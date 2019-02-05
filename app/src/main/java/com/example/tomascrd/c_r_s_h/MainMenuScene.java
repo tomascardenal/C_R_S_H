@@ -1,6 +1,7 @@
 package com.example.tomascrd.c_r_s_h;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -19,6 +20,7 @@ public class MainMenuScene extends SceneCrsh {
     private int SCREEN_COLUMNS = 18;
     private int SCREEN_ROWS = 8;
     Paint pText;
+    ParallaxBackground bg1,bg2,bg3;
     ButtonCrsh btnNewGame, btnOptions, btnRecords, btnCredits, btnTutorial;
 
 
@@ -37,6 +39,11 @@ public class MainMenuScene extends SceneCrsh {
         pText.setColor(Color.BLACK);
         pText.setTextAlign(Paint.Align.CENTER);
         pText.setTextSize((float) ((screenHeight/SCREEN_COLUMNS)*2.5));
+
+        //Backgrounds
+        bg1 = new ParallaxBackground(BitmapFactory.decodeResource(context.getResources(),R.drawable.paramount1),screenWidth);
+        bg2= new ParallaxBackground(BitmapFactory.decodeResource(context.getResources(),R.drawable.paramount2),screenWidth);
+        bg3 = new ParallaxBackground(BitmapFactory.decodeResource(context.getResources(),R.drawable.paramount3),screenWidth);
     }
 
     /**
@@ -44,7 +51,20 @@ public class MainMenuScene extends SceneCrsh {
      */
     @Override
     public void updatePhysics(){
+        bg1.move(1);
+        bg2.move(2);
+        bg3.move(3);
+        Log.i("img position", bg3.position.x+" Screen width = "+screenWidth);
 
+        if(bg1.position.x>=0){
+            bg1.position.x = screenWidth-bg1.image.getWidth();
+        }
+        if(bg2.position.x>=0){
+            bg2.position.x = screenWidth-bg2.image.getWidth();
+        }
+        if(bg3.position.x>=0){
+            bg3.position.x = screenWidth-bg3.image.getWidth();
+        }
     }
 
     /**
@@ -56,8 +76,11 @@ public class MainMenuScene extends SceneCrsh {
         //General background
         c.drawColor(Color.GREEN);
 
-        //Parallax background TODO get inspirational with
-        //http://gamecodeschool.com/android/coding-a-parallax-scrolling-background-for-android/
+        //Parallax background FIXME This are placeholder images
+        c.drawBitmap(bg3.image,bg3.position.x,bg3.position.y,null);
+        c.drawBitmap(bg2.image,bg2.position.x,bg2.position.y,null);
+        c.drawBitmap(bg1.image,bg1.position.x,bg1.position.y,null);
+
 
         //Title
         c.drawText("C_R_S_H",screenWidth/SCREEN_COLUMNS*9,screenHeight/SCREEN_ROWS*2,pText);
@@ -164,6 +187,7 @@ public class MainMenuScene extends SceneCrsh {
                 long startFrameTime = System.currentTimeMillis();
 
                 updatePhysics();
+
 
             }
         }
