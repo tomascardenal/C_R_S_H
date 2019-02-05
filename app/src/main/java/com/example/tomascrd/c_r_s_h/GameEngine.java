@@ -67,6 +67,24 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
             if (newScene != currentScene.getId()) {
                 switch (newScene) {
                     //TODO Scene control
+                    case 0:
+                        currentScene = new MainMenuScene(context, newScene, screenWidth, screenHeight);
+                        break;
+                    case 1:
+                        //currentScene = new NewGameScene(context, newScene, screenWidth,screenHeight);
+                        break;
+                    case 2:
+                        //currentScene = new MainGameScene(context, newScene, screenWidth,screenHeight);
+                        break;
+                    case 3:
+                        //currentScene = new RecordsScene(context, newScene, screenWidth,screenHeight);
+                        break;
+                    case 4:
+                        //currentScene = new TutorialScene(context, newScene, screenWidth,screenHeight);
+                        break;
+                    case 5:
+                        //currentScene = new CreditScene(context, newScene, screenWidth,screenHeight);
+                        break;
                 }
             }
         }
@@ -142,9 +160,11 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
                         continue;
                     }
                     c = surfaceHolder.lockCanvas();
-                    synchronized (surfaceHolder) {
-                        currentScene.updatePhysics();
-                        currentScene.draw(c);
+                    if(c!=null){
+                        synchronized (surfaceHolder) {
+                            currentScene.updatePhysics();
+                            currentScene.draw(c);
+                        }
                     }
                 } finally {
                     if (c != null) {
@@ -156,6 +176,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
 
         /**
          * Sets this thread's working flag
+         *
          * @param work the new working state
          */
         protected void setWorking(boolean work) {
@@ -164,6 +185,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
 
         /**
          * Sets the surface size when there's size or orientation changes.
+         *
          * @param width
          * @param height
          */

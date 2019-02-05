@@ -54,5 +54,9 @@ public class MainActivity extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
         decorView.setSystemUiVisibility(opciones);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        GameEngine gameEngine = new GameEngine(this);
+        gameEngine.setKeepScreenOn(true);
+
+        setContentView(gameEngine);
     }
 }

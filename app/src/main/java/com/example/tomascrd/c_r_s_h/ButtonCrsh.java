@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 
 /**
  * A button for the menus and interface for CRSH
@@ -54,20 +55,25 @@ public class ButtonCrsh extends DrawableComponent {
      * @param xRight the button's bottom right corner x position
      * @param yBottom the button's bottom right corner y position
      */
-    public ButtonCrsh (Context context, String text,float xPos, float yPos, float xRight, float yBottom){
+    public ButtonCrsh (Context context, Typeface font, String text,float xPos, float yPos, float xRight, float yBottom){
         this.context = context;
         this.text = text;
         this.xPos = xPos;
         this.yPos = yPos;
         this.xRight = xRight;
         this.yBottom = yBottom;
+        this.width = xRight - xPos;
+        this.height = yBottom - yPos;
         this.btnRect = new Rect((int)xPos,(int)yPos,(int)xRight,(int)yBottom);
         pButton = new Paint();
         pButton.setColor(Color.GRAY);
         pText = new Paint();
+        if(font != null){
+            pText.setTypeface(font);
+        }
         pText.setColor(Color.BLACK);
         pText.setTextAlign(Paint.Align.CENTER);
-        pText.setTextSize(yBottom-yPos/2);
+        pText.setTextSize(btnRect.height()/2);
     }
 
     /**
@@ -77,6 +83,6 @@ public class ButtonCrsh extends DrawableComponent {
     @Override
     public void draw(Canvas c){
         c.drawRect(btnRect,pButton);
-        c.drawText(text,btnRect.centerX(),btnRect.centerY()+height/2, pText);
+        c.drawText(text,btnRect.centerX(),btnRect.centerY()+ height/6, pText);
     }
 }

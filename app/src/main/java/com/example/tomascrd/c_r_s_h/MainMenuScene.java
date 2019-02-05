@@ -3,6 +3,8 @@ package com.example.tomascrd.c_r_s_h;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.util.Log;
 import android.view.MotionEvent;
 
@@ -14,6 +16,10 @@ import android.view.MotionEvent;
 public class MainMenuScene extends SceneCrsh {
 
     private volatile boolean runParallax;
+    private int SCREEN_COLUMNS = 18;
+    private int SCREEN_ROWS = 8;
+    Paint pText;
+    ButtonCrsh btnNewGame, btnOptions, btnRecords, btnCredits, btnTutorial;
 
 
     /**
@@ -25,6 +31,12 @@ public class MainMenuScene extends SceneCrsh {
      */
     public MainMenuScene(Context context, int id, int screenWidth, int screenHeight) {
         super(context, id, screenWidth, screenHeight);
+        //Title text
+        pText = new Paint();
+        pText.setTypeface(Typeface.createFromAsset(context.getAssets(),"KarmaFuture.ttf"));
+        pText.setColor(Color.BLACK);
+        pText.setTextAlign(Paint.Align.CENTER);
+        pText.setTextSize((float) ((screenHeight/SCREEN_COLUMNS)*2.5));
     }
 
     /**
@@ -42,14 +54,70 @@ public class MainMenuScene extends SceneCrsh {
     @Override
     public void draw(Canvas c){
         //General background
-        c.drawColor(Color.BLUE);
+        c.drawColor(Color.GREEN);
 
         //Parallax background TODO get inspirational with
         //http://gamecodeschool.com/android/coding-a-parallax-scrolling-background-for-android/
 
-        //Menu components
+        //Title
+        c.drawText("C_R_S_H",screenWidth/SCREEN_COLUMNS*9,screenHeight/SCREEN_ROWS*2,pText);
 
 
+        //Menu buttons
+        if(btnNewGame==null){
+            btnNewGame = new ButtonCrsh(context,
+                    Typeface.createFromAsset(context.getAssets(),"homespun.ttf"),
+                    "Jugar",
+                    screenWidth/SCREEN_COLUMNS*7,
+                    screenHeight/SCREEN_ROWS*3,
+                    screenWidth/SCREEN_COLUMNS*11,
+                    screenHeight/SCREEN_ROWS*4);
+        }
+        btnNewGame.draw(c);
+
+        if(btnOptions==null){
+            btnOptions = new ButtonCrsh(context,
+                    Typeface.createFromAsset(context.getAssets(),"homespun.ttf"),
+                    "Opciones",
+                    screenWidth/SCREEN_COLUMNS,
+                    screenHeight/SCREEN_ROWS*5,
+                    screenWidth/SCREEN_COLUMNS*4,
+                    screenHeight/SCREEN_ROWS*6);
+        }
+        btnOptions.draw(c);
+
+        if(btnCredits==null){
+            btnCredits = new ButtonCrsh(context,
+                    Typeface.createFromAsset(context.getAssets(),"homespun.ttf"),
+                    "Créditos",
+                    screenWidth/SCREEN_COLUMNS*5,
+                    screenHeight/SCREEN_ROWS*5,
+                     screenWidth/SCREEN_COLUMNS*8,
+                    screenHeight/SCREEN_ROWS*6);
+        }
+        btnCredits.draw(c);
+
+        if(btnRecords==null){
+            btnRecords = new ButtonCrsh(context,
+                    Typeface.createFromAsset(context.getAssets(),"homespun.ttf"),
+                    "Récords",
+                    screenWidth/SCREEN_COLUMNS*10,
+                    screenHeight/SCREEN_ROWS*5,
+                    screenWidth/SCREEN_COLUMNS*13,
+                    screenHeight/SCREEN_ROWS*6);
+        }
+        btnRecords.draw(c);
+
+        if(btnTutorial==null){
+            btnTutorial = new ButtonCrsh(context,
+                    Typeface.createFromAsset(context.getAssets(),"homespun.ttf"),
+                    "Tutorial",
+                    screenWidth/SCREEN_COLUMNS*14,
+                    screenHeight/SCREEN_ROWS*5,
+                    screenWidth/SCREEN_COLUMNS*17,
+                    screenHeight/SCREEN_ROWS*6);
+        }
+        btnTutorial.draw(c);
     }
 
     /**
