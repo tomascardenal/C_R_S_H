@@ -5,18 +5,23 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 
+/**
+ * Represents a tile in the game
+ *
+ * @author Tomás Cardenal López
+ */
 public class TileCrsh extends DrawableComponent {
 
     /**
      *  Enumerates the various types of tile
      */
-    public static enum TILE_TYPE {
+    public enum TILE_TYPE {
         TILE_PATH,
         TILE_NORMAL,
         TILE_STEEL,
         TILE_CRACKEDSTEEL,
         TILE_UNBREAKABLE
-    };
+    }
 
     protected TILE_TYPE tileType;
     /**
@@ -81,7 +86,4 @@ public class TileCrsh extends DrawableComponent {
     public void setTileType(TILE_TYPE tileType) {
         this.tileType = tileType;
     }
-
-
-
 }

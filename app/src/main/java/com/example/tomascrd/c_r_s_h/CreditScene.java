@@ -8,6 +8,11 @@ import android.graphics.Typeface;
 import android.util.Log;
 import android.view.MotionEvent;
 
+/**
+ * Scene which contains this game's credits
+ *
+ * @author Tomás Cardenal López
+ */
 public class CreditScene extends SceneCrsh{
 
     private int SCREEN_COLUMNS = 18;
@@ -16,7 +21,7 @@ public class CreditScene extends SceneCrsh{
 
 
     /**
-     * Starts a main menu
+     * Starts a credits scene
      * @param context the application context
      * @param id this scene's id (0 is recommended by default for the main menu)
      * @param screenWidth this screen's width

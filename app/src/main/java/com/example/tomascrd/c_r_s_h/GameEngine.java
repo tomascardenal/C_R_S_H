@@ -10,7 +10,7 @@ import android.view.SurfaceView;
 /**
  * Main engine of this game, concentrates and controls the activities of different scenes. Contains the main game thread
  *
- * @author Tomás Cardenal
+ * @author Tomás Cardenal López
  */
 public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
     /**

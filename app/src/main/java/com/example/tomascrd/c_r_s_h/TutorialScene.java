@@ -8,6 +8,11 @@ import android.graphics.Typeface;
 import android.util.Log;
 import android.view.MotionEvent;
 
+/**
+ * Represents the tutorial for the game
+ *
+ * @author Tomás Cardenal López
+ */
 public class TutorialScene extends SceneCrsh{
 
     private int SCREEN_COLUMNS = 18;

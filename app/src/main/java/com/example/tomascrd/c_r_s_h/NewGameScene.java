@@ -8,6 +8,11 @@ import android.graphics.Typeface;
 import android.util.Log;
 import android.view.MotionEvent;
 
+/**
+ * Represents the new game menu
+ *
+ * @author Tomás Cardenal López
+ */
 public class NewGameScene extends SceneCrsh{
 
     private int SCREEN_COLUMNS = 18;
@@ -16,7 +21,7 @@ public class NewGameScene extends SceneCrsh{
 
 
     /**
-     * Starts a main menu
+     * Starts a new game menu
      * @param context the application context
      * @param id this scene's id (0 is recommended by default for the main menu)
      * @param screenWidth this screen's width

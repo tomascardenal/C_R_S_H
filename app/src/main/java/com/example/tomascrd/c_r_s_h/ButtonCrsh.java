@@ -10,7 +10,7 @@ import android.graphics.Typeface;
 /**
  * A button for the menus and interface for CRSH
  *
- * @author Tomás Cardenal
+ * @author Tomás Cardenal López
  */
 public class ButtonCrsh extends DrawableComponent {
 

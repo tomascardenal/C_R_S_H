@@ -8,7 +8,7 @@ import android.view.MotionEvent;
 /**
  * Represents the general idea of a screen of the game
  *
- * @author Tomás Cardenal
+ * @author Tomás Cardenal López
  */
 public class SceneCrsh {
     /**

@@ -6,7 +6,7 @@ import android.graphics.Canvas;
 /**
  * Represents a drawable component for a SurfaceView GUI, and gameplay
  *
- * @author Tomás Cardenal
+ * @author Tomás Cardenal López
  */
 public abstract class DrawableComponent {
 

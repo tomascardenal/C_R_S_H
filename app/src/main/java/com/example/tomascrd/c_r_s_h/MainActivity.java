@@ -9,7 +9,7 @@ import android.view.Window;
 /**
  * Main activity for this Android application. Most of the code in this activity hides normal screen controls to use the screen at it's full extent for the game
  *
- * @author Tomás Cardenal
+ * @author Tomás Cardenal López
  */
 public class MainActivity extends AppCompatActivity {
 

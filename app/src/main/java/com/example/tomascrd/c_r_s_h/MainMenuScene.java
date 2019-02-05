@@ -12,11 +12,10 @@ import android.view.MotionEvent;
 /**
  * This game's main menu
  *
- * @author Tomás Cardenal
+ * @author Tomás Cardenal López
  */
 public class MainMenuScene extends SceneCrsh {
 
-    private volatile boolean runParallax;
     private int SCREEN_COLUMNS = 18;
     private int SCREEN_ROWS = 8;
     Paint pText;
@@ -40,7 +39,7 @@ public class MainMenuScene extends SceneCrsh {
         pText.setTextAlign(Paint.Align.CENTER);
         pText.setTextSize((float) ((screenHeight/SCREEN_COLUMNS)*2.5));
 
-        //Backgrounds
+        //Parallax Backgrounds
         bg1 = new ParallaxBackground(BitmapFactory.decodeResource(context.getResources(),R.drawable.paramount1),screenWidth);
         bg2= new ParallaxBackground(BitmapFactory.decodeResource(context.getResources(),R.drawable.paramount2),screenWidth);
         bg3 = new ParallaxBackground(BitmapFactory.decodeResource(context.getResources(),R.drawable.paramount3),screenWidth);
@@ -178,18 +177,5 @@ public class MainMenuScene extends SceneCrsh {
             default:  Log.i("Other", "Undefined action: "+action);
         }
         return this.id;
-    }
-
-    protected class ParallaxThread extends Thread{
-        @Override
-        public void run() {
-            while(runParallax){
-                long startFrameTime = System.currentTimeMillis();
-
-                updatePhysics();
-
-
-            }
-        }
     }
 }

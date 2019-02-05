@@ -8,15 +8,26 @@ import android.graphics.Typeface;
 import android.util.Log;
 import android.view.MotionEvent;
 
+/**
+ * Represents the options menu
+ *
+ * @author Tomás Cardenal López
+ */
 public class OptionsScene extends SceneCrsh{
 
+    /**
+     * Number of columns on screen for measure reference
+     */
     private int SCREEN_COLUMNS = 18;
+    /**
+     * Number of rows on screen for measure reference
+     */
     private int SCREEN_ROWS = 8;
     Paint pText;
 
 
     /**
-     * Starts a main menu
+     * Starts an options menu
      * @param context the application context
      * @param id this scene's id (0 is recommended by default for the main menu)
      * @param screenWidth this screen's width

@@ -8,6 +8,11 @@ import android.graphics.Typeface;
 import android.util.Log;
 import android.view.MotionEvent;
 
+/**
+ * Represents the records scene
+ *
+ * @author Tomás Cardenal López
+ */
 public class RecordsScene extends SceneCrsh{
 
     private int SCREEN_COLUMNS = 18;

@@ -3,12 +3,14 @@ package com.example.tomascrd.c_r_s_h;
 
 /**
  * Represents a power up object inside the game
+ *
+ * @author Tomás Cardenal López
  */
 public class PowerUpCrsh extends DrawableComponent {
     /**
      * Enumerates the various types of power ups
      */
-    public static enum POWERUP_TYPE {
+    public enum POWERUP_TYPE {
         POWERUP_1UP,
         POWERUP_3UP,
         POWERUP_TIME_REDUCTION,
