@@ -18,7 +18,7 @@ public class SceneCrsh {
     /**
      * A back button, all scenes will have this button to fall back onto the main menu
      */
-    ButtonCrsh backBtn;
+    public ButtonCrsh backBtn;
     /**
      * This scene's id
      */
