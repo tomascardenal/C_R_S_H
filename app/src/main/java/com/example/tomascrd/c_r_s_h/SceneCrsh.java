@@ -46,6 +46,9 @@ public class SceneCrsh {
         this.id = id;
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
+        if(backBtn==null){
+            backBtn = new ButtonCrsh(context, null, "<=",screenWidth-screenWidth/16,0,screenWidth,screenWidth/16);
+        }
     }
 
     /**

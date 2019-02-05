@@ -71,19 +71,22 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
                         currentScene = new MainMenuScene(context, newScene, screenWidth, screenHeight);
                         break;
                     case 1:
-                        //currentScene = new NewGameScene(context, newScene, screenWidth,screenHeight);
+                        currentScene = new NewGameScene(context, newScene, screenWidth,screenHeight);
                         break;
                     case 2:
-                        //currentScene = new MainGameScene(context, newScene, screenWidth,screenHeight);
+                        currentScene = new OptionsScene(context, newScene, screenWidth,screenHeight);
                         break;
                     case 3:
-                        //currentScene = new RecordsScene(context, newScene, screenWidth,screenHeight);
+                        currentScene = new CreditScene(context, newScene, screenWidth,screenHeight);
                         break;
                     case 4:
-                        //currentScene = new TutorialScene(context, newScene, screenWidth,screenHeight);
+                        currentScene = new RecordsScene(context, newScene, screenWidth,screenHeight);
                         break;
                     case 5:
-                        //currentScene = new CreditScene(context, newScene, screenWidth,screenHeight);
+                        currentScene = new TutorialScene(context, newScene, screenWidth,screenHeight);
+                        break;
+                    case 99:
+                        //currentScene = new MainGameScene(context, newScene, screenWidth,screenHeight);
                         break;
                 }
             }

@@ -70,6 +70,8 @@ public class ButtonCrsh extends DrawableComponent {
         pText = new Paint();
         if(font != null){
             pText.setTypeface(font);
+        }else{
+            pText.setTypeface(Typeface.DEFAULT_BOLD);
         }
         pText.setColor(Color.BLACK);
         pText.setTextAlign(Paint.Align.CENTER);

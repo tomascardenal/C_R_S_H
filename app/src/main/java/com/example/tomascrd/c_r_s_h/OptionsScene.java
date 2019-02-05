@@ -8,7 +8,7 @@ import android.graphics.Typeface;
 import android.util.Log;
 import android.view.MotionEvent;
 
-public class TutorialScene extends SceneCrsh{
+public class OptionsScene extends SceneCrsh{
 
     private int SCREEN_COLUMNS = 18;
     private int SCREEN_ROWS = 8;
@@ -22,7 +22,7 @@ public class TutorialScene extends SceneCrsh{
      * @param screenWidth this screen's width
      * @param screenHeight this screen's height
      */
-    public TutorialScene(Context context, int id, int screenWidth, int screenHeight) {
+    public OptionsScene(Context context, int id, int screenWidth, int screenHeight) {
         super(context, id, screenWidth, screenHeight);
         //Title text
         pText = new Paint();
@@ -53,7 +53,7 @@ public class TutorialScene extends SceneCrsh{
         //http://gamecodeschool.com/android/coding-a-parallax-scrolling-background-for-android/
 
         //Test text
-        c.drawText("TUTORIAL",screenWidth/SCREEN_COLUMNS*9,screenHeight/SCREEN_ROWS*2,pText);
+        c.drawText("OPCIONES",screenWidth/SCREEN_COLUMNS*9,screenHeight/SCREEN_ROWS*2,pText);
 
         backBtn.draw(c);
 

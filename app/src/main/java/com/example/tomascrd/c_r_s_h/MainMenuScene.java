@@ -136,8 +136,19 @@ public class MainMenuScene extends SceneCrsh {
 
             case MotionEvent.ACTION_UP:                     // Last finger up
             case MotionEvent.ACTION_POINTER_UP:  // Any other finger up
-                break;
 
+                if(isClick(btnNewGame,event)){
+                    return 1;
+                }else if(isClick(btnOptions,event)){
+                    return 2;
+                }else if(isClick(btnCredits,event)){
+                    return 3;
+                }else if(isClick(btnRecords,event)){
+                    return 4;
+                }else if(isClick(btnTutorial,event)){
+                    return 5;
+                }
+                break;
             case MotionEvent.ACTION_MOVE: // Any finger moves
 
                 break;
