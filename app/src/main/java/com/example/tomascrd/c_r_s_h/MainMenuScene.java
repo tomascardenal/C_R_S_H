@@ -54,7 +54,7 @@ public class MainMenuScene extends SceneCrsh {
         bg1.move(1);
         bg2.move(2);
         bg3.move(3);
-        Log.i("img position", bg3.position.x+" Screen width = "+screenWidth);
+        //Log.i("img position", bg3.position.x+" Screen width = "+screenWidth);
 
         if(bg1.position.x>=0){
             bg1.position.x = screenWidth-bg1.image.getWidth();
@@ -74,7 +74,7 @@ public class MainMenuScene extends SceneCrsh {
     @Override
     public void draw(Canvas c){
         //General background
-        c.drawColor(Color.GREEN);
+        c.drawColor(Color.BLUE);
 
         //Parallax background FIXME This are placeholder images
         c.drawBitmap(bg3.image,bg3.position.x,bg3.position.y,null);
