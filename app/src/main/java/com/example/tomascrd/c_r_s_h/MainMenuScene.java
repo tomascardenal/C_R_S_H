@@ -16,10 +16,12 @@ import android.view.MotionEvent;
  */
 public class MainMenuScene extends SceneCrsh {
 
-    private int SCREEN_COLUMNS = 18;
-    private int SCREEN_ROWS = 8;
+    private final int SCREEN_COLUMNS = 18;
+    private final int SCREEN_ROWS = 8;
+    private final int[] mipmapBackgrounds = {R.mipmap.paramount1,R.mipmap.paramount2,R.mipmap.paramount3};
+
     Paint pText;
-    ParallaxBackground bg1,bg2,bg3;
+    ParallaxBackground parallaxBackgrounds[];
     ButtonCrsh btnNewGame, btnOptions, btnRecords, btnCredits, btnTutorial;
 
 
@@ -40,9 +42,10 @@ public class MainMenuScene extends SceneCrsh {
         pText.setTextSize((float) ((screenHeight/SCREEN_COLUMNS)*2.5));
 
         //Parallax Backgrounds
-        bg1 = new ParallaxBackground(BitmapFactory.decodeResource(context.getResources(),R.drawable.paramount1),screenWidth);
-        bg2= new ParallaxBackground(BitmapFactory.decodeResource(context.getResources(),R.drawable.paramount2),screenWidth);
-        bg3 = new ParallaxBackground(BitmapFactory.decodeResource(context.getResources(),R.drawable.paramount3),screenWidth);
+        parallaxBackgrounds = new ParallaxBackground[3];
+        for(int i=0;i<parallaxBackgrounds.length;i++){
+            parallaxBackgrounds[i] = new ParallaxBackground(BitmapFactory.decodeResource(context.getResources(),mipmapBackgrounds[i]),screenWidth);
+        }
     }
 
     /**
@@ -50,19 +53,12 @@ public class MainMenuScene extends SceneCrsh {
      */
     @Override
     public void updatePhysics(){
-        bg1.move(1);
-        bg2.move(2);
-        bg3.move(3);
-        //Log.i("img position", bg3.position.x+" Screen width = "+screenWidth);
 
-        if(bg1.position.x>=0){
-            bg1.position.x = screenWidth-bg1.image.getWidth();
-        }
-        if(bg2.position.x>=0){
-            bg2.position.x = screenWidth-bg2.image.getWidth();
-        }
-        if(bg3.position.x>=0){
-            bg3.position.x = screenWidth-bg3.image.getWidth();
+        for(int i=0;i<parallaxBackgrounds.length;i++){
+            parallaxBackgrounds[i].move(i+1);
+            if(parallaxBackgrounds[i].position.x>=0){
+                parallaxBackgrounds[i].position.x = screenWidth-parallaxBackgrounds[i].image.getWidth();
+            }
         }
     }
 
@@ -76,9 +72,9 @@ public class MainMenuScene extends SceneCrsh {
         c.drawColor(Color.BLUE);
 
         //Parallax background FIXME This are placeholder images
-        c.drawBitmap(bg3.image,bg3.position.x,bg3.position.y,null);
-        c.drawBitmap(bg2.image,bg2.position.x,bg2.position.y,null);
-        c.drawBitmap(bg1.image,bg1.position.x,bg1.position.y,null);
+        for(int i=parallaxBackgrounds.length-1;i>=0;i--){
+            c.drawBitmap(parallaxBackgrounds[i].image,parallaxBackgrounds[i].position.x,parallaxBackgrounds[i].position.y,null);
+        }
 
 
         //Title
