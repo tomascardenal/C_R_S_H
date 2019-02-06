@@ -1,6 +1,7 @@
 package com.example.tomascrd.c_r_s_h;
 
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.graphics.PointF;
 
 /**
@@ -38,6 +39,18 @@ public class ParallaxBackground {
         this(image, screenWidth - image.getWidth(), 0);
     }
 
+
+    /**
+     * Initializes a background for the indicated screen width and height
+     * @param image the image
+     * @param screenWidth the screen width
+     * @param screenHeight the screen height
+     */
+    public ParallaxBackground(Bitmap image, int screenWidth, int screenHeight) {
+        this.image = image;
+        this.position = new PointF(screenWidth - image.getWidth(), screenHeight-image.getHeight());
+    }
+
     /**
      * Moves this backgrounds' x position the indicated velocity
      * @param velocity
@@ -46,5 +59,14 @@ public class ParallaxBackground {
         position.x += velocity;
     }
 
+    public void reverseBitmap(boolean horizontally){
+        Matrix matrix = new Matrix();
+        if(horizontally){
+            matrix.preScale(-1,1);
+        }else{
+            matrix.preScale(1,-1);
+        }
+        this.image = Bitmap.createBitmap(this.image,0,0,image.getWidth(),image.getHeight(),matrix,false);
+    }
 
 }

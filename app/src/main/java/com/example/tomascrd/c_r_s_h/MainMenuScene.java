@@ -19,7 +19,6 @@ public class MainMenuScene extends SceneCrsh {
     private final int SCREEN_COLUMNS = 18;
     private final int SCREEN_ROWS = 8;
     private final int[] mipmapBackgrounds = {R.mipmap.paramount1,R.mipmap.paramount2,R.mipmap.paramount3};
-
     Paint pText;
     ParallaxBackground parallaxBackgrounds[];
     ButtonCrsh btnNewGame, btnOptions, btnRecords, btnCredits, btnTutorial;
@@ -44,7 +43,7 @@ public class MainMenuScene extends SceneCrsh {
         //Parallax Backgrounds
         parallaxBackgrounds = new ParallaxBackground[3];
         for(int i=0;i<parallaxBackgrounds.length;i++){
-            parallaxBackgrounds[i] = new ParallaxBackground(BitmapFactory.decodeResource(context.getResources(),mipmapBackgrounds[i]),screenWidth);
+            parallaxBackgrounds[i] = new ParallaxBackground(BitmapFactory.decodeResource(context.getResources(),mipmapBackgrounds[i]),screenWidth,screenHeight);
         }
     }
 
@@ -56,7 +55,8 @@ public class MainMenuScene extends SceneCrsh {
 
         for(int i=0;i<parallaxBackgrounds.length;i++){
             parallaxBackgrounds[i].move(i+1);
-            if(parallaxBackgrounds[i].position.x>=0){
+            Log.i("img position", parallaxBackgrounds[i].position.x+" Screen width = "+screenWidth);
+            if(parallaxBackgrounds[i].position.x>screenWidth){
                 parallaxBackgrounds[i].position.x = screenWidth-parallaxBackgrounds[i].image.getWidth();
             }
         }
@@ -72,8 +72,9 @@ public class MainMenuScene extends SceneCrsh {
         c.drawColor(Color.BLUE);
 
         //Parallax background FIXME This are placeholder images
-        for(int i=parallaxBackgrounds.length-1;i>=0;i--){
+        for(int i=0;i<parallaxBackgrounds.length;i++){
             c.drawBitmap(parallaxBackgrounds[i].image,parallaxBackgrounds[i].position.x,parallaxBackgrounds[i].position.y,null);
+            c.drawBitmap(parallaxBackgrounds[i].image,parallaxBackgrounds[i].position.x-parallaxBackgrounds[i].image.getWidth(),parallaxBackgrounds[i].position.y,null);
         }
 
 

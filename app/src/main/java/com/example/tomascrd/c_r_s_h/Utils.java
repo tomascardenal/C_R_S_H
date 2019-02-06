@@ -16,6 +16,8 @@ public class Utils {
         this.context=context;
     }
 
+
+
     int getPixels(float dp) {
         DisplayMetrics metrics = new DisplayMetrics();
         ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getMetrics(metrics);
@@ -26,25 +28,25 @@ public class Utils {
     public Bitmap escalaAnchura(int res, int nuevoAncho) {
         Bitmap bitmapAux=BitmapFactory.decodeResource(context.getResources(), res);
         if (nuevoAncho==bitmapAux.getWidth()) return bitmapAux;
-        return bitmapAux.createScaledBitmap(bitmapAux, nuevoAncho, (bitmapAux.getHeight() * nuevoAncho) / bitmapAux.getWidth(), true);
+        return Bitmap.createScaledBitmap(bitmapAux, nuevoAncho, (bitmapAux.getHeight() * nuevoAncho) / bitmapAux.getWidth(), true);
     }
 
     public  Bitmap escalaAltura(int res, int nuevoAlto ) {
         Bitmap bitmapAux=BitmapFactory.decodeResource(context.getResources(), res);
         if (nuevoAlto==bitmapAux.getHeight()) return bitmapAux;
-        return bitmapAux.createScaledBitmap(bitmapAux, (bitmapAux.getWidth() * nuevoAlto) / bitmapAux.getHeight(), nuevoAlto, true);
+        return Bitmap.createScaledBitmap(bitmapAux, (bitmapAux.getWidth() * nuevoAlto) / bitmapAux.getHeight(), nuevoAlto, true);
     }
 
     public  Bitmap escalaAnchura(String fichero, int nuevoAncho) {
         Bitmap bitmapAux=getBitmapFromAssets(fichero);
         if (nuevoAncho==bitmapAux.getWidth()) return bitmapAux;
-        return bitmapAux.createScaledBitmap(bitmapAux, nuevoAncho, (bitmapAux.getHeight() * nuevoAncho) / bitmapAux.getWidth(), true);
+        return Bitmap.createScaledBitmap(bitmapAux, nuevoAncho, (bitmapAux.getHeight() * nuevoAncho) / bitmapAux.getWidth(), true);
     }
 
     public  Bitmap escalaAltura(String fichero, int nuevoAlto ) {
         Bitmap bitmapAux=getBitmapFromAssets(fichero);
         if (nuevoAlto==bitmapAux.getHeight()) return bitmapAux;
-        return bitmapAux.createScaledBitmap(bitmapAux, (bitmapAux.getWidth() * nuevoAlto) / bitmapAux.getHeight(), nuevoAlto, true);
+        return Bitmap.createScaledBitmap(bitmapAux, (bitmapAux.getWidth() * nuevoAlto) / bitmapAux.getHeight(), nuevoAlto, true);
     }
 
     public Bitmap[] getFrames(int numImg, String dir, String tag, int width){
