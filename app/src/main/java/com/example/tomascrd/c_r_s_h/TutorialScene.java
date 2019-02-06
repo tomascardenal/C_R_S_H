@@ -54,9 +54,6 @@ public class TutorialScene extends SceneCrsh{
         //General background
         c.drawColor(Color.GREEN);
 
-        //Parallax background TODO get inspirational with
-        //http://gamecodeschool.com/android/coding-a-parallax-scrolling-background-for-android/
-
         //Test text
         c.drawText(context.getString(R.string.btnTutorial),screenWidth/SCREEN_COLUMNS*9,screenHeight/SCREEN_ROWS*2,pText);
 
