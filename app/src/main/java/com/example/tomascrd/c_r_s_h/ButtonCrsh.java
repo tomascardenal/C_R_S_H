@@ -47,7 +47,7 @@ public class ButtonCrsh extends DrawableComponent {
     protected Paint pText;
 
     /**
-     * Creates a Button with the given parameters
+     * Creates a Button with the given parameters and gray background color
      * @param context the context
      * @param text the text within the button
      * @param xPos the button's x position
@@ -55,7 +55,7 @@ public class ButtonCrsh extends DrawableComponent {
      * @param xRight the button's bottom right corner x position
      * @param yBottom the button's bottom right corner y position
      */
-    public ButtonCrsh (Context context, Typeface font, String text,float xPos, float yPos, float xRight, float yBottom){
+    public ButtonCrsh (Context context, Typeface font,String text,float xPos, float yPos, float xRight, float yBottom){
         this.context = context;
         this.text = text;
         this.xPos = xPos;
@@ -79,7 +79,22 @@ public class ButtonCrsh extends DrawableComponent {
     }
 
     /**
-     * Draws the components on the screen
+     * Creates a Button with the given parameters, a background color must be given
+     * @param context the context
+     * @param text the text within the button
+     * @param xPos the button's x position
+     * @param yPos the button's y position
+     * @param xRight the button's bottom right corner x position
+     * @param yBottom the button's bottom right corner y position
+     * @param background the button's background color
+     */
+    public ButtonCrsh (Context context, Typeface font,String text,float xPos, float yPos, float xRight, float yBottom, int background){
+        this(context,font,text,xPos,yPos,xRight,yBottom);
+        pButton.setColor(background);
+    }
+
+    /**
+     * Draws the button on the screen
      * @param c the canvas to draw
      */
     @Override

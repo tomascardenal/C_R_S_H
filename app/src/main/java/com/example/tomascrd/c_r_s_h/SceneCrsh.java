@@ -3,6 +3,7 @@ package com.example.tomascrd.c_r_s_h;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.view.MotionEvent;
 
 /**
@@ -47,7 +48,7 @@ public class SceneCrsh {
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
         if(backBtn==null){
-            backBtn = new ButtonCrsh(context, null, "<=",screenWidth-screenWidth/16,0,screenWidth,screenWidth/16);
+            backBtn = new ButtonCrsh(context, null, "<=",screenWidth-screenWidth/16,0,screenWidth,screenWidth/16, Color.TRANSPARENT);
         }
     }
 
