@@ -58,7 +58,7 @@ public class CreditScene extends SceneCrsh{
         //http://gamecodeschool.com/android/coding-a-parallax-scrolling-background-for-android/
 
         //Test text
-        c.drawText("CREDITOS",screenWidth/SCREEN_COLUMNS*9,screenHeight/SCREEN_ROWS*2,pText);
+        c.drawText(context.getString(R.string.btnCredits),screenWidth/SCREEN_COLUMNS*9,screenHeight/SCREEN_ROWS*2,pText);
 
         backBtn.draw(c);
 

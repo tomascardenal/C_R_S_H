@@ -1,8 +1,10 @@
 <resources>
-    <string name="app_name">C_R_S_H</string>
+    <string name="app_name" translatable="false">C_R_S_H</string>
     <string name="btnPlay">Jugar</string>
     <string name="btnOptions">Opciones</string>
     <string name="btnCredits">Créditos</string>
     <string name="btnRecords">Récords</string>
     <string name="btnTutorial">Tutorial</string>
+    <string name="btnBack" translatable="false"></string>
+    <string name="titleNewGame">Nueva Partida</string>
 </resources>

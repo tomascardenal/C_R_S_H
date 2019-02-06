@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="btnPlay">Play</string>
+    <string name="btnOptions">Options</string>
+    <string name="btnCredits">Credits</string>
+    <string name="btnRecords">Records</string>
+    <string name="btnTutorial">Tutorial</string>
+    <string name="titleNewGame">New Game</string>
+</resources>
