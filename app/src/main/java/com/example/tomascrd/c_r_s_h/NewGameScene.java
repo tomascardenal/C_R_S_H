@@ -18,7 +18,7 @@ public class NewGameScene extends SceneCrsh{
     private int SCREEN_COLUMNS = 18;
     private int SCREEN_ROWS = 8;
     Paint pText;
-
+    ButtonCrsh btnStartGame;
 
     /**
      * Starts a new game menu
@@ -35,6 +35,15 @@ public class NewGameScene extends SceneCrsh{
         pText.setColor(Color.BLACK);
         pText.setTextAlign(Paint.Align.CENTER);
         pText.setTextSize((float) ((screenHeight/SCREEN_COLUMNS)*2.5));
+
+        //Buttons
+        btnStartGame = new ButtonCrsh(context,
+                Typeface.createFromAsset(context.getAssets(), "homespun.ttf"),
+                context.getString(R.string.btnStartGame),
+                screenWidth / SCREEN_COLUMNS * 6,
+                screenHeight / SCREEN_ROWS * 6,
+                screenWidth / SCREEN_COLUMNS * 12,
+                screenHeight / SCREEN_ROWS * 7);
     }
 
     /**
@@ -62,6 +71,8 @@ public class NewGameScene extends SceneCrsh{
 
         backBtn.draw(c);
 
+        btnStartGame.draw(c);
+
     }
 
     /**
@@ -82,7 +93,10 @@ public class NewGameScene extends SceneCrsh{
             case MotionEvent.ACTION_POINTER_UP:  // Any other finger up
                 if(isClick(backBtn,event)){
                     return 0;
+                }else if(isClick(btnStartGame,event)){
+                    return 99;
                 }
+
             case MotionEvent.ACTION_MOVE: // Any finger moves
 
                 break;

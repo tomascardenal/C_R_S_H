@@ -6,4 +6,5 @@
     <string name="btnRecords">Records</string>
     <string name="btnTutorial">Tutorial</string>
     <string name="titleNewGame">New Game</string>
+    <string name="btnStartGame">Start game</string>
 </resources>
