@@ -16,9 +16,9 @@ import android.view.MotionEvent;
  */
 public class MainGameScene extends SceneCrsh{
 
-    private int SCREEN_COLUMNS = 32;
-    private int SCREEN_ROWS = 16;
-    private Paint pTiles;
+    private int SCREEN_COLUMNS = 18;
+    private int SCREEN_ROWS = 9;
+    private MapCrsh mapLoad;
 
     /**
      * Starts a new main game
@@ -29,7 +29,7 @@ public class MainGameScene extends SceneCrsh{
      */
     public MainGameScene(Context context, int id, int screenWidth, int screenHeight) {
         super(context, id, screenWidth, screenHeight);
-        pTiles = new Paint();
+        mapLoad = new MapCrsh(-1,this);
 
     }
 
@@ -41,22 +41,15 @@ public class MainGameScene extends SceneCrsh{
     }
 
     /**
-     * Draws the menu
+     * Draws the main game
      * @param c the canvas to draw
      */
     @Override
     public void draw(Canvas c){
         //General background
-        int reference = screenHeight/SCREEN_COLUMNS;
         c.drawColor(Color.WHITE);
-        for(int i=2;i<=SCREEN_COLUMNS-3;i++){
-            for(int j=2;j<=SCREEN_ROWS-4;j++){
-                if(!(i%2==0 && j==2)){
-                    pTiles.setColor(pTiles.getColor()==Color.RED?Color.GREEN:Color.RED);
-                }
-                c.drawRect(new Rect(screenWidth/SCREEN_COLUMNS*i,screenHeight/SCREEN_ROWS*j,screenWidth/SCREEN_COLUMNS*i+reference,screenHeight/SCREEN_ROWS*j+reference),pTiles);
-            }
-        }
+        //Grid test (IT WORKS, on my phone at least)
+        mapLoad.draw(c);
         backBtn.draw(c);
     }
 
