@@ -11,8 +11,8 @@ import android.graphics.Paint;
  */
 public class MapCrsh {
 
-    private int SCREEN_COLUMNS = 18;
-    private int SCREEN_ROWS = 9;
+    private int SCREEN_COLUMNS = 32;
+    private int SCREEN_ROWS = 16;
     private Paint pTiles;
     private MainGameScene gameRef;
     public int mapID;
@@ -34,12 +34,12 @@ public class MapCrsh {
     public void draw(Canvas c){
         if(this.mapID==-1){
             pTiles = new Paint();
-            int reference = gameRef.screenHeight/SCREEN_ROWS;
+            int reference = gameRef.screenWidth/SCREEN_COLUMNS;
             boolean redFirst = true;
             pTiles.setColor(Color.GREEN);
             //Grid test (IT WORKS, on my phone at least)
-            for(int i=0;i<SCREEN_ROWS;i++){
-                for(int j=0;j<SCREEN_COLUMNS;j++){
+            for(int i=1;i<SCREEN_ROWS-1;i++){
+                for(int j=2;j<SCREEN_COLUMNS-2;j++){
                     pTiles.setColor(pTiles.getColor()==Color.GREEN?Color.RED:Color.GREEN);
                     c.drawRect(j*reference,i*reference,(j+1)*reference,(i+1)*reference,pTiles);
                 }
