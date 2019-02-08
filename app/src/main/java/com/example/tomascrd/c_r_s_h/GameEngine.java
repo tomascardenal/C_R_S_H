@@ -156,6 +156,8 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
          */
         @Override
         public void run() {
+            long timeRef = System.nanoTime();
+            long timeSleep = 0;
             while (gameWorking) {
                 Canvas c = null;
                 try {
@@ -175,6 +177,18 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
                     }
                 }
             }
+            //FPS control
+            timeRef += GameConstants.TIME_FRAGMENT;
+            timeSleep = timeRef - System.nanoTime();
+
+            if(timeSleep>0){
+                try{
+                    Thread.sleep(timeSleep/1000000);
+                }catch(InterruptedException e){
+                    Log.e("GameEngine error",e.getLocalizedMessage());
+                }
+            }
+
         }
 
         /**
