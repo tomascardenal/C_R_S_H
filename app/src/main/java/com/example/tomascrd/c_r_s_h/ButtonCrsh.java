@@ -37,12 +37,12 @@ public class ButtonCrsh extends DrawableComponent {
     protected String text;
 
     /**
-     * Painter for the button
+     * Paint object for the button
      */
     protected Paint pButton;
 
     /**
-     * Painter for the text
+     * Paint object for the text
      */
     protected Paint pText;
 

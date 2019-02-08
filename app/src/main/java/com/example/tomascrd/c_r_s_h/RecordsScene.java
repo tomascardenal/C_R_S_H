@@ -15,13 +15,14 @@ import android.view.MotionEvent;
  */
 public class RecordsScene extends SceneCrsh{
 
-    private int SCREEN_COLUMNS = 18;
-    private int SCREEN_ROWS = 8;
+    /**
+     * Paint object for text
+     */
     Paint pText;
 
 
     /**
-     * Starts a main menu
+     * Starts a records screen
      * @param context the application context
      * @param id this scene's id (0 is recommended by default for the main menu)
      * @param screenWidth this screen's width
@@ -34,7 +35,7 @@ public class RecordsScene extends SceneCrsh{
         pText.setTypeface(Typeface.createFromAsset(context.getAssets(),"KarmaFuture.ttf"));
         pText.setColor(Color.BLACK);
         pText.setTextAlign(Paint.Align.CENTER);
-        pText.setTextSize((float) ((screenHeight/SCREEN_COLUMNS)*2.5));
+        pText.setTextSize((float) ((screenHeight/GameConstants.MENUSCREEN_COLUMNS)*2.5));
     }
 
     /**
@@ -46,7 +47,7 @@ public class RecordsScene extends SceneCrsh{
     }
 
     /**
-     * Draws the menu
+     * Draws the records
      * @param c the canvas to draw
      */
     @Override
@@ -54,7 +55,7 @@ public class RecordsScene extends SceneCrsh{
         //General background
         c.drawColor(Color.GREEN);
         //Test text
-        c.drawText(context.getString(R.string.btnRecords),screenWidth/SCREEN_COLUMNS*9,screenHeight/SCREEN_ROWS*2,pText);
+        c.drawText(context.getString(R.string.btnRecords),screenWidth/GameConstants.MENUSCREEN_COLUMNS*9,screenHeight/GameConstants.MENUSCREEN_ROWS*2,pText);
 
         backBtn.draw(c);
 

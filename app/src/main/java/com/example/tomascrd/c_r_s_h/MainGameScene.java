@@ -16,8 +16,9 @@ import android.view.MotionEvent;
  */
 public class MainGameScene extends SceneCrsh{
 
-    private int SCREEN_COLUMNS = 18;
-    private int SCREEN_ROWS = 9;
+    /**
+     * Map to load on the main game scene
+     */
     private MapCrsh mapLoad;
 
     /**
@@ -30,7 +31,6 @@ public class MainGameScene extends SceneCrsh{
     public MainGameScene(Context context, int id, int screenWidth, int screenHeight) {
         super(context, id, screenWidth, screenHeight);
         mapLoad = new MapCrsh(-1,this);
-
     }
 
     /**

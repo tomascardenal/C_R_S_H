@@ -16,13 +16,8 @@ import android.view.MotionEvent;
 public class OptionsScene extends SceneCrsh{
 
     /**
-     * Number of columns on screen for measure reference
+     * Paint object for text
      */
-    private int SCREEN_COLUMNS = 18;
-    /**
-     * Number of rows on screen for measure reference
-     */
-    private int SCREEN_ROWS = 8;
     Paint pText;
 
 
@@ -40,7 +35,7 @@ public class OptionsScene extends SceneCrsh{
         pText.setTypeface(Typeface.createFromAsset(context.getAssets(),"KarmaFuture.ttf"));
         pText.setColor(Color.BLACK);
         pText.setTextAlign(Paint.Align.CENTER);
-        pText.setTextSize((float) ((screenHeight/SCREEN_COLUMNS)*2.5));
+        pText.setTextSize((float) ((screenHeight/GameConstants.MENUSCREEN_COLUMNS)*2.5));
     }
 
     /**
@@ -52,7 +47,7 @@ public class OptionsScene extends SceneCrsh{
     }
 
     /**
-     * Draws the menu
+     * Draws the options menu
      * @param c the canvas to draw
      */
     @Override
@@ -61,7 +56,7 @@ public class OptionsScene extends SceneCrsh{
         c.drawColor(Color.GREEN);
 
         //Test text
-        c.drawText(context.getString(R.string.btnOptions),screenWidth/SCREEN_COLUMNS*9,screenHeight/SCREEN_ROWS*2,pText);
+        c.drawText(context.getString(R.string.btnOptions),screenWidth/GameConstants.MENUSCREEN_COLUMNS*9,screenHeight/GameConstants.MENUSCREEN_ROWS*2,pText);
 
         backBtn.draw(c);
 

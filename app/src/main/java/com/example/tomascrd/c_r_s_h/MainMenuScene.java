@@ -16,11 +16,22 @@ import android.view.MotionEvent;
  */
 public class MainMenuScene extends SceneCrsh {
 
-    private final int SCREEN_COLUMNS = 18;
-    private final int SCREEN_ROWS = 8;
+    /**
+     * Reference to backgrounds for parallax
+     */
     private final int[] mipmapBackgrounds = {R.mipmap.paramount1, R.mipmap.paramount2, R.mipmap.paramount3};
+    /**
+     * Paint object for text
+     */
     Paint pText;
+    /**
+     * Array to store the backgrounds
+     */
     ParallaxBackground parallaxBackgrounds[];
+
+    /**
+     * Buttons
+     */
     ButtonCrsh btnNewGame, btnOptions, btnRecords, btnCredits, btnTutorial;
 
 
@@ -39,7 +50,7 @@ public class MainMenuScene extends SceneCrsh {
         pText.setTypeface(Typeface.createFromAsset(context.getAssets(), "KarmaFuture.ttf"));
         pText.setColor(Color.BLACK);
         pText.setTextAlign(Paint.Align.CENTER);
-        pText.setTextSize((float) ((screenHeight / SCREEN_COLUMNS) * 2.5));
+        pText.setTextSize((float) ((screenHeight / GameConstants.MENUSCREEN_COLUMNS) * 2.5));
 
         //Parallax Backgrounds
         parallaxBackgrounds = new ParallaxBackground[3];
@@ -51,42 +62,42 @@ public class MainMenuScene extends SceneCrsh {
         btnNewGame = new ButtonCrsh(context,
                 Typeface.createFromAsset(context.getAssets(), "homespun.ttf"),
                 context.getString(R.string.btnPlay),
-                screenWidth / SCREEN_COLUMNS * 7,
-                screenHeight / SCREEN_ROWS * 3,
-                screenWidth / SCREEN_COLUMNS * 11,
-                screenHeight / SCREEN_ROWS * 4);
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 7,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 3,
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 11,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 4);
 
         btnOptions = new ButtonCrsh(context,
                 Typeface.createFromAsset(context.getAssets(), "homespun.ttf"),
                 context.getString(R.string.btnOptions),
-                screenWidth / SCREEN_COLUMNS,
-                screenHeight / SCREEN_ROWS * 5,
-                screenWidth / SCREEN_COLUMNS * 4,
-                screenHeight / SCREEN_ROWS * 6);
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 5,
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 4,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 6);
 
         btnCredits = new ButtonCrsh(context,
                 Typeface.createFromAsset(context.getAssets(), "homespun.ttf"),
                 context.getString(R.string.btnCredits),
-                screenWidth / SCREEN_COLUMNS * 5,
-                screenHeight / SCREEN_ROWS * 5,
-                screenWidth / SCREEN_COLUMNS * 8,
-                screenHeight / SCREEN_ROWS * 6);
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 5,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 5,
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 8,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 6);
 
         btnRecords = new ButtonCrsh(context,
                 Typeface.createFromAsset(context.getAssets(), "homespun.ttf"),
                 context.getString(R.string.btnRecords),
-                screenWidth / SCREEN_COLUMNS * 10,
-                screenHeight / SCREEN_ROWS * 5,
-                screenWidth / SCREEN_COLUMNS * 13,
-                screenHeight / SCREEN_ROWS * 6);
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 10,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 5,
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 13,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 6);
 
         btnTutorial = new ButtonCrsh(context,
                 Typeface.createFromAsset(context.getAssets(), "homespun.ttf"),
                 context.getString(R.string.btnTutorial),
-                screenWidth / SCREEN_COLUMNS * 14,
-                screenHeight / SCREEN_ROWS * 5,
-                screenWidth / SCREEN_COLUMNS * 17,
-                screenHeight / SCREEN_ROWS * 6);
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 14,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 5,
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 17,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 6);
 
     }
 
@@ -121,7 +132,7 @@ public class MainMenuScene extends SceneCrsh {
         }
 
         //Title
-        c.drawText("C_R_S_H", screenWidth / SCREEN_COLUMNS * 9, screenHeight / SCREEN_ROWS * 2, pText);
+        c.drawText("C_R_S_H", screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9, screenHeight / GameConstants.MENUSCREEN_ROWS * 2, pText);
 
         //Menu buttons
         btnNewGame.draw(c);

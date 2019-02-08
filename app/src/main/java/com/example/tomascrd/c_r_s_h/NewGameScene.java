@@ -15,8 +15,6 @@ import android.view.MotionEvent;
  */
 public class NewGameScene extends SceneCrsh{
 
-    private int SCREEN_COLUMNS = 18;
-    private int SCREEN_ROWS = 8;
     Paint pText;
     ButtonCrsh btnStartGame;
 
@@ -34,16 +32,16 @@ public class NewGameScene extends SceneCrsh{
         pText.setTypeface(Typeface.createFromAsset(context.getAssets(),"KarmaFuture.ttf"));
         pText.setColor(Color.BLACK);
         pText.setTextAlign(Paint.Align.CENTER);
-        pText.setTextSize((float) ((screenHeight/SCREEN_COLUMNS)*2.5));
+        pText.setTextSize((float) ((screenHeight/GameConstants.MENUSCREEN_COLUMNS)*2.5));
 
         //Buttons
         btnStartGame = new ButtonCrsh(context,
                 Typeface.createFromAsset(context.getAssets(), "homespun.ttf"),
                 context.getString(R.string.btnStartGame),
-                screenWidth / SCREEN_COLUMNS * 6,
-                screenHeight / SCREEN_ROWS * 6,
-                screenWidth / SCREEN_COLUMNS * 12,
-                screenHeight / SCREEN_ROWS * 7);
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 6,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 6,
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 12,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 7);
     }
 
     /**
@@ -64,7 +62,7 @@ public class NewGameScene extends SceneCrsh{
         c.drawColor(Color.GREEN);
 
         //Test text
-        c.drawText(context.getString(R.string.titleNewGame),screenWidth/SCREEN_COLUMNS*9,screenHeight/SCREEN_ROWS*2,pText);
+        c.drawText(context.getString(R.string.titleNewGame),screenWidth/GameConstants.MENUSCREEN_COLUMNS*9,screenHeight/ GameConstants.MENUSCREEN_ROWS *2,pText);
 
         backBtn.draw(c);
 

@@ -9,69 +9,36 @@ import android.view.WindowManager;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * Utilities and functions
+ *
+ * @author Tomás Cardenal López
+ */
 public class Utils {
+    /**
+     * The application's context
+     */
     Context context;
 
+    /**
+     * Starts a utils object on the given context
+     * @param context
+     */
     public Utils(Context context){
         this.context=context;
     }
 
-
-
-    int getPixels(float dp) {
-        DisplayMetrics metrics = new DisplayMetrics();
-        ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getMetrics(metrics);
-        return (int)(dp*metrics.density);
-    }
-
-
-    public Bitmap escalaAnchura(int res, int nuevoAncho) {
-        Bitmap bitmapAux=BitmapFactory.decodeResource(context.getResources(), res);
-        if (nuevoAncho==bitmapAux.getWidth()) return bitmapAux;
-        return Bitmap.createScaledBitmap(bitmapAux, nuevoAncho, (bitmapAux.getHeight() * nuevoAncho) / bitmapAux.getWidth(), true);
-    }
-
-    public  Bitmap escalaAltura(int res, int nuevoAlto ) {
-        Bitmap bitmapAux=BitmapFactory.decodeResource(context.getResources(), res);
-        if (nuevoAlto==bitmapAux.getHeight()) return bitmapAux;
-        return Bitmap.createScaledBitmap(bitmapAux, (bitmapAux.getWidth() * nuevoAlto) / bitmapAux.getHeight(), nuevoAlto, true);
-    }
-
-    public  Bitmap escalaAnchura(String fichero, int nuevoAncho) {
-        Bitmap bitmapAux=getBitmapFromAssets(fichero);
-        if (nuevoAncho==bitmapAux.getWidth()) return bitmapAux;
-        return Bitmap.createScaledBitmap(bitmapAux, nuevoAncho, (bitmapAux.getHeight() * nuevoAncho) / bitmapAux.getWidth(), true);
-    }
-
-    public  Bitmap escalaAltura(String fichero, int nuevoAlto ) {
-        Bitmap bitmapAux=getBitmapFromAssets(fichero);
-        if (nuevoAlto==bitmapAux.getHeight()) return bitmapAux;
-        return Bitmap.createScaledBitmap(bitmapAux, (bitmapAux.getWidth() * nuevoAlto) / bitmapAux.getHeight(), nuevoAlto, true);
-    }
-
-    public Bitmap[] getFrames(int numImg, String dir, String tag, int width){
-        Bitmap[] aux=new Bitmap[numImg];
-        for (int i=0;i<numImg;i++) aux[i]=escalaAnchura(dir+"/"+tag+" ("+(i+1)+").png",width);
-        return aux;
-    }
-
-
-    public Bitmap getBitmapFromAssets(String fichero) {
+    /**
+     * Parses a bitmap from assets
+     * @param file
+     * @return
+     */
+    public Bitmap getBitmapFromAssets(String file) {
         try {
-            InputStream is=context.getAssets().open(fichero);
+            InputStream is=context.getAssets().open(file);
             return BitmapFactory.decodeStream(is);
         } catch (IOException e) {
             return null;
         }
     }
-
-    /* 1280x775
-    public int getDpW(int pixels){
-        return (int)((pixels/12.8)*PantallaInicioView.anchoPantalla)/100;
-    }
-
-    // 1280x775
-    public int getDpH(int pixels){
-        return (int)((pixels/7.75)*PantallaInicioView.altoPantalla)/100;
-    }*/
 }
