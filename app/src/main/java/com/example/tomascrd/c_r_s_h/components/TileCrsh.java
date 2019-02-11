@@ -18,6 +18,9 @@ public class TileCrsh extends DrawableComponent {
      * Painter for test maps
      */
     public Paint testPaint;
+    /**
+     * This tile's type
+     */
     protected TILE_TYPE tileType;
     /**
      * This tile's collision rectangle

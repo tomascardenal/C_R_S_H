@@ -9,15 +9,8 @@ import android.graphics.Rect;
  *
  * @author Tomás Cardenal López
  */
-public class CircleComponent {
-    /**
-     * The x position of this circle
-     */
-    public float xPos;
-    /**
-     * The y position of this circle
-     */
-    public float yPos;
+public class CircleComponent extends DrawableComponent {
+
     /**
      * The radius of this circle
      */
@@ -42,14 +35,22 @@ public class CircleComponent {
     }
 
     /**
-     * Draws the circle on the wanted color
+     * Draws the circle
      *
-     * @param c     the canvas to draw
-     * @param color the color for the circle
+     * @param c the canvas to draw
      */
-    public void draw(Canvas c, int color) {
-        this.circlePaint.setColor(color);
+    @Override
+    public void draw(Canvas c) {
         c.drawCircle(xPos, yPos, radius, circlePaint);
+    }
+
+    /**
+     * Sets the color for this circle's painter
+     *
+     * @param color the color
+     */
+    public void setColor(int color) {
+        this.circlePaint.setColor(color);
     }
 
     /**
