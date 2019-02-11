@@ -27,39 +27,41 @@ public class RecordsScene extends SceneCrsh {
 
     /**
      * Starts a records screen
-     * @param context the application context
-     * @param id this scene's id (0 is recommended by default for the main menu)
-     * @param screenWidth this screen's width
+     *
+     * @param context      the application context
+     * @param id           this scene's id (0 is recommended by default for the main menu)
+     * @param screenWidth  this screen's width
      * @param screenHeight this screen's height
      */
     public RecordsScene(Context context, int id, int screenWidth, int screenHeight) {
         super(context, id, screenWidth, screenHeight);
         //Title text
         pText = new Paint();
-        pText.setTypeface(Typeface.createFromAsset(context.getAssets(),"KarmaFuture.ttf"));
+        pText.setTypeface(Typeface.createFromAsset(context.getAssets(), "KarmaFuture.ttf"));
         pText.setColor(Color.BLACK);
         pText.setTextAlign(Paint.Align.CENTER);
-        pText.setTextSize((float) ((screenHeight/GameConstants.MENUSCREEN_COLUMNS)*2.5));
+        pText.setTextSize((float) ((screenHeight / GameConstants.MENUSCREEN_COLUMNS) * 2.5));
     }
 
     /**
      * Updates the physics of the elements on the screen
      */
     @Override
-    public void updatePhysics(){
+    public void updatePhysics() {
 
     }
 
     /**
      * Draws the records
+     *
      * @param c the canvas to draw
      */
     @Override
-    public void draw(Canvas c){
+    public void draw(Canvas c) {
         //General background
         c.drawColor(Color.GREEN);
         //Test text
-        c.drawText(context.getString(R.string.btnRecords),screenWidth/GameConstants.MENUSCREEN_COLUMNS*9,screenHeight/GameConstants.MENUSCREEN_ROWS*2,pText);
+        c.drawText(context.getString(R.string.btnRecords), screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9, screenHeight / GameConstants.MENUSCREEN_ROWS * 2, pText);
 
         backBtn.draw(c);
 
@@ -67,10 +69,11 @@ public class RecordsScene extends SceneCrsh {
 
     /**
      * Controls the events on the touchscreen
+     *
      * @param event the touch event
      * @return the pointerId;
      */
-    public int onTouchEvent (MotionEvent event){
+    public int onTouchEvent(MotionEvent event) {
         int pointerIndex = event.getActionIndex();
         int pointerID = event.getPointerId(pointerIndex);
         int action = event.getActionMasked();
@@ -81,13 +84,14 @@ public class RecordsScene extends SceneCrsh {
 
             case MotionEvent.ACTION_UP:                     // Last finger up
             case MotionEvent.ACTION_POINTER_UP:  // Any other finger up
-                if(isClick(backBtn,event)){
+                if (isClick(backBtn, event)) {
                     return 0;
                 }
             case MotionEvent.ACTION_MOVE: // Any finger moves
 
                 break;
-            default:  Log.i("Other", "Undefined action: "+action);
+            default:
+                Log.i("Other", "Undefined action: " + action);
         }
         return this.id;
     }

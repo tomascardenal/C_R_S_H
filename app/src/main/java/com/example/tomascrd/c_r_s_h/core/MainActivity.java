@@ -15,6 +15,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Controls the actions when this activity gets created
+     *
      * @param savedInstanceState the last saved state
      */
     @Override

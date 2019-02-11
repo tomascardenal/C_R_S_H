@@ -22,9 +22,10 @@ public abstract class DrawableComponent {
 
     /**
      * Draws the components on screen
+     *
      * @param c the canvas to draw
      */
-    public void draw(Canvas c){
+    public void draw(Canvas c) {
         //Override this method on inheritance
     }
 }

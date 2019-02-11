@@ -80,22 +80,22 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
                         currentScene = new MainMenuScene(context, newScene, screenWidth, screenHeight);
                         break;
                     case 1:
-                        currentScene = new NewGameScene(context, newScene, screenWidth,screenHeight);
+                        currentScene = new NewGameScene(context, newScene, screenWidth, screenHeight);
                         break;
                     case 2:
-                        currentScene = new OptionsScene(context, newScene, screenWidth,screenHeight);
+                        currentScene = new OptionsScene(context, newScene, screenWidth, screenHeight);
                         break;
                     case 3:
-                        currentScene = new CreditScene(context, newScene, screenWidth,screenHeight);
+                        currentScene = new CreditScene(context, newScene, screenWidth, screenHeight);
                         break;
                     case 4:
-                        currentScene = new RecordsScene(context, newScene, screenWidth,screenHeight);
+                        currentScene = new RecordsScene(context, newScene, screenWidth, screenHeight);
                         break;
                     case 5:
-                        currentScene = new TutorialScene(context, newScene, screenWidth,screenHeight);
+                        currentScene = new TutorialScene(context, newScene, screenWidth, screenHeight);
                         break;
                     case 99:
-                        currentScene = new MainGameScene(context, newScene, screenWidth,screenHeight);
+                        currentScene = new MainGameScene(context, newScene, screenWidth, screenHeight);
                         break;
                 }
             }
@@ -174,7 +174,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
                         continue;
                     }
                     c = surfaceHolder.lockCanvas();
-                    if(c!=null){
+                    if (c != null) {
                         synchronized (surfaceHolder) {
                             currentScene.updatePhysics();
                             currentScene.draw(c);
@@ -190,11 +190,11 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
             timeRef += GameConstants.TIME_FRAGMENT;
             timeSleep = timeRef - System.nanoTime();
 
-            if(timeSleep>0){
-                try{
-                    Thread.sleep(timeSleep/1000000);
-                }catch(InterruptedException e){
-                    Log.e("GameEngine error",e.getLocalizedMessage());
+            if (timeSleep > 0) {
+                try {
+                    Thread.sleep(timeSleep / 1000000);
+                } catch (InterruptedException e) {
+                    Log.e("GameEngine error", e.getLocalizedMessage());
                 }
             }
 

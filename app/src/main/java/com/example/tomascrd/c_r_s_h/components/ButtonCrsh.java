@@ -48,14 +48,15 @@ public class ButtonCrsh extends DrawableComponent {
 
     /**
      * Creates a Button with the given parameters and gray background color
+     *
      * @param context the context
-     * @param text the text within the button
-     * @param xPos the button's x position
-     * @param yPos the button's y position
-     * @param xRight the button's bottom right corner x position
+     * @param text    the text within the button
+     * @param xPos    the button's x position
+     * @param yPos    the button's y position
+     * @param xRight  the button's bottom right corner x position
      * @param yBottom the button's bottom right corner y position
      */
-    public ButtonCrsh (Context context, Typeface font,String text,int xPos, int yPos, int xRight, int yBottom){
+    public ButtonCrsh(Context context, Typeface font, String text, int xPos, int yPos, int xRight, int yBottom) {
         this.context = context;
         this.text = text;
         this.xPos = xPos;
@@ -68,38 +69,40 @@ public class ButtonCrsh extends DrawableComponent {
         pButton = new Paint();
         pButton.setColor(Color.GRAY);
         pText = new Paint();
-        if(font != null){
+        if (font != null) {
             pText.setTypeface(font);
-        }else{
+        } else {
             pText.setTypeface(Typeface.DEFAULT_BOLD);
         }
         pText.setColor(Color.BLACK);
         pText.setTextAlign(Paint.Align.CENTER);
-        pText.setTextSize(btnRect.height()/2);
+        pText.setTextSize(btnRect.height() / 2);
     }
 
     /**
      * Creates a Button with the given parameters, a background color must be given
-     * @param context the context
-     * @param text the text within the button
-     * @param xPos the button's x position
-     * @param yPos the button's y position
-     * @param xRight the button's bottom right corner x position
-     * @param yBottom the button's bottom right corner y position
+     *
+     * @param context    the context
+     * @param text       the text within the button
+     * @param xPos       the button's x position
+     * @param yPos       the button's y position
+     * @param xRight     the button's bottom right corner x position
+     * @param yBottom    the button's bottom right corner y position
      * @param background the button's background color
      */
-    public ButtonCrsh (Context context, Typeface font,String text,int xPos, int yPos, int xRight, int yBottom, int background){
-        this(context,font,text,xPos,yPos,xRight,yBottom);
+    public ButtonCrsh(Context context, Typeface font, String text, int xPos, int yPos, int xRight, int yBottom, int background) {
+        this(context, font, text, xPos, yPos, xRight, yBottom);
         pButton.setColor(background);
     }
 
     /**
      * Draws the button on the screen
+     *
      * @param c the canvas to draw
      */
     @Override
-    public void draw(Canvas c){
-        c.drawRect(btnRect,pButton);
-        c.drawText(text,btnRect.centerX(),btnRect.centerY()+ height/6, pText);
+    public void draw(Canvas c) {
+        c.drawRect(btnRect, pButton);
+        c.drawText(text, btnRect.centerX(), btnRect.centerY() + height / 6, pText);
     }
 }

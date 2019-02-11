@@ -14,6 +14,10 @@ import android.graphics.Rect;
  */
 public class TileCrsh extends DrawableComponent {
 
+    /**
+     * Painter for test maps
+     */
+    public Paint testPaint;
     protected TILE_TYPE tileType;
     /**
      * This tile's collision rectangle
@@ -23,10 +27,6 @@ public class TileCrsh extends DrawableComponent {
      * This tile's bitmap
      */
     protected Bitmap tileImage;
-    /**
-     * Painter for test maps
-     */
-    public Paint testPaint;
     /**
      * Tile side length reference
      */
@@ -42,43 +42,25 @@ public class TileCrsh extends DrawableComponent {
      * @param yPos     the tile's Y position
      * @param tileType this tile's type
      */
-    public TileCrsh(Context context, int drawable, int xPos, int yPos, int xBottom, int yBottom,TILE_TYPE tileType) {
+    public TileCrsh(Context context, int drawable, int xPos, int yPos, int xBottom, int yBottom, TILE_TYPE tileType) {
         this.context = context;
         this.xPos = xPos;
         this.yPos = yPos;
         this.xBottom = xBottom;
         this.yBottom = yBottom;
         this.tileType = tileType;
-        this.collisionRect = new Rect(xPos,yPos,xBottom,yBottom);
+        this.collisionRect = new Rect(xPos, yPos, xBottom, yBottom);
         this.testPaint = new Paint();
         setPainter();
 
     }
 
     /**
-     * Sets the painter color (for test maps only)
-     */
-    public void setPainter(){
-        switch(this.tileType){
-            case TILE_BORDER:
-                testPaint.setColor(Color.BLACK);
-                break;
-            case TILE_PATH:
-                testPaint.setColor(Color.GREEN);
-                break;
-            case TILE_BREAKONE:
-                testPaint.setColor(Color.BLUE);
-                break;
-            case TILE_BREAKTWO:
-                testPaint.setColor(Color.RED);
-        }
-    }
-
-    /**
      * Converts integers to TILE_TYPE
-     * @see TILE_TYPE
+     *
      * @param tileType the TILE_TYPE to convert
      * @return the corresponding integer
+     * @see TILE_TYPE
      */
     public static int tileTypeToInt(TILE_TYPE tileType) {
         switch (tileType) {
@@ -97,9 +79,10 @@ public class TileCrsh extends DrawableComponent {
 
     /**
      * Converts TILE_TYPEs to integer
-     * @see TILE_TYPE
+     *
      * @param tileType the integer to convert
      * @return the corresponding TILE_TYPE
+     * @see TILE_TYPE
      */
     public static TILE_TYPE intToTileType(int tileType) {
         switch (tileType) {
@@ -113,6 +96,25 @@ public class TileCrsh extends DrawableComponent {
                 return TILE_TYPE.TILE_BREAKTWO;
             default:
                 return null;
+        }
+    }
+
+    /**
+     * Sets the painter color (for test maps only)
+     */
+    public void setPainter() {
+        switch (this.tileType) {
+            case TILE_BORDER:
+                testPaint.setColor(Color.BLACK);
+                break;
+            case TILE_PATH:
+                testPaint.setColor(Color.GREEN);
+                break;
+            case TILE_BREAKONE:
+                testPaint.setColor(Color.BLUE);
+                break;
+            case TILE_BREAKTWO:
+                testPaint.setColor(Color.RED);
         }
     }
 

@@ -40,9 +40,10 @@ public class SceneCrsh {
 
     /**
      * Starts a new scene
-     * @param context the scene's context
-     * @param id the scene's id
-     * @param screenWidth the screen width
+     *
+     * @param context      the scene's context
+     * @param id           the scene's id
+     * @param screenWidth  the screen width
      * @param screenHeight the screen height
      */
     public SceneCrsh(Context context, int id, int screenWidth, int screenHeight) {
@@ -50,13 +51,14 @@ public class SceneCrsh {
         this.id = id;
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
-        if(backBtn==null){
-            backBtn = new ButtonCrsh(context, Typeface.createFromAsset(context.getAssets(), "fa-solid-900.ttf"), context.getString(R.string.btnBack),screenWidth-screenWidth/16,0,screenWidth,screenWidth/16, Color.TRANSPARENT);
+        if (backBtn == null) {
+            backBtn = new ButtonCrsh(context, Typeface.createFromAsset(context.getAssets(), "fa-solid-900.ttf"), context.getString(R.string.btnBack), screenWidth - screenWidth / 16, 0, screenWidth, screenWidth / 16, Color.TRANSPARENT);
         }
     }
 
     /**
      * Controls touchscreen events and the actions to take if necessary
+     *
      * @param event the touchscreen event
      * @return this scene's id or the corresponding new id
      */
@@ -74,6 +76,7 @@ public class SceneCrsh {
 
     /**
      * Draws the components
+     *
      * @param c the canvas to draw
      */
     public void draw(Canvas c) {
@@ -82,7 +85,8 @@ public class SceneCrsh {
 
     /**
      * Determines if a rectangle on a button is clicked
-     * @param btn the button
+     *
+     * @param btn   the button
      * @param event the motion event detected
      * @return true if the button was clicked
      */
@@ -92,6 +96,7 @@ public class SceneCrsh {
 
     /**
      * Gives back this context
+     *
      * @return the context
      */
     public Context getContext() {
@@ -100,6 +105,7 @@ public class SceneCrsh {
 
     /**
      * Sets this scene's context
+     *
      * @param context the context to set
      */
     public void setContext(Context context) {
@@ -108,6 +114,7 @@ public class SceneCrsh {
 
     /**
      * Gets this scene's id
+     *
      * @return the id
      */
     public int getId() {
@@ -116,6 +123,7 @@ public class SceneCrsh {
 
     /**
      * Gives this scene an id
+     *
      * @param id the new id
      */
     public void setId(int id) {
@@ -124,6 +132,7 @@ public class SceneCrsh {
 
     /**
      * Gets this screen's width
+     *
      * @return the width
      */
     public int getScreenWidth() {
@@ -132,6 +141,7 @@ public class SceneCrsh {
 
     /**
      * Sets this screen's width
+     *
      * @param screenWidth the new width
      */
     public void setScreenWidth(int screenWidth) {
@@ -140,6 +150,7 @@ public class SceneCrsh {
 
     /**
      * Gets this screens height
+     *
      * @return the height
      */
     public int getScreenHeight() {
@@ -148,6 +159,7 @@ public class SceneCrsh {
 
     /**
      * Sets this screen's height
+     *
      * @param screenHeight the new height
      */
     public void setScreenHeight(int screenHeight) {
@@ -156,6 +168,7 @@ public class SceneCrsh {
 
     /**
      * Gets the background image from this scene
+     *
      * @return the background image
      */
     public Bitmap getBackImage() {
@@ -164,6 +177,7 @@ public class SceneCrsh {
 
     /**
      * Sets a new background image for this scene
+     *
      * @param backImage the new background image
      */
     public void setBackImage(Bitmap backImage) {

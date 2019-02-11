@@ -22,20 +22,22 @@ public class Utils {
 
     /**
      * Starts a utils object on the given context
+     *
      * @param context
      */
-    public Utils(Context context){
-        this.context=context;
+    public Utils(Context context) {
+        this.context = context;
     }
 
     /**
      * Parses a bitmap from assets
+     *
      * @param file
      * @return
      */
     public Bitmap getBitmapFromAssets(String file) {
         try {
-            InputStream is=context.getAssets().open(file);
+            InputStream is = context.getAssets().open(file);
             return BitmapFactory.decodeStream(is);
         } catch (IOException e) {
             return null;

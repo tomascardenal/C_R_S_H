@@ -23,29 +23,31 @@ public class MainGameScene extends SceneCrsh {
 
     /**
      * Starts a new main game
-     * @param context the application context
-     * @param id this scene's id (0 is recommended by default for the main menu)
-     * @param screenWidth this screen's width
+     *
+     * @param context      the application context
+     * @param id           this scene's id (0 is recommended by default for the main menu)
+     * @param screenWidth  this screen's width
      * @param screenHeight this screen's height
      */
     public MainGameScene(Context context, int id, int screenWidth, int screenHeight) {
         super(context, id, screenWidth, screenHeight);
-        mapLoad = new MapCrsh(666,this);
+        mapLoad = new MapCrsh(666, this);
     }
 
     /**
      * Updates the physics of the elements on the screen
      */
     @Override
-    public void updatePhysics(){
+    public void updatePhysics() {
     }
 
     /**
      * Draws the main game
+     *
      * @param c the canvas to draw
      */
     @Override
-    public void draw(Canvas c){
+    public void draw(Canvas c) {
         //General background
         c.drawColor(Color.WHITE);
         //Grid test (IT WORKS, on my phone at least)
@@ -55,10 +57,11 @@ public class MainGameScene extends SceneCrsh {
 
     /**
      * Controls the events on the touchscreen
+     *
      * @param event the touch event
      * @return the pointerId;
      */
-    public int onTouchEvent (MotionEvent event){
+    public int onTouchEvent(MotionEvent event) {
         int pointerIndex = event.getActionIndex();
         int pointerID = event.getPointerId(pointerIndex);
         int action = event.getActionMasked();
@@ -69,13 +72,14 @@ public class MainGameScene extends SceneCrsh {
 
             case MotionEvent.ACTION_UP:                     // Last finger up
             case MotionEvent.ACTION_POINTER_UP:  // Any other finger up
-                if(isClick(backBtn,event)){
+                if (isClick(backBtn, event)) {
                     return 0;
                 }
             case MotionEvent.ACTION_MOVE: // Any finger moves
 
                 break;
-            default:  Log.i("Other", "Undefined action: "+action);
+            default:
+                Log.i("Other", "Undefined action: " + action);
         }
         return this.id;
     }
@@ -83,7 +87,7 @@ public class MainGameScene extends SceneCrsh {
     /**
      * Parses the map
      */
-    public void mapParser(){
+    public void mapParser() {
 
     }
 }

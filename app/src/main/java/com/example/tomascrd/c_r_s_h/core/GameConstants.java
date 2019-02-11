@@ -17,7 +17,7 @@ public final class GameConstants {
     /**
      * Time fragment to repeat
      */
-    public static int TIME_FRAGMENT = TPS/FPS;
+    public static int TIME_FRAGMENT = TPS / FPS;
     /**
      * Rows on a game screen
      */
