@@ -119,6 +119,7 @@ public class MapCrsh {
     /**
      * Loads a map from files with the corresponding mapID
      * @param mapID the mapID to load
+     * @returns a boolean depicting if the loading was successful
      */
     public boolean loadMap(int mapID){
         this.mapArray = new TileCrsh.TILE_TYPE[GameConstants.MAPAREA_ROWS][GameConstants.MAPAREA_COLUMNS];
@@ -139,8 +140,10 @@ public class MapCrsh {
 
     /**
      * Saves a map into local files with the mapID of the current instance
+     *
+     * @returns a boolean depicting if the saving was successful
      */
-    public void saveMap(){
+    public boolean saveMap(){
         Log.i("Saving map","Saving map");
         if(this.mapID!=-1&&mapArray!=null){
             try(FileOutputStream fos = gameRef.context.openFileOutput(mapID+GameConstants.MAPFILE_NAME, Context.MODE_PRIVATE)){
@@ -153,7 +156,11 @@ public class MapCrsh {
                 }
             }catch (IOException e){
                 Log.e("SaveMap error",e.getLocalizedMessage());
+                return false;
             }
+            return true;
+        }else{
+            return false;
         }
     }
 }
