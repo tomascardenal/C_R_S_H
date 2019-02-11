@@ -43,7 +43,10 @@ public class MapCrsh {
         this.reference = gameRef.screenWidth/GameConstants.GAMESCREEN_COLUMNS;
         this.hReference = (gameRef.screenHeight-reference*GameConstants.GAMESCREEN_ROWS)/2;
         if(mapID==666){
-            //loadMap(666);
+            if(!loadMap(666)){
+                mapArray = testMap();
+                saveMap();
+            }
         }
     }
 
@@ -93,20 +96,20 @@ public class MapCrsh {
      * Returns an array for a test map
      * @return the test map
      */
-    private int[][] testMap(){
+    private TileCrsh.TILE_TYPE[][] testMap(){
         Log.i("Loading test map","Loading test  map");
         this.mapID = 666;
-        int[][] testArray = new int[GameConstants.MAPAREA_ROWS][GameConstants.MAPAREA_COLUMNS];
+        TileCrsh.TILE_TYPE[][] testArray = new TileCrsh.TILE_TYPE[GameConstants.MAPAREA_ROWS][GameConstants.MAPAREA_COLUMNS];
         for(int i=0;i<testArray.length;i++){
             for(int j=0;j<testArray[i].length;j++){
                 if(i==0||i==testArray.length-1||j==0||j==testArray[i].length-1){
-                    testArray[i][j]=0;
+                    testArray[i][j]=TileCrsh.intToTileType(0);
                 }else if(i%3!=0){
-                    testArray[i][j]=1;
+                    testArray[i][j]=TileCrsh.intToTileType(1);
                 }else if(j%3==0){
-                    testArray[i][j]=2;
+                    testArray[i][j]=TileCrsh.intToTileType(2);
                 }else{
-                    testArray[i][j]=1;
+                    testArray[i][j]=TileCrsh.intToTileType(1);
                 }
             }
         }
@@ -117,7 +120,7 @@ public class MapCrsh {
      * Loads a map from files with the corresponding mapID
      * @param mapID the mapID to load
      */
-    public void loadMap(int mapID){
+    public boolean loadMap(int mapID){
         this.mapArray = new TileCrsh.TILE_TYPE[GameConstants.MAPAREA_ROWS][GameConstants.MAPAREA_COLUMNS];
         try(FileInputStream fis = gameRef.context.openFileInput(mapID+GameConstants.MAPFILE_NAME)){
             DataInputStream input = new DataInputStream(fis);
@@ -129,7 +132,9 @@ public class MapCrsh {
             }
         }catch(IOException e){
             Log.e("LoadMap error",e.getLocalizedMessage());
+            return false;
         }
+        return true;
     }
 
     /**

@@ -56,7 +56,7 @@ public class TileCrsh extends DrawableComponent {
     }
 
     /**
-     * Sets the painter color (for tests maps only)
+     * Sets the painter color (for test maps only)
      */
     public void setPainter(){
         switch(this.tileType){
