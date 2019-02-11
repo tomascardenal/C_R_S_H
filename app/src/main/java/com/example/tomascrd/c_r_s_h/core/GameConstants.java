@@ -1,4 +1,4 @@
-package com.example.tomascrd.c_r_s_h;
+package com.example.tomascrd.c_r_s_h.core;
 
 /**
  * Constants of common use in the whole game

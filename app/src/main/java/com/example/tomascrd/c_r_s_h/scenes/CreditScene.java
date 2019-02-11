@@ -1,36 +1,43 @@
-package com.example.tomascrd.c_r_s_h;
+package com.example.tomascrd.c_r_s_h.scenes;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.util.Log;
 import android.view.MotionEvent;
 
+import com.example.tomascrd.c_r_s_h.R;
+import com.example.tomascrd.c_r_s_h.components.SceneCrsh;
+
 /**
- * Represents the main game
+ * Scene which contains this game's credits
  *
  * @author Tomás Cardenal López
  */
-public class MainGameScene extends SceneCrsh{
+public class CreditScene extends SceneCrsh {
+
+    private int SCREEN_COLUMNS = 18;
+    private int SCREEN_ROWS = 8;
+    Paint pText;
+
 
     /**
-     * Map to load on the main game scene
-     */
-    private MapCrsh mapLoad;
-
-    /**
-     * Starts a new main game
+     * Starts a credits scene
      * @param context the application context
      * @param id this scene's id (0 is recommended by default for the main menu)
      * @param screenWidth this screen's width
      * @param screenHeight this screen's height
      */
-    public MainGameScene(Context context, int id, int screenWidth, int screenHeight) {
+    public CreditScene(Context context, int id, int screenWidth, int screenHeight) {
         super(context, id, screenWidth, screenHeight);
-        mapLoad = new MapCrsh(-1,this);
+        //Title text
+        pText = new Paint();
+        pText.setTypeface(Typeface.createFromAsset(context.getAssets(),"KarmaFuture.ttf"));
+        pText.setColor(Color.BLACK);
+        pText.setTextAlign(Paint.Align.CENTER);
+        pText.setTextSize((float) ((screenHeight/SCREEN_COLUMNS)*2.5));
     }
 
     /**
@@ -38,19 +45,23 @@ public class MainGameScene extends SceneCrsh{
      */
     @Override
     public void updatePhysics(){
+
     }
 
     /**
-     * Draws the main game
+     * Draws the menu
      * @param c the canvas to draw
      */
     @Override
     public void draw(Canvas c){
         //General background
-        c.drawColor(Color.WHITE);
-        //Grid test (IT WORKS, on my phone at least)
-        mapLoad.draw(c);
+        c.drawColor(Color.GREEN);
+
+        //Test text
+        c.drawText(context.getString(R.string.btnCredits),screenWidth/SCREEN_COLUMNS*9,screenHeight/SCREEN_ROWS*2,pText);
+
         backBtn.draw(c);
+
     }
 
     /**
@@ -79,11 +90,5 @@ public class MainGameScene extends SceneCrsh{
         }
         return this.id;
     }
-
-    /**
-     * Parses the map
-     */
-    public void mapParser(){
-
-    }
 }
+

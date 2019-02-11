@@ -1,47 +1,36 @@
-package com.example.tomascrd.c_r_s_h;
+package com.example.tomascrd.c_r_s_h.scenes;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Typeface;
 import android.util.Log;
 import android.view.MotionEvent;
 
+import com.example.tomascrd.c_r_s_h.components.MapCrsh;
+import com.example.tomascrd.c_r_s_h.components.SceneCrsh;
+
 /**
- * Represents the new game menu
+ * Represents the main game
  *
  * @author Tomás Cardenal López
  */
-public class NewGameScene extends SceneCrsh{
-
-    Paint pText;
-    ButtonCrsh btnStartGame;
+public class MainGameScene extends SceneCrsh {
 
     /**
-     * Starts a new game menu
+     * Map to load on the main game scene
+     */
+    private MapCrsh mapLoad;
+
+    /**
+     * Starts a new main game
      * @param context the application context
      * @param id this scene's id (0 is recommended by default for the main menu)
      * @param screenWidth this screen's width
      * @param screenHeight this screen's height
      */
-    public NewGameScene(Context context, int id, int screenWidth, int screenHeight) {
+    public MainGameScene(Context context, int id, int screenWidth, int screenHeight) {
         super(context, id, screenWidth, screenHeight);
-        //Title text
-        pText = new Paint();
-        pText.setTypeface(Typeface.createFromAsset(context.getAssets(),"KarmaFuture.ttf"));
-        pText.setColor(Color.BLACK);
-        pText.setTextAlign(Paint.Align.CENTER);
-        pText.setTextSize((float) ((screenHeight/GameConstants.MENUSCREEN_COLUMNS)*2.5));
-
-        //Buttons
-        btnStartGame = new ButtonCrsh(context,
-                Typeface.createFromAsset(context.getAssets(), "homespun.ttf"),
-                context.getString(R.string.btnStartGame),
-                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 6,
-                screenHeight / GameConstants.MENUSCREEN_ROWS * 6,
-                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 12,
-                screenHeight / GameConstants.MENUSCREEN_ROWS * 7);
+        mapLoad = new MapCrsh(-1,this);
     }
 
     /**
@@ -49,25 +38,19 @@ public class NewGameScene extends SceneCrsh{
      */
     @Override
     public void updatePhysics(){
-
     }
 
     /**
-     * Draws the menu
+     * Draws the main game
      * @param c the canvas to draw
      */
     @Override
     public void draw(Canvas c){
         //General background
-        c.drawColor(Color.GREEN);
-
-        //Test text
-        c.drawText(context.getString(R.string.titleNewGame),screenWidth/GameConstants.MENUSCREEN_COLUMNS*9,screenHeight/ GameConstants.MENUSCREEN_ROWS *2,pText);
-
+        c.drawColor(Color.WHITE);
+        //Grid test (IT WORKS, on my phone at least)
+        mapLoad.draw(c);
         backBtn.draw(c);
-
-        btnStartGame.draw(c);
-
     }
 
     /**
@@ -88,15 +71,19 @@ public class NewGameScene extends SceneCrsh{
             case MotionEvent.ACTION_POINTER_UP:  // Any other finger up
                 if(isClick(backBtn,event)){
                     return 0;
-                }else if(isClick(btnStartGame,event)){
-                    return 99;
                 }
-
             case MotionEvent.ACTION_MOVE: // Any finger moves
 
                 break;
             default:  Log.i("Other", "Undefined action: "+action);
         }
         return this.id;
+    }
+
+    /**
+     * Parses the map
+     */
+    public void mapParser(){
+
     }
 }

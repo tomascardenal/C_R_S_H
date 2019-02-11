@@ -1,4 +1,4 @@
-package com.example.tomascrd.c_r_s_h;
+package com.example.tomascrd.c_r_s_h.scenes;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
@@ -8,6 +8,12 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.util.Log;
 import android.view.MotionEvent;
+
+import com.example.tomascrd.c_r_s_h.R;
+import com.example.tomascrd.c_r_s_h.components.ButtonCrsh;
+import com.example.tomascrd.c_r_s_h.components.ParallaxBackground;
+import com.example.tomascrd.c_r_s_h.components.SceneCrsh;
+import com.example.tomascrd.c_r_s_h.core.GameConstants;
 
 /**
  * This game's main menu

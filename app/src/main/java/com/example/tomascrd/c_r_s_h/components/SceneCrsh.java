@@ -1,4 +1,4 @@
-package com.example.tomascrd.c_r_s_h;
+package com.example.tomascrd.c_r_s_h.components;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -6,6 +6,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.MotionEvent;
+
+import com.example.tomascrd.c_r_s_h.R;
 
 /**
  * Represents the general idea of a screen of the game
@@ -16,7 +18,7 @@ public class SceneCrsh {
     /**
      * This scene's context
      */
-    protected Context context;
+    public Context context;
     /**
      * A back button, all scenes will have this button to fall back onto the main menu
      */
@@ -24,16 +26,16 @@ public class SceneCrsh {
     /**
      * This scene's id
      */
-    protected int id;
+    public int id;
     /**
      * The screen width and height
      */
-    protected int screenWidth;
-    protected int screenHeight;
+    public int screenWidth;
+    public int screenHeight;
     /**
      * If avaliable, this scene's background image
      */
-    protected Bitmap backImage;
+    public Bitmap backImage;
 
 
     /**

@@ -1,4 +1,4 @@
-package com.example.tomascrd.c_r_s_h;
+package com.example.tomascrd.c_r_s_h.scenes;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -8,33 +8,45 @@ import android.graphics.Typeface;
 import android.util.Log;
 import android.view.MotionEvent;
 
+import com.example.tomascrd.c_r_s_h.R;
+import com.example.tomascrd.c_r_s_h.components.ButtonCrsh;
+import com.example.tomascrd.c_r_s_h.components.SceneCrsh;
+import com.example.tomascrd.c_r_s_h.core.GameConstants;
+
 /**
- * Scene which contains this game's credits
+ * Represents the new game menu
  *
  * @author Tomás Cardenal López
  */
-public class CreditScene extends SceneCrsh{
+public class NewGameScene extends SceneCrsh {
 
-    private int SCREEN_COLUMNS = 18;
-    private int SCREEN_ROWS = 8;
     Paint pText;
-
+    ButtonCrsh btnStartGame;
 
     /**
-     * Starts a credits scene
+     * Starts a new game menu
      * @param context the application context
      * @param id this scene's id (0 is recommended by default for the main menu)
      * @param screenWidth this screen's width
      * @param screenHeight this screen's height
      */
-    public CreditScene(Context context, int id, int screenWidth, int screenHeight) {
+    public NewGameScene(Context context, int id, int screenWidth, int screenHeight) {
         super(context, id, screenWidth, screenHeight);
         //Title text
         pText = new Paint();
         pText.setTypeface(Typeface.createFromAsset(context.getAssets(),"KarmaFuture.ttf"));
         pText.setColor(Color.BLACK);
         pText.setTextAlign(Paint.Align.CENTER);
-        pText.setTextSize((float) ((screenHeight/SCREEN_COLUMNS)*2.5));
+        pText.setTextSize((float) ((screenHeight/GameConstants.MENUSCREEN_COLUMNS)*2.5));
+
+        //Buttons
+        btnStartGame = new ButtonCrsh(context,
+                Typeface.createFromAsset(context.getAssets(), "homespun.ttf"),
+                context.getString(R.string.btnStartGame),
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 6,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 6,
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 12,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 7);
     }
 
     /**
@@ -55,9 +67,11 @@ public class CreditScene extends SceneCrsh{
         c.drawColor(Color.GREEN);
 
         //Test text
-        c.drawText(context.getString(R.string.btnCredits),screenWidth/SCREEN_COLUMNS*9,screenHeight/SCREEN_ROWS*2,pText);
+        c.drawText(context.getString(R.string.titleNewGame),screenWidth/GameConstants.MENUSCREEN_COLUMNS*9,screenHeight/ GameConstants.MENUSCREEN_ROWS *2,pText);
 
         backBtn.draw(c);
+
+        btnStartGame.draw(c);
 
     }
 
@@ -79,7 +93,10 @@ public class CreditScene extends SceneCrsh{
             case MotionEvent.ACTION_POINTER_UP:  // Any other finger up
                 if(isClick(backBtn,event)){
                     return 0;
+                }else if(isClick(btnStartGame,event)){
+                    return 99;
                 }
+
             case MotionEvent.ACTION_MOVE: // Any finger moves
 
                 break;
@@ -88,4 +105,3 @@ public class CreditScene extends SceneCrsh{
         return this.id;
     }
 }
-

@@ -1,4 +1,4 @@
-package com.example.tomascrd.c_r_s_h;
+package com.example.tomascrd.c_r_s_h.scenes;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -8,27 +8,31 @@ import android.graphics.Typeface;
 import android.util.Log;
 import android.view.MotionEvent;
 
+import com.example.tomascrd.c_r_s_h.R;
+import com.example.tomascrd.c_r_s_h.components.SceneCrsh;
+import com.example.tomascrd.c_r_s_h.core.GameConstants;
+
 /**
- * Represents the options menu
+ * Represents the tutorial for the game
  *
  * @author Tomás Cardenal López
  */
-public class OptionsScene extends SceneCrsh{
+public class TutorialScene extends SceneCrsh {
 
     /**
-     * Paint object for text
+     * Paint object for the text
      */
     Paint pText;
 
 
     /**
-     * Starts an options menu
+     * Starts a tutorial screen
      * @param context the application context
      * @param id this scene's id (0 is recommended by default for the main menu)
      * @param screenWidth this screen's width
      * @param screenHeight this screen's height
      */
-    public OptionsScene(Context context, int id, int screenWidth, int screenHeight) {
+    public TutorialScene(Context context, int id, int screenWidth, int screenHeight) {
         super(context, id, screenWidth, screenHeight);
         //Title text
         pText = new Paint();
@@ -47,7 +51,7 @@ public class OptionsScene extends SceneCrsh{
     }
 
     /**
-     * Draws the options menu
+     * Draws the tutorial
      * @param c the canvas to draw
      */
     @Override
@@ -56,7 +60,7 @@ public class OptionsScene extends SceneCrsh{
         c.drawColor(Color.GREEN);
 
         //Test text
-        c.drawText(context.getString(R.string.btnOptions),screenWidth/GameConstants.MENUSCREEN_COLUMNS*9,screenHeight/GameConstants.MENUSCREEN_ROWS*2,pText);
+        c.drawText(context.getString(R.string.btnTutorial),screenWidth/GameConstants.MENUSCREEN_COLUMNS*9,screenHeight/GameConstants.MENUSCREEN_ROWS*2,pText);
 
         backBtn.draw(c);
 

@@ -1,4 +1,4 @@
-package com.example.tomascrd.c_r_s_h;
+package com.example.tomascrd.c_r_s_h.core;
 
 import android.content.pm.ActivityInfo;
 import android.support.v7.app.AppCompatActivity;

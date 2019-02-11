@@ -1,4 +1,4 @@
-package com.example.tomascrd.c_r_s_h;
+package com.example.tomascrd.c_r_s_h.core;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -6,6 +6,15 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+
+import com.example.tomascrd.c_r_s_h.scenes.CreditScene;
+import com.example.tomascrd.c_r_s_h.scenes.MainGameScene;
+import com.example.tomascrd.c_r_s_h.scenes.MainMenuScene;
+import com.example.tomascrd.c_r_s_h.scenes.NewGameScene;
+import com.example.tomascrd.c_r_s_h.scenes.OptionsScene;
+import com.example.tomascrd.c_r_s_h.scenes.RecordsScene;
+import com.example.tomascrd.c_r_s_h.components.SceneCrsh;
+import com.example.tomascrd.c_r_s_h.scenes.TutorialScene;
 
 /**
  * Main engine of this game, concentrates and controls the activities of different scenes. Contains the main game thread

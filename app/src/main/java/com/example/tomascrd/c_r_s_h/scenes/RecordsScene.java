@@ -1,4 +1,4 @@
-package com.example.tomascrd.c_r_s_h;
+package com.example.tomascrd.c_r_s_h.scenes;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -8,12 +8,16 @@ import android.graphics.Typeface;
 import android.util.Log;
 import android.view.MotionEvent;
 
+import com.example.tomascrd.c_r_s_h.R;
+import com.example.tomascrd.c_r_s_h.components.SceneCrsh;
+import com.example.tomascrd.c_r_s_h.core.GameConstants;
+
 /**
  * Represents the records scene
  *
  * @author Tomás Cardenal López
  */
-public class RecordsScene extends SceneCrsh{
+public class RecordsScene extends SceneCrsh {
 
     /**
      * Paint object for text

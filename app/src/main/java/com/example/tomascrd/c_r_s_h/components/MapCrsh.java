@@ -1,8 +1,11 @@
-package com.example.tomascrd.c_r_s_h;
+package com.example.tomascrd.c_r_s_h.components;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+
+import com.example.tomascrd.c_r_s_h.scenes.MainGameScene;
+import com.example.tomascrd.c_r_s_h.core.GameConstants;
 
 /**
  * Represents a map from the game
