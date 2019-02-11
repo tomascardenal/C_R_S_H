@@ -19,19 +19,31 @@ public final class GameConstants {
      */
     public static int TIME_FRAGMENT = TPS/FPS;
     /**
+     * Rows on a game screen
+     */
+    public static int GAMESCREEN_ROWS = 18;
+    /**
      * Columns on a game screen
      */
     public static int GAMESCREEN_COLUMNS = 32;
     /**
-     * Rows on a game screen
+     * Rows on the map area
      */
-    public static int GAMESCREEN_ROWS = 18;
+    public static int MAPAREA_ROWS = 16;
+    /**
+     * Columns on the map area
+     */
+    public static int MAPAREA_COLUMNS = 28;
+    /**
+     * Rows on a menu screen
+     */
+    public static int MENUSCREEN_ROWS = 8;
     /**
      * Columns on a menu screen
      */
     public static int MENUSCREEN_COLUMNS = 18;
     /**
-     * Rows on a menu screen
+     * Reference name for mapfiles
      */
-    public static int MENUSCREEN_ROWS = 8;
+    public static String MAPFILE_NAME = "map.crsh";
 }

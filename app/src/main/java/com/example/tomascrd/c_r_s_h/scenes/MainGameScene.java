@@ -30,7 +30,7 @@ public class MainGameScene extends SceneCrsh {
      */
     public MainGameScene(Context context, int id, int screenWidth, int screenHeight) {
         super(context, id, screenWidth, screenHeight);
-        mapLoad = new MapCrsh(-1,this);
+        mapLoad = new MapCrsh(666,this);
     }
 
     /**

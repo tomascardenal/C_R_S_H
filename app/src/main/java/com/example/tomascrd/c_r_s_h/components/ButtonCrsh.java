@@ -23,8 +23,8 @@ public class ButtonCrsh extends DrawableComponent {
     /**
      * Right and bottom coordinates of the Rect for this button
      */
-    protected float xRight;
-    protected float yBottom;
+    protected int xRight;
+    protected int yBottom;
 
     /**
      * Rect to draw this button
@@ -55,7 +55,7 @@ public class ButtonCrsh extends DrawableComponent {
      * @param xRight the button's bottom right corner x position
      * @param yBottom the button's bottom right corner y position
      */
-    public ButtonCrsh (Context context, Typeface font,String text,float xPos, float yPos, float xRight, float yBottom){
+    public ButtonCrsh (Context context, Typeface font,String text,int xPos, int yPos, int xRight, int yBottom){
         this.context = context;
         this.text = text;
         this.xPos = xPos;
@@ -64,7 +64,7 @@ public class ButtonCrsh extends DrawableComponent {
         this.yBottom = yBottom;
         this.width = xRight - xPos;
         this.height = yBottom - yPos;
-        this.btnRect = new Rect((int)xPos,(int)yPos,(int)xRight,(int)yBottom);
+        this.btnRect = new Rect(xPos, yPos, xRight, yBottom);
         pButton = new Paint();
         pButton.setColor(Color.GRAY);
         pText = new Paint();
@@ -88,7 +88,7 @@ public class ButtonCrsh extends DrawableComponent {
      * @param yBottom the button's bottom right corner y position
      * @param background the button's background color
      */
-    public ButtonCrsh (Context context, Typeface font,String text,float xPos, float yPos, float xRight, float yBottom, int background){
+    public ButtonCrsh (Context context, Typeface font,String text,int xPos, int yPos, int xRight, int yBottom, int background){
         this(context,font,text,xPos,yPos,xRight,yBottom);
         pButton.setColor(background);
     }

@@ -17,8 +17,8 @@ public abstract class DrawableComponent {
     /**
      * X and Y coordinates
      */
-    protected float xPos;
-    protected float yPos;
+    protected int xPos;
+    protected int yPos;
 
     /**
      * Draws the components on screen

@@ -24,7 +24,6 @@ public class TutorialScene extends SceneCrsh {
      */
     Paint pText;
 
-
     /**
      * Starts a tutorial screen
      * @param context the application context
