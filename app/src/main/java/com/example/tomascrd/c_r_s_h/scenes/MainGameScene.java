@@ -9,7 +9,7 @@ import android.view.MotionEvent;
 
 import com.example.tomascrd.c_r_s_h.components.CircleComponent;
 import com.example.tomascrd.c_r_s_h.components.GamepadComponent;
-import com.example.tomascrd.c_r_s_h.components.MapCrsh;
+import com.example.tomascrd.c_r_s_h.components.MapComponent;
 import com.example.tomascrd.c_r_s_h.components.PlayerCrsh;
 import com.example.tomascrd.c_r_s_h.components.SceneCrsh;
 
@@ -23,7 +23,7 @@ public class MainGameScene extends SceneCrsh {
     /**
      * Map to load on the main game scene
      */
-    private MapCrsh mapLoad;
+    private MapComponent mapLoad;
     /**
      * Player 1
      */
@@ -55,7 +55,7 @@ public class MainGameScene extends SceneCrsh {
      */
     public MainGameScene(Context context, int id, int screenWidth, int screenHeight) {
         super(context, id, screenWidth, screenHeight);
-        mapLoad = new MapCrsh(666, context,screenWidth,screenHeight);
+        mapLoad = new MapComponent(666, context,screenWidth,screenHeight);
         mapLoad.loadTileArray();
         PointF playerCenter = new PointF(mapLoad.tileArray[1][1].getCollisionRect().centerX(), mapLoad.tileArray[1][1].getCollisionRect().centerY());
         playerOne = new PlayerCrsh("TestP1", 1, false, new CircleComponent(playerCenter, mapLoad.getReference() / 2));

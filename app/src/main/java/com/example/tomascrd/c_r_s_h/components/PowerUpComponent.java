@@ -6,7 +6,7 @@ package com.example.tomascrd.c_r_s_h.components;
  *
  * @author Tomás Cardenal López
  */
-public class PowerUpCrsh extends DrawableComponent {
+public class PowerUpComponent extends DrawableComponent {
     /**
      * Enumerates the various types of power ups
      */

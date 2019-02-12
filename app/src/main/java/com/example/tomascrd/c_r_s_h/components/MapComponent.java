@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.Log;
 
-import com.example.tomascrd.c_r_s_h.scenes.MainGameScene;
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
 
 import java.io.DataInputStream;
@@ -20,15 +19,36 @@ import java.io.IOException;
  *
  * @author Tomás Cardenal López
  */
-public class MapCrsh extends DrawableComponent {
+public class MapComponent extends DrawableComponent {
 
+    /**
+     * This map's ID
+     */
     public int mapID;
-    public TileCrsh[][] tileArray;
+    /**
+     * Array of tiles in the map
+     */
+    public TileComponent[][] tileArray;
+    /**
+     * The screen's width
+     */
     public int screenWidth;
+    /**
+     * The screen's height
+     */
     public int screenHeight;
+    /**
+     * Array of tile types
+     */
+    private TileComponent.TILE_TYPE[][] dataArray;
+    /**
+     * Tile size reference
+     */
     private int reference;
+    /**
+     * Height offset reference
+     */
     private int hReference;
-    private TileCrsh.TILE_TYPE[][] dataArray;
 
     /**
      * Starts a map on this ID and with the indicated reference
@@ -38,7 +58,7 @@ public class MapCrsh extends DrawableComponent {
      * @param screenWidth  The screen width
      * @param screenHeight The screen height
      */
-    public MapCrsh(int mapID, Context context, int screenWidth, int screenHeight) {
+    public MapComponent(int mapID, Context context, int screenWidth, int screenHeight) {
         this.context = context;
         this.mapID = mapID;
         this.screenWidth = screenWidth;
@@ -48,10 +68,10 @@ public class MapCrsh extends DrawableComponent {
         this.xPos = screenWidth - (screenWidth - (reference * GameConstants.MAPAREA_COLUMNS));
         this.yPos = hReference;
         if (mapID == 666) {
-            //if (!loadMap(666)) {
-            dataArray = testMap();
-            saveMap();
-            //}
+            if (!loadMap(666)) {
+                dataArray = testMap();
+                saveMap();
+            }
         }
     }
 
@@ -68,7 +88,7 @@ public class MapCrsh extends DrawableComponent {
             if (dataArray == null) {
                 loadMap(mapID);
             }
-            TileCrsh currentTile;
+            TileComponent currentTile;
             for (int i = 1; i < GameConstants.GAMESCREEN_ROWS - 1; i++) {
                 for (int j = 3; j < GameConstants.GAMESCREEN_COLUMNS - 3; j++) {
                     currentTile = tileArray[i - 1][j - 3];
@@ -106,10 +126,10 @@ public class MapCrsh extends DrawableComponent {
      * Loads tiles into an array for their management
      */
     public void loadTileArray() {
-        tileArray = new TileCrsh[GameConstants.MAPAREA_ROWS][GameConstants.MAPAREA_COLUMNS];
+        tileArray = new TileComponent[GameConstants.MAPAREA_ROWS][GameConstants.MAPAREA_COLUMNS];
         for (int i = 1; i < GameConstants.GAMESCREEN_ROWS - 1; i++) {
             for (int j = 3; j < GameConstants.GAMESCREEN_COLUMNS - 3; j++) {
-                tileArray[i - 1][j - 3] = new TileCrsh(context, -1,
+                tileArray[i - 1][j - 3] = new TileComponent(context, -1,
                         j * getReference(), i * getReference() + gethReference(), (j + 1) * getReference(), (i + 1) * getReference() + gethReference(), dataArray[i - 1][j - 3]
                 );
             }
@@ -121,20 +141,20 @@ public class MapCrsh extends DrawableComponent {
      *
      * @return the test map
      */
-    private TileCrsh.TILE_TYPE[][] testMap() {
+    private TileComponent.TILE_TYPE[][] testMap() {
         Log.i("Loading test map", "Loading test  map");
         this.mapID = 666;
-        TileCrsh.TILE_TYPE[][] testArray = new TileCrsh.TILE_TYPE[GameConstants.MAPAREA_ROWS][GameConstants.MAPAREA_COLUMNS];
+        TileComponent.TILE_TYPE[][] testArray = new TileComponent.TILE_TYPE[GameConstants.MAPAREA_ROWS][GameConstants.MAPAREA_COLUMNS];
         for (int i = 0; i < testArray.length; i++) {
             for (int j = 0; j < testArray[i].length; j++) {
                 if (i == 0 || i == testArray.length - 1 || j == 0 || j == testArray[i].length - 1) {
-                    testArray[i][j] = TileCrsh.intToTileType(0);
+                    testArray[i][j] = TileComponent.intToTileType(0);
                 } else if (i % 3 != 0) {
-                    testArray[i][j] = TileCrsh.intToTileType(1);
+                    testArray[i][j] = TileComponent.intToTileType(1);
                 } else if (j % 3 == 2) {
-                    testArray[i][j] = TileCrsh.intToTileType(2);
+                    testArray[i][j] = TileComponent.intToTileType(2);
                 } else {
-                    testArray[i][j] = TileCrsh.intToTileType(1);
+                    testArray[i][j] = TileComponent.intToTileType(1);
                 }
             }
         }
@@ -148,12 +168,12 @@ public class MapCrsh extends DrawableComponent {
      * @return a boolean depicting if the loading was successful
      */
     public boolean loadMap(int mapID) {
-        this.dataArray = new TileCrsh.TILE_TYPE[GameConstants.MAPAREA_ROWS][GameConstants.MAPAREA_COLUMNS];
+        this.dataArray = new TileComponent.TILE_TYPE[GameConstants.MAPAREA_ROWS][GameConstants.MAPAREA_COLUMNS];
         try (FileInputStream fis = context.openFileInput(mapID + GameConstants.MAPFILE_NAME)) {
             DataInputStream input = new DataInputStream(fis);
             for (int i = 0; i < dataArray.length; i++) {
                 for (int j = 0; j < dataArray[i].length; j++) {
-                    dataArray[i][j] = TileCrsh.intToTileType(input.readInt());
+                    dataArray[i][j] = TileComponent.intToTileType(input.readInt());
                     Log.i("mapValue", dataArray[i][j] + "");
                 }
             }
@@ -176,7 +196,7 @@ public class MapCrsh extends DrawableComponent {
                 DataOutputStream output = new DataOutputStream(fos);
                 for (int i = 0; i < dataArray.length; i++) {
                     for (int j = 0; j < dataArray[i].length; j++) {
-                        output.writeInt(TileCrsh.tileTypeToInt(dataArray[i][j]));
+                        output.writeInt(TileComponent.tileTypeToInt(dataArray[i][j]));
                         Log.i("mapValue", dataArray[i][j] + "");
                     }
                 }

@@ -12,7 +12,7 @@ import android.graphics.Rect;
  *
  * @author Tomás Cardenal López
  */
-public class TileCrsh extends DrawableComponent {
+public class TileComponent extends DrawableComponent {
 
     /**
      * Painter for test maps
@@ -50,7 +50,7 @@ public class TileCrsh extends DrawableComponent {
      * @param yBottom  The Rect's bottom right y coordinate
      * @param tileType The tile's type
      */
-    public TileCrsh(Context context, int drawable, int xPos, int yPos, int xBottom, int yBottom, TILE_TYPE tileType) {
+    public TileComponent(Context context, int drawable, int xPos, int yPos, int xBottom, int yBottom, TILE_TYPE tileType) {
         this.context = context;
         this.xPos = xPos;
         this.yPos = yPos;
@@ -71,7 +71,7 @@ public class TileCrsh extends DrawableComponent {
      * @param collisionRect The tile's collisionRect
      * @param tileType      The tile's type
      */
-    public TileCrsh(Context context, int drawable, Rect collisionRect, TILE_TYPE tileType) {
+    public TileComponent(Context context, int drawable, Rect collisionRect, TILE_TYPE tileType) {
         this.context = context;
         this.tileType = tileType;
         this.collisionRect = collisionRect;
