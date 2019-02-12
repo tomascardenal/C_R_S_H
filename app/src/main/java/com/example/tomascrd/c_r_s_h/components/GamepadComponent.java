@@ -68,50 +68,51 @@ public class GamepadComponent extends DrawableComponent {
                     context,
                     Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_AWESOME),
                     context.getString(R.string.btnLeft1),
-                    screenWidth - gridReference * 2, screenHeight - gridReference, screenWidth-gridReference, screenHeight,
-                    Color.TRANSPARENT);
-            btnDown = new ButtonComponent(
-                    context,
-                    Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_AWESOME),
-                    context.getString(R.string.btnDown1),
-                    screenWidth - gridReference, screenHeight - gridReference * 2, screenWidth, screenHeight - gridReference,
+                    screenWidth - gridReference*2, screenHeight - gridReference*2, screenWidth, screenHeight,
                     Color.TRANSPARENT);
             btnRight = new ButtonComponent(
                     context,
                     Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_AWESOME),
                     context.getString(R.string.btnRight1),
-                    screenWidth - gridReference * 2, screenHeight - gridReference * 3, screenWidth-gridReference, screenHeight - gridReference * 2,
+                    screenWidth - gridReference*2, screenHeight - gridReference * 4, screenWidth, screenHeight -gridReference*2,
                     Color.TRANSPARENT);
             btnUp = new ButtonComponent(
                     context,
                     Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_AWESOME),
                     context.getString(R.string.btnUp1),
-                    screenWidth - gridReference * 3, screenHeight - gridReference * 2, screenWidth - gridReference*2, screenHeight - gridReference,
+                    screenWidth - gridReference*2, screenHeight - gridReference * 6, screenWidth, screenHeight - gridReference*4,
+                    Color.TRANSPARENT);
+            btnDown = new ButtonComponent(
+                    context,
+                    Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_AWESOME),
+                    context.getString(R.string.btnDown1),
+                    screenWidth - gridReference*2, screenHeight - gridReference * 8, screenWidth, screenHeight - gridReference*6,
                     Color.TRANSPARENT);
         } else if (playerId == 2) {
             btnLeft = new ButtonComponent(
                     context,
                     Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_AWESOME),
                     context.getString(R.string.btnLeft2),
-                    gridReference,0,gridReference*2,gridReference,
-                    Color.TRANSPARENT);
-            btnDown = new ButtonComponent(
-                    context,
-                    Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_AWESOME),
-                    context.getString(R.string.btnDown2),
-                    0,gridReference,gridReference,gridReference*2,
+                    0,0,gridReference*2,gridReference*2,
                     Color.TRANSPARENT);
             btnRight = new ButtonComponent(
                     context,
                     Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_AWESOME),
                     context.getString(R.string.btnRight2),
-                    gridReference,gridReference*2,gridReference*2,gridReference*3,
+                    0,gridReference*2,gridReference*2,gridReference*4,
                     Color.TRANSPARENT);
             btnUp = new ButtonComponent(
                     context,
                     Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_AWESOME),
                     context.getString(R.string.btnUp2),
-                    gridReference*2,gridReference,gridReference*3,gridReference*2,
+                    0,gridReference*4,gridReference*2,gridReference*6,
+                    Color.TRANSPARENT);
+
+            btnDown = new ButtonComponent(
+                    context,
+                    Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_AWESOME),
+                    context.getString(R.string.btnDown2),
+                    0,gridReference*6,gridReference*2,gridReference*8,
                     Color.TRANSPARENT);
         }
 
