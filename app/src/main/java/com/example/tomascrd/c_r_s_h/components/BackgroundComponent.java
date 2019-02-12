@@ -9,7 +9,7 @@ import android.graphics.PointF;
  *
  * @author Tomás Cardenal López
  */
-public class ParallaxBackground {
+public class BackgroundComponent {
     /**
      * This background's position
      */
@@ -26,7 +26,7 @@ public class ParallaxBackground {
      * @param x     the x coordinate
      * @param y     the y coordinate
      */
-    public ParallaxBackground(Bitmap image, float x, float y) {
+    public BackgroundComponent(Bitmap image, float x, float y) {
         this.image = image;
         this.position = new PointF(x, y);
     }
@@ -37,7 +37,7 @@ public class ParallaxBackground {
      * @param image       the image
      * @param screenWidth the screen width
      */
-    public ParallaxBackground(Bitmap image, int screenWidth) {
+    public BackgroundComponent(Bitmap image, int screenWidth) {
         this(image, screenWidth - image.getWidth(), 0);
     }
 
@@ -49,7 +49,7 @@ public class ParallaxBackground {
      * @param screenWidth  the screen width
      * @param screenHeight the screen height
      */
-    public ParallaxBackground(Bitmap image, int screenWidth, int screenHeight) {
+    public BackgroundComponent(Bitmap image, int screenWidth, int screenHeight) {
         this.image = image;
         this.position = new PointF(screenWidth - image.getWidth(), screenHeight - image.getHeight());
     }

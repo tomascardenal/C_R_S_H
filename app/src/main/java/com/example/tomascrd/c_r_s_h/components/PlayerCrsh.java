@@ -38,7 +38,6 @@ public class PlayerCrsh {
      */
     private float yVelocity;
 
-
     /**
      * Initializes a player to it's parameters, with a given CircleComponent
      *

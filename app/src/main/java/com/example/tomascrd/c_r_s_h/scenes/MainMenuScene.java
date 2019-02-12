@@ -10,8 +10,8 @@ import android.util.Log;
 import android.view.MotionEvent;
 
 import com.example.tomascrd.c_r_s_h.R;
-import com.example.tomascrd.c_r_s_h.components.ButtonCrsh;
-import com.example.tomascrd.c_r_s_h.components.ParallaxBackground;
+import com.example.tomascrd.c_r_s_h.components.ButtonComponent;
+import com.example.tomascrd.c_r_s_h.components.BackgroundComponent;
 import com.example.tomascrd.c_r_s_h.components.SceneCrsh;
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
 
@@ -33,27 +33,27 @@ public class MainMenuScene extends SceneCrsh {
     /**
      * Array to store the backgrounds
      */
-    ParallaxBackground parallaxBackgrounds[];
+    BackgroundComponent parallaxBackgrounds[];
     /**
      * Button for new game scene
      */
-    ButtonCrsh btnNewGame;
+    ButtonComponent btnNewGame;
     /**
      * Button for options scene
      */
-    ButtonCrsh btnOptions;
+    ButtonComponent btnOptions;
     /**
      * Button for records scene
      */
-    ButtonCrsh btnRecords;
+    ButtonComponent btnRecords;
     /**
      * Button for credits scene
      */
-    ButtonCrsh btnCredits;
+    ButtonComponent btnCredits;
     /**
      * Button for tutorial scene
      */
-    ButtonCrsh btnTutorial;
+    ButtonComponent btnTutorial;
 
 
     /**
@@ -74,13 +74,13 @@ public class MainMenuScene extends SceneCrsh {
         pText.setTextSize((float) ((screenHeight / GameConstants.MENUSCREEN_COLUMNS) * 2.5));
 
         //Parallax Backgrounds
-        parallaxBackgrounds = new ParallaxBackground[3];
+        parallaxBackgrounds = new BackgroundComponent[3];
         for (int i = 0; i < parallaxBackgrounds.length; i++) {
-            parallaxBackgrounds[i] = new ParallaxBackground(BitmapFactory.decodeResource(context.getResources(), mipmapBackgrounds[i]), screenWidth, screenHeight);
+            parallaxBackgrounds[i] = new BackgroundComponent(BitmapFactory.decodeResource(context.getResources(), mipmapBackgrounds[i]), screenWidth, screenHeight);
         }
 
         //Initialize buttons
-        btnNewGame = new ButtonCrsh(context,
+        btnNewGame = new ButtonComponent(context,
                 Typeface.createFromAsset(context.getAssets(), "homespun.ttf"),
                 context.getString(R.string.btnPlay),
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 7,
@@ -88,7 +88,7 @@ public class MainMenuScene extends SceneCrsh {
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 11,
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 4);
 
-        btnOptions = new ButtonCrsh(context,
+        btnOptions = new ButtonComponent(context,
                 Typeface.createFromAsset(context.getAssets(), "homespun.ttf"),
                 context.getString(R.string.btnOptions),
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS,
@@ -96,7 +96,7 @@ public class MainMenuScene extends SceneCrsh {
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 4,
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 6);
 
-        btnCredits = new ButtonCrsh(context,
+        btnCredits = new ButtonComponent(context,
                 Typeface.createFromAsset(context.getAssets(), "homespun.ttf"),
                 context.getString(R.string.btnCredits),
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 5,
@@ -104,7 +104,7 @@ public class MainMenuScene extends SceneCrsh {
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 8,
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 6);
 
-        btnRecords = new ButtonCrsh(context,
+        btnRecords = new ButtonComponent(context,
                 Typeface.createFromAsset(context.getAssets(), "homespun.ttf"),
                 context.getString(R.string.btnRecords),
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 10,
@@ -112,7 +112,7 @@ public class MainMenuScene extends SceneCrsh {
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 13,
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 6);
 
-        btnTutorial = new ButtonCrsh(context,
+        btnTutorial = new ButtonComponent(context,
                 Typeface.createFromAsset(context.getAssets(), "homespun.ttf"),
                 context.getString(R.string.btnTutorial),
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 14,

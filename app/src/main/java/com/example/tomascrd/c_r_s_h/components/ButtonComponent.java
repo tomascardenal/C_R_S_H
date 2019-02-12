@@ -12,7 +12,7 @@ import android.graphics.Typeface;
  *
  * @author Tomás Cardenal López
  */
-public class ButtonCrsh extends DrawableComponent {
+public class ButtonComponent extends DrawableComponent {
 
     /**
      * Width of the button
@@ -62,7 +62,7 @@ public class ButtonCrsh extends DrawableComponent {
      * @param xRight  the button's bottom right corner x position
      * @param yBottom the button's bottom right corner y position
      */
-    public ButtonCrsh(Context context, Typeface font, String text, int xPos, int yPos, int xRight, int yBottom) {
+    public ButtonComponent(Context context, Typeface font, String text, int xPos, int yPos, int xRight, int yBottom) {
         this.context = context;
         this.text = text;
         this.xPos = xPos;
@@ -96,7 +96,7 @@ public class ButtonCrsh extends DrawableComponent {
      * @param yBottom    the button's bottom right corner y position
      * @param background the button's background color
      */
-    public ButtonCrsh(Context context, Typeface font, String text, int xPos, int yPos, int xRight, int yBottom, int background) {
+    public ButtonComponent(Context context, Typeface font, String text, int xPos, int yPos, int xRight, int yBottom, int background) {
         this(context, font, text, xPos, yPos, xRight, yBottom);
         pButton.setColor(background);
     }

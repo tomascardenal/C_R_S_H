@@ -22,7 +22,7 @@ public class SceneCrsh {
     /**
      * A back button, all scenes will have this button to fall back onto the main menu
      */
-    public ButtonCrsh backBtn;
+    public ButtonComponent backBtn;
     /**
      * This scene's id
      */
@@ -52,7 +52,7 @@ public class SceneCrsh {
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
         if (backBtn == null) {
-            backBtn = new ButtonCrsh(context, Typeface.createFromAsset(context.getAssets(), "fa-solid-900.ttf"), context.getString(R.string.btnBack), screenWidth - screenWidth / 16, 0, screenWidth, screenWidth / 16, Color.TRANSPARENT);
+            backBtn = new ButtonComponent(context, Typeface.createFromAsset(context.getAssets(), "fa-solid-900.ttf"), context.getString(R.string.btnBack), screenWidth - screenWidth / 16, 0, screenWidth, screenWidth / 16, Color.TRANSPARENT);
         }
     }
 
@@ -90,7 +90,7 @@ public class SceneCrsh {
      * @param event the motion event detected
      * @return true if the button was clicked
      */
-    public boolean isClick(ButtonCrsh btn, MotionEvent event) {
+    public boolean isClick(ButtonComponent btn, MotionEvent event) {
         return btn.btnRect.contains((int) event.getX(), (int) event.getY());
     }
 

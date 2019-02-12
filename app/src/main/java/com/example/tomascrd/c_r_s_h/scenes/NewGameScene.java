@@ -9,7 +9,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 
 import com.example.tomascrd.c_r_s_h.R;
-import com.example.tomascrd.c_r_s_h.components.ButtonCrsh;
+import com.example.tomascrd.c_r_s_h.components.ButtonComponent;
 import com.example.tomascrd.c_r_s_h.components.SceneCrsh;
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
 
@@ -27,7 +27,7 @@ public class NewGameScene extends SceneCrsh {
     /**
      * Button for starting a new game
      */
-    ButtonCrsh btnStartGame;
+    ButtonComponent btnStartGame;
 
     /**
      * Starts a new game menu
@@ -47,7 +47,7 @@ public class NewGameScene extends SceneCrsh {
         pText.setTextSize((float) ((screenHeight / GameConstants.MENUSCREEN_COLUMNS) * 2.5));
 
         //Buttons
-        btnStartGame = new ButtonCrsh(context,
+        btnStartGame = new ButtonComponent(context,
                 Typeface.createFromAsset(context.getAssets(), "homespun.ttf"),
                 context.getString(R.string.btnStartGame),
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 6,
