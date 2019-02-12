@@ -105,11 +105,14 @@ public class MainGameScene extends SceneCrsh {
                 break;
 
             case MotionEvent.ACTION_UP:                     // Last finger up
+                playerOne.setVelocity(0,0);
+                break;
             case MotionEvent.ACTION_POINTER_UP:  // Any other finger up
                 gamePadUp(0,event);
                 if (isClick(backBtn, event)) {
                     return 0;
                 }
+                break;
             case MotionEvent.ACTION_MOVE: // Any finger moves
 
                 break;
