@@ -41,10 +41,10 @@ public class MapCrsh {
         this.reference = gameRef.screenWidth / GameConstants.GAMESCREEN_COLUMNS;
         this.hReference = (gameRef.screenHeight - getReference() * GameConstants.GAMESCREEN_ROWS) / 2;
         if (mapID == 666) {
-            if (!loadMap(666)) {
+            //if (!loadMap(666)) {
                 dataArray = testMap();
                 saveMap();
-            }
+            //}
         }
     }
 
@@ -62,8 +62,8 @@ public class MapCrsh {
             }
             TileCrsh currentTile;
             for (int i = 1; i < GameConstants.GAMESCREEN_ROWS - 1; i++) {
-                for (int j = 2; j < GameConstants.GAMESCREEN_COLUMNS - 2; j++) {
-                    currentTile = tileArray[i - 1][j - 2];
+                for (int j = 3; j < GameConstants.GAMESCREEN_COLUMNS - 3; j++) {
+                    currentTile = tileArray[i - 1][j - 3];
                     c.drawRect(currentTile.collisionRect, currentTile.testPaint);
                 }
             }
@@ -81,7 +81,7 @@ public class MapCrsh {
         boolean redFirst = true;
         //Grid test (IT WORKS, ON EVERY PHONE) Adjust settings to start drawing wherever we want to
         for (int i = 1; i < GameConstants.GAMESCREEN_ROWS - 1; i++) {
-            for (int j = 2; j < GameConstants.GAMESCREEN_COLUMNS - 2; j++) {
+            for (int j = 3; j < GameConstants.GAMESCREEN_COLUMNS - 3; j++) {
                 pTiles.setColor(pTiles.getColor() == Color.GREEN ? Color.RED : Color.GREEN);
                 c.drawRect(j * getReference(), i * getReference() + gethReference(), (j + 1) * getReference(), (i + 1) * getReference() + gethReference(), pTiles);
             }
@@ -100,10 +100,10 @@ public class MapCrsh {
     public void loadTileArray() {
         tileArray = new TileCrsh[GameConstants.MAPAREA_ROWS][GameConstants.MAPAREA_COLUMNS];
         for (int i = 1; i < GameConstants.GAMESCREEN_ROWS - 1; i++) {
-            for (int j = 2; j < GameConstants.GAMESCREEN_COLUMNS - 2; j++) {
-                tileArray[i - 1][j - 2] = new TileCrsh(
+            for (int j = 3; j < GameConstants.GAMESCREEN_COLUMNS - 3; j++) {
+                tileArray[i - 1][j - 3] = new TileCrsh(
                         gameRef.context, -1,
-                        j * getReference(), i * getReference() + gethReference(), (j + 1) * getReference(), (i + 1) * getReference() + gethReference(), dataArray[i - 1][j - 2]
+                        j * getReference(), i * getReference() + gethReference(), (j + 1) * getReference(), (i + 1) * getReference() + gethReference(), dataArray[i - 1][j - 3]
                 );
             }
         }
@@ -124,7 +124,7 @@ public class MapCrsh {
                     testArray[i][j] = TileCrsh.intToTileType(0);
                 } else if (i % 3 != 0) {
                     testArray[i][j] = TileCrsh.intToTileType(1);
-                } else if (j % 3 == 0) {
+                } else if (j % 3 == 2) {
                     testArray[i][j] = TileCrsh.intToTileType(2);
                 } else {
                     testArray[i][j] = TileCrsh.intToTileType(1);

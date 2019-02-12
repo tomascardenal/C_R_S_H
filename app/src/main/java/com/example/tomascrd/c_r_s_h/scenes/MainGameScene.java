@@ -57,6 +57,7 @@ public class MainGameScene extends SceneCrsh {
      */
     @Override
     public void updatePhysics() {
+
     }
 
     /**
@@ -70,6 +71,7 @@ public class MainGameScene extends SceneCrsh {
         c.drawColor(Color.WHITE);
         //Grid test (IT WORKS, on my phone at least)
         mapLoad.draw(c);
+        playerOne.playerCollision.draw(c);
         backBtn.draw(c);
     }
 

@@ -33,7 +33,7 @@ public final class GameConstants {
     /**
      * Columns on the map area
      */
-    public static int MAPAREA_COLUMNS = 28;
+    public static int MAPAREA_COLUMNS = 26;
     /**
      * Rows on a menu screen
      */

@@ -113,7 +113,6 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
      */
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-
     }
 
     /**
@@ -162,6 +161,8 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
      */
     public class GameThread extends Thread {
 
+        private boolean canvasLocked = false;
+
         /**
          * Runs the actions of the thread
          */
@@ -175,16 +176,22 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
                     if (!surfaceHolder.getSurface().isValid()) {
                         continue;
                     }
-                    c = surfaceHolder.lockCanvas();
+                    if(!canvasLocked){
+                        c = surfaceHolder.lockCanvas();
+                        canvasLocked = true;
+                    }
                     if (c != null) {
                         synchronized (surfaceHolder) {
                             currentScene.updatePhysics();
                             currentScene.draw(c);
                         }
                     }
+                } catch (IllegalArgumentException e){
+                    canvasLocked = false;
                 } finally {
-                    if (c != null) {
+                    if (c != null && canvasLocked) {
                         surfaceHolder.unlockCanvasAndPost(c);
+                        canvasLocked = false;
                     }
                 }
             }

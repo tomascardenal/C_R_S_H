@@ -1,5 +1,7 @@
 package com.example.tomascrd.c_r_s_h.components;
 
+import android.graphics.Color;
+
 /**
  * Represents a player in the game
  *
@@ -52,6 +54,16 @@ public class PlayerCrsh {
         this.onAttack = onAttack;
         this.playerCollision = playerCollision;
         this.playerLifes = 3;
+        switch(playerId){
+            case 0:
+                this.playerCollision.setColor(Color.RED);
+                break;
+            case 1:
+                this.playerCollision.setColor(Color.BLUE);
+                break;
+            case 2:
+                this.playerCollision.setColor(Color.GREEN);
+        }
     }
 
     /**

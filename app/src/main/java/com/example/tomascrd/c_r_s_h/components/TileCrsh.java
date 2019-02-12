@@ -136,13 +136,13 @@ public class TileCrsh extends DrawableComponent {
                 testPaint.setColor(Color.BLACK);
                 break;
             case TILE_PATH:
-                testPaint.setColor(Color.GREEN);
+                testPaint.setColor(Color.YELLOW);
                 break;
             case TILE_BREAKONE:
-                testPaint.setColor(Color.BLUE);
+                testPaint.setColor(Color.LTGRAY);
                 break;
             case TILE_BREAKTWO:
-                testPaint.setColor(Color.RED);
+                testPaint.setColor(Color.GRAY);
         }
     }
 
