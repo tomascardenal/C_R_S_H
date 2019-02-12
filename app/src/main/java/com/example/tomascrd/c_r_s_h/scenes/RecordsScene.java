@@ -20,10 +20,9 @@ import com.example.tomascrd.c_r_s_h.core.GameConstants;
 public class RecordsScene extends SceneCrsh {
 
     /**
-     * Paint object for text
+     * Text painter
      */
     Paint pText;
-
 
     /**
      * Starts a records screen

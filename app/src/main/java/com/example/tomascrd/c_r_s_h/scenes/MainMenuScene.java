@@ -27,18 +27,33 @@ public class MainMenuScene extends SceneCrsh {
      */
     private final int[] mipmapBackgrounds = {R.mipmap.paramount1, R.mipmap.paramount2, R.mipmap.paramount3};
     /**
-     * Paint object for text
+     * Text painter
      */
     Paint pText;
     /**
      * Array to store the backgrounds
      */
     ParallaxBackground parallaxBackgrounds[];
-
     /**
-     * Buttons
+     * Button for new game scene
      */
-    ButtonCrsh btnNewGame, btnOptions, btnRecords, btnCredits, btnTutorial;
+    ButtonCrsh btnNewGame;
+    /**
+     * Button for options scene
+     */
+    ButtonCrsh btnOptions;
+    /**
+     * Button for records scene
+     */
+    ButtonCrsh btnRecords;
+    /**
+     * Button for credits scene
+     */
+    ButtonCrsh btnCredits;
+    /**
+     * Button for tutorial scene
+     */
+    ButtonCrsh btnTutorial;
 
 
     /**
@@ -112,7 +127,6 @@ public class MainMenuScene extends SceneCrsh {
      */
     @Override
     public void updatePhysics() {
-
         for (int i = 0; i < parallaxBackgrounds.length; i++) {
             parallaxBackgrounds[i].move(i + 1);
             if (parallaxBackgrounds[i].position.x > screenWidth) {
@@ -165,7 +179,6 @@ public class MainMenuScene extends SceneCrsh {
 
             case MotionEvent.ACTION_UP:                     // Last finger up
             case MotionEvent.ACTION_POINTER_UP:  // Any other finger up
-
                 if (isClick(btnNewGame, event)) {
                     return 1;
                 } else if (isClick(btnOptions, event)) {

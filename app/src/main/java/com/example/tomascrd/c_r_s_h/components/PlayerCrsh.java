@@ -1,8 +1,5 @@
 package com.example.tomascrd.c_r_s_h.components;
 
-import android.graphics.Canvas;
-import android.graphics.Paint;
-
 /**
  * Represents a player in the game
  *
@@ -156,35 +153,37 @@ public class PlayerCrsh {
      * @param xVelocity the xVelocity to set
      * @param yVelocity the yVelocity to set
      */
-    public void setVelocity(float xVelocity, float yVelocity){
+    public void setVelocity(float xVelocity, float yVelocity) {
         setxVelocity(xVelocity);
         setyVelocity(yVelocity);
     }
 
     /**
      * Sets this player's xVelocity
+     *
      * @param xVelocity the xVelocity to set
      */
-    public void setxVelocity(float xVelocity){
-        if(xVelocity<=3 && xVelocity>=-3){
+    public void setxVelocity(float xVelocity) {
+        if (xVelocity <= 3 && xVelocity >= -3) {
             this.xVelocity = xVelocity;
-        }else if(xVelocity>3){
+        } else if (xVelocity > 3) {
             this.xVelocity = 3;
-        }else if(xVelocity<-3){
+        } else if (xVelocity < -3) {
             this.xVelocity = -3;
         }
     }
 
     /**
      * Sets this player's yVelocity
+     *
      * @param yVelocity the yVelocity to set
      */
-    public void setyVelocity(float yVelocity){
-        if(yVelocity<=3 && yVelocity>=-3){
+    public void setyVelocity(float yVelocity) {
+        if (yVelocity <= 3 && yVelocity >= -3) {
             this.yVelocity = yVelocity;
-        }else if(yVelocity>3){
+        } else if (yVelocity > 3) {
             this.yVelocity = 3;
-        }else if(yVelocity<-3){
+        } else if (yVelocity < -3) {
             this.yVelocity = -3;
         }
     }
@@ -192,21 +191,21 @@ public class PlayerCrsh {
     /**
      * Reverses this player's xVelocity
      */
-    public void reverseXVelocity(){
+    public void reverseXVelocity() {
         this.xVelocity = -this.xVelocity;
     }
 
     /**
      * Reverses this player's yVelocity
      */
-    public void reverseYVelocity(){
+    public void reverseYVelocity() {
         this.yVelocity = -this.yVelocity;
     }
 
     /**
      * Moves this player's position the distance indicated on it's velocity
      */
-    public void move(){
-        this.playerCollision.move(xVelocity,yVelocity);
+    public void move() {
+        this.playerCollision.move(xVelocity, yVelocity);
     }
 }

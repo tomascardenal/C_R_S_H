@@ -31,9 +31,12 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
      */
     private SurfaceHolder surfaceHolder;
     /**
-     * Screen width and height
+     * Screen width
      */
     private int screenWidth;
+    /**
+     * Screen height
+     */
     private int screenHeight;
     /**
      * Game thread instance
@@ -47,7 +50,6 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
      * Current scene to draw and control
      */
     private SceneCrsh currentScene;
-
 
     /**
      * Starts a gameEngine within the given context
@@ -217,7 +219,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
          */
         public void setSurfaceSize(int width, int height) {
             synchronized (surfaceHolder) {
-
+                
             }
         }
     }

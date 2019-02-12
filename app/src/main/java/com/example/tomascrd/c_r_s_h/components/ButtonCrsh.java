@@ -15,15 +15,21 @@ import android.graphics.Typeface;
 public class ButtonCrsh extends DrawableComponent {
 
     /**
-     * Width and height of the button
+     * Width of the button
      */
     protected float width;
+    /**
+     * Height of the button
+     */
     protected float height;
 
     /**
-     * Right and bottom coordinates of the Rect for this button
+     * Right coordinate for this button's Rect
      */
     protected int xRight;
+    /**
+     * Bottom coordinate for this button's Rect
+     */
     protected int yBottom;
 
     /**

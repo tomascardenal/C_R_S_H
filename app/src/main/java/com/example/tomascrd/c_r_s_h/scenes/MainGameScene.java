@@ -24,9 +24,13 @@ public class MainGameScene extends SceneCrsh {
      */
     private MapCrsh mapLoad;
     /**
-     * Players 1 and 2
+     * Player 1
      */
-    private PlayerCrsh playerOne, playerTwo;
+    private PlayerCrsh playerOne;
+    /**
+     * Player 2
+     */
+    private PlayerCrsh playerTwo;
     /**
      * COM Player
      */
@@ -44,8 +48,8 @@ public class MainGameScene extends SceneCrsh {
         super(context, id, screenWidth, screenHeight);
         mapLoad = new MapCrsh(666, this);
         mapLoad.loadTileArray();
-        PointF playerCenter = new PointF(mapLoad.tileArray[1][1].getCollisionRect().centerX(),mapLoad.tileArray[1][1].getCollisionRect().centerY());
-        playerOne = new PlayerCrsh("TestP1",1,false,new CircleComponent(playerCenter,mapLoad.getReference()/2));
+        PointF playerCenter = new PointF(mapLoad.tileArray[1][1].getCollisionRect().centerX(), mapLoad.tileArray[1][1].getCollisionRect().centerY());
+        playerOne = new PlayerCrsh("TestP1", 1, false, new CircleComponent(playerCenter, mapLoad.getReference() / 2));
     }
 
     /**
@@ -96,12 +100,5 @@ public class MainGameScene extends SceneCrsh {
                 Log.i("Other", "Undefined action: " + action);
         }
         return this.id;
-    }
-
-    /**
-     * Parses the map
-     */
-    public void mapParser() {
-
     }
 }

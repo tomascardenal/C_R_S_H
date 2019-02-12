@@ -20,7 +20,13 @@ import com.example.tomascrd.c_r_s_h.core.GameConstants;
  */
 public class NewGameScene extends SceneCrsh {
 
+    /**
+     * Text painter
+     */
     Paint pText;
+    /**
+     * Button for starting a new game
+     */
     ButtonCrsh btnStartGame;
 
     /**

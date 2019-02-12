@@ -33,7 +33,6 @@ public class CreditScene extends SceneCrsh {
      */
     public CreditScene(Context context, int id, int screenWidth, int screenHeight) {
         super(context, id, screenWidth, screenHeight);
-        //Title text
         pText = new Paint();
         pText.setTypeface(Typeface.createFromAsset(context.getAssets(), "KarmaFuture.ttf"));
         pText.setColor(Color.BLACK);
@@ -46,7 +45,6 @@ public class CreditScene extends SceneCrsh {
      */
     @Override
     public void updatePhysics() {
-
     }
 
     /**

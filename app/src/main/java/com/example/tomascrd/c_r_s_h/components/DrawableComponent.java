@@ -15,9 +15,12 @@ public abstract class DrawableComponent {
      */
     protected Context context;
     /**
-     * X and Y coordinates
+     * X coordinate
      */
     protected float xPos;
+    /**
+     * Y coordinate
+     */
     protected float yPos;
 
     /**

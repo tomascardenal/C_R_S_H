@@ -63,6 +63,11 @@ public class ParallaxBackground {
         position.x += velocity;
     }
 
+    /**
+     * Reverses this background's bitmap. Unused for the moment
+     *
+     * @param horizontally true for horizontal flip, false for vertical flip
+     */
     public void reverseBitmap(boolean horizontally) {
         Matrix matrix = new Matrix();
         if (horizontally) {

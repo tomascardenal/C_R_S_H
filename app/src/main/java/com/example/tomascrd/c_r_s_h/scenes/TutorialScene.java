@@ -20,7 +20,7 @@ import com.example.tomascrd.c_r_s_h.core.GameConstants;
 public class TutorialScene extends SceneCrsh {
 
     /**
-     * Paint object for the text
+     * Text painter
      */
     Paint pText;
 

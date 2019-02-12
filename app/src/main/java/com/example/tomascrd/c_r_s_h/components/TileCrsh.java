@@ -31,19 +31,24 @@ public class TileCrsh extends DrawableComponent {
      */
     protected Bitmap tileImage;
     /**
-     * Tile side length reference
+     * This tile's Rect right bottom x coordinate
      */
     protected int xBottom;
+    /**
+     * This tile's Rect right bottom y coordinate
+     */
     protected int yBottom;
 
     /**
      * Initializes a tile to it's parameters
      *
-     * @param context  the context for this tile
-     * @param drawable the drawable resource
-     * @param xPos     the tile's X position
-     * @param yPos     the tile's Y position
-     * @param tileType this tile's type
+     * @param context  The application's context
+     * @param drawable The tile's drawable, -1 for no drawable
+     * @param xPos     The tile's xPos, used as the Rect's top left x coordinate
+     * @param yPos     The tile's yPos, used as the Rect's top left y coordinate
+     * @param xBottom  The Rect's bottom right x coordinate
+     * @param yBottom  The Rect's bottom right y coordinate
+     * @param tileType The tile's type
      */
     public TileCrsh(Context context, int drawable, int xPos, int yPos, int xBottom, int yBottom, TILE_TYPE tileType) {
         this.context = context;
@@ -56,6 +61,26 @@ public class TileCrsh extends DrawableComponent {
         this.testPaint = new Paint();
         setPainter();
 
+    }
+
+    /**
+     * Initializes a tile to it's parameters
+     *
+     * @param context       The application's context
+     * @param drawable      The tile's drawable, -1 for no drawable
+     * @param collisionRect The tile's collisionRect
+     * @param tileType      The tile's type
+     */
+    public TileCrsh(Context context, int drawable, Rect collisionRect, TILE_TYPE tileType) {
+        this.context = context;
+        this.tileType = tileType;
+        this.collisionRect = collisionRect;
+        this.xPos = collisionRect.left;
+        this.yPos = collisionRect.top;
+        this.xBottom = collisionRect.right;
+        this.yBottom = collisionRect.bottom;
+        this.testPaint = new Paint();
+        setPainter();
     }
 
     /**
@@ -121,7 +146,7 @@ public class TileCrsh extends DrawableComponent {
         }
     }
 
-    public Rect getCollisionRect(){
+    public Rect getCollisionRect() {
         return this.collisionRect;
     }
 
