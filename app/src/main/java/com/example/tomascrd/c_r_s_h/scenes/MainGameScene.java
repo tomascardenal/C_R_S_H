@@ -3,10 +3,13 @@ package com.example.tomascrd.c_r_s_h.scenes;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.PointF;
 import android.util.Log;
 import android.view.MotionEvent;
 
+import com.example.tomascrd.c_r_s_h.components.CircleComponent;
 import com.example.tomascrd.c_r_s_h.components.MapCrsh;
+import com.example.tomascrd.c_r_s_h.components.PlayerCrsh;
 import com.example.tomascrd.c_r_s_h.components.SceneCrsh;
 
 /**
@@ -20,6 +23,14 @@ public class MainGameScene extends SceneCrsh {
      * Map to load on the main game scene
      */
     private MapCrsh mapLoad;
+    /**
+     * Players 1 and 2
+     */
+    private PlayerCrsh playerOne, playerTwo;
+    /**
+     * COM Player
+     */
+    private PlayerCrsh playerCom;
 
     /**
      * Starts a new main game
@@ -32,6 +43,9 @@ public class MainGameScene extends SceneCrsh {
     public MainGameScene(Context context, int id, int screenWidth, int screenHeight) {
         super(context, id, screenWidth, screenHeight);
         mapLoad = new MapCrsh(666, this);
+        mapLoad.loadTileArray();
+        PointF playerCenter = new PointF(mapLoad.tileArray[1][1].getCollisionRect().centerX(),mapLoad.tileArray[1][1].getCollisionRect().centerY());
+        playerOne = new PlayerCrsh("TestP1",1,false,new CircleComponent(playerCenter,mapLoad.getReference()/2));
     }
 
     /**

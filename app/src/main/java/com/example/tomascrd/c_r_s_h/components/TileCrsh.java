@@ -121,6 +121,10 @@ public class TileCrsh extends DrawableComponent {
         }
     }
 
+    public Rect getCollisionRect(){
+        return this.collisionRect;
+    }
+
     /**
      * Sets the drawable as a Bitmap using BMPFactory
      *

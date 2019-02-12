@@ -15,7 +15,7 @@ public class PlayerCrsh {
      */
     public String playerName;
     /**
-     * The player's id (either 0 or 1)
+     * The player's id (0 for com player, 1 for player one, 2 for player two)
      */
     public int playerId;
     /**
@@ -30,6 +30,14 @@ public class PlayerCrsh {
      * The player's lifes
      */
     private int playerLifes;
+    /**
+     * This player's x axis velocity
+     */
+    private float xVelocity;
+    /**
+     * This player's y axis velocity
+     */
+    private float yVelocity;
 
 
     /**
@@ -140,5 +148,65 @@ public class PlayerCrsh {
         if (this.playerLifes < 9) {
             this.playerLifes++;
         }
+    }
+
+    /**
+     * Sets this player's velocity on both axis
+     *
+     * @param xVelocity the xVelocity to set
+     * @param yVelocity the yVelocity to set
+     */
+    public void setVelocity(float xVelocity, float yVelocity){
+        setxVelocity(xVelocity);
+        setyVelocity(yVelocity);
+    }
+
+    /**
+     * Sets this player's xVelocity
+     * @param xVelocity the xVelocity to set
+     */
+    public void setxVelocity(float xVelocity){
+        if(xVelocity<=3 && xVelocity>=-3){
+            this.xVelocity = xVelocity;
+        }else if(xVelocity>3){
+            this.xVelocity = 3;
+        }else if(xVelocity<-3){
+            this.xVelocity = -3;
+        }
+    }
+
+    /**
+     * Sets this player's yVelocity
+     * @param yVelocity the yVelocity to set
+     */
+    public void setyVelocity(float yVelocity){
+        if(yVelocity<=3 && yVelocity>=-3){
+            this.yVelocity = yVelocity;
+        }else if(yVelocity>3){
+            this.yVelocity = 3;
+        }else if(yVelocity<-3){
+            this.yVelocity = -3;
+        }
+    }
+
+    /**
+     * Reverses this player's xVelocity
+     */
+    public void reverseXVelocity(){
+        this.xVelocity = -this.xVelocity;
+    }
+
+    /**
+     * Reverses this player's yVelocity
+     */
+    public void reverseYVelocity(){
+        this.yVelocity = -this.yVelocity;
+    }
+
+    /**
+     * Moves this player's position the distance indicated on it's velocity
+     */
+    public void move(){
+        this.playerCollision.move(xVelocity,yVelocity);
     }
 }

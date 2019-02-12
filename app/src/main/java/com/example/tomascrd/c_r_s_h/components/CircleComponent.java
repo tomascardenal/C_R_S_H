@@ -2,6 +2,7 @@ package com.example.tomascrd.c_r_s_h.components;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.PointF;
 import android.graphics.Rect;
 
 /**
@@ -32,6 +33,16 @@ public class CircleComponent extends DrawableComponent {
         this.yPos = yPos;
         this.radius = radius;
         this.circlePaint = new Paint();
+    }
+
+    /**
+     * Initializes a circle on the given PointF center, and radius
+     *
+     * @param center the circle's center point
+     * @param radius the circle's radius
+     */
+    public CircleComponent(PointF center, int radius) {
+        this(center.x, center.y, radius);
     }
 
     /**
@@ -90,5 +101,16 @@ public class CircleComponent extends DrawableComponent {
         }
         double cornerDistanceSquared = Math.pow(distanceX - rect.width() / 2, 2) + Math.pow(distanceY - rect.height() / 2, 2);
         return cornerDistanceSquared <= Math.pow(this.radius, 2);
+    }
+
+    /**
+     * Moves this circle component
+     *
+     * @param distanceX the distance to move on the X axis
+     * @param distanceY the distance to move on the Y axis
+     */
+    public void move(float distanceX, float distanceY) {
+        this.xPos += distanceX;
+        this.yPos += distanceY;
     }
 }

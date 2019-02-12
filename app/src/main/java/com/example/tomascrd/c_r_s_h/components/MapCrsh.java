@@ -12,11 +12,8 @@ import com.example.tomascrd.c_r_s_h.core.GameConstants;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Scanner;
-import java.util.stream.Collector;
 
 /**
  * Represents a map from the game
@@ -26,9 +23,11 @@ import java.util.stream.Collector;
 public class MapCrsh {
 
     public int mapID;
-    int reference, hReference;
+    public TileCrsh[][] tileArray;
+    private int reference;
+    private int hReference;
     private MainGameScene gameRef;
-    private TileCrsh.TILE_TYPE[][] mapArray;
+    private TileCrsh.TILE_TYPE[][] dataArray;
 
     /**
      * Starts a map on this ID and with the indicated reference
@@ -40,10 +39,10 @@ public class MapCrsh {
         this.gameRef = gameRef;
         this.mapID = mapID;
         this.reference = gameRef.screenWidth / GameConstants.GAMESCREEN_COLUMNS;
-        this.hReference = (gameRef.screenHeight - reference * GameConstants.GAMESCREEN_ROWS) / 2;
+        this.hReference = (gameRef.screenHeight - getReference() * GameConstants.GAMESCREEN_ROWS) / 2;
         if (mapID == 666) {
             if (!loadMap(666)) {
-                mapArray = testMap();
+                dataArray = testMap();
                 saveMap();
             }
         }
@@ -58,13 +57,13 @@ public class MapCrsh {
         if (this.mapID == -1) {
             drawTestGrid(c);
         } else {
-            if (mapArray == null) {
+            if (dataArray == null) {
                 loadMap(mapID);
             }
             TileCrsh currentTile;
             for (int i = 1; i < GameConstants.GAMESCREEN_ROWS - 1; i++) {
                 for (int j = 2; j < GameConstants.GAMESCREEN_COLUMNS - 2; j++) {
-                    currentTile = new TileCrsh(gameRef.context, -1, j * reference, i * reference + hReference, (j + 1) * reference, (i + 1) * reference + hReference, mapArray[i - 1][j - 2]);
+                    currentTile = tileArray[i - 1][j - 2];
                     c.drawRect(currentTile.collisionRect, currentTile.testPaint);
                 }
             }
@@ -84,7 +83,7 @@ public class MapCrsh {
         for (int i = 1; i < GameConstants.GAMESCREEN_ROWS - 1; i++) {
             for (int j = 2; j < GameConstants.GAMESCREEN_COLUMNS - 2; j++) {
                 pTiles.setColor(pTiles.getColor() == Color.GREEN ? Color.RED : Color.GREEN);
-                c.drawRect(j * reference, i * reference + hReference, (j + 1) * reference, (i + 1) * reference + hReference, pTiles);
+                c.drawRect(j * getReference(), i * getReference() + gethReference(), (j + 1) * getReference(), (i + 1) * getReference() + gethReference(), pTiles);
             }
             if (redFirst) {
                 pTiles.setColor(Color.RED);
@@ -92,6 +91,21 @@ public class MapCrsh {
                 pTiles.setColor(Color.GREEN);
             }
             redFirst = !redFirst;
+        }
+    }
+
+    /**
+     * Loads tiles into an array for their management
+     */
+    public void loadTileArray() {
+        tileArray = new TileCrsh[GameConstants.MAPAREA_ROWS][GameConstants.MAPAREA_COLUMNS];
+        for (int i = 1; i < GameConstants.GAMESCREEN_ROWS - 1; i++) {
+            for (int j = 2; j < GameConstants.GAMESCREEN_COLUMNS - 2; j++) {
+                tileArray[i - 1][j - 2] = new TileCrsh(
+                        gameRef.context, -1,
+                        j * getReference(), i * getReference() + gethReference(), (j + 1) * getReference(), (i + 1) * getReference() + gethReference(), dataArray[i - 1][j - 2]
+                );
+            }
         }
     }
 
@@ -127,13 +141,13 @@ public class MapCrsh {
      * @return a boolean depicting if the loading was successful
      */
     public boolean loadMap(int mapID) {
-        this.mapArray = new TileCrsh.TILE_TYPE[GameConstants.MAPAREA_ROWS][GameConstants.MAPAREA_COLUMNS];
+        this.dataArray = new TileCrsh.TILE_TYPE[GameConstants.MAPAREA_ROWS][GameConstants.MAPAREA_COLUMNS];
         try (FileInputStream fis = gameRef.context.openFileInput(mapID + GameConstants.MAPFILE_NAME)) {
             DataInputStream input = new DataInputStream(fis);
-            for (int i = 0; i < mapArray.length; i++) {
-                for (int j = 0; j < mapArray[i].length; j++) {
-                    mapArray[i][j] = TileCrsh.intToTileType(input.readInt());
-                    Log.i("mapValue", mapArray[i][j] + "");
+            for (int i = 0; i < dataArray.length; i++) {
+                for (int j = 0; j < dataArray[i].length; j++) {
+                    dataArray[i][j] = TileCrsh.intToTileType(input.readInt());
+                    Log.i("mapValue", dataArray[i][j] + "");
                 }
             }
         } catch (IOException e) {
@@ -150,13 +164,13 @@ public class MapCrsh {
      */
     public boolean saveMap() {
         Log.i("Saving map", "Saving map");
-        if (this.mapID != -1 && mapArray != null) {
+        if (this.mapID != -1 && dataArray != null) {
             try (FileOutputStream fos = gameRef.context.openFileOutput(mapID + GameConstants.MAPFILE_NAME, Context.MODE_PRIVATE)) {
                 DataOutputStream output = new DataOutputStream(fos);
-                for (int i = 0; i < mapArray.length; i++) {
-                    for (int j = 0; j < mapArray[i].length; j++) {
-                        output.writeInt(TileCrsh.tileTypeToInt(mapArray[i][j]));
-                        Log.i("mapValue", mapArray[i][j] + "");
+                for (int i = 0; i < dataArray.length; i++) {
+                    for (int j = 0; j < dataArray[i].length; j++) {
+                        output.writeInt(TileCrsh.tileTypeToInt(dataArray[i][j]));
+                        Log.i("mapValue", dataArray[i][j] + "");
                     }
                 }
             } catch (IOException e) {
@@ -168,4 +182,23 @@ public class MapCrsh {
             return false;
         }
     }
+
+    /**
+     * Returns this instance's tile width reference
+     *
+     * @return the reference value
+     */
+    public int getReference() {
+        return reference;
+    }
+
+    /**
+     * Returns this map's height offset
+     *
+     * @return the height offset value
+     */
+    public int gethReference() {
+        return hReference;
+    }
+
 }
