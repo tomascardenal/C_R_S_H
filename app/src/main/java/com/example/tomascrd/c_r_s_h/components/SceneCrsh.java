@@ -8,6 +8,7 @@ import android.graphics.Typeface;
 import android.view.MotionEvent;
 
 import com.example.tomascrd.c_r_s_h.R;
+import com.example.tomascrd.c_r_s_h.core.GameConstants;
 
 /**
  * Represents the general idea of a screen of the game
@@ -52,7 +53,7 @@ public class SceneCrsh {
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
         if (backBtn == null) {
-            backBtn = new ButtonComponent(context, Typeface.createFromAsset(context.getAssets(), "fa-solid-900.ttf"), context.getString(R.string.btnBack), screenWidth - screenWidth / 16, 0, screenWidth, screenWidth / 16, Color.TRANSPARENT);
+            backBtn = new ButtonComponent(context, Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_AWESOME), context.getString(R.string.btnBack), screenWidth - screenWidth / 16, 0, screenWidth, screenWidth / 16, Color.TRANSPARENT);
         }
     }
 

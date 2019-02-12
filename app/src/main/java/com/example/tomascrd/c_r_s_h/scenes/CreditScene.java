@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 
 import com.example.tomascrd.c_r_s_h.R;
 import com.example.tomascrd.c_r_s_h.components.SceneCrsh;
+import com.example.tomascrd.c_r_s_h.core.GameConstants;
 
 /**
  * Scene which contains this game's credits
@@ -34,7 +35,7 @@ public class CreditScene extends SceneCrsh {
     public CreditScene(Context context, int id, int screenWidth, int screenHeight) {
         super(context, id, screenWidth, screenHeight);
         pText = new Paint();
-        pText.setTypeface(Typeface.createFromAsset(context.getAssets(), "KarmaFuture.ttf"));
+        pText.setTypeface(Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_KARMAFUTURE));
         pText.setColor(Color.BLACK);
         pText.setTextAlign(Paint.Align.CENTER);
         pText.setTextSize((float) ((screenHeight / SCREEN_COLUMNS) * 2.5));

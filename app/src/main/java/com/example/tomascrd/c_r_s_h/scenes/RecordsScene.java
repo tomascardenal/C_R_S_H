@@ -36,7 +36,7 @@ public class RecordsScene extends SceneCrsh {
         super(context, id, screenWidth, screenHeight);
         //Title text
         pText = new Paint();
-        pText.setTypeface(Typeface.createFromAsset(context.getAssets(), "KarmaFuture.ttf"));
+        pText.setTypeface(Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_KARMAFUTURE));
         pText.setColor(Color.BLACK);
         pText.setTextAlign(Paint.Align.CENTER);
         pText.setTextSize((float) ((screenHeight / GameConstants.MENUSCREEN_COLUMNS) * 2.5));

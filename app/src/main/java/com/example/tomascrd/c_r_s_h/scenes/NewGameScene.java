@@ -41,14 +41,14 @@ public class NewGameScene extends SceneCrsh {
         super(context, id, screenWidth, screenHeight);
         //Title text
         pText = new Paint();
-        pText.setTypeface(Typeface.createFromAsset(context.getAssets(), "KarmaFuture.ttf"));
+        pText.setTypeface(Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_KARMAFUTURE));
         pText.setColor(Color.BLACK);
         pText.setTextAlign(Paint.Align.CENTER);
         pText.setTextSize((float) ((screenHeight / GameConstants.MENUSCREEN_COLUMNS) * 2.5));
 
         //Buttons
         btnStartGame = new ButtonComponent(context,
-                Typeface.createFromAsset(context.getAssets(), "homespun.ttf"),
+                Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN),
                 context.getString(R.string.btnStartGame),
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 6,
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 6,

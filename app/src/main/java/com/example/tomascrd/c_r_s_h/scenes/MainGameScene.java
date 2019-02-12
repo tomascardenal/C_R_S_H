@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 
 import com.example.tomascrd.c_r_s_h.components.CircleComponent;
+import com.example.tomascrd.c_r_s_h.components.GamepadComponent;
 import com.example.tomascrd.c_r_s_h.components.MapCrsh;
 import com.example.tomascrd.c_r_s_h.components.PlayerCrsh;
 import com.example.tomascrd.c_r_s_h.components.SceneCrsh;
@@ -35,6 +36,14 @@ public class MainGameScene extends SceneCrsh {
      * COM Player
      */
     private PlayerCrsh playerCom;
+    /**
+     * Player 1 controls
+     */
+    private GamepadComponent padOne;
+    /**
+     * Player 2 controls
+     */
+    private GamepadComponent padTwo;
 
     /**
      * Starts a new main game
@@ -46,10 +55,12 @@ public class MainGameScene extends SceneCrsh {
      */
     public MainGameScene(Context context, int id, int screenWidth, int screenHeight) {
         super(context, id, screenWidth, screenHeight);
-        mapLoad = new MapCrsh(666, this);
+        mapLoad = new MapCrsh(666, context,screenWidth,screenHeight);
         mapLoad.loadTileArray();
         PointF playerCenter = new PointF(mapLoad.tileArray[1][1].getCollisionRect().centerX(), mapLoad.tileArray[1][1].getCollisionRect().centerY());
         playerOne = new PlayerCrsh("TestP1", 1, false, new CircleComponent(playerCenter, mapLoad.getReference() / 2));
+        padOne = new GamepadComponent(context,1,screenHeight,screenWidth,mapLoad.getReference());
+        padTwo = new GamepadComponent(context,2,screenHeight,screenWidth,mapLoad.getReference());
     }
 
     /**
@@ -72,6 +83,8 @@ public class MainGameScene extends SceneCrsh {
         //Grid test (IT WORKS, on my phone at least)
         mapLoad.draw(c);
         playerOne.playerCollision.draw(c);
+        padOne.draw(c);
+        padTwo.draw(c);
         backBtn.draw(c);
     }
 

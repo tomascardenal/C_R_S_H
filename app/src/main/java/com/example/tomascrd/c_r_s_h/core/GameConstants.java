@@ -1,5 +1,7 @@
 package com.example.tomascrd.c_r_s_h.core;
 
+import android.graphics.Typeface;
+
 /**
  * Constants of common use in the whole game
  *
@@ -46,4 +48,16 @@ public final class GameConstants {
      * Reference name for mapfiles
      */
     public static String MAPFILE_NAME = "map.crsh";
+    /**
+     * Font awesome path
+     */
+    public static String FONT_AWESOME = "fa-solid-900.ttf";
+    /**
+     * Homespun font path
+     */
+    public static String FONT_HOMESPUN = "homespun.ttf";
+    /**
+     * KarmaFuture font path
+     */
+    public static String FONT_KARMAFUTURE = "KarmaFuture.ttf";
 }

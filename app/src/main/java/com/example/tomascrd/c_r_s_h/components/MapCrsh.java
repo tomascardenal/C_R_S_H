@@ -20,30 +20,37 @@ import java.io.IOException;
  *
  * @author Tomás Cardenal López
  */
-public class MapCrsh {
+public class MapCrsh extends DrawableComponent {
 
     public int mapID;
     public TileCrsh[][] tileArray;
+    public int screenWidth;
+    public int screenHeight;
     private int reference;
     private int hReference;
-    private MainGameScene gameRef;
     private TileCrsh.TILE_TYPE[][] dataArray;
 
     /**
      * Starts a map on this ID and with the indicated reference
      *
-     * @param mapID   The id for the map to load, -1 for test grid
-     * @param gameRef
+     * @param mapID        The id for the map to load, -1 for test grid
+     * @param context      The application context
+     * @param screenWidth  The screen width
+     * @param screenHeight The screen height
      */
-    public MapCrsh(int mapID, MainGameScene gameRef) {
-        this.gameRef = gameRef;
+    public MapCrsh(int mapID, Context context, int screenWidth, int screenHeight) {
+        this.context = context;
         this.mapID = mapID;
-        this.reference = gameRef.screenWidth / GameConstants.GAMESCREEN_COLUMNS;
-        this.hReference = (gameRef.screenHeight - getReference() * GameConstants.GAMESCREEN_ROWS) / 2;
+        this.screenWidth = screenWidth;
+        this.screenHeight = screenHeight;
+        this.reference = screenWidth / GameConstants.GAMESCREEN_COLUMNS;
+        this.hReference = (screenHeight - getReference() * GameConstants.GAMESCREEN_ROWS) / 2;
+        this.xPos = screenWidth - (screenWidth - (reference * GameConstants.MAPAREA_COLUMNS));
+        this.yPos = hReference;
         if (mapID == 666) {
             //if (!loadMap(666)) {
-                dataArray = testMap();
-                saveMap();
+            dataArray = testMap();
+            saveMap();
             //}
         }
     }
@@ -53,6 +60,7 @@ public class MapCrsh {
      *
      * @param c the canvas to draw
      */
+    @Override
     public void draw(Canvas c) {
         if (this.mapID == -1) {
             drawTestGrid(c);
@@ -101,8 +109,7 @@ public class MapCrsh {
         tileArray = new TileCrsh[GameConstants.MAPAREA_ROWS][GameConstants.MAPAREA_COLUMNS];
         for (int i = 1; i < GameConstants.GAMESCREEN_ROWS - 1; i++) {
             for (int j = 3; j < GameConstants.GAMESCREEN_COLUMNS - 3; j++) {
-                tileArray[i - 1][j - 3] = new TileCrsh(
-                        gameRef.context, -1,
+                tileArray[i - 1][j - 3] = new TileCrsh(context, -1,
                         j * getReference(), i * getReference() + gethReference(), (j + 1) * getReference(), (i + 1) * getReference() + gethReference(), dataArray[i - 1][j - 3]
                 );
             }
@@ -142,7 +149,7 @@ public class MapCrsh {
      */
     public boolean loadMap(int mapID) {
         this.dataArray = new TileCrsh.TILE_TYPE[GameConstants.MAPAREA_ROWS][GameConstants.MAPAREA_COLUMNS];
-        try (FileInputStream fis = gameRef.context.openFileInput(mapID + GameConstants.MAPFILE_NAME)) {
+        try (FileInputStream fis = context.openFileInput(mapID + GameConstants.MAPFILE_NAME)) {
             DataInputStream input = new DataInputStream(fis);
             for (int i = 0; i < dataArray.length; i++) {
                 for (int j = 0; j < dataArray[i].length; j++) {
@@ -165,7 +172,7 @@ public class MapCrsh {
     public boolean saveMap() {
         Log.i("Saving map", "Saving map");
         if (this.mapID != -1 && dataArray != null) {
-            try (FileOutputStream fos = gameRef.context.openFileOutput(mapID + GameConstants.MAPFILE_NAME, Context.MODE_PRIVATE)) {
+            try (FileOutputStream fos = context.openFileOutput(mapID + GameConstants.MAPFILE_NAME, Context.MODE_PRIVATE)) {
                 DataOutputStream output = new DataOutputStream(fos);
                 for (int i = 0; i < dataArray.length; i++) {
                     for (int j = 0; j < dataArray[i].length; j++) {

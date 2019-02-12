@@ -6,6 +6,14 @@
     <string name="btnRecords">Récords</string>
     <string name="btnTutorial">Tutorial</string>
     <string name="btnBack" translatable="false"></string>
+    <string name="btnRight1" translatable="false"></string>
+    <string name="btnLeft1" translatable="false"></string>
+    <string name="btnUp1" translatable="false"></string>
+    <string name="btnDown1" translatable="false"></string>
+    <string name="btnLeft2" translatable="false"></string>
+    <string name="btnRight2" translatable="false"></string>
+    <string name="btnDown2" translatable="false"></string>
+    <string name="btnUp2" translatable="false"></string>
     <string name="titleNewGame">Nueva Partida</string>
     <string name="btnStartGame">Comenzar partida</string>
 </resources>

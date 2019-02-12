@@ -68,7 +68,7 @@ public class MainMenuScene extends SceneCrsh {
         super(context, id, screenWidth, screenHeight);
         //Title text
         pText = new Paint();
-        pText.setTypeface(Typeface.createFromAsset(context.getAssets(), "KarmaFuture.ttf"));
+        pText.setTypeface(Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_KARMAFUTURE));
         pText.setColor(Color.BLACK);
         pText.setTextAlign(Paint.Align.CENTER);
         pText.setTextSize((float) ((screenHeight / GameConstants.MENUSCREEN_COLUMNS) * 2.5));
@@ -81,7 +81,7 @@ public class MainMenuScene extends SceneCrsh {
 
         //Initialize buttons
         btnNewGame = new ButtonComponent(context,
-                Typeface.createFromAsset(context.getAssets(), "homespun.ttf"),
+                Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN),
                 context.getString(R.string.btnPlay),
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 7,
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 3,
@@ -89,7 +89,7 @@ public class MainMenuScene extends SceneCrsh {
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 4);
 
         btnOptions = new ButtonComponent(context,
-                Typeface.createFromAsset(context.getAssets(), "homespun.ttf"),
+                Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN),
                 context.getString(R.string.btnOptions),
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS,
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 5,
@@ -97,7 +97,7 @@ public class MainMenuScene extends SceneCrsh {
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 6);
 
         btnCredits = new ButtonComponent(context,
-                Typeface.createFromAsset(context.getAssets(), "homespun.ttf"),
+                Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN),
                 context.getString(R.string.btnCredits),
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 5,
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 5,
@@ -105,7 +105,7 @@ public class MainMenuScene extends SceneCrsh {
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 6);
 
         btnRecords = new ButtonComponent(context,
-                Typeface.createFromAsset(context.getAssets(), "homespun.ttf"),
+                Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN),
                 context.getString(R.string.btnRecords),
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 10,
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 5,
@@ -113,7 +113,7 @@ public class MainMenuScene extends SceneCrsh {
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 6);
 
         btnTutorial = new ButtonComponent(context,
-                Typeface.createFromAsset(context.getAssets(), "homespun.ttf"),
+                Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN),
                 context.getString(R.string.btnTutorial),
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 14,
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 5,
@@ -152,7 +152,7 @@ public class MainMenuScene extends SceneCrsh {
         }
 
         //Title
-        c.drawText("C_R_S_H", screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9, screenHeight / GameConstants.MENUSCREEN_ROWS * 2, pText);
+        c.drawText(context.getString(R.string.app_name), screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9, screenHeight / GameConstants.MENUSCREEN_ROWS * 2, pText);
 
         //Menu buttons
         btnNewGame.draw(c);
