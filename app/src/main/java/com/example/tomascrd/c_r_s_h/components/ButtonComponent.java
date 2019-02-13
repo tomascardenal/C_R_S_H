@@ -15,15 +15,6 @@ import android.graphics.Typeface;
 public class ButtonComponent extends DrawableComponent {
 
     /**
-     * Width of the button
-     */
-    protected float width;
-    /**
-     * Height of the button
-     */
-    protected float height;
-
-    /**
      * Right coordinate for this button's Rect
      */
     protected int xRight;

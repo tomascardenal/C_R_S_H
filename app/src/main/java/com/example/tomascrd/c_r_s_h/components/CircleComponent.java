@@ -32,6 +32,8 @@ public class CircleComponent extends DrawableComponent {
         this.xPos = xPos;
         this.yPos = yPos;
         this.radius = radius;
+        this.width = radius*2;
+        this.height = this.width;
         this.circlePaint = new Paint();
     }
 

@@ -126,6 +126,7 @@ public class MainGameScene extends SceneCrsh {
         GamepadComponent[] gamepads = {padOne, padTwo};
         PlayerCrsh[] players = {playerOne, playerTwo};
         if (isClick(gamepads[player].btnUp, event)) {
+            
             players[player].setxVelocity((float) -1);
         } else if (isClick(gamepads[player].btnDown, event)) {
             players[player].setxVelocity((float) 1);

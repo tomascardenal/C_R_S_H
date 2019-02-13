@@ -22,6 +22,14 @@ public abstract class DrawableComponent {
      * Y coordinate
      */
     protected float yPos;
+    /**
+     * Component height
+     */
+    public float height;
+    /**
+     * Component width
+     */
+    public float width;
 
     /**
      * Draws the components on screen
