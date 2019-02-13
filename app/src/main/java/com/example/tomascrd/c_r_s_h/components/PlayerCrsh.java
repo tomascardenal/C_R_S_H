@@ -53,7 +53,7 @@ public class PlayerCrsh {
         this.onAttack = onAttack;
         this.playerCollision = playerCollision;
         this.playerLifes = 3;
-        switch(playerId){
+        switch (playerId) {
             case 0:
                 this.playerCollision.setColor(Color.RED);
                 break;
@@ -203,14 +203,14 @@ public class PlayerCrsh {
      * Reverses this player's xVelocity
      */
     public void reverseXVelocity() {
-        this.xVelocity = -this.xVelocity;
+        this.xVelocity = this.xVelocity * -1;
     }
 
     /**
      * Reverses this player's yVelocity
      */
     public void reverseYVelocity() {
-        this.yVelocity = -this.yVelocity;
+        this.yVelocity = this.yVelocity * -1;
     }
 
     /**

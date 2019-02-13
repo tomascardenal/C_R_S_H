@@ -73,8 +73,6 @@ public class RecordsScene extends SceneCrsh {
      * @return the pointerId;
      */
     public int onTouchEvent(MotionEvent event) {
-        int pointerIndex = event.getActionIndex();
-        int pointerID = event.getPointerId(pointerIndex);
         int action = event.getActionMasked();
         switch (action) {
             case MotionEvent.ACTION_DOWN:           // First finger

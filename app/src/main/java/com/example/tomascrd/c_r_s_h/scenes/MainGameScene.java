@@ -95,26 +95,20 @@ public class MainGameScene extends SceneCrsh {
      * @return the pointerId;
      */
     public int onTouchEvent(MotionEvent event) {
-        int pointerIndex = event.getActionIndex();
-        int pointerID = event.getPointerId(pointerIndex);
         int action = event.getActionMasked();
         switch (action) {
             case MotionEvent.ACTION_DOWN:           // First finger
             case MotionEvent.ACTION_POINTER_DOWN:  // Second finger and so on
                 gamePadDown(0, event);
                 break;
-
             case MotionEvent.ACTION_UP:                     // Last finger up
-                playerOne.setVelocity(0,0);
-                break;
             case MotionEvent.ACTION_POINTER_UP:  // Any other finger up
-                gamePadUp(0,event);
+                gamePadUp(0, event);
                 if (isClick(backBtn, event)) {
                     return 0;
                 }
                 break;
             case MotionEvent.ACTION_MOVE: // Any finger moves
-
                 break;
             default:
                 Log.i("Other", "Undefined action: " + action);
@@ -124,6 +118,7 @@ public class MainGameScene extends SceneCrsh {
 
     /**
      * Routine for gamepad touch events
+     *
      * @param player The player controlling this gamepad
      * @param event  The event which launched this action
      */
@@ -131,38 +126,32 @@ public class MainGameScene extends SceneCrsh {
         GamepadComponent[] gamepads = {padOne, padTwo};
         PlayerCrsh[] players = {playerOne, playerTwo};
         if (isClick(gamepads[player].btnUp, event)) {
-            players[player].setxVelocity((float) -0.5);
-        }
-        if (isClick(gamepads[player].btnDown, event)) {
-            players[player].setxVelocity((float) 0.5);
+            players[player].setxVelocity((float) -1);
+        } else if (isClick(gamepads[player].btnDown, event)) {
+            players[player].setxVelocity((float) 1);
         }
         if (isClick(gamepads[player].btnLeft, event)) {
-            players[player].setyVelocity((float) 0.5);
-        }
-        if (isClick(gamepads[player].btnRight, event)) {
-            players[player].setyVelocity((float) -0.5);
+            players[player].setyVelocity((float) 1);
+        } else if (isClick(gamepads[player].btnRight, event)) {
+            players[player].setyVelocity((float) -1);
         }
     }
 
     /**
      * Routine for gamepad touch events
+     *
      * @param player The player controlling this gamepad
      * @param event  The event which launched this action
      */
     public void gamePadUp(int player, MotionEvent event) {
         GamepadComponent[] gamepads = {padOne, padTwo};
         PlayerCrsh[] players = {playerOne, playerTwo};
-        if (isClick(gamepads[player].btnUp, event)) {
+        if (isClick(gamepads[player].btnUp, event) || isClick(gamepads[player].btnDown, event)) {
             players[player].setxVelocity((float) 0);
         }
-        if (isClick(gamepads[player].btnDown, event)) {
-            players[player].setxVelocity((float) 0);
-        }
-        if (isClick(gamepads[player].btnLeft, event)) {
+        if (isClick(gamepads[player].btnLeft, event) || isClick(gamepads[player].btnRight, event)) {
             players[player].setyVelocity((float) 0);
         }
-        if (isClick(gamepads[player].btnRight, event)) {
-            players[player].setyVelocity((float) 0);
-        }
+
     }
 }

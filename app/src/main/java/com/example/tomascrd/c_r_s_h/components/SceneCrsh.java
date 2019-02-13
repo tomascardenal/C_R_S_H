@@ -64,7 +64,6 @@ public class SceneCrsh {
      * @return this scene's id or the corresponding new id
      */
     public int onTouchEvent(MotionEvent event) {
-
         return getId();
     }
 
@@ -81,18 +80,17 @@ public class SceneCrsh {
      * @param c the canvas to draw
      */
     public void draw(Canvas c) {
-
     }
 
     /**
-     * Determines if a rectangle on a button is clicked
+     * Determines if a rectangle on a button is clicked by the ActionIndex of the event
      *
      * @param btn   the button
      * @param event the motion event detected
      * @return true if the button was clicked
      */
     public boolean isClick(ButtonComponent btn, MotionEvent event) {
-        return btn.btnRect.contains((int) event.getX(), (int) event.getY());
+        return btn.btnRect.contains((int) event.getX(event.getActionIndex()), (int) event.getY(event.getActionIndex()));
     }
 
     /**
