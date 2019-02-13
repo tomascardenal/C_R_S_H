@@ -44,6 +44,11 @@ public class MainGameScene extends SceneCrsh {
      * Player 2 controls
      */
     private GamepadComponent padTwo;
+    /**
+     * Controls if the players moved
+     */
+    private boolean[] playerMoved;
+
 
     /**
      * Starts a new main game
@@ -57,10 +62,11 @@ public class MainGameScene extends SceneCrsh {
         super(context, id, screenWidth, screenHeight);
         mapLoad = new MapComponent(666, context, screenWidth, screenHeight);
         mapLoad.loadTileArray();
-        PointF playerCenter = new PointF(mapLoad.tileArray[1][1].getCollisionRect().centerX(), mapLoad.tileArray[1][1].getCollisionRect().centerY());
-        playerOne = new PlayerCrsh("TestP1", 1, false, new CircleComponent(playerCenter, mapLoad.getReference() / 2));
+        PointF playerCenter = new PointF(mapLoad.tileArray[2][2].getCollisionRect().exactCenterX(), mapLoad.tileArray[2][2].getCollisionRect().exactCenterY());
+        playerOne = new PlayerCrsh(mapLoad,"TestP1", 1, false, new CircleComponent(playerCenter, mapLoad.getReference() / 2));
         padOne = new GamepadComponent(context, 1, screenHeight, screenWidth, mapLoad.getReference());
         padTwo = new GamepadComponent(context, 2, screenHeight, screenWidth, mapLoad.getReference());
+        playerMoved = new boolean[2];
     }
 
     /**
@@ -68,7 +74,9 @@ public class MainGameScene extends SceneCrsh {
      */
     @Override
     public void updatePhysics() {
-        playerOne.move();
+        if(playerMoved[0]){
+            playerOne.move();
+        }
     }
 
     /**
@@ -125,16 +133,25 @@ public class MainGameScene extends SceneCrsh {
     public void gamePadDown(int player, MotionEvent event) {
         GamepadComponent[] gamepads = {padOne, padTwo};
         PlayerCrsh[] players = {playerOne, playerTwo};
+        playerMoved[player] = false;
+
         if (isClick(gamepads[player].btnUp, event)) {
-            
-            players[player].setxVelocity((float) -1);
+            players[player].setxVelocity((float) -5);
+            Log.i("PULSADO","ARRIBA");
+            playerMoved[player] = true;
         } else if (isClick(gamepads[player].btnDown, event)) {
-            players[player].setxVelocity((float) 1);
+            players[player].setxVelocity((float) 5);
+            Log.i("PULSADO","ABAJO");
+            playerMoved[player] = true;
         }
         if (isClick(gamepads[player].btnLeft, event)) {
-            players[player].setyVelocity((float) 1);
+            players[player].setyVelocity((float) 5);
+            Log.i("PULSADO","IZQUIERDA");
+            playerMoved[player] = true;
         } else if (isClick(gamepads[player].btnRight, event)) {
-            players[player].setyVelocity((float) -1);
+            players[player].setyVelocity((float) -5);
+            Log.i("PULSADO","DERECHA");
+            playerMoved[player] = true;
         }
     }
 
@@ -153,6 +170,8 @@ public class MainGameScene extends SceneCrsh {
         if (isClick(gamepads[player].btnLeft, event) || isClick(gamepads[player].btnRight, event)) {
             players[player].setyVelocity((float) 0);
         }
-
+        if(event.getActionIndex()==0){
+            playerMoved[player] = false;
+        }
     }
 }
