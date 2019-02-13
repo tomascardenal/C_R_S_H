@@ -19,10 +19,10 @@ import com.example.tomascrd.c_r_s_h.core.GameConstants;
  */
 public class CreditScene extends SceneCrsh {
 
+    /**
+     * Text painter
+     */
     Paint pText;
-    private int SCREEN_COLUMNS = 18;
-    private int SCREEN_ROWS = 8;
-
 
     /**
      * Starts a credits scene
@@ -38,7 +38,7 @@ public class CreditScene extends SceneCrsh {
         pText.setTypeface(Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_KARMAFUTURE));
         pText.setColor(Color.BLACK);
         pText.setTextAlign(Paint.Align.CENTER);
-        pText.setTextSize((float) ((screenHeight / SCREEN_COLUMNS) * 2.5));
+        pText.setTextSize((float) ((screenHeight / GameConstants.MENUSCREEN_COLUMNS) * 2.5));
     }
 
     /**
@@ -57,10 +57,8 @@ public class CreditScene extends SceneCrsh {
     public void draw(Canvas c) {
         //General background
         c.drawColor(Color.GREEN);
-
         //Test text
-        c.drawText(context.getString(R.string.btnCredits), screenWidth / SCREEN_COLUMNS * 9, screenHeight / SCREEN_ROWS * 2, pText);
-
+        c.drawText(context.getString(R.string.btnCredits), screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9, screenHeight / GameConstants.MENUSCREEN_ROWS * 2, pText);
         backBtn.draw(c);
 
     }

@@ -77,7 +77,6 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
             int newScene = currentScene.onTouchEvent(event);
             if (newScene != currentScene.getId()) {
                 switch (newScene) {
-                    //TODO Scene control
                     case 0:
                         currentScene = new MainMenuScene(context, newScene, screenWidth, screenHeight);
                         break;
@@ -150,7 +149,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
         try {
             thread.join();
         } catch (InterruptedException e) {
-            Log.wtf("What a terrible failure: ", e.getLocalizedMessage());
+            Log.i("SurfaceDestroyed Error", e.getLocalizedMessage());
         }
     }
 
@@ -176,7 +175,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
                     if (!surfaceHolder.getSurface().isValid()) {
                         continue;
                     }
-                    if(!canvasLocked){
+                    if (!canvasLocked) {
                         c = surfaceHolder.lockCanvas();
                         canvasLocked = true;
                     }
@@ -186,7 +185,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
                             currentScene.draw(c);
                         }
                     }
-                } catch (IllegalArgumentException e){
+                } catch (IllegalArgumentException e) {
                     canvasLocked = false;
                 } finally {
                     if (c != null && canvasLocked) {
@@ -226,7 +225,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
          */
         public void setSurfaceSize(int width, int height) {
             synchronized (surfaceHolder) {
-                
+
             }
         }
     }

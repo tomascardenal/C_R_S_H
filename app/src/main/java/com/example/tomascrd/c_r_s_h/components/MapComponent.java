@@ -65,8 +65,8 @@ public class MapComponent extends DrawableComponent {
         this.screenHeight = screenHeight;
         this.reference = screenWidth / GameConstants.GAMESCREEN_COLUMNS;
         this.hReference = (screenHeight - getReference() * GameConstants.GAMESCREEN_ROWS) / 2;
-        this.width = this.reference*GameConstants.GAMESCREEN_COLUMNS;
-        this.height = this.reference*GameConstants.GAMESCREEN_ROWS;
+        this.width = this.reference * GameConstants.GAMESCREEN_COLUMNS;
+        this.height = this.reference * GameConstants.GAMESCREEN_ROWS;
         this.xPos = screenWidth - (screenWidth - (reference * GameConstants.MAPAREA_COLUMNS));
         this.yPos = hReference;
         if (mapID == 666) {

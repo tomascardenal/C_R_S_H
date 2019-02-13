@@ -47,6 +47,7 @@ public class ButtonComponent extends DrawableComponent {
      * Creates a Button with the given parameters and gray background color
      *
      * @param context the context
+     * @param font    the font to use on this button
      * @param text    the text within the button
      * @param xPos    the button's x position
      * @param yPos    the button's y position
@@ -80,6 +81,7 @@ public class ButtonComponent extends DrawableComponent {
      * Creates a Button with the given parameters, a background color must be given
      *
      * @param context    the context
+     * @param font       the font to use on this button
      * @param text       the text within the button
      * @param xPos       the button's x position
      * @param yPos       the button's y position

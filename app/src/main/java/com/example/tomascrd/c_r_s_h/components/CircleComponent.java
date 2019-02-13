@@ -32,7 +32,7 @@ public class CircleComponent extends DrawableComponent {
         this.xPos = xPos;
         this.yPos = yPos;
         this.radius = radius;
-        this.width = radius*2;
+        this.width = radius * 2;
         this.height = this.width;
         this.circlePaint = new Paint();
     }
@@ -84,7 +84,7 @@ public class CircleComponent extends DrawableComponent {
      * Determines a collision between this and a rectangle
      *
      * @param rect the rectangle
-     * @return whethet there's been a collision
+     * @return whether there's been a collision
      */
     public boolean collision(Rect rect) {
         double distanceX = Math.abs(this.xPos - rect.centerX());

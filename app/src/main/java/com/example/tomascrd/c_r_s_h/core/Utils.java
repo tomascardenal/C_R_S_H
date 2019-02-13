@@ -30,8 +30,8 @@ public class Utils {
     /**
      * Parses a bitmap from assets
      *
-     * @param file
-     * @return
+     * @param file The path to the file on assets
+     * @return The bitmap
      */
     public Bitmap getBitmapFromAssets(String file) {
         try {

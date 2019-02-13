@@ -146,6 +146,11 @@ public class TileComponent extends DrawableComponent {
         }
     }
 
+    /**
+     * Fetches the collision rectangle of this tile
+     *
+     * @return this tile's collision rectangle
+     */
     public Rect getCollisionRect() {
         return this.collisionRect;
     }

@@ -29,9 +29,12 @@ public class SceneCrsh {
      */
     public int id;
     /**
-     * The screen width and height
+     * The screen width
      */
     public int screenWidth;
+    /**
+     * The screen height
+     */
     public int screenHeight;
     /**
      * If avaliable, this scene's background image

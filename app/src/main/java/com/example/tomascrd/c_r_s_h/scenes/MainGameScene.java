@@ -63,7 +63,7 @@ public class MainGameScene extends SceneCrsh {
         mapLoad = new MapComponent(666, context, screenWidth, screenHeight);
         mapLoad.loadTileArray();
         PointF playerCenter = new PointF(mapLoad.tileArray[2][2].getCollisionRect().exactCenterX(), mapLoad.tileArray[2][2].getCollisionRect().exactCenterY());
-        playerOne = new PlayerCrsh(mapLoad,"TestP1", 1, false, new CircleComponent(playerCenter, mapLoad.getReference() / 2));
+        playerOne = new PlayerCrsh(mapLoad, "TestP1", 1, false, new CircleComponent(playerCenter, mapLoad.getReference() / 2));
         padOne = new GamepadComponent(context, 1, screenHeight, screenWidth, mapLoad.getReference());
         padTwo = new GamepadComponent(context, 2, screenHeight, screenWidth, mapLoad.getReference());
         playerMoved = new boolean[2];
@@ -74,7 +74,7 @@ public class MainGameScene extends SceneCrsh {
      */
     @Override
     public void updatePhysics() {
-        if(playerMoved[0]){
+        if (playerMoved[0]) {
             playerOne.move();
         }
     }
@@ -137,20 +137,20 @@ public class MainGameScene extends SceneCrsh {
 
         if (isClick(gamepads[player].btnUp, event)) {
             players[player].setxVelocity((float) -5);
-            Log.i("PULSADO","ARRIBA");
+            Log.i("PULSADO", "ARRIBA");
             playerMoved[player] = true;
         } else if (isClick(gamepads[player].btnDown, event)) {
             players[player].setxVelocity((float) 5);
-            Log.i("PULSADO","ABAJO");
+            Log.i("PULSADO", "ABAJO");
             playerMoved[player] = true;
         }
         if (isClick(gamepads[player].btnLeft, event)) {
             players[player].setyVelocity((float) 5);
-            Log.i("PULSADO","IZQUIERDA");
+            Log.i("PULSADO", "IZQUIERDA");
             playerMoved[player] = true;
         } else if (isClick(gamepads[player].btnRight, event)) {
             players[player].setyVelocity((float) -5);
-            Log.i("PULSADO","DERECHA");
+            Log.i("PULSADO", "DERECHA");
             playerMoved[player] = true;
         }
     }
@@ -170,7 +170,7 @@ public class MainGameScene extends SceneCrsh {
         if (isClick(gamepads[player].btnLeft, event) || isClick(gamepads[player].btnRight, event)) {
             players[player].setyVelocity((float) 0);
         }
-        if(event.getActionIndex()==0){
+        if (event.getActionIndex() == 0) {
             playerMoved[player] = false;
         }
     }
