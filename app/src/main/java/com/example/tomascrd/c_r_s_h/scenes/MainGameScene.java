@@ -45,7 +45,7 @@ public class MainGameScene extends SceneCrsh {
      */
     private GamepadComponent padTwo;
     /**
-     * Controls if the players moved
+     * Controls if the players are moving
      */
     private boolean[] playerMoved;
 

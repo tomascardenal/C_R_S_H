@@ -287,11 +287,14 @@ public class PlayerCrsh {
         CircleComponent xMovedCircle = new CircleComponent(this.playerCollision.xPos + xVelocity, this.playerCollision.yPos, this.playerCollision.radius);
         CircleComponent yMovedCircle = new CircleComponent(this.playerCollision.xPos, this.playerCollision.yPos + yVelocity, this.playerCollision.radius);
         TileComponent currentTile;
+
         if(bounceBackX){
             xVelocity = restoreXVelocity;
+            bounceBackX = false;
         }
         if(bounceBackY){
             yVelocity = restoreYVelocity;
+            bounceBackY = false;
         }
         for (int i = 0; i < surroundingTiles.length; i++) {
             currentTile = surroundingTiles[i];
@@ -305,19 +308,20 @@ public class PlayerCrsh {
                         currentTile.tileType = TileComponent.TILE_TYPE.TILE_PATH;
                         currentTile.setPainter();
                         restoreXVelocity = xVelocity;
-                        xVelocity = (float) -0.5;
+                        xVelocity = xVelocity>0?(float) -2.5:(float) 2.5;
                         bounceBackX = true;
+                        playerCollision.move(xVelocity,0);
                         break;
                     case TILE_BREAKTWO:
                         currentTile.tileType = TileComponent.TILE_TYPE.TILE_BREAKONE;
                         currentTile.setPainter();
                         restoreXVelocity = xVelocity;
-                        xVelocity = (float) -1;
+                        xVelocity = xVelocity>0?(float) -5:(float) 5;
                         bounceBackX = true;
+                        playerCollision.move(xVelocity,0);
                         break;
-                    default:
-                        bounceBackX = false;
                 }
+
             }
             if (yMovedCircle.collision(currentTile.collisionRect)) {
                 switch (currentTile.tileType) {
@@ -329,24 +333,29 @@ public class PlayerCrsh {
                         currentTile.tileType = TileComponent.TILE_TYPE.TILE_PATH;
                         currentTile.setPainter();
                         restoreYVelocity = yVelocity;
-                        yVelocity = (float) -0.5;
+                        yVelocity = yVelocity>0?(float) -2.5:(float) 2.5;
                         bounceBackY = true;
+                        playerCollision.move(0,yVelocity);
                         break;
                     case TILE_BREAKTWO:
                         currentTile.tileType = TileComponent.TILE_TYPE.TILE_BREAKONE;
                         currentTile.setPainter();
                         restoreYVelocity = yVelocity;
-                        yVelocity = (float) -1;
+                        yVelocity = yVelocity>0?(float) -5:(float) 5;
                         bounceBackY = true;
+                        playerCollision.move(0,yVelocity);
+                        move();
                         break;
-                    default:
-                        bounceBackY = false;
                 }
             }
         }
-        if (xVelocity != 0 || yVelocity != 0) {
+        if ((xVelocity != 0 || yVelocity != 0) && (!bounceBackX ||!bounceBackY)) {
             playerCollision.move(xVelocity, yVelocity);
         }
         setMapPosition();
+    }
+
+    public boolean onBounceBack(){
+        return bounceBackX || bounceBackY;
     }
 }
