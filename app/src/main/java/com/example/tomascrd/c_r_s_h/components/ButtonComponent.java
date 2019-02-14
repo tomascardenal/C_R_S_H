@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 
+//TODO Implement animated button with different rect border drawings
 /**
  * A button for the menus and interface for CRSH
  *
