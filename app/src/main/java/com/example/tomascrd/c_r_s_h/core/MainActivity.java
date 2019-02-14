@@ -13,6 +13,8 @@ import android.view.Window;
  */
 public class MainActivity extends AppCompatActivity {
 
+    GameEngine gameEngine;
+
     /**
      * Controls the actions when this activity gets created
      *
@@ -21,7 +23,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         View decorView = getWindow().getDecorView();
         int opciones = View.SYSTEM_UI_FLAG_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
@@ -32,10 +33,8 @@ public class MainActivity extends AppCompatActivity {
         decorView.setSystemUiVisibility(opciones);
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-
-        GameEngine gameEngine = new GameEngine(this);
+        gameEngine = new GameEngine(this);
         gameEngine.setKeepScreenOn(true);
-
         setContentView(gameEngine);
     }
 
@@ -45,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
         View decorView = getWindow().getDecorView();
         int opciones = View.SYSTEM_UI_FLAG_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
@@ -55,9 +53,10 @@ public class MainActivity extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
         decorView.setSystemUiVisibility(opciones);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        GameEngine gameEngine = new GameEngine(this);
+        if (gameEngine == null) {
+            gameEngine = new GameEngine(this);
+        }
         gameEngine.setKeepScreenOn(true);
-
         setContentView(gameEngine);
     }
 }

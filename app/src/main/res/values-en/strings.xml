@@ -7,4 +7,5 @@
     <string name="btnTutorial">Tutorial</string>
     <string name="titleNewGame">New Game</string>
     <string name="btnStartGame">Start game</string>
+    <string name="optMusic">"Music      "</string>
 </resources>

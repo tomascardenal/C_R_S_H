@@ -31,7 +31,7 @@ public class ButtonComponent extends DrawableComponent {
     /**
      * Text to show on this button
      */
-    protected String text;
+    private String text;
 
     /**
      * Paint object for the button
@@ -56,7 +56,7 @@ public class ButtonComponent extends DrawableComponent {
      */
     public ButtonComponent(Context context, Typeface font, String text, int xPos, int yPos, int xRight, int yBottom) {
         this.context = context;
-        this.text = text;
+        this.setText(text);
         this.xPos = xPos;
         this.yPos = yPos;
         this.xRight = xRight;
@@ -102,6 +102,24 @@ public class ButtonComponent extends DrawableComponent {
     @Override
     public void draw(Canvas c) {
         c.drawRect(btnRect, pButton);
-        c.drawText(text, btnRect.centerX(), btnRect.centerY() + height / 6, pText);
+        c.drawText(getText(), btnRect.centerX(), btnRect.centerY() + height / 6, pText);
+    }
+
+    /**
+     * Returns the texts on this button
+     *
+     * @return the text on the button
+     */
+    public String getText() {
+        return text;
+    }
+
+    /**
+     * Sets a new text on this button
+     *
+     * @param text the new text to show
+     */
+    public void setText(String text) {
+        this.text = text;
     }
 }

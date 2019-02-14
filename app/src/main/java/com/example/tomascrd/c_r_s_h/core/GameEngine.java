@@ -2,11 +2,14 @@ package com.example.tomascrd.c_r_s_h.core;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.example.tomascrd.c_r_s_h.R;
 import com.example.tomascrd.c_r_s_h.scenes.CreditScene;
 import com.example.tomascrd.c_r_s_h.scenes.MainGameScene;
 import com.example.tomascrd.c_r_s_h.scenes.MainMenuScene;
@@ -50,6 +53,14 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
      * Current scene to draw and control
      */
     private SceneCrsh currentScene;
+    /**
+     * Media player for the music
+     */
+    public MediaPlayer mediaPlayer;
+    /**
+     * Audio manager for the music
+     */
+    public AudioManager audioManager;
 
     /**
      * Starts a gameEngine within the given context
@@ -84,7 +95,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
                         currentScene = new NewGameScene(context, newScene, screenWidth, screenHeight);
                         break;
                     case 2:
-                        currentScene = new OptionsScene(context, newScene, screenWidth, screenHeight);
+                        currentScene = new OptionsScene(context, newScene, screenWidth, screenHeight, this);
                         break;
                     case 3:
                         currentScene = new CreditScene(context, newScene, screenWidth, screenHeight);
@@ -112,6 +123,19 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
      */
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
+        //Audio managing
+        if (audioManager == null) {
+            audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        }
+        if (mediaPlayer == null) {
+            mediaPlayer = MediaPlayer.create(context, R.raw.crshtheme);
+        }
+        int v = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        mediaPlayer.setVolume(v / 3, v / 3);
+        if (!mediaPlayer.isPlaying()) {
+            mediaPlayer.start();
+            Log.i("Started music: ", "new GameEngine");
+        }
     }
 
     /**
