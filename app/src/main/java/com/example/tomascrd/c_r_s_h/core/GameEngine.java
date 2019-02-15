@@ -61,6 +61,14 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
      * Audio manager for the music
      */
     public AudioManager audioManager;
+    /**
+     * Stores the current system volume
+     */
+    private int currentVolume;
+    /**
+     * Options manager to access the values of the user selected options
+     */
+    public OptionsManager optionsManager;
 
     /**
      * Starts a gameEngine within the given context
@@ -72,6 +80,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
         this.surfaceHolder = getHolder();
         this.surfaceHolder.addCallback(this);
         this.context = context;
+        optionsManager = new OptionsManager();
         thread = new GameThread();
         setFocusable(true);
     }
@@ -124,18 +133,9 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         //Audio managing
-        if (audioManager == null) {
-            audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-        }
-        if (mediaPlayer == null) {
-            mediaPlayer = MediaPlayer.create(context, R.raw.crshtheme);
-        }
-        int v = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-        mediaPlayer.setVolume(v / 3, v / 3);
-        if (!mediaPlayer.isPlaying()) {
-            mediaPlayer.start();
-            Log.i("Started music: ", "new GameEngine");
-        }
+        updateAudioObjects();
+        updateVolume();
+        updateMusicPlayer();
     }
 
     /**
@@ -151,6 +151,9 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
         screenWidth = width;
         screenHeight = height;
         currentScene = new MainMenuScene(context, 0, screenWidth, screenHeight);
+        updateAudioObjects();
+        updateVolume();
+        updateMusicPlayer();
         thread.setWorking(true);
         if (thread.getState() == Thread.State.NEW) {
             thread.start();
@@ -172,11 +175,42 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
         thread.setWorking(false);
         try {
             thread.join();
+            mediaPlayer.pause();
         } catch (InterruptedException e) {
             Log.i("SurfaceDestroyed Error", e.getLocalizedMessage());
         }
     }
 
+    /**
+     * Updates the mediaPlayer and audioManager objects
+     */
+    public void updateAudioObjects(){
+        if (audioManager == null) {
+            audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        }
+        if (mediaPlayer == null) {
+            mediaPlayer = MediaPlayer.create(context,R.raw.crshmaintheme);
+        }
+    }
+
+    /**
+     * Checks for the system volume and updates the music volume accordingly
+     */
+    public void updateVolume(){
+        currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        mediaPlayer.setVolume(currentVolume / 3, currentVolume / 3);
+    }
+
+    /**
+     * Updates the mediaPlayer values for the music loop
+     */
+    public void updateMusicPlayer(){
+        if (!mediaPlayer.isPlaying() && optionsManager.isPlayMusic()) {
+            mediaPlayer.start();
+        }else if(mediaPlayer.isPlaying() && !optionsManager.isPlayMusic()){
+            mediaPlayer.pause();
+        }
+    }
     /**
      * Main thread of the game
      *
@@ -194,6 +228,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
             long timeRef = System.nanoTime();
             long timeSleep = 0;
             while (gameWorking) {
+                updateVolume();
                 Canvas c = null;
                 try {
                     if (!surfaceHolder.getSurface().isValid()) {

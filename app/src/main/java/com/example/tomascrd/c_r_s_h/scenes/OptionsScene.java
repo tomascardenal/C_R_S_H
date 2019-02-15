@@ -68,7 +68,8 @@ public class OptionsScene extends SceneCrsh {
         pOptionsText.setTextSize((float) ((screenHeight / GameConstants.MENUSCREEN_COLUMNS) * 1));
 
         //Buttons
-        btnMusic = new TextButtonComponent(context, Typeface.createFromAsset(getContext().getAssets(), GameConstants.FONT_AWESOME), getContext().getString(R.string.btnMusicOn),
+        String musicValue = engineCallback.optionsManager.isPlayMusic()? getContext().getString(R.string.btnMusicOn) : getContext().getString(R.string.btnMusicOff);
+        btnMusic = new TextButtonComponent(context, Typeface.createFromAsset(getContext().getAssets(), GameConstants.FONT_AWESOME), musicValue,
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 6,
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 3,
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 7,
@@ -139,11 +140,13 @@ public class OptionsScene extends SceneCrsh {
     public void toggleMusic() {
         if (btnMusic.getText().equals(context.getString(R.string.btnMusicOn))) {
             btnMusic.setText(context.getString(R.string.btnMusicOff));
+            engineCallback.optionsManager.setPlayMusic(false);
             if (engineCallback.mediaPlayer.isPlaying()) {
                 engineCallback.mediaPlayer.pause();
             }
         } else {
             btnMusic.setText(context.getString(R.string.btnMusicOn));
+            engineCallback.optionsManager.setPlayMusic(true);
             if (!engineCallback.mediaPlayer.isPlaying()) {
                 engineCallback.mediaPlayer.start();
             }
