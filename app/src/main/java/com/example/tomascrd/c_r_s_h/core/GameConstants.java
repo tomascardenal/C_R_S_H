@@ -49,6 +49,22 @@ public final class GameConstants {
      */
     public static String MAPFILE_NAME = "map.crsh";
     /**
+     * Reference for the SharedPreferences
+     */
+    public static String PREFERENCES_NAME = "options.crsh";
+    /**
+     * Reference for the music option
+     */
+    public static String PREFERENCES_MUSIC = "music";
+    /**
+     * Reference for the sound effects option
+     */
+    public static String PREFERENCES_SOUNDEFFECTS = "soundeffects";
+    /**
+     * Reference for the vibrate option
+     */
+    public static String PREFERENCES_VIBRATE = "vibrate";
+    /**
      * Font awesome path
      */
     public static String FONT_AWESOME = "fa-solid-900.ttf";

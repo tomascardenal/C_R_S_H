@@ -1,5 +1,9 @@
 package com.example.tomascrd.c_r_s_h.core;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.util.Log;
+
 /**
  * Options manager for the game
  *
@@ -19,9 +23,48 @@ public class OptionsManager {
      * Determines if the phone should vibrate
      */
     private boolean doVibrate;
+    /**
+     * SharedPreferences to store the options
+     */
+    private SharedPreferences preferences;
+    /**
+     * The application's Context
+     */
+    private Context context;
+
+    /**
+     * Default constructor, initalizes a new OptionsManager with the given Context
+     */
+    public OptionsManager(Context context) {
+        this.context = context;
+        preferences = context.getSharedPreferences(GameConstants.PREFERENCES_NAME, Context.MODE_PRIVATE);
+        loadOptions();
+    }
+
+    /**
+     * Loads the values of the options if they are saved, or sets them to true if they are not saved
+     */
+    public void loadOptions() {
+        SharedPreferences.Editor editor = preferences.edit();
+        playMusic = preferences.getBoolean(GameConstants.PREFERENCES_MUSIC, true);
+        playSoundEffects = preferences.getBoolean(GameConstants.PREFERENCES_SOUNDEFFECTS, true);
+        doVibrate = preferences.getBoolean(GameConstants.PREFERENCES_VIBRATE, true);
+    }
+
+    /**
+     * Saves the values of the options
+     */
+    public void saveOptions() {
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean(GameConstants.PREFERENCES_MUSIC, playMusic);
+        editor.putBoolean(GameConstants.PREFERENCES_SOUNDEFFECTS, playSoundEffects);
+        editor.putBoolean(GameConstants.PREFERENCES_VIBRATE, doVibrate);
+        editor.commit();
+    }
 
     /**
      * Determines if the play music option is on
+     *
      * @return whether the music option is on or not
      */
     public boolean isPlayMusic() {
@@ -30,6 +73,7 @@ public class OptionsManager {
 
     /**
      * Sets the value of the play music option
+     *
      * @param playMusic the new value of the option
      */
     public void setPlayMusic(boolean playMusic) {
@@ -38,6 +82,7 @@ public class OptionsManager {
 
     /**
      * Determines if the sound effects option is on
+     *
      * @return whether the sound effects is on or not
      */
     public boolean isPlaySoundEffects() {
@@ -46,6 +91,7 @@ public class OptionsManager {
 
     /**
      * Sets the value of the sound effects option
+     *
      * @param playSoundEffects the new value of the option
      */
     public void setPlaySoundEffects(boolean playSoundEffects) {
@@ -54,6 +100,7 @@ public class OptionsManager {
 
     /**
      * Determines if the vibrate option is on or not
+     *
      * @return whether the vibrate option is on or not
      */
     public boolean isDoVibrate() {
@@ -62,6 +109,7 @@ public class OptionsManager {
 
     /**
      * Sets the value of the vibrate option
+     *
      * @param doVibrate the new value of the option
      */
     public void setDoVibrate(boolean doVibrate) {
