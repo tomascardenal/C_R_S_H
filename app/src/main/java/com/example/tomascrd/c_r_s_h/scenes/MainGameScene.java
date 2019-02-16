@@ -4,6 +4,9 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PointF;
+import android.os.Build;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.MotionEvent;
 
@@ -12,6 +15,7 @@ import com.example.tomascrd.c_r_s_h.components.GamepadComponent;
 import com.example.tomascrd.c_r_s_h.components.MapComponent;
 import com.example.tomascrd.c_r_s_h.components.PlayerCrsh;
 import com.example.tomascrd.c_r_s_h.components.SceneCrsh;
+import com.example.tomascrd.c_r_s_h.core.GameEngine;
 
 /**
  * Represents the main game
@@ -48,25 +52,64 @@ public class MainGameScene extends SceneCrsh {
      * Controls if the players are moving
      */
     private boolean[] playerMoved;
+    /**
+     * Vibrator for the game
+     */
+    private Vibrator vibrator;
+    /**
+     * Callback to access the game engine
+     */
+    private GameEngine engineCallback;
 
 
     /**
      * Starts a new main game
      *
-     * @param context      the application context
-     * @param id           this scene's id (0 is recommended by default for the main menu)
-     * @param screenWidth  this screen's width
-     * @param screenHeight this screen's height
+     * @param context        the application context
+     * @param id             this scene's id (0 is recommended by default for the main menu)
+     * @param screenWidth    this screen's width
+     * @param screenHeight   this screen's height
+     * @param engineCallback callback to this game's engine
      */
-    public MainGameScene(Context context, int id, int screenWidth, int screenHeight) {
+    public MainGameScene(Context context, int id, int screenWidth, int screenHeight, GameEngine engineCallback) {
         super(context, id, screenWidth, screenHeight);
+        this.engineCallback = engineCallback;
         mapLoad = new MapComponent(666, context, screenWidth, screenHeight);
         mapLoad.loadTileArray();
         PointF playerCenter = new PointF(mapLoad.tileArray[2][2].getCollisionRect().exactCenterX(), mapLoad.tileArray[2][2].getCollisionRect().exactCenterY());
-        playerOne = new PlayerCrsh(mapLoad, "TestP1", 1, false, new CircleComponent(playerCenter, mapLoad.getReference() / 2));
+        playerOne = new PlayerCrsh(this, mapLoad, "TestP1", 1, false, new CircleComponent(playerCenter, mapLoad.getReference() / 2));
         padOne = new GamepadComponent(context, 1, screenHeight, screenWidth, mapLoad.getReference());
         padTwo = new GamepadComponent(context, 2, screenHeight, screenWidth, mapLoad.getReference());
         playerMoved = new boolean[2];
+        this.vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+    }
+
+    /**
+     * Triggers a 200ms vibration
+     */
+    public void doShortVibration() {
+        if (engineCallback.optionsManager.isDoVibrate()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                this.vibrator.vibrate(VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE));
+            }
+            {
+                this.vibrator.vibrate(200);
+            }
+        }
+    }
+
+    /**
+     * Triggers a 500ms vibration
+     */
+    public void doLongVibration() {
+        if (engineCallback.optionsManager.isDoVibrate()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                this.vibrator.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
+            }
+            {
+                this.vibrator.vibrate(500);
+            }
+        }
     }
 
     /**

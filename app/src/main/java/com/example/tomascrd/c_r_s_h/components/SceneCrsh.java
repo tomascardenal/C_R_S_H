@@ -9,6 +9,7 @@ import android.view.MotionEvent;
 
 import com.example.tomascrd.c_r_s_h.R;
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
+import com.example.tomascrd.c_r_s_h.core.GameEngine;
 
 /**
  * Represents the general idea of a screen of the game
@@ -40,6 +41,10 @@ public class SceneCrsh {
      * If avaliable, this scene's background image
      */
     public Bitmap backImage;
+    /**
+     * Callback to access the game engine, not used in default constructor
+     */
+    protected GameEngine engineCallback;
 
 
     /**

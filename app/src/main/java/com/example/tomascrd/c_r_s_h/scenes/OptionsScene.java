@@ -32,10 +32,6 @@ public class OptionsScene extends SceneCrsh {
      */
     Paint pOptionsText;
     /**
-     * Callback to access gameEngine data
-     */
-    GameEngine engineCallback;
-    /**
      * Music toggle button
      */
     TextButtonComponent btnMusic;

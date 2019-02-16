@@ -3,6 +3,8 @@ package com.example.tomascrd.c_r_s_h.components;
 import android.graphics.Color;
 import android.util.Log;
 
+import com.example.tomascrd.c_r_s_h.scenes.MainGameScene;
+
 /**
  * Represents a player in the game
  *
@@ -43,6 +45,10 @@ public class PlayerCrsh {
      */
     private MapComponent mapCallback;
     /**
+     * Callback to access the game scene
+     */
+    private MainGameScene gameCallback;
+    /**
      * The player columnPosition
      */
     private int columnPosition;
@@ -66,14 +72,16 @@ public class PlayerCrsh {
     /**
      * Initializes a player to it's parameters, with a given CircleComponent
      *
-     * @param mapCallback     Callback to this MapComponent for accessing the tiles
+     * @param gameCallback    Callback to the scene calling this player
+     * @param mapCallback     Callback to the MapComponent for accessing the tiles
      * @param playerName      The player's name
      * @param playerId        The player's id
      * @param onAttack        The player's mode
      * @param playerCollision The player's collision circle
      * @see CircleComponent
      */
-    public PlayerCrsh(MapComponent mapCallback, String playerName, int playerId, boolean onAttack, CircleComponent playerCollision) {
+    public PlayerCrsh(MainGameScene gameCallback, MapComponent mapCallback, String playerName, int playerId, boolean onAttack, CircleComponent playerCollision) {
+        this.gameCallback = gameCallback;
         this.mapCallback = mapCallback;
         this.playerName = playerName;
         this.playerId = playerId;
@@ -98,16 +106,18 @@ public class PlayerCrsh {
     /**
      * Initializes a player to it's parameters, indicating the coordinates and radius of the CircleComponent
      *
-     * @param mapCallback Callback to this MapComponent for accessing the tiles
-     * @param playerName  The player's name
-     * @param playerId    The player's id
-     * @param onAttack    The player's mode
-     * @param yPos        The CircleComponent's yPos
-     * @param xPos        The CircleComponent's yPos
-     * @param radius      The CircleComponent's radius
+     * @param gameCallback Callback to the scene calling this player
+     * @param mapCallback  Callback to this MapComponent for accessing the tiles
+     * @param playerName   The player's name
+     * @param playerId     The player's id
+     * @param onAttack     The player's mode
+     * @param yPos         The CircleComponent's yPos
+     * @param xPos         The CircleComponent's yPos
+     * @param radius       The CircleComponent's radius
      * @see CircleComponent
      */
-    public PlayerCrsh(MapComponent mapCallback, String playerName, int playerId, boolean onAttack, float xPos, float yPos, int radius) {
+    public PlayerCrsh(MainGameScene gameCallback, MapComponent mapCallback, String playerName, int playerId, boolean onAttack, float xPos, float yPos, int radius) {
+        this.gameCallback = gameCallback;
         this.mapCallback = mapCallback;
         this.playerName = playerName;
         this.playerId = playerId;
@@ -122,6 +132,7 @@ public class PlayerCrsh {
     /**
      * Initializes a player to it's parameters, with a given CircleComponent and the indicated lives (within the accepted limits)
      *
+     * @param gameCallback    Callback to the scene calling this player
      * @param mapCallback     Callback to this MapComponent for accessing the tiles
      * @param playerName      The player's name
      * @param playerId        The player's id
@@ -130,26 +141,27 @@ public class PlayerCrsh {
      * @param lives           The player's lives
      * @see CircleComponent
      */
-    public PlayerCrsh(MapComponent mapCallback, String playerName, int playerId, boolean onAttack, CircleComponent playerCollision, int lives) {
-        this(mapCallback, playerName, playerId, onAttack, playerCollision);
+    public PlayerCrsh(MainGameScene gameCallback, MapComponent mapCallback, String playerName, int playerId, boolean onAttack, CircleComponent playerCollision, int lives) {
+        this(gameCallback, mapCallback, playerName, playerId, onAttack, playerCollision);
         this.setPlayerLifes(lives);
     }
 
     /**
      * Initializes a player to it's parameters, indicating the coordinates, radius of the CircleComponent and the indicated lives (within the accepted limits)
      *
-     * @param mapCallback Callback to this MapComponent for accessing the tiles
-     * @param playerName  The player's name
-     * @param playerId    The player's id
-     * @param onAttack    The player's mode
-     * @param yPos        The CircleComponent's yPos
-     * @param xPos        The CircleComponent's yPos
-     * @param radius      The CircleComponent's radius
-     * @param lives       The player's lives
+     * @param gameCallback Callback to the scene calling this player
+     * @param mapCallback  Callback to this MapComponent for accessing the tiles
+     * @param playerName   The player's name
+     * @param playerId     The player's id
+     * @param onAttack     The player's mode
+     * @param yPos         The CircleComponent's yPos
+     * @param xPos         The CircleComponent's yPos
+     * @param radius       The CircleComponent's radius
+     * @param lives        The player's lives
      * @see CircleComponent
      */
-    public PlayerCrsh(MapComponent mapCallback, String playerName, int playerId, boolean onAttack, float xPos, float yPos, int radius, int lives) {
-        this(mapCallback, playerName, playerId, onAttack, xPos, yPos, radius);
+    public PlayerCrsh(MainGameScene gameCallback, MapComponent mapCallback, String playerName, int playerId, boolean onAttack, float xPos, float yPos, int radius, int lives) {
+        this(gameCallback, mapCallback, playerName, playerId, onAttack, xPos, yPos, radius);
         this.setPlayerLifes(lives);
     }
 
@@ -305,7 +317,6 @@ public class PlayerCrsh {
                         playerCollision.move(xVelocity > 0 ? (float) -5 : (float) 5, 0);
                         break;
                 }
-
             }
             if (yMovedCircle.collision(currentTile.collisionRect)) {
                 switch (currentTile.tileType) {
@@ -331,11 +342,15 @@ public class PlayerCrsh {
                 }
             }
         }
+        if (bounceBackX || bounceBackY) {
+            gameCallback.doShortVibration();
+        }
         if ((xVelocity != 0 || yVelocity != 0) && (!bounceBackX || !bounceBackY)) {
             playerCollision.move(xVelocity, yVelocity);
         }
         setMapPosition();
     }
+
 
     /**
      * Determines if this player is bouncing back

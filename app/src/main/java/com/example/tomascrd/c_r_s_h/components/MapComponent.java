@@ -4,6 +4,9 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Build;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.util.Log;
 
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
@@ -49,6 +52,7 @@ public class MapComponent extends DrawableComponent {
      * Height offset reference
      */
     private int hReference;
+
 
     /**
      * Starts a map on this ID and with the indicated reference

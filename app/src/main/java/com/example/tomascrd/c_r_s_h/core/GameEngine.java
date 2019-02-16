@@ -116,7 +116,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
                         currentScene = new TutorialScene(context, newScene, screenWidth, screenHeight);
                         break;
                     case 99:
-                        currentScene = new MainGameScene(context, newScene, screenWidth, screenHeight);
+                        currentScene = new MainGameScene(context, newScene, screenWidth, screenHeight, this);
                         break;
                 }
             }
