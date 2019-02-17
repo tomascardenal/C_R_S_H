@@ -12,6 +12,7 @@ import android.view.MotionEvent;
 
 import com.example.tomascrd.c_r_s_h.components.CircleComponent;
 import com.example.tomascrd.c_r_s_h.components.GamepadComponent;
+import com.example.tomascrd.c_r_s_h.components.JoystickComponent;
 import com.example.tomascrd.c_r_s_h.components.MapComponent;
 import com.example.tomascrd.c_r_s_h.components.PlayerCrsh;
 import com.example.tomascrd.c_r_s_h.components.SceneCrsh;
@@ -60,6 +61,10 @@ public class MainGameScene extends SceneCrsh {
      * Callback to access the game engine
      */
     private GameEngine engineCallback;
+    /**
+     * Test for JoystickComponent
+     */
+    private JoystickComponent joystickTest;
 
 
     /**
@@ -76,12 +81,18 @@ public class MainGameScene extends SceneCrsh {
         this.engineCallback = engineCallback;
         mapLoad = new MapComponent(666, context, screenWidth, screenHeight);
         mapLoad.loadTileArray();
+
         PointF playerCenter = new PointF(mapLoad.tileArray[2][2].getCollisionRect().exactCenterX(), mapLoad.tileArray[2][2].getCollisionRect().exactCenterY());
         playerOne = new PlayerCrsh(this, mapLoad, "TestP1", 1, false, new CircleComponent(playerCenter, mapLoad.getReference() / 2));
-        padOne = new GamepadComponent(context, 1, screenHeight, screenWidth, mapLoad.getReference());
-        padTwo = new GamepadComponent(context, 2, screenHeight, screenWidth, mapLoad.getReference());
+        /*padOne = new GamepadComponent(context, 1, screenHeight, screenWidth, mapLoad.getReference());
+        padTwo = new GamepadComponent(context, 2, screenHeight, screenWidth, mapLoad.getReference());*/
         playerMoved = new boolean[2];
+
+        joystickTest = new JoystickComponent(context,mapLoad.getReference(),Color.GRAY,Color.MAGENTA);
+
         this.vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+
+
     }
 
     /**
@@ -117,7 +128,12 @@ public class MainGameScene extends SceneCrsh {
      */
     @Override
     public void updatePhysics() {
-        if (playerMoved[0]) {
+        /*if (playerMoved[0]) {
+            playerOne.move();
+        }*/
+        if(joystickTest.isActive()){
+            PointF joystickReference = joystickTest.getDisplacement();
+            playerOne.setVelocity(joystickReference.x*5,joystickReference.y*5);
             playerOne.move();
         }
     }
@@ -134,9 +150,10 @@ public class MainGameScene extends SceneCrsh {
         //Grid test (IT WORKS, on my phone at least)
         mapLoad.draw(c);
         playerOne.playerCollision.draw(c);
-        padOne.draw(c);
-        padTwo.draw(c);
+/*        padOne.draw(c);
+        padTwo.draw(c);*/
         backBtn.draw(c);
+        joystickTest.draw(c);
     }
 
     /**
@@ -150,16 +167,19 @@ public class MainGameScene extends SceneCrsh {
         switch (action) {
             case MotionEvent.ACTION_DOWN:           // First finger
             case MotionEvent.ACTION_POINTER_DOWN:  // Second finger and so on
-                gamePadDown(0, event);
+//                gamePadDown(0, event);
+                joystickTest.onTouchEvent(event);
                 break;
             case MotionEvent.ACTION_UP:                     // Last finger up
+                joystickTest.setActive(false);
             case MotionEvent.ACTION_POINTER_UP:  // Any other finger up
-                gamePadUp(0, event);
+//                gamePadUp(0, event);
                 if (isClick(backBtn, event)) {
                     return 0;
                 }
                 break;
             case MotionEvent.ACTION_MOVE: // Any finger moves
+                joystickTest.onTouchEvent(event);
                 break;
             default:
                 Log.i("Other", "Undefined action: " + action);

@@ -115,4 +115,22 @@ public class CircleComponent extends DrawableComponent {
         this.xPos += distanceX;
         this.yPos += distanceY;
     }
+
+    /**
+     * Resets this circle's position
+     * @param xPos the x coordinate for the new position
+     * @param yPos the y coordinate for the new position
+     */
+    public void resetPosition(float xPos, float yPos){
+        this.xPos = xPos;
+        this.yPos = yPos;
+    }
+
+    /**
+     * Sets this paint's alpha value
+     * @param alpha the new alpha value
+     */
+    public void setDrawingAlpha(int alpha){
+        this.circlePaint.setAlpha(alpha);
+    }
 }
