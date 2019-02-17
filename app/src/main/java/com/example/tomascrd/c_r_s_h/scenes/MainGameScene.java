@@ -16,6 +16,7 @@ import com.example.tomascrd.c_r_s_h.components.JoystickComponent;
 import com.example.tomascrd.c_r_s_h.components.MapComponent;
 import com.example.tomascrd.c_r_s_h.components.PlayerCrsh;
 import com.example.tomascrd.c_r_s_h.components.SceneCrsh;
+import com.example.tomascrd.c_r_s_h.core.GameConstants;
 import com.example.tomascrd.c_r_s_h.core.GameEngine;
 
 /**
@@ -133,7 +134,9 @@ public class MainGameScene extends SceneCrsh {
         }*/
         if(joystickTest.isActive()){
             PointF joystickReference = joystickTest.getDisplacement();
-            playerOne.setVelocity(joystickReference.x*5,joystickReference.y*5);
+            playerOne.setVelocity(
+                    joystickReference.x* GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE,
+                    joystickReference.y*GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE);
             playerOne.move();
         }
     }

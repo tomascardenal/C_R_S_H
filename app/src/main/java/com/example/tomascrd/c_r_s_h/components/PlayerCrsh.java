@@ -3,6 +3,7 @@ package com.example.tomascrd.c_r_s_h.components;
 import android.graphics.Color;
 import android.util.Log;
 
+import com.example.tomascrd.c_r_s_h.core.GameConstants;
 import com.example.tomascrd.c_r_s_h.scenes.MainGameScene;
 
 /**
@@ -224,12 +225,12 @@ public class PlayerCrsh {
      * @param xVelocity the xVelocity to set
      */
     public void setxVelocity(float xVelocity) {
-        if (xVelocity <= 3 && xVelocity >= -3) {
+        if (xVelocity <= GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE && xVelocity >= GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE*-1) {
             this.xVelocity = xVelocity;
-        } else if (xVelocity > 3) {
-            this.xVelocity = 3;
-        } else if (xVelocity < -3) {
-            this.xVelocity = -3;
+        } else if (xVelocity > GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE) {
+            this.xVelocity = GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE;
+        } else if (xVelocity < GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE*-1) {
+            this.xVelocity = GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE*1;
         }
     }
 
@@ -239,12 +240,12 @@ public class PlayerCrsh {
      * @param yVelocity the yVelocity to set
      */
     public void setyVelocity(float yVelocity) {
-        if (yVelocity <= 3 && yVelocity >= -3) {
+        if (yVelocity <= GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE && yVelocity >= GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE*-1) {
             this.yVelocity = yVelocity;
-        } else if (yVelocity > 3) {
-            this.yVelocity = 3;
-        } else if (yVelocity < -3) {
-            this.yVelocity = -3;
+        } else if (yVelocity > GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE) {
+            this.yVelocity = GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE;
+        } else if (yVelocity < GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE*-1) {
+            this.yVelocity = GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE*1;
         }
     }
 

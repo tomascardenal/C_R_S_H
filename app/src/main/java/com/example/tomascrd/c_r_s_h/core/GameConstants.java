@@ -21,6 +21,14 @@ public final class GameConstants {
      */
     public final static int TIME_FRAGMENT = TPS / FPS;
     /**
+     * Value to multiply the acceleration from the Joystick on attack mode
+     */
+    public final static int ACCELERATION_MULTIPLIER_ONATTACK = 8;
+    /**
+     * Value to multiply the acceleration from the Joystick on defense mode
+     */
+    public final static int ACCELERATION_MULTIPLIER_ONDEFENSE = 12;
+    /**
      * Rows on a game screen
      */
     public final static int GAMESCREEN_ROWS = 18;
