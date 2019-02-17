@@ -29,33 +29,29 @@ public class JoystickComponent extends DrawableComponent {
      * This joystick's maximum radius
      */
     private int maxRadius;
-    /**
-     * This joystick's threshold
-     */
-    private float threshold;
 
     /**
      * Initializes a new Joystick
-     * @param context the context
-     * @param maxRadius the maximum radius
-     * @param areaColor the color of the joystick's area
+     *
+     * @param context     the context
+     * @param maxRadius   the maximum radius
+     * @param areaColor   the color of the joystick's area
      * @param handleColor the color of the joystick's handle
      */
     public JoystickComponent(Context context, int maxRadius, int areaColor, int handleColor) {
         this.context = context;
         this.maxRadius = maxRadius;
 
+        //Outer circle
         this.joystickArea = new CircleComponent(0, 0, maxRadius);
         this.joystickArea.setColor(areaColor);
         this.joystickArea.setDrawingAlpha(150);
 
+        //Inner circle
         this.joystickHandle = new CircleComponent(0, 0, maxRadius / 3);
         this.joystickHandle.setColor(handleColor);
         this.joystickHandle.setDrawingAlpha(200);
-
-        this.threshold = maxRadius/3;
     }
-
 
     /**
      * Draws this joystick
@@ -85,19 +81,17 @@ public class JoystickComponent extends DrawableComponent {
 
     /**
      * Moves this joystick's handle and constrains it
+     *
      * @param xHandle the new x coordinate for the handle
      * @param yHandle the new y coordinate for the handle
      */
-    public void moveHandle(float xHandle, float yHandle){
-        float movement = (float) Math.sqrt(Math.pow(xHandle-xPos,2)+Math.pow(yHandle-yPos,2));
+    public void moveHandle(float xHandle, float yHandle) {
+        float movement = (float) Math.sqrt(Math.pow(xHandle - xPos, 2) + Math.pow(yHandle - yPos, 2));
         float hypotenuseRatio = maxRadius / movement;
-        float xDisplacement = (this.joystickHandle.xPos-xPos)/maxRadius;
-        float yDisplacement = (this.joystickHandle.yPos-yPos)/maxRadius;
-        Log.i("Handle moving: ","X: "+ xDisplacement+ " Y: "+yDisplacement);
-        if(movement<maxRadius){
-            this.joystickHandle.resetPosition(xHandle,yHandle);
-        }else{
-            this.joystickHandle.resetPosition(xPos + (xHandle - xPos) * hypotenuseRatio,yPos + (yHandle - yPos) * hypotenuseRatio);
+        if (movement < maxRadius) {
+            this.joystickHandle.resetPosition(xHandle, yHandle);
+        } else {
+            this.joystickHandle.resetPosition(xPos + (xHandle - xPos) * hypotenuseRatio, yPos + (yHandle - yPos) * hypotenuseRatio);
         }
     }
 
@@ -120,23 +114,10 @@ public class JoystickComponent extends DrawableComponent {
     }
 
     /**
-     * Gives back the value of the maximum radius
+     * Manages the MotionEvents for the joystick
      *
-     * @return the maximum radius
+     * @param e the motion event
      */
-    public int getMaxRadius() {
-        return maxRadius;
-    }
-
-    /**
-     * Sets the value of the maximum radius
-     *
-     * @param maxRadius the new maximum radius
-     */
-    public void setMaxRadius(int maxRadius) {
-        this.maxRadius = maxRadius;
-    }
-
     public void onTouchEvent(MotionEvent e) {
         if (!active) {
             active = true;
@@ -148,9 +129,13 @@ public class JoystickComponent extends DrawableComponent {
 
     /**
      * Returns a PointF with x and y values for the displacement between 0 and 1
+     *
      * @return the PointF representing the displacement
      */
-    public PointF getDisplacement(){
-        return new PointF((this.joystickHandle.xPos-xPos)/maxRadius,(this.joystickHandle.yPos-yPos)/maxRadius);
+    public PointF getDisplacement() {
+        float xDisplacement = (this.joystickHandle.xPos - xPos) / maxRadius;
+        float yDisplacement = (this.joystickHandle.yPos - yPos) / maxRadius;
+        Log.i("Handle moving: ", "X: " + xDisplacement + " Y: " + yDisplacement);
+        return new PointF(xDisplacement, yDisplacement);
     }
 }

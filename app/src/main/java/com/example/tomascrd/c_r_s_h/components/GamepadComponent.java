@@ -12,7 +12,9 @@ import com.example.tomascrd.c_r_s_h.core.GameConstants;
  * Represents a gamepad for the game
  *
  * @author Tomás Cardenal López
+ * @deprecated When the JoystickComponent was implemented on 17/02/2019
  */
+@Deprecated
 public class GamepadComponent extends DrawableComponent {
 
     /**

@@ -43,16 +43,27 @@ public class MainGameScene extends SceneCrsh {
      */
     private PlayerCrsh playerCom;
     /**
-     * Player 1 controls
+     * Joystick for player one
      */
+    private JoystickComponent joystickOne;
+    /**
+     * Joystick for player one
+     */
+    private JoystickComponent joystickTwo;
+    /**
+     * Gamepad for player one
+     */
+    @Deprecated
     private GamepadComponent padOne;
     /**
-     * Player 2 controls
+     * Gamepad for player two
      */
+    @Deprecated
     private GamepadComponent padTwo;
     /**
      * Controls if the players are moving
      */
+    @Deprecated
     private boolean[] playerMoved;
     /**
      * Vibrator for the game
@@ -62,11 +73,7 @@ public class MainGameScene extends SceneCrsh {
      * Callback to access the game engine
      */
     private GameEngine engineCallback;
-    /**
-     * Test for JoystickComponent
-     */
-    private JoystickComponent joystickTest;
-
+    private boolean pOneTouchFirst;
 
     /**
      * Starts a new main game
@@ -80,17 +87,22 @@ public class MainGameScene extends SceneCrsh {
     public MainGameScene(Context context, int id, int screenWidth, int screenHeight, GameEngine engineCallback) {
         super(context, id, screenWidth, screenHeight);
         this.engineCallback = engineCallback;
-        mapLoad = new MapComponent(666, context, screenWidth, screenHeight);
-        mapLoad.loadTileArray();
 
-        PointF playerCenter = new PointF(mapLoad.tileArray[2][2].getCollisionRect().exactCenterX(), mapLoad.tileArray[2][2].getCollisionRect().exactCenterY());
-        playerOne = new PlayerCrsh(this, mapLoad, "TestP1", 1, false, new CircleComponent(playerCenter, mapLoad.getReference() / 2));
-        /*padOne = new GamepadComponent(context, 1, screenHeight, screenWidth, mapLoad.getReference());
-        padTwo = new GamepadComponent(context, 2, screenHeight, screenWidth, mapLoad.getReference());*/
-        playerMoved = new boolean[2];
+        //Initialize map
+        this.mapLoad = new MapComponent(666, context, screenWidth, screenHeight);
+        this.mapLoad.loadTileArray();
 
-        joystickTest = new JoystickComponent(context,mapLoad.getReference(),Color.GRAY,Color.MAGENTA);
+        //Initialize players
+        PointF playerOneCenter = new PointF(mapLoad.tileArray[2][2].getCollisionRect().exactCenterX(), mapLoad.tileArray[2][2].getCollisionRect().exactCenterY());
+        this.playerOne = new PlayerCrsh(this, mapLoad, "TestP1", 1, false, new CircleComponent(playerOneCenter, mapLoad.getReference() / 2));
+        PointF playerTwoCenter = new PointF(mapLoad.tileArray[mapLoad.tileArray.length - 3][mapLoad.tileArray[mapLoad.tileArray.length - 3].length - 3].getCollisionRect().exactCenterX(), mapLoad.tileArray[mapLoad.tileArray.length - 3][mapLoad.tileArray[mapLoad.tileArray.length - 3].length - 3].getCollisionRect().exactCenterY());
+        this.playerTwo = new PlayerCrsh(this, mapLoad, "testP2", 2, true, new CircleComponent(playerTwoCenter, mapLoad.getReference() / 2));
 
+        //Initialize joysticks
+        this.joystickOne = new JoystickComponent(context, mapLoad.getReference(), Color.GRAY, Color.CYAN);
+        this.joystickTwo = new JoystickComponent(context, mapLoad.getReference(), Color.GRAY, Color.YELLOW);
+
+        //Initialize vibrator
         this.vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
 
 
@@ -129,15 +141,19 @@ public class MainGameScene extends SceneCrsh {
      */
     @Override
     public void updatePhysics() {
-        /*if (playerMoved[0]) {
-            playerOne.move();
-        }*/
-        if(joystickTest.isActive()){
-            PointF joystickReference = joystickTest.getDisplacement();
+        if (joystickOne.isActive()) {
+            PointF joystickReference = joystickOne.getDisplacement();
             playerOne.setVelocity(
-                    joystickReference.x* GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE,
-                    joystickReference.y*GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE);
+                    joystickReference.x * playerOne.getJoystickMultiplier(),
+                    joystickReference.y * playerOne.getJoystickMultiplier());
             playerOne.move();
+        }
+        if (joystickTwo.isActive()) {
+            PointF joystickReference = joystickTwo.getDisplacement();
+            playerTwo.setVelocity(
+                    joystickReference.x * playerTwo.getJoystickMultiplier(),
+                    joystickReference.y * playerTwo.getJoystickMultiplier());
+            playerTwo.move();
         }
     }
 
@@ -150,13 +166,17 @@ public class MainGameScene extends SceneCrsh {
     public void draw(Canvas c) {
         //General background
         c.drawColor(Color.WHITE);
-        //Grid test (IT WORKS, on my phone at least)
+        //Draw map
         mapLoad.draw(c);
+        //Draw player One
         playerOne.playerCollision.draw(c);
-/*        padOne.draw(c);
-        padTwo.draw(c);*/
+        //Draw player Two
+        playerTwo.playerCollision.draw(c);
+        //Draw the back button TODO change this for an ingame pause menu
         backBtn.draw(c);
-        joystickTest.draw(c);
+        //Draw the joysticks
+        joystickOne.draw(c);
+        joystickTwo.draw(c);
     }
 
     /**
@@ -167,22 +187,49 @@ public class MainGameScene extends SceneCrsh {
      */
     public int onTouchEvent(MotionEvent event) {
         int action = event.getActionMasked();
+        boolean playerOneArea = event.getX(event.getActionIndex()) > screenWidth / 2 + 20;
+        boolean playerTwoArea = event.getX(event.getActionIndex()) < screenWidth / 2 - 20;
         switch (action) {
             case MotionEvent.ACTION_DOWN:           // First finger
+                if (playerOneArea) {
+                    pOneTouchFirst = true;
+                    joystickOne.onTouchEvent(event);
+                }
+                if (playerTwoArea) {
+                    pOneTouchFirst = false;
+                    joystickTwo.onTouchEvent(event);
+                }
             case MotionEvent.ACTION_POINTER_DOWN:  // Second finger and so on
-//                gamePadDown(0, event);
-                joystickTest.onTouchEvent(event);
+                if (playerOneArea) {
+                    joystickOne.onTouchEvent(event);
+                }
+                if (playerTwoArea) {
+                    joystickTwo.onTouchEvent(event);
+                }
                 break;
             case MotionEvent.ACTION_UP:                     // Last finger up
-                joystickTest.setActive(false);
+                if (pOneTouchFirst) {
+                    joystickOne.setActive(false);
+                } else {
+                    joystickTwo.setActive(false);
+                }
             case MotionEvent.ACTION_POINTER_UP:  // Any other finger up
-//                gamePadUp(0, event);
+                if (pOneTouchFirst) {
+                    joystickTwo.setActive(false);
+                } else {
+                    joystickOne.setActive(false);
+                }
                 if (isClick(backBtn, event)) {
                     return 0;
                 }
                 break;
             case MotionEvent.ACTION_MOVE: // Any finger moves
-                joystickTest.onTouchEvent(event);
+                if (playerOneArea && joystickOne.isActive()) {
+                    joystickOne.onTouchEvent(event);
+                }
+                if (playerTwoArea && joystickTwo.isActive()) {
+                    joystickTwo.onTouchEvent(event);
+                }
                 break;
             default:
                 Log.i("Other", "Undefined action: " + action);
@@ -195,28 +242,25 @@ public class MainGameScene extends SceneCrsh {
      *
      * @param player The player controlling this gamepad
      * @param event  The event which launched this action
+     * @deprecated When the JoystickComponent was implemented on 17/02/2019
      */
+    @Deprecated
     public void gamePadDown(int player, MotionEvent event) {
         GamepadComponent[] gamepads = {padOne, padTwo};
         PlayerCrsh[] players = {playerOne, playerTwo};
         playerMoved[player] = false;
-
         if (isClick(gamepads[player].btnUp, event)) {
             players[player].setxVelocity((float) -5);
-            Log.i("PULSADO", "ARRIBA");
             playerMoved[player] = true;
         } else if (isClick(gamepads[player].btnDown, event)) {
             players[player].setxVelocity((float) 5);
-            Log.i("PULSADO", "ABAJO");
             playerMoved[player] = true;
         }
         if (isClick(gamepads[player].btnLeft, event)) {
             players[player].setyVelocity((float) 5);
-            Log.i("PULSADO", "IZQUIERDA");
             playerMoved[player] = true;
         } else if (isClick(gamepads[player].btnRight, event)) {
             players[player].setyVelocity((float) -5);
-            Log.i("PULSADO", "DERECHA");
             playerMoved[player] = true;
         }
     }
@@ -226,7 +270,9 @@ public class MainGameScene extends SceneCrsh {
      *
      * @param player The player controlling this gamepad
      * @param event  The event which launched this action
+     * @deprecated When the JoystickComponent was implemented on 17/02/2019
      */
+    @Deprecated
     public void gamePadUp(int player, MotionEvent event) {
         GamepadComponent[] gamepads = {padOne, padTwo};
         PlayerCrsh[] players = {playerOne, playerTwo};

@@ -69,6 +69,10 @@ public class PlayerCrsh {
      * Determines if this player bounced back on Y axis
      */
     private boolean bounceBackY;
+    /**
+     * Accelleration multiplier for the joystick
+     */
+    private int joystickMultiplier;
 
     /**
      * Initializes a player to it's parameters, with a given CircleComponent
@@ -101,7 +105,8 @@ public class PlayerCrsh {
         }
         this.xVelocity = 0;
         this.yVelocity = 0;
-        setMapPosition();
+        this.setJoystickMultiplier();
+        this.setMapPosition();
     }
 
     /**
@@ -127,7 +132,8 @@ public class PlayerCrsh {
         this.playerLifes = 3;
         this.xVelocity = 0;
         this.yVelocity = 0;
-        setMapPosition();
+        this.setJoystickMultiplier();
+        this.setMapPosition();
     }
 
     /**
@@ -360,5 +366,20 @@ public class PlayerCrsh {
      */
     public boolean onBounceBack() {
         return bounceBackX || bounceBackY;
+    }
+
+    /**
+     * Gets the value of the joystick acceleration multiplier
+     * @return the current joystick acceleration multiplier
+     */
+    public int getJoystickMultiplier() {
+        return joystickMultiplier;
+    }
+
+    /**
+     * Sets the value of the joystick acceleration multiplier based on the GameConstants
+     */
+    public void setJoystickMultiplier() {
+        this.joystickMultiplier = this.onAttack? GameConstants.ACCELERATION_MULTIPLIER_ONATTACK : GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE;
     }
 }
