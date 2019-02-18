@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.view.MotionEvent;
 
@@ -45,6 +46,10 @@ public class SceneCrsh {
      * Callback to access the game engine, not used in default constructor
      */
     protected GameEngine engineCallback;
+    /**
+     * Paint for gradient backgrounds
+     */
+    protected Paint gradientPaint;
 
 
     /**
@@ -61,7 +66,7 @@ public class SceneCrsh {
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
         if (backBtn == null) {
-            backBtn = new ButtonComponent(context, Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_AWESOME), context.getString(R.string.btnBack), screenWidth - screenWidth / 16, 0, screenWidth, screenWidth / 16, Color.TRANSPARENT);
+            backBtn = new ButtonComponent(context, Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_AWESOME), context.getString(R.string.btnBack), screenWidth - screenWidth / 16, 0, screenWidth, screenWidth / 16, Color.TRANSPARENT, 0);
         }
     }
 

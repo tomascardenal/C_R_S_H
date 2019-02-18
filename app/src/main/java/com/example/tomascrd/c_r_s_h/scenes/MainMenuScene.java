@@ -4,7 +4,9 @@ import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
+import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -73,6 +75,12 @@ public class MainMenuScene extends SceneCrsh {
         pText.setTextAlign(Paint.Align.CENTER);
         pText.setTextSize((float) ((screenHeight / GameConstants.MENUSCREEN_COLUMNS) * 2.5));
 
+        //Gradient paint
+        int[] gradientColors = {Color.BLUE,Color.YELLOW,Color.CYAN};
+        float[] positions = {0,screenWidth/2,screenWidth};
+        this.gradientPaint = new Paint();
+        this.gradientPaint.setShader(new LinearGradient(0,0,screenWidth,screenHeight,gradientColors,positions, Shader.TileMode.CLAMP));
+
         //Parallax Backgrounds
         parallaxBackgrounds = new BackgroundComponent[3];
         for (int i = 0; i < parallaxBackgrounds.length; i++) {
@@ -86,7 +94,7 @@ public class MainMenuScene extends SceneCrsh {
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 7,
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 3,
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 11,
-                screenHeight / GameConstants.MENUSCREEN_ROWS * 4);
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 4, Color.GRAY, 150);
 
         btnOptions = new ButtonComponent(context,
                 Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN),
@@ -94,7 +102,7 @@ public class MainMenuScene extends SceneCrsh {
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS,
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 5,
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 4,
-                screenHeight / GameConstants.MENUSCREEN_ROWS * 6);
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 6, Color.GRAY, 150);
 
         btnCredits = new ButtonComponent(context,
                 Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN),
@@ -102,7 +110,7 @@ public class MainMenuScene extends SceneCrsh {
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 5,
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 5,
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 8,
-                screenHeight / GameConstants.MENUSCREEN_ROWS * 6);
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 6, Color.GRAY, 150);
 
         btnRecords = new ButtonComponent(context,
                 Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN),
@@ -110,7 +118,7 @@ public class MainMenuScene extends SceneCrsh {
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 10,
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 5,
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 13,
-                screenHeight / GameConstants.MENUSCREEN_ROWS * 6);
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 6, Color.GRAY, 150);
 
         btnTutorial = new ButtonComponent(context,
                 Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN),
@@ -118,7 +126,7 @@ public class MainMenuScene extends SceneCrsh {
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 14,
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 5,
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 17,
-                screenHeight / GameConstants.MENUSCREEN_ROWS * 6);
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 6, Color.GRAY, 150);
 
     }
 
@@ -143,7 +151,7 @@ public class MainMenuScene extends SceneCrsh {
     @Override
     public void draw(Canvas c) {
         //General background
-        c.drawColor(Color.BLUE);
+        c.drawPaint(gradientPaint);
 
         //Parallax background FIXME This are placeholder images
         for (int i = 0; i < parallaxBackgrounds.length; i++) {

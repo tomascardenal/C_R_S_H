@@ -3,7 +3,9 @@ package com.example.tomascrd.c_r_s_h.scenes;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
+import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -39,7 +41,11 @@ public class RecordsScene extends SceneCrsh {
         pText.setTypeface(Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_KARMAFUTURE));
         pText.setColor(Color.BLACK);
         pText.setTextAlign(Paint.Align.CENTER);
-        pText.setTextSize((float) ((screenHeight / GameConstants.MENUSCREEN_COLUMNS) * 2.5));
+        pText.setTextSize((float) ((screenHeight / GameConstants.MENUSCREEN_COLUMNS) * 2));
+
+        //Gradient paint
+        this.gradientPaint = new Paint();
+        this.gradientPaint.setShader(new LinearGradient(0, 0, screenWidth, screenHeight, Color.GREEN, Color.CYAN, Shader.TileMode.CLAMP));
     }
 
     /**
@@ -58,9 +64,9 @@ public class RecordsScene extends SceneCrsh {
     @Override
     public void draw(Canvas c) {
         //General background
-        c.drawColor(Color.GREEN);
+        c.drawPaint(gradientPaint);
         //Test text
-        c.drawText(context.getString(R.string.btnRecords), screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9, screenHeight / GameConstants.MENUSCREEN_ROWS * 2, pText);
+        c.drawText(context.getString(R.string.btnRecords), screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9, screenHeight / GameConstants.MENUSCREEN_ROWS, pText);
 
         backBtn.draw(c);
 

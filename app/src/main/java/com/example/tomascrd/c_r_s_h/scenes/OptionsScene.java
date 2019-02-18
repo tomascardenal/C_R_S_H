@@ -3,7 +3,9 @@ package com.example.tomascrd.c_r_s_h.scenes;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
+import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -40,6 +42,11 @@ public class OptionsScene extends SceneCrsh {
      * Vibration toggle button
      */
     TextButtonComponent btnVibrate;
+    /**
+     * Sound effects toggle button
+     */
+    TextButtonComponent btnEffects;
+
 
     /**
      * Starts an options menu
@@ -59,7 +66,7 @@ public class OptionsScene extends SceneCrsh {
         pTitleText.setTypeface(Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_KARMAFUTURE));
         pTitleText.setColor(Color.BLACK);
         pTitleText.setTextAlign(Paint.Align.CENTER);
-        pTitleText.setTextSize((float) ((screenHeight / GameConstants.MENUSCREEN_COLUMNS) * 2.5));
+        pTitleText.setTextSize((float) ((screenHeight / GameConstants.MENUSCREEN_COLUMNS) * 2));
 
         //Options text
         pOptionsText = new Paint();
@@ -68,28 +75,49 @@ public class OptionsScene extends SceneCrsh {
         pOptionsText.setTextAlign(Paint.Align.CENTER);
         pOptionsText.setTextSize((float) ((screenHeight / GameConstants.MENUSCREEN_COLUMNS) * 1));
 
+        //Gradient paint
+        this.gradientPaint = new Paint();
+        this.gradientPaint.setShader(new LinearGradient(0, 0, screenWidth, screenHeight, Color.GREEN, Color.CYAN, Shader.TileMode.CLAMP));
+
         //Buttons
         String musicValue = engineCallback.optionsManager.isPlayMusic() ? getContext().getString(R.string.btnMusicOn) : getContext().getString(R.string.btnMusicOff);
         btnMusic = new TextButtonComponent(context, Typeface.createFromAsset(getContext().getAssets(), GameConstants.FONT_AWESOME), musicValue,
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 6,
-                screenHeight / GameConstants.MENUSCREEN_ROWS * 3,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 2,
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 7,
-                screenHeight / GameConstants.MENUSCREEN_ROWS * 4,
-                Color.TRANSPARENT,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 3,
+                Color.TRANSPARENT, 0,
                 getContext().getString(R.string.optMusic),
                 Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN),
-                TextButtonComponent.TEXT_ALIGN.ALIGN_LEFT, screenWidth / GameConstants.MENUSCREEN_COLUMNS/3,screenWidth/GameConstants.MENUSCREEN_COLUMNS*2);
+                TextButtonComponent.TEXT_ALIGN.ALIGN_LEFT,
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS / 3,
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 3);
 
         String vibrateValue = engineCallback.optionsManager.isDoVibrate() ? getContext().getString(R.string.btnToggleOn) : getContext().getString(R.string.btnToggleOff);
         btnVibrate = new TextButtonComponent(context, Typeface.createFromAsset(getContext().getAssets(), GameConstants.FONT_AWESOME), vibrateValue,
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 6,
-                screenHeight / GameConstants.MENUSCREEN_ROWS * 5,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 4,
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 7,
-                screenHeight / GameConstants.MENUSCREEN_ROWS * 6,
-                Color.TRANSPARENT,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 5,
+                Color.TRANSPARENT, 0,
                 getContext().getString(R.string.optVibrate),
                 Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN),
-                TextButtonComponent.TEXT_ALIGN.ALIGN_LEFT, screenWidth / GameConstants.MENUSCREEN_COLUMNS/3,screenWidth/GameConstants.MENUSCREEN_COLUMNS*2);
+                TextButtonComponent.TEXT_ALIGN.ALIGN_LEFT,
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS / 3,
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 3);
+
+        String effectsValue = engineCallback.optionsManager.isPlaySoundEffects() ? context.getString(R.string.btnPlayOn) : context.getString(R.string.btnPlayOff);
+        btnEffects = new TextButtonComponent(context, Typeface.createFromAsset(getContext().getAssets(), GameConstants.FONT_AWESOME), effectsValue,
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 6,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 6,
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 7,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 7,
+                Color.TRANSPARENT, 0,
+                getContext().getString(R.string.optSoundEffects),
+                Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN),
+                TextButtonComponent.TEXT_ALIGN.ALIGN_LEFT,
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS / 3,
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 3);
     }
 
     /**
@@ -108,13 +136,13 @@ public class OptionsScene extends SceneCrsh {
     @Override
     public void draw(Canvas c) {
         //General background
-        c.drawColor(Color.GREEN);
+        c.drawPaint(gradientPaint);
 
-        c.drawText(context.getString(R.string.btnOptions), screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9, screenHeight / GameConstants.MENUSCREEN_ROWS * 2, pTitleText);
+        c.drawText(context.getString(R.string.btnOptions), screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9, screenHeight / GameConstants.MENUSCREEN_ROWS, pTitleText);
         backBtn.draw(c);
         btnMusic.draw(c);
         btnVibrate.draw(c);
-
+        btnEffects.draw(c);
     }
 
     /**
@@ -140,6 +168,9 @@ public class OptionsScene extends SceneCrsh {
                 }
                 if (isClick(btnVibrate, event)) {
                     toggleVibration();
+                }
+                if (isClick(btnEffects, event)) {
+                    toggleEffects();
                 }
             case MotionEvent.ACTION_MOVE: // Any finger moves
 
@@ -174,6 +205,19 @@ public class OptionsScene extends SceneCrsh {
         } else {
             btnVibrate.setText(context.getString(R.string.btnToggleOn));
             engineCallback.optionsManager.setDoVibrate(true);
+        }
+    }
+
+    /**
+     * Toggles the sound effects on or off
+     */
+    public void toggleEffects() {
+        if (btnEffects.getText().equals(context.getString(R.string.btnPlayOn))) {
+            btnEffects.setText(context.getString(R.string.btnPlayOff));
+            engineCallback.optionsManager.setPlaySoundEffects(false);
+        } else {
+            btnEffects.setText(context.getString(R.string.btnPlayOn));
+            engineCallback.optionsManager.setPlaySoundEffects(true);
         }
     }
 }

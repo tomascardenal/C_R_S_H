@@ -79,7 +79,7 @@ public class ButtonComponent extends DrawableComponent {
     }
 
     /**
-     * Creates a Button with the given parameters, a background color must be given
+     * Creates a Button with the given parameters, a background color and alpha must be given
      *
      * @param context    the context
      * @param font       the font to use on this button
@@ -89,10 +89,12 @@ public class ButtonComponent extends DrawableComponent {
      * @param xRight     the button's bottom right corner x position
      * @param yBottom    the button's bottom right corner y position
      * @param background the button's background color
+     * @param alpha  the button's background alpha
      */
-    public ButtonComponent(Context context, Typeface font, String text, int xPos, int yPos, int xRight, int yBottom, int background) {
+    public ButtonComponent(Context context, Typeface font, String text, int xPos, int yPos, int xRight, int yBottom, int background, int alpha) {
         this(context, font, text, xPos, yPos, xRight, yBottom);
         pButton.setColor(background);
+        pButton.setAlpha(alpha);
     }
 
     /**

@@ -52,21 +52,21 @@ public class TextButtonComponent extends ButtonComponent {
     /**
      * Creates a TextButton with the given parameters and gray background color
      *
-     * @param context   the context
-     * @param font      the font to use on this button
-     * @param text      the text within the button
-     * @param xPos      the TextButton's x position
-     * @param yPos      the TextButton's y position
-     * @param xRight    the TextButton's bottom right corner x position
-     * @param yBottom   the TextButton's bottom right corner y position
-     * @param sideText  the TextButton's sideText
-     * @param sideFont  the sideText font
-     * @param textAlign the TextButton's sideText alignment
-     * @param xPadding  the TextButton's x padding
+     * @param context     the context
+     * @param font        the font to use on this button
+     * @param text        the text within the button
+     * @param xLeft       the TextButton's ButtonComponent left x position
+     * @param yTop        the TextButton's ButtonComponent top y position
+     * @param xRight      the TextButton's ButtonComponent right x position
+     * @param yBottom     the TextButton's ButtonCompoonent bottom y position
+     * @param sideText    the TextButton's sideText
+     * @param sideFont    the sideText font
+     * @param textAlign   the TextButton's sideText alignment
+     * @param xPadding    the TextButton's x padding
      * @param borderRectX the TextButton's border right coordinate
      */
-    public TextButtonComponent(Context context, Typeface font, String text, int xPos, int yPos, int xRight, int yBottom, String sideText, Typeface sideFont, TEXT_ALIGN textAlign, int xPadding, int borderRectX) {
-        super(context, font, text, xPos, yPos, xRight, yBottom);
+    public TextButtonComponent(Context context, Typeface font, String text, int xLeft, int yTop, int xRight, int yBottom, String sideText, Typeface sideFont, TEXT_ALIGN textAlign, int xPadding, int borderRectX) {
+        super(context, font, text, xRight, yBottom, xRight, yBottom);
         this.setSideText(sideText);
         this.sideFont = sideFont;
         this.textAlign = textAlign;
@@ -78,6 +78,7 @@ public class TextButtonComponent extends ButtonComponent {
         this.borderPaint = new Paint();
         this.borderPaint.setStyle(Paint.Style.STROKE);
         this.borderPaint.setStrokeWidth(10);
+        this.borderPaint.setAlpha(150);
 
         this.xPadding = xPadding;
         this.borderRectX = borderRectX;
@@ -86,22 +87,23 @@ public class TextButtonComponent extends ButtonComponent {
     /**
      * Creates a TextButton with the given parameters and the given background color
      *
-     * @param context    the context
-     * @param font       the font to use on this button
-     * @param text       the text within the button
-     * @param xPos       the TextButton's x position
-     * @param yPos       the TextButton's y position
-     * @param xRight     the TextButton's bottom right corner x position
-     * @param yBottom    the TextButton's bottom right corner y position
-     * @param background the TextButton's button part background color
-     * @param sideText   the TextButton's sideText
-     * @param sideFont   the sideText font
-     * @param textAlign  the TextButton's sideText alignment
-     * @param xPadding   the TextButton's total width
+     * @param context     the context
+     * @param font        the font to use on this button
+     * @param text        the text within the button
+     * @param xLeft       the TextButton's ButtonComponent left x position
+     * @param yTop        the TextButton's ButtonComponent top y position
+     * @param xRight      the TextButton's ButtonComponent right x position
+     * @param yBottom     the TextButton's ButtonComponent bottom y position
+     * @param background  the TextButton's ButtonComponent background color
+     * @param alpha       the Textbutton's ButtonComponent alpha
+     * @param sideText    the TextButton's sideText
+     * @param sideFont    the sideText font
+     * @param textAlign   the TextButton's sideText alignment
+     * @param xPadding    the TextButton's total width
      * @param borderRectX the TextButton's borderRectX
      */
-    public TextButtonComponent(Context context, Typeface font, String text, int xPos, int yPos, int xRight, int yBottom, int background, String sideText, Typeface sideFont, TEXT_ALIGN textAlign, int xPadding, int borderRectX) {
-        super(context, font, text, xPos, yPos, xRight, yBottom, background);
+    public TextButtonComponent(Context context, Typeface font, String text, int xLeft, int yTop, int xRight, int yBottom, int background, int alpha, String sideText, Typeface sideFont, TEXT_ALIGN textAlign, int xPadding, int borderRectX) {
+        super(context, font, text, xLeft, yTop, xRight, yBottom, background, alpha);
         this.setSideText(sideText);
         this.sideFont = sideFont;
         this.textAlign = textAlign;
@@ -113,6 +115,7 @@ public class TextButtonComponent extends ButtonComponent {
         this.borderPaint = new Paint();
         this.borderPaint.setStyle(Paint.Style.STROKE);
         this.borderPaint.setStrokeWidth(10);
+        this.borderPaint.setAlpha(150);
 
         this.xPadding = xPadding;
         this.borderRectX = borderRectX;
@@ -126,12 +129,12 @@ public class TextButtonComponent extends ButtonComponent {
     @Override
     public void draw(Canvas c) {
         super.draw(c);
-        int textX, textY, halfBtnWidth, halfBtnHeight;
+        int textX, textY;
         Rect borderRect;
         if (textAlign == TEXT_ALIGN.ALIGN_LEFT) {
-            textX = (int) (btnRect.exactCenterX() - (btnRect.width() / 2) - sideTextPaint.measureText(getSideText()));
+            textX = (int) borderRectX;
             textY = (int) (btnRect.exactCenterY() + height / 6);
-            borderRect = new Rect(borderRectX-xPadding, btnRect.top, btnRect.right + xPadding, btnRect.bottom);
+            borderRect = new Rect(borderRectX - xPadding, btnRect.top, btnRect.right + xPadding, btnRect.bottom);
         } else {
             textX = (int) (btnRect.exactCenterX() + (btnRect.width() / 2));
             textY = (int) (btnRect.exactCenterY() + height / 6);
