@@ -98,8 +98,9 @@ public class MainGameScene extends SceneCrsh {
         this.playerTwo = new PlayerCrsh(this, mapLoad, "testP2", 2, true, new CircleComponent(playerTwoCenter, mapLoad.getReference() / 2));
 
         //Initialize joysticks
-        this.joystickOne = new JoystickComponent(context, mapLoad.getReference(), Color.GRAY, Color.CYAN);
-        this.joystickTwo = new JoystickComponent(context, mapLoad.getReference(), Color.GRAY, Color.YELLOW);
+        int joystickRadius = (int) Math.floor(mapLoad.getReference() * 1.5);
+        this.joystickOne = new JoystickComponent(context, joystickRadius, Color.GRAY, Color.CYAN);
+        this.joystickTwo = new JoystickComponent(context, joystickRadius, Color.GRAY, Color.MAGENTA);
 
         //Initialize vibrator
         this.vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);

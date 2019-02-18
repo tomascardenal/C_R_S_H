@@ -95,13 +95,13 @@ public class PlayerCrsh {
         this.playerLifes = 3;
         switch (playerId) {
             case 0:
-                this.playerCollision.setColor(Color.RED);
+                this.playerCollision.setColor(Color.MAGENTA);
                 break;
             case 1:
                 this.playerCollision.setColor(Color.BLUE);
                 break;
             case 2:
-                this.playerCollision.setColor(Color.GREEN);
+                this.playerCollision.setColor(Color.RED);
         }
         this.xVelocity = 0;
         this.yVelocity = 0;
@@ -231,12 +231,12 @@ public class PlayerCrsh {
      * @param xVelocity the xVelocity to set
      */
     public void setxVelocity(float xVelocity) {
-        if (xVelocity <= GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE && xVelocity >= GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE*-1) {
+        if (xVelocity <= GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE && xVelocity >= GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE * -1) {
             this.xVelocity = xVelocity;
         } else if (xVelocity > GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE) {
             this.xVelocity = GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE;
-        } else if (xVelocity < GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE*-1) {
-            this.xVelocity = GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE*1;
+        } else if (xVelocity < GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE * -1) {
+            this.xVelocity = GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE * 1;
         }
     }
 
@@ -246,12 +246,12 @@ public class PlayerCrsh {
      * @param yVelocity the yVelocity to set
      */
     public void setyVelocity(float yVelocity) {
-        if (yVelocity <= GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE && yVelocity >= GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE*-1) {
+        if (yVelocity <= GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE && yVelocity >= GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE * -1) {
             this.yVelocity = yVelocity;
         } else if (yVelocity > GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE) {
             this.yVelocity = GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE;
-        } else if (yVelocity < GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE*-1) {
-            this.yVelocity = GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE*1;
+        } else if (yVelocity < GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE * -1) {
+            this.yVelocity = GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE * 1;
         }
     }
 
@@ -275,8 +275,25 @@ public class PlayerCrsh {
     public void setMapPosition() {
         double mapX = this.playerCollision.xPos - (mapCallback.screenWidth - mapCallback.xPos) / 2;
         double mapY = this.playerCollision.yPos - (mapCallback.screenHeight - mapCallback.height) / 2;
+        boolean reposition = false;
         columnPosition = (int) (mapX / this.mapCallback.getReference());
         rowPosition = (int) (mapY / this.mapCallback.getReference()) - 1;
+        //Checking for out of bounds positions. Border tiles are ALWAYS border tiles
+        if (columnPosition <= 0) {
+            columnPosition = 1;
+            reposition = true;
+        } else if (columnPosition >= (GameConstants.MAPAREA_COLUMNS-1)) {
+            columnPosition = GameConstants.MAPAREA_COLUMNS-2;
+            reposition = true;
+        }
+        if (rowPosition <= 0) {
+            rowPosition = 1;
+            reposition = true;
+        } else if (rowPosition >= (GameConstants.MAPAREA_ROWS-1))
+        {
+            rowPosition = GameConstants.MAPAREA_ROWS-2;
+            reposition = true;
+        }
         TileComponent[] surroundingTiles = {
                 mapCallback.tileArray[rowPosition - 1][columnPosition - 1],
                 mapCallback.tileArray[rowPosition - 1][columnPosition],
@@ -288,7 +305,11 @@ public class PlayerCrsh {
                 mapCallback.tileArray[rowPosition + 1][columnPosition + 1]
         };
         this.surroundingTiles = surroundingTiles;
-        Log.i("PLAYER POSITION :", "ROW:" + rowPosition + " COLUMN:" + columnPosition);
+        if(reposition){
+            TileComponent reposTile = mapCallback.tileArray[rowPosition][columnPosition];
+            this.playerCollision.resetPosition(reposTile.collisionRect.exactCenterX(),reposTile.collisionRect.exactCenterY());
+        }
+        Log.i("PLAYER "+this.playerId+" GRID POSITION ", "ROW:" + rowPosition + " COLUMN:" + columnPosition);
     }
 
     /**
@@ -362,7 +383,7 @@ public class PlayerCrsh {
     /**
      * Determines if this player is bouncing back
      *
-     * @return wheter the player is bounding back
+     * @return whether the player is bounding back
      */
     public boolean onBounceBack() {
         return bounceBackX || bounceBackY;
@@ -370,6 +391,7 @@ public class PlayerCrsh {
 
     /**
      * Gets the value of the joystick acceleration multiplier
+     *
      * @return the current joystick acceleration multiplier
      */
     public int getJoystickMultiplier() {
@@ -380,6 +402,6 @@ public class PlayerCrsh {
      * Sets the value of the joystick acceleration multiplier based on the GameConstants
      */
     public void setJoystickMultiplier() {
-        this.joystickMultiplier = this.onAttack? GameConstants.ACCELERATION_MULTIPLIER_ONATTACK : GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE;
+        this.joystickMultiplier = this.onAttack ? GameConstants.ACCELERATION_MULTIPLIER_ONATTACK : GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE;
     }
 }
