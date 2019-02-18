@@ -114,24 +114,7 @@ public class JoystickComponent extends DrawableComponent {
     public void deactivate() {
         this.active = false;
     }
-
-    /**
-     * Manages the MotionEvents for the joystick
-     *
-     * @param e the motion event
-     */
-    public void onTouchEvent(MotionEvent e) {
-        if (!active) {
-            active = true;
-            this.pointerId = e.getPointerId(e.getActionIndex());
-            resetPosition(e.getX(e.getActionIndex()), e.getY(e.getActionIndex()));
-        } else {
-            if (e.getPointerId(e.getActionIndex()) == this.pointerId) {
-                moveHandle(e.getX(e.getActionIndex()), e.getY(e.getActionIndex()));
-            }
-        }
-    }
-
+    
     /**
      * Activates the joystick with the event's parameters
      *
