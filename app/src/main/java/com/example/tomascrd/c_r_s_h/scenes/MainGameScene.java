@@ -73,7 +73,6 @@ public class MainGameScene extends SceneCrsh {
      * Callback to access the game engine
      */
     private GameEngine engineCallback;
-    private boolean pOneTouchFirst;
 
     /**
      * Starts a new main game
@@ -187,49 +186,33 @@ public class MainGameScene extends SceneCrsh {
      */
     public int onTouchEvent(MotionEvent event) {
         int action = event.getActionMasked();
-        boolean playerOneArea = event.getX(event.getActionIndex()) > screenWidth / 2 + 20;
-        boolean playerTwoArea = event.getX(event.getActionIndex()) < screenWidth / 2 - 20;
+        boolean playerOneArea = event.getX(event.getActionIndex()) > screenWidth / 2 + 100;
+        boolean playerTwoArea = event.getX(event.getActionIndex()) < screenWidth / 2 - 100;
         switch (action) {
             case MotionEvent.ACTION_DOWN:           // First finger
-                if (playerOneArea) {
-                    pOneTouchFirst = true;
-                    joystickOne.onTouchEvent(event);
-                }
-                if (playerTwoArea) {
-                    pOneTouchFirst = false;
-                    joystickTwo.onTouchEvent(event);
-                }
             case MotionEvent.ACTION_POINTER_DOWN:  // Second finger and so on
                 if (playerOneArea) {
-                    joystickOne.onTouchEvent(event);
+                    joystickOne.activateJoystick(event);
                 }
                 if (playerTwoArea) {
-                    joystickTwo.onTouchEvent(event);
+                    joystickTwo.activateJoystick(event);
                 }
                 break;
             case MotionEvent.ACTION_UP:                     // Last finger up
-                if (pOneTouchFirst) {
-                    joystickOne.setActive(false);
-                } else {
-                    joystickTwo.setActive(false);
-                }
             case MotionEvent.ACTION_POINTER_UP:  // Any other finger up
-                if (pOneTouchFirst) {
-                    joystickTwo.setActive(false);
-                } else {
-                    joystickOne.setActive(false);
+                if (event.getPointerId(event.getActionIndex()) == joystickOne.getPointerId() && playerOneArea) {
+                    joystickOne.deactivate();
+                }
+                if (event.getPointerId(event.getActionIndex()) == joystickTwo.getPointerId() && playerTwoArea) {
+                    joystickTwo.deactivate();
                 }
                 if (isClick(backBtn, event)) {
                     return 0;
                 }
                 break;
             case MotionEvent.ACTION_MOVE: // Any finger moves
-                if (playerOneArea && joystickOne.isActive()) {
-                    joystickOne.onTouchEvent(event);
-                }
-                if (playerTwoArea && joystickTwo.isActive()) {
-                    joystickTwo.onTouchEvent(event);
-                }
+                joystickOne.onMoveEvent(event);
+                joystickTwo.onMoveEvent(event);
                 break;
             default:
                 Log.i("Other", "Undefined action: " + action);

@@ -29,6 +29,10 @@ public class JoystickComponent extends DrawableComponent {
      * This joystick's maximum radius
      */
     private int maxRadius;
+    /**
+     * The event's pointer id
+     */
+    private int pointerId;
 
     /**
      * Initializes a new Joystick
@@ -105,12 +109,10 @@ public class JoystickComponent extends DrawableComponent {
     }
 
     /**
-     * Sets this joystick's activity
-     *
-     * @param active
+     * Deactivates the joystick
      */
-    public void setActive(boolean active) {
-        this.active = active;
+    public void deactivate() {
+        this.active = false;
     }
 
     /**
@@ -121,9 +123,38 @@ public class JoystickComponent extends DrawableComponent {
     public void onTouchEvent(MotionEvent e) {
         if (!active) {
             active = true;
+            this.pointerId = e.getPointerId(e.getActionIndex());
             resetPosition(e.getX(e.getActionIndex()), e.getY(e.getActionIndex()));
         } else {
-            moveHandle(e.getX(e.getActionIndex()), e.getY(e.getActionIndex()));
+            if (e.getPointerId(e.getActionIndex()) == this.pointerId) {
+                moveHandle(e.getX(e.getActionIndex()), e.getY(e.getActionIndex()));
+            }
+        }
+    }
+
+    /**
+     * Activates the joystick with the event's parameters
+     *
+     * @param e the event which activated the joystick
+     */
+    public void activateJoystick(MotionEvent e) {
+        if (!active) {
+            active = true;
+            this.pointerId = e.getPointerId(e.getActionIndex());
+            resetPosition(e.getX(e.getActionIndex()), e.getY(e.getActionIndex()));
+        }
+    }
+
+    /**
+     * Moves the handle of the joystick on the correspondent pointer id
+     *
+     * @param e the event triggering the movement
+     */
+    public void onMoveEvent(MotionEvent e) {
+        for (int i = 0; i < e.getPointerCount(); i++) {
+            if (e.getPointerId(i) == this.getPointerId()) {
+                moveHandle(e.getX(i), e.getY(i));
+            }
         }
     }
 
@@ -137,5 +168,14 @@ public class JoystickComponent extends DrawableComponent {
         float yDisplacement = (this.joystickHandle.yPos - yPos) / maxRadius;
         Log.i("Handle moving: ", "X: " + xDisplacement + " Y: " + yDisplacement);
         return new PointF(xDisplacement, yDisplacement);
+    }
+
+    /**
+     * Gives the current value of the pointerId
+     *
+     * @return this pointer id
+     */
+    public int getPointerId() {
+        return this.pointerId;
     }
 }
