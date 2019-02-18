@@ -78,18 +78,18 @@ public class OptionsScene extends SceneCrsh {
                 Color.TRANSPARENT,
                 getContext().getString(R.string.optMusic),
                 Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN),
-                TextButtonComponent.TEXT_ALIGN.ALIGN_LEFT);
+                TextButtonComponent.TEXT_ALIGN.ALIGN_LEFT, screenWidth / GameConstants.MENUSCREEN_COLUMNS/3,screenWidth/GameConstants.MENUSCREEN_COLUMNS*2);
 
         String vibrateValue = engineCallback.optionsManager.isDoVibrate() ? getContext().getString(R.string.btnToggleOn) : getContext().getString(R.string.btnToggleOff);
         btnVibrate = new TextButtonComponent(context, Typeface.createFromAsset(getContext().getAssets(), GameConstants.FONT_AWESOME), vibrateValue,
-                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 13,
-                screenHeight / GameConstants.MENUSCREEN_ROWS * 3,
-                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 14,
-                screenHeight / GameConstants.MENUSCREEN_ROWS * 4,
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 6,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 5,
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 7,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 6,
                 Color.TRANSPARENT,
                 getContext().getString(R.string.optVibrate),
                 Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN),
-                TextButtonComponent.TEXT_ALIGN.ALIGN_LEFT);
+                TextButtonComponent.TEXT_ALIGN.ALIGN_LEFT, screenWidth / GameConstants.MENUSCREEN_COLUMNS/3,screenWidth/GameConstants.MENUSCREEN_COLUMNS*2);
     }
 
     /**

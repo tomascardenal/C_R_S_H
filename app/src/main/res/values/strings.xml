@@ -16,7 +16,7 @@
     <string name="btnUp2" translatable="false"></string>
     <string name="titleNewGame">Nueva Partida</string>
     <string name="btnStartGame">Comenzar partida</string>
-    <string name="optMusic">"Música  "</string>
+    <string name="optMusic">"Música    "</string>
     <string name="btnMusicOff" translatable="false"></string>
     <string name="btnMusicOn" translatable="false"></string>
     <string name="btnToggleOff" translatable="false"></string>
