@@ -16,6 +16,7 @@ import com.example.tomascrd.c_r_s_h.core.GameConstants;
 import com.example.tomascrd.c_r_s_h.core.GameEngine;
 
 //TODO implement
+
 /**
  * Represents the options menu
  *
@@ -35,6 +36,10 @@ public class OptionsScene extends SceneCrsh {
      * Music toggle button
      */
     TextButtonComponent btnMusic;
+    /**
+     * Vibration toggle button
+     */
+    TextButtonComponent btnVibrate;
 
     /**
      * Starts an options menu
@@ -64,7 +69,7 @@ public class OptionsScene extends SceneCrsh {
         pOptionsText.setTextSize((float) ((screenHeight / GameConstants.MENUSCREEN_COLUMNS) * 1));
 
         //Buttons
-        String musicValue = engineCallback.optionsManager.isPlayMusic()? getContext().getString(R.string.btnMusicOn) : getContext().getString(R.string.btnMusicOff);
+        String musicValue = engineCallback.optionsManager.isPlayMusic() ? getContext().getString(R.string.btnMusicOn) : getContext().getString(R.string.btnMusicOff);
         btnMusic = new TextButtonComponent(context, Typeface.createFromAsset(getContext().getAssets(), GameConstants.FONT_AWESOME), musicValue,
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 6,
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 3,
@@ -72,6 +77,17 @@ public class OptionsScene extends SceneCrsh {
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 4,
                 Color.TRANSPARENT,
                 getContext().getString(R.string.optMusic),
+                Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN),
+                TextButtonComponent.TEXT_ALIGN.ALIGN_LEFT);
+
+        String vibrateValue = engineCallback.optionsManager.isDoVibrate() ? getContext().getString(R.string.btnToggleOn) : getContext().getString(R.string.btnToggleOff);
+        btnVibrate = new TextButtonComponent(context, Typeface.createFromAsset(getContext().getAssets(), GameConstants.FONT_AWESOME), vibrateValue,
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 13,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 3,
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 14,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 4,
+                Color.TRANSPARENT,
+                getContext().getString(R.string.optVibrate),
                 Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN),
                 TextButtonComponent.TEXT_ALIGN.ALIGN_LEFT);
     }
@@ -97,6 +113,7 @@ public class OptionsScene extends SceneCrsh {
         c.drawText(context.getString(R.string.btnOptions), screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9, screenHeight / GameConstants.MENUSCREEN_ROWS * 2, pTitleText);
         backBtn.draw(c);
         btnMusic.draw(c);
+        btnVibrate.draw(c);
 
     }
 
@@ -121,6 +138,9 @@ public class OptionsScene extends SceneCrsh {
                 if (isClick(btnMusic, event)) {
                     toggleMusic();
                 }
+                if (isClick(btnVibrate, event)) {
+                    toggleVibration();
+                }
             case MotionEvent.ACTION_MOVE: // Any finger moves
 
                 break;
@@ -137,15 +157,23 @@ public class OptionsScene extends SceneCrsh {
         if (btnMusic.getText().equals(context.getString(R.string.btnMusicOn))) {
             btnMusic.setText(context.getString(R.string.btnMusicOff));
             engineCallback.optionsManager.setPlayMusic(false);
-            if (engineCallback.mediaPlayer.isPlaying()) {
-                engineCallback.mediaPlayer.pause();
-            }
         } else {
             btnMusic.setText(context.getString(R.string.btnMusicOn));
             engineCallback.optionsManager.setPlayMusic(true);
-            if (!engineCallback.mediaPlayer.isPlaying()) {
-                engineCallback.mediaPlayer.start();
-            }
+        }
+        engineCallback.updateMusicPlayer();
+    }
+
+    /**
+     * Toggles the vibration on or off
+     */
+    public void toggleVibration() {
+        if (btnVibrate.getText().equals(context.getString(R.string.btnToggleOn))) {
+            btnVibrate.setText(context.getString(R.string.btnToggleOff));
+            engineCallback.optionsManager.setDoVibrate(false);
+        } else {
+            btnVibrate.setText(context.getString(R.string.btnToggleOn));
+            engineCallback.optionsManager.setDoVibrate(true);
         }
     }
 }
