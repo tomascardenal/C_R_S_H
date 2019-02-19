@@ -39,11 +39,15 @@ public final class GameConstants {
     /**
      * Small bounceback number of cycles
      */
-    public final static int BOUNCEBACK_SMALL_CYCLES = 60;
+    public final static int BOUNCEBACK_SMALL_CYCLES = 20;
     /**
      * Large bounceback number of cycles
      */
-    public final static int BOUNCEBACK_BIG_CYCLES = 120;
+    public final static int BOUNCEBACK_BIG_CYCLES = 40;
+    /**
+     * Bounceback slowdown shift value
+     */
+    public final static float BOUNCEBACK_SLOWDOWN_SHIFT = (float)0.2;
     /**
      * Rows on a game screen
      */

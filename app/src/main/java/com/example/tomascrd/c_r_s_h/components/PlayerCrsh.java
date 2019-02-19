@@ -246,7 +246,7 @@ public class PlayerCrsh {
         } else if (xVelocity > GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE) {
             this.xVelocity = GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE;
         } else if (xVelocity < GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE * -1) {
-            this.xVelocity = GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE * 1;
+            this.xVelocity = GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE * -1;
         }
     }
 
@@ -261,7 +261,7 @@ public class PlayerCrsh {
         } else if (yVelocity > GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE) {
             this.yVelocity = GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE;
         } else if (yVelocity < GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE * -1) {
-            this.yVelocity = GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE * 1;
+            this.yVelocity = GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE * -1;
         }
     }
 
@@ -325,27 +325,55 @@ public class PlayerCrsh {
      * Moves this player's position the distance indicated on it's velocity
      */
     public void move() {
+        //Checking collisions
         checkTileCollisions();
 
+        //If velocity is not 0 on both edges and there's no bounceback at all
         if ((xVelocity != 0 || yVelocity != 0) && (!bounceBackSmall) && (!bounceBackBig)) {
             playerCollision.move(xVelocity, yVelocity);
+            //If there's bounceback
         } else if (bounceBackSmall || bounceBackBig) {
+            //Cycles for the bounceback
             int cycles = bounceBackSmall ? GameConstants.BOUNCEBACK_SMALL_CYCLES : GameConstants.BOUNCEBACK_BIG_CYCLES;
+            //If it's the first cycle, vibrate
             if (bounceBackCycle == 0) {
                 gameCallback.doShortVibration();
                 bounceBackCycle++;
+                //If it's still cycling
             } else if (bounceBackCycle < cycles) {
                 bounceBackCycle++;
-                if (bounceBackCycle == cycles - 20 && this.xVelocity != 0 && this.yVelocity != 0) {
-                    this.xVelocity = this.xVelocity / 2;
-                    this.yVelocity = this.yVelocity / 2;
+                //Start slowdown
+                if (bounceBackCycle > cycles / 2) {
+                    if (this.xVelocity - GameConstants.BOUNCEBACK_SLOWDOWN_SHIFT > 0) {
+                        this.xVelocity -= GameConstants.BOUNCEBACK_SLOWDOWN_SHIFT;
+                    }
+                    if (this.yVelocity - GameConstants.BOUNCEBACK_SLOWDOWN_SHIFT > 0) {
+                        this.yVelocity -= GameConstants.BOUNCEBACK_SLOWDOWN_SHIFT;
+                    }
+                } else if (this.xVelocity - GameConstants.BOUNCEBACK_SLOWDOWN_SHIFT <= 0 && this.yVelocity - GameConstants.BOUNCEBACK_SLOWDOWN_SHIFT <= 0) {
+                    bounceBackCycle = cycles;
                 }
+                //Ending slowdown and bounceback
             } else {
-                bounceBackCycle = 0;
-                bounceBackBig = false;
-                bounceBackSmall = false;
-                this.xVelocity = 0;
-                this.yVelocity = 0;
+                boolean stopX = false;
+                boolean stopY = false;
+                if (this.xVelocity - GameConstants.BOUNCEBACK_SLOWDOWN_SHIFT > 0) {
+                    this.xVelocity -= GameConstants.BOUNCEBACK_SLOWDOWN_SHIFT;
+                } else {
+                    stopX = true;
+                }
+                if (this.yVelocity - GameConstants.BOUNCEBACK_SLOWDOWN_SHIFT > 0) {
+                    this.yVelocity -= GameConstants.BOUNCEBACK_SLOWDOWN_SHIFT;
+                } else {
+                    stopY = true;
+                }
+                if (stopX && stopY) {
+                    bounceBackCycle = 0;
+                    bounceBackBig = false;
+                    bounceBackSmall = false;
+                    this.xVelocity = 0;
+                    this.yVelocity = 0;
+                }
             }
         }
         setMapPosition();
@@ -354,7 +382,7 @@ public class PlayerCrsh {
     /**
      * Checks for tile collisions
      */
-    public void checkTileCollisions() {
+    private void checkTileCollisions() {
         //Declaring current tile
         TileComponent currentTile;
 
@@ -365,6 +393,7 @@ public class PlayerCrsh {
         //Checking surrounding tiles
         for (int i = 0; i < surroundingTiles.length; i++) {
             currentTile = surroundingTiles[i];
+            //Collision on x edge
             if (xMovedCircle.collision(currentTile.collisionRect)) {
                 switch (currentTile.tileType) {
                     case TILE_BORDER:
@@ -389,6 +418,7 @@ public class PlayerCrsh {
                         break;
                 }
             }
+            //Collision on y edge
             if (yMovedCircle.collision(currentTile.collisionRect)) {
                 switch (currentTile.tileType) {
                     case TILE_BORDER:
@@ -414,6 +444,7 @@ public class PlayerCrsh {
                 }
             }
         }
+        //Move if there's no bounceback
         if (bounceBackSmall || bounceBackBig) {
             playerCollision.move(xVelocity, yVelocity);
         }
@@ -426,7 +457,7 @@ public class PlayerCrsh {
      * @return whether the player is bounding back
      */
     public boolean onBounceBack() {
-        return bounceBackSmall || bounceBackSmall;
+        return bounceBackSmall || bounceBackBig;
     }
 
     /**
