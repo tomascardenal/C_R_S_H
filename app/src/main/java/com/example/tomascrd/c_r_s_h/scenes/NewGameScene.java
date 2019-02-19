@@ -23,10 +23,6 @@ import com.example.tomascrd.c_r_s_h.core.GameConstants;
 public class NewGameScene extends SceneCrsh {
 
     /**
-     * Text painter
-     */
-    Paint pText;
-    /**
      * Button for starting a new game
      */
     ButtonComponent btnStartGame;
@@ -42,11 +38,11 @@ public class NewGameScene extends SceneCrsh {
     public NewGameScene(Context context, int id, int screenWidth, int screenHeight) {
         super(context, id, screenWidth, screenHeight);
         //Title text
-        pText = new Paint();
-        pText.setTypeface(Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_KARMAFUTURE));
-        pText.setColor(Color.BLACK);
-        pText.setTextAlign(Paint.Align.CENTER);
-        pText.setTextSize((float) ((screenHeight / GameConstants.MENUSCREEN_COLUMNS) * 2));
+        pTitleText = new Paint();
+        pTitleText.setTypeface(Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_KARMAFUTURE));
+        pTitleText.setColor(Color.BLACK);
+        pTitleText.setTextAlign(Paint.Align.CENTER);
+        pTitleText.setTextSize((float) ((screenHeight / GameConstants.MENUSCREEN_COLUMNS) * 2));
 
         //Gradient paint
         this.gradientPaint = new Paint();
@@ -71,7 +67,7 @@ public class NewGameScene extends SceneCrsh {
     }
 
     /**
-     * Draws the menu
+     * Draws the a new game scene
      *
      * @param c the canvas to draw
      */
@@ -81,7 +77,7 @@ public class NewGameScene extends SceneCrsh {
         c.drawPaint(gradientPaint);
 
         //Test text
-        c.drawText(context.getString(R.string.titleNewGame), screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9, screenHeight / GameConstants.MENUSCREEN_ROWS, pText);
+        c.drawText(context.getString(R.string.titleNewGame), screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9, screenHeight / GameConstants.MENUSCREEN_ROWS, pTitleText);
 
         backBtn.draw(c);
 

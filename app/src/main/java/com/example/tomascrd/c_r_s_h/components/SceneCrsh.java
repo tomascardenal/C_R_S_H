@@ -50,6 +50,10 @@ public class SceneCrsh {
      * Paint for gradient backgrounds
      */
     protected Paint gradientPaint;
+    /**
+     * Title text painter
+     */
+    protected Paint pTitleText;
 
 
     /**

@@ -29,10 +29,6 @@ public class MainMenuScene extends SceneCrsh {
      */
     private final int[] mipmapBackgrounds = {R.mipmap.paramount1, R.mipmap.paramount2, R.mipmap.paramount3};
     /**
-     * Text painter
-     */
-    Paint pText;
-    /**
      * Array to store the backgrounds
      */
     BackgroundComponent parallaxBackgrounds[];
@@ -69,17 +65,17 @@ public class MainMenuScene extends SceneCrsh {
     public MainMenuScene(Context context, int id, int screenWidth, int screenHeight) {
         super(context, id, screenWidth, screenHeight);
         //Title text
-        pText = new Paint();
-        pText.setTypeface(Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_KARMAFUTURE));
-        pText.setColor(Color.BLACK);
-        pText.setTextAlign(Paint.Align.CENTER);
-        pText.setTextSize((float) ((screenHeight / GameConstants.MENUSCREEN_COLUMNS) * 2.5));
+        pTitleText = new Paint();
+        pTitleText.setTypeface(Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_KARMAFUTURE));
+        pTitleText.setColor(Color.BLACK);
+        pTitleText.setTextAlign(Paint.Align.CENTER);
+        pTitleText.setTextSize((float) ((screenHeight / GameConstants.MENUSCREEN_COLUMNS) * 2.5));
 
         //Gradient paint
-        int[] gradientColors = {Color.BLUE,Color.YELLOW,Color.CYAN};
-        float[] positions = {0,screenWidth/2,screenWidth};
+        int[] gradientColors = {Color.BLUE, Color.YELLOW, Color.CYAN};
+        float[] positions = {0, screenWidth / 2, screenWidth};
         this.gradientPaint = new Paint();
-        this.gradientPaint.setShader(new LinearGradient(0,0,screenWidth,screenHeight,gradientColors,positions, Shader.TileMode.CLAMP));
+        this.gradientPaint.setShader(new LinearGradient(0, 0, screenWidth, screenHeight, gradientColors, positions, Shader.TileMode.CLAMP));
 
         //Parallax Backgrounds
         parallaxBackgrounds = new BackgroundComponent[3];
@@ -144,7 +140,7 @@ public class MainMenuScene extends SceneCrsh {
     }
 
     /**
-     * Draws the menu
+     * Draws the main menu
      *
      * @param c the canvas to draw
      */
@@ -159,8 +155,8 @@ public class MainMenuScene extends SceneCrsh {
             c.drawBitmap(parallaxBackgrounds[i].image, parallaxBackgrounds[i].position.x - parallaxBackgrounds[i].image.getWidth(), parallaxBackgrounds[i].position.y, null);
         }
 
-        //Title
-        c.drawText(context.getString(R.string.app_name), screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9, screenHeight / GameConstants.MENUSCREEN_ROWS * 2, pText);
+        //Title text
+        c.drawText(context.getString(R.string.app_name), screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9, screenHeight / GameConstants.MENUSCREEN_ROWS * 2, pTitleText);
 
         //Menu buttons
         btnNewGame.draw(c);

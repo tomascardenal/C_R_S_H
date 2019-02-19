@@ -27,10 +27,6 @@ import com.example.tomascrd.c_r_s_h.core.GameEngine;
 public class OptionsScene extends SceneCrsh {
 
     /**
-     * Title text painter
-     */
-    Paint pTitleText;
-    /**
      * Options text painter
      */
     Paint pOptionsText;

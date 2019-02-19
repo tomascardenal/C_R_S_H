@@ -114,7 +114,7 @@ public class JoystickComponent extends DrawableComponent {
     public void deactivate() {
         this.active = false;
     }
-    
+
     /**
      * Activates the joystick with the event's parameters
      *
