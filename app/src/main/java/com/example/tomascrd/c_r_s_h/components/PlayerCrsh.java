@@ -323,6 +323,7 @@ public class PlayerCrsh {
     public void move() {
         //Checking collisions
         checkTileCollisions();
+        checkPlayerCollision();
         //If velocity is not 0 on both edges and there's no bounceback at all
         if ((xVelocity != 0 || yVelocity != 0) && (!bounceBackSmall) && (!bounceBackBig)) {
             playerCollision.move(xVelocity, yVelocity);
@@ -443,6 +444,23 @@ public class PlayerCrsh {
         if (bounceBackSmall || bounceBackBig) {
             playerCollision.move(xVelocity, yVelocity);
         }
+    }
+
+    /**
+     * Detects collisions between players
+     */
+    public void checkPlayerCollision() {
+        CircleComponent movedCircle = new CircleComponent(this.playerCollision.xPos + xVelocity, this.playerCollision.yPos + yVelocity, this.playerCollision.radius);
+        CircleComponent opponentCircle = gameCallback.getOpponentCollisionComponent(this.playerId);
+        if (movedCircle.collision(opponentCircle)) {
+            Log.i("Players collided!", "YEAH");
+            if (this.onAttack) {
+
+            } else {
+
+            }
+        }
+
     }
 
 

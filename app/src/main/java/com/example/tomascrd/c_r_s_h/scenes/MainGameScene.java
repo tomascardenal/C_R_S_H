@@ -276,4 +276,24 @@ public class MainGameScene extends SceneCrsh {
             playerMoved[player] = false;
         }
     }
+
+    /**
+     * Gets the opponent's collision CircleComponent
+     *
+     * @param playerID the player id asking for the opponent collision
+     * @return the opponent's collision CircleComponent, null if there's no playerCom initialized and the playerID doesn't correspond to playerOne or playerTwo
+     */
+    public CircleComponent getOpponentCollisionComponent(int playerID) {
+        if (playerCom == null) {
+            if (playerID == 1) {
+                return playerTwo.playerCollision;
+            } else if (playerID == 2) {
+                return playerOne.playerCollision;
+            }
+        } else {
+            return playerCom.playerCollision;
+        }
+        return null;
+    }
+
 }
