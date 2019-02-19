@@ -27,13 +27,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View decorView = getWindow().getDecorView();
-        int opciones = View.SYSTEM_UI_FLAG_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_IMMERSIVE
-                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-        decorView.setSystemUiVisibility(opciones);
+        resetUIVisibility(decorView);
+        decorView.setOnSystemUiVisibilityChangeListener(visibility -> {
+            //Visibility changes?, go back!
+            if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
+                resetUIVisibility(decorView);
+            }
+        });
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         gameEngine = new GameEngine(this);
@@ -48,6 +48,25 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         View decorView = getWindow().getDecorView();
+        resetUIVisibility(decorView);
+        decorView.setOnSystemUiVisibilityChangeListener(visibility -> {
+            //Visibility changes?, go back!
+            if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
+                resetUIVisibility(decorView);
+            }
+        });
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        if (gameEngine == null) {
+            gameEngine = new GameEngine(this);
+        }
+        gameEngine.setKeepScreenOn(true);
+        setContentView(gameEngine);
+    }
+
+    /**
+     * Resets the UIVisibility
+     */
+    private void resetUIVisibility(View decorView) {
         int opciones = View.SYSTEM_UI_FLAG_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -55,11 +74,5 @@ public class MainActivity extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_IMMERSIVE
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
         decorView.setSystemUiVisibility(opciones);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        if (gameEngine == null) {
-            gameEngine = new GameEngine(this);
-        }
-        gameEngine.setKeepScreenOn(true);
-        setContentView(gameEngine);
     }
 }
