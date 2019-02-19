@@ -39,6 +39,10 @@ public class RecordsScene extends SceneCrsh {
         pTitleText.setTextAlign(Paint.Align.CENTER);
         pTitleText.setTextSize((float) ((screenHeight / GameConstants.MENUSCREEN_COLUMNS) * 2));
 
+        //Gradient paint
+        this.gradientPaint = new Paint();
+        this.gradientPaint.setShader(new LinearGradient(0, 0, screenWidth, screenHeight, Color.GREEN, Color.CYAN, Shader.TileMode.CLAMP));
+
     }
 
     /**
@@ -60,17 +64,15 @@ public class RecordsScene extends SceneCrsh {
         c.drawPaint(gradientPaint);
         //Title text
         c.drawText(context.getString(R.string.btnRecords), screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9, screenHeight / GameConstants.MENUSCREEN_ROWS, pTitleText);
-
+        //Buttons
         backBtn.draw(c);
-
-
     }
 
     /**
      * Controls the events on the touchscreen
      *
      * @param event the touch event
-     * @return the pointerId;
+     * @return a new sceneId if it changed, or this id if it didn't change
      */
     public int onTouchEvent(MotionEvent event) {
         int action = event.getActionMasked();
@@ -85,7 +87,6 @@ public class RecordsScene extends SceneCrsh {
                     return 0;
                 }
             case MotionEvent.ACTION_MOVE: // Any finger moves
-
                 break;
             default:
                 Log.i("Other", "Undefined action: " + action);

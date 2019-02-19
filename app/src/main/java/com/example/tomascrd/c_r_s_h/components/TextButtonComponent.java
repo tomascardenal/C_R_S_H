@@ -2,6 +2,7 @@ package com.example.tomascrd.c_r_s_h.components;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
@@ -50,41 +51,6 @@ public class TextButtonComponent extends ButtonComponent {
     private int borderRectX;
 
     /**
-     * Creates a TextButton with the given parameters and gray background color
-     *
-     * @param context     the context
-     * @param font        the font to use on this button
-     * @param text        the text within the button
-     * @param xLeft       the TextButton's ButtonComponent left x position
-     * @param yTop        the TextButton's ButtonComponent top y position
-     * @param xRight      the TextButton's ButtonComponent right x position
-     * @param yBottom     the TextButton's ButtonCompoonent bottom y position
-     * @param sideText    the TextButton's sideText
-     * @param sideFont    the sideText font
-     * @param textAlign   the TextButton's sideText alignment
-     * @param xPadding    the TextButton's x padding
-     * @param borderRectX the TextButton's border right coordinate
-     */
-    public TextButtonComponent(Context context, Typeface font, String text, int xLeft, int yTop, int xRight, int yBottom, String sideText, Typeface sideFont, TEXT_ALIGN textAlign, int xPadding, int borderRectX) {
-        super(context, font, text, xRight, yBottom, xRight, yBottom);
-        this.setSideText(sideText);
-        this.sideFont = sideFont;
-        this.textAlign = textAlign;
-
-        this.sideTextPaint = new Paint();
-        this.sideTextPaint.setTextSize(btnRect.height() / 2);
-        this.sideTextPaint.setTypeface(sideFont);
-
-        this.borderPaint = new Paint();
-        this.borderPaint.setStyle(Paint.Style.STROKE);
-        this.borderPaint.setStrokeWidth(10);
-        this.borderPaint.setAlpha(150);
-
-        this.xPadding = xPadding;
-        this.borderRectX = borderRectX;
-    }
-
-    /**
      * Creates a TextButton with the given parameters and the given background color
      *
      * @param context     the context
@@ -107,18 +73,40 @@ public class TextButtonComponent extends ButtonComponent {
         this.setSideText(sideText);
         this.sideFont = sideFont;
         this.textAlign = textAlign;
+        this.xPadding = xPadding;
+        this.borderRectX = borderRectX;
 
-        sideTextPaint = new Paint();
-        sideTextPaint.setTextSize(btnRect.height() / 2);
-        sideTextPaint.setTypeface(sideFont);
+        //Side text painter
+        this.sideTextPaint = new Paint();
+        this.sideTextPaint.setTextSize(btnRect.height() / 2);
+        this.sideTextPaint.setTypeface(sideFont);
 
+        //Outer border painter
         this.borderPaint = new Paint();
         this.borderPaint.setStyle(Paint.Style.STROKE);
         this.borderPaint.setStrokeWidth(10);
         this.borderPaint.setAlpha(150);
 
-        this.xPadding = xPadding;
-        this.borderRectX = borderRectX;
+    }
+
+    /**
+     * Creates a TextButton with the given parameters and gray background color with max alpha
+     *
+     * @param context     the context
+     * @param font        the font to use on this button
+     * @param text        the text within the button
+     * @param xLeft       the TextButton's ButtonComponent left x position
+     * @param yTop        the TextButton's ButtonComponent top y position
+     * @param xRight      the TextButton's ButtonComponent right x position
+     * @param yBottom     the TextButton's ButtonCompoonent bottom y position
+     * @param sideText    the TextButton's sideText
+     * @param sideFont    the sideText font
+     * @param textAlign   the TextButton's sideText alignment
+     * @param xPadding    the TextButton's x padding
+     * @param borderRectX the TextButton's border right coordinate
+     */
+    public TextButtonComponent(Context context, Typeface font, String text, int xLeft, int yTop, int xRight, int yBottom, String sideText, Typeface sideFont, TEXT_ALIGN textAlign, int xPadding, int borderRectX) {
+        this(context, font, text, xLeft, yTop, xRight, yBottom, Color.GRAY, 255, sideText, sideFont, textAlign, xPadding, borderRectX);
     }
 
     /**
@@ -128,7 +116,9 @@ public class TextButtonComponent extends ButtonComponent {
      */
     @Override
     public void draw(Canvas c) {
+        //Draw the button component
         super.draw(c);
+        //Draw the text aligned as indicated
         int textX, textY;
         Rect borderRect;
         if (textAlign == TEXT_ALIGN.ALIGN_LEFT) {

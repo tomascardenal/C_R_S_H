@@ -2,7 +2,6 @@ package com.example.tomascrd.c_r_s_h.core;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 /**
  * Options manager for the game
@@ -34,6 +33,8 @@ public class OptionsManager {
 
     /**
      * Default constructor, initalizes a new OptionsManager with the given Context
+     *
+     * @param context The context for this OptionsManager
      */
     public OptionsManager(Context context) {
         this.context = context;
@@ -45,7 +46,6 @@ public class OptionsManager {
      * Loads the values of the options if they are saved, or sets them to true if they are not saved
      */
     public void loadOptions() {
-        SharedPreferences.Editor editor = preferences.edit();
         playMusic = preferences.getBoolean(GameConstants.PREFERENCES_MUSIC, true);
         playSoundEffects = preferences.getBoolean(GameConstants.PREFERENCES_SOUNDEFFECTS, true);
         doVibrate = preferences.getBoolean(GameConstants.PREFERENCES_VIBRATE, true);

@@ -16,7 +16,7 @@ public class Utils {
     /**
      * The application's context
      */
-    Context context;
+    private Context context;
 
     /**
      * Starts a utils object on the given context

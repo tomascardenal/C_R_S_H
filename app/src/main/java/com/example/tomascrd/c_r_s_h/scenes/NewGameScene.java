@@ -25,7 +25,7 @@ public class NewGameScene extends SceneCrsh {
     /**
      * Button for starting a new game
      */
-    ButtonComponent btnStartGame;
+    private ButtonComponent btnStartGame;
 
     /**
      * Starts a new game menu
@@ -75,21 +75,18 @@ public class NewGameScene extends SceneCrsh {
     public void draw(Canvas c) {
         //General background
         c.drawPaint(gradientPaint);
-
         //Test text
         c.drawText(context.getString(R.string.titleNewGame), screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9, screenHeight / GameConstants.MENUSCREEN_ROWS, pTitleText);
-
+        //Buttons
         backBtn.draw(c);
-
         btnStartGame.draw(c);
-
     }
 
     /**
      * Controls the events on the touchscreen
      *
      * @param event the touch event
-     * @return the pointerId;
+     * @return a new sceneId if it changed, or this id if it didn't change
      */
     public int onTouchEvent(MotionEvent event) {
         int action = event.getActionMasked();

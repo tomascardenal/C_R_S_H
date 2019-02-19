@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 
 import com.example.tomascrd.c_r_s_h.R;
-import com.example.tomascrd.c_r_s_h.components.ButtonComponent;
 import com.example.tomascrd.c_r_s_h.components.SceneCrsh;
 import com.example.tomascrd.c_r_s_h.components.TextButtonComponent;
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
@@ -29,19 +28,19 @@ public class OptionsScene extends SceneCrsh {
     /**
      * Options text painter
      */
-    Paint pOptionsText;
+    private Paint pOptionsText;
     /**
      * Music toggle button
      */
-    TextButtonComponent btnMusic;
+    private TextButtonComponent btnMusic;
     /**
      * Vibration toggle button
      */
-    TextButtonComponent btnVibrate;
+    private TextButtonComponent btnVibrate;
     /**
      * Sound effects toggle button
      */
-    TextButtonComponent btnEffects;
+    private TextButtonComponent btnEffects;
 
 
     /**
@@ -133,8 +132,9 @@ public class OptionsScene extends SceneCrsh {
     public void draw(Canvas c) {
         //General background
         c.drawPaint(gradientPaint);
-
+        //Title text
         c.drawText(context.getString(R.string.btnOptions), screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9, screenHeight / GameConstants.MENUSCREEN_ROWS, pTitleText);
+        //Buttons
         backBtn.draw(c);
         btnMusic.draw(c);
         btnVibrate.draw(c);
@@ -145,7 +145,7 @@ public class OptionsScene extends SceneCrsh {
      * Controls the events on the touchscreen
      *
      * @param event the touch event
-     * @return the pointerId;
+     * @return a new sceneId if it changed, or this id if it didn't change
      */
     public int onTouchEvent(MotionEvent event) {
         int action = event.getActionMasked();

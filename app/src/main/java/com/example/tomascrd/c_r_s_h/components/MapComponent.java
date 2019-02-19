@@ -4,10 +4,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.os.Build;
-import android.os.VibrationEffect;
-import android.os.Vibrator;
-import android.util.Log;
 
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
 
@@ -53,7 +49,6 @@ public class MapComponent extends DrawableComponent {
      */
     private int hReference;
 
-
     /**
      * Starts a map on this ID and with the indicated reference
      *
@@ -63,16 +58,26 @@ public class MapComponent extends DrawableComponent {
      * @param screenHeight The screen height
      */
     public MapComponent(int mapID, Context context, int screenWidth, int screenHeight) {
+        //Initialize variables
         this.context = context;
         this.mapID = mapID;
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
+
+        //Take a size reference from the width
         this.reference = screenWidth / GameConstants.GAMESCREEN_COLUMNS;
-        this.hReference = (screenHeight - getReference() * GameConstants.GAMESCREEN_ROWS) / 2;
+        //Width of the map
         this.width = this.reference * GameConstants.GAMESCREEN_COLUMNS;
+        //Height of the map
         this.height = this.reference * GameConstants.GAMESCREEN_ROWS;
+        //Height reference for adjusting, just the screen's height minus the map height between 2
+        this.hReference = (int) (screenHeight - this.height) / 2;
+
+        //Determine topx and topy positions
         this.xPos = screenWidth - (screenWidth - (reference * GameConstants.MAPAREA_COLUMNS));
         this.yPos = hReference;
+
+        //Load map - test map for the moment
         if (mapID == 666) {
             if (!loadMap(666)) {
                 dataArray = testMap();
@@ -88,12 +93,15 @@ public class MapComponent extends DrawableComponent {
      */
     @Override
     public void draw(Canvas c) {
+        //Test grids
         if (this.mapID == -1) {
             drawTestGrid(c);
         } else {
+            //If data is not loaded, load it!
             if (dataArray == null) {
                 loadMap(mapID);
             }
+            //Draw every tile on the map
             TileComponent currentTile;
             for (int i = 1; i < GameConstants.GAMESCREEN_ROWS - 1; i++) {
                 for (int j = 3; j < GameConstants.GAMESCREEN_COLUMNS - 3; j++) {
@@ -113,7 +121,6 @@ public class MapComponent extends DrawableComponent {
         Paint pTiles = new Paint();
         pTiles.setColor(Color.GREEN);
         boolean redFirst = true;
-        //Grid test (IT WORKS, ON EVERY PHONE) Adjust settings to start drawing wherever we want to
         for (int i = 1; i < GameConstants.GAMESCREEN_ROWS - 1; i++) {
             for (int j = 3; j < GameConstants.GAMESCREEN_COLUMNS - 3; j++) {
                 pTiles.setColor(pTiles.getColor() == Color.GREEN ? Color.RED : Color.GREEN);
@@ -133,6 +140,7 @@ public class MapComponent extends DrawableComponent {
      */
     public void loadTileArray() {
         tileArray = new TileComponent[GameConstants.MAPAREA_ROWS][GameConstants.MAPAREA_COLUMNS];
+        //Loop the size of the map and load tiles on the corresponding coordinates to be drawn later
         for (int i = 1; i < GameConstants.GAMESCREEN_ROWS - 1; i++) {
             for (int j = 3; j < GameConstants.GAMESCREEN_COLUMNS - 3; j++) {
                 tileArray[i - 1][j - 3] = new TileComponent(context, -1,
@@ -143,12 +151,11 @@ public class MapComponent extends DrawableComponent {
     }
 
     /**
-     * Returns an array for a test map
+     * Creates an array for a test map
      *
-     * @return the test map
+     * @return the test map created
      */
     private TileComponent.TILE_TYPE[][] testMap() {
-        Log.i("Loading test map", "Loading test  map");
         this.mapID = 666;
         TileComponent.TILE_TYPE[][] testArray = new TileComponent.TILE_TYPE[GameConstants.MAPAREA_ROWS][GameConstants.MAPAREA_COLUMNS];
         for (int i = 0; i < testArray.length; i++) {
@@ -174,17 +181,17 @@ public class MapComponent extends DrawableComponent {
      * @return a boolean depicting if the loading was successful
      */
     public boolean loadMap(int mapID) {
+        //Initialize dataArray
         this.dataArray = new TileComponent.TILE_TYPE[GameConstants.MAPAREA_ROWS][GameConstants.MAPAREA_COLUMNS];
+        //Open the input stream
         try (FileInputStream fis = context.openFileInput(mapID + GameConstants.MAPFILE_NAME)) {
             DataInputStream input = new DataInputStream(fis);
             for (int i = 0; i < dataArray.length; i++) {
                 for (int j = 0; j < dataArray[i].length; j++) {
                     dataArray[i][j] = TileComponent.intToTileType(input.readInt());
-                    Log.i("mapValue", dataArray[i][j] + "");
                 }
             }
         } catch (IOException e) {
-            Log.e("LoadMap error", e.getLocalizedMessage());
             return false;
         }
         return true;
@@ -196,18 +203,17 @@ public class MapComponent extends DrawableComponent {
      * @return a boolean depicting if the saving was successful
      */
     public boolean saveMap() {
-        Log.i("Saving map", "Saving map");
+        //If this map is not a test grid nor is it null
         if (this.mapID != -1 && dataArray != null) {
+            //Open output stream
             try (FileOutputStream fos = context.openFileOutput(mapID + GameConstants.MAPFILE_NAME, Context.MODE_PRIVATE)) {
                 DataOutputStream output = new DataOutputStream(fos);
                 for (int i = 0; i < dataArray.length; i++) {
                     for (int j = 0; j < dataArray[i].length; j++) {
                         output.writeInt(TileComponent.tileTypeToInt(dataArray[i][j]));
-                        Log.i("mapValue", dataArray[i][j] + "");
                     }
                 }
             } catch (IOException e) {
-                Log.e("SaveMap error", e.getLocalizedMessage());
                 return false;
             }
             return true;

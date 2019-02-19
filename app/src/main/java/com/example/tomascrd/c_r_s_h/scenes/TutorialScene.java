@@ -60,10 +60,9 @@ public class TutorialScene extends SceneCrsh {
     public void draw(Canvas c) {
         //General background
         c.drawPaint(gradientPaint);
-
         //Title text
         c.drawText(context.getString(R.string.btnTutorial), screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9, screenHeight / GameConstants.MENUSCREEN_ROWS, pTitleText);
-
+        //Buttons
         backBtn.draw(c);
 
     }
@@ -72,7 +71,7 @@ public class TutorialScene extends SceneCrsh {
      * Controls the events on the touchscreen
      *
      * @param event the touch event
-     * @return the pointerId;
+     * @return a new sceneId if it changed, or this id if it didn't change
      */
     public int onTouchEvent(MotionEvent event) {
         int action = event.getActionMasked();

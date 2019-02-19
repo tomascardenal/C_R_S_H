@@ -1,7 +1,5 @@
 package com.example.tomascrd.c_r_s_h.core;
 
-import android.graphics.Typeface;
-
 /**
  * Constants of common use in the whole game
  *
@@ -47,7 +45,7 @@ public final class GameConstants {
     /**
      * Bounceback slowdown shift value
      */
-    public final static float BOUNCEBACK_SLOWDOWN_SHIFT = (float)0.2;
+    public final static float BOUNCEBACK_SLOWDOWN_SHIFT = (float) 0.2;
     /**
      * Rows on a game screen
      */

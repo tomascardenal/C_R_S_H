@@ -90,6 +90,7 @@ public class PlayerCrsh {
      * @see CircleComponent
      */
     public PlayerCrsh(MainGameScene gameCallback, MapComponent mapCallback, String playerName, int playerId, boolean onAttack, CircleComponent playerCollision) {
+        //Initialize variables
         this.gameCallback = gameCallback;
         this.mapCallback = mapCallback;
         this.playerName = playerName;
@@ -97,6 +98,13 @@ public class PlayerCrsh {
         this.onAttack = onAttack;
         this.playerCollision = playerCollision;
         this.playerLifes = 3;
+        this.xVelocity = 0;
+        this.yVelocity = 0;
+        this.bounceBackCycle = 0;
+        this.bounceBackBig = false;
+        this.bounceBackSmall = false;
+
+        //Set the color of the player depending of it's ID
         switch (playerId) {
             case 0:
                 this.playerCollision.setColor(Color.MAGENTA);
@@ -107,11 +115,7 @@ public class PlayerCrsh {
             case 2:
                 this.playerCollision.setColor(Color.RED);
         }
-        this.xVelocity = 0;
-        this.yVelocity = 0;
-        this.bounceBackCycle = 0;
-        this.bounceBackBig = false;
-        this.bounceBackSmall = false;
+        //Set the joystick multiplier and position on the map
         this.setJoystickMultiplier();
         this.setMapPosition();
     }
@@ -130,20 +134,7 @@ public class PlayerCrsh {
      * @see CircleComponent
      */
     public PlayerCrsh(MainGameScene gameCallback, MapComponent mapCallback, String playerName, int playerId, boolean onAttack, float xPos, float yPos, int radius) {
-        this.gameCallback = gameCallback;
-        this.mapCallback = mapCallback;
-        this.playerName = playerName;
-        this.playerId = playerId;
-        this.onAttack = onAttack;
-        this.playerCollision = new CircleComponent(xPos, yPos, radius);
-        this.playerLifes = 3;
-        this.xVelocity = 0;
-        this.yVelocity = 0;
-        this.bounceBackCycle = 0;
-        this.bounceBackBig = false;
-        this.bounceBackSmall = false;
-        this.setJoystickMultiplier();
-        this.setMapPosition();
+        this(gameCallback, mapCallback, playerName, playerId, onAttack, new CircleComponent(xPos, yPos, radius));
     }
 
     /**
@@ -283,11 +274,14 @@ public class PlayerCrsh {
      * Sets this player's position in the tiles of the map, and takes an array of the surrounding tiles
      */
     public void setMapPosition() {
+        //Calculate the position inside of the map
         double mapX = this.playerCollision.xPos - (mapCallback.screenWidth - mapCallback.xPos) / 2;
         double mapY = this.playerCollision.yPos - (mapCallback.screenHeight - mapCallback.height) / 2;
-        boolean reposition = false;
+        //Deduce the column and row position from the mapX and mapY coordinates
         columnPosition = (int) (mapX / this.mapCallback.getReference());
         rowPosition = (int) (mapY / this.mapCallback.getReference()) - 1;
+        //Indicates if it should reposition in the end of this function
+        boolean reposition = false;
         //Checking for out of bounds positions. Border tiles are ALWAYS border tiles
         if (columnPosition <= 0) {
             columnPosition = 1;
@@ -303,17 +297,19 @@ public class PlayerCrsh {
             rowPosition = GameConstants.MAPAREA_ROWS - 2;
             reposition = true;
         }
+        //Get the surrounding Tiles and assign them
         TileComponent[] surroundingTiles = {
-                mapCallback.tileArray[rowPosition - 1][columnPosition - 1],
-                mapCallback.tileArray[rowPosition - 1][columnPosition],
-                mapCallback.tileArray[rowPosition - 1][columnPosition + 1],
-                mapCallback.tileArray[rowPosition][columnPosition - 1],
-                mapCallback.tileArray[rowPosition][columnPosition + 1],
-                mapCallback.tileArray[rowPosition + 1][columnPosition - 1],
-                mapCallback.tileArray[rowPosition + 1][columnPosition],
-                mapCallback.tileArray[rowPosition + 1][columnPosition + 1]
+                mapCallback.tileArray[rowPosition - 1][columnPosition - 1], //Tile on upper left side
+                mapCallback.tileArray[rowPosition - 1][columnPosition],     //Tile on top side
+                mapCallback.tileArray[rowPosition - 1][columnPosition + 1], //Tile on upper right side
+                mapCallback.tileArray[rowPosition][columnPosition - 1],     //Tile on left side
+                mapCallback.tileArray[rowPosition][columnPosition + 1],     //Tile on right side
+                mapCallback.tileArray[rowPosition + 1][columnPosition - 1], //Tile on bottom left side
+                mapCallback.tileArray[rowPosition + 1][columnPosition],     //Tile on bottom side
+                mapCallback.tileArray[rowPosition + 1][columnPosition + 1]  //Tile on bottom right side
         };
         this.surroundingTiles = surroundingTiles;
+        //Reposition the player if it went out of bounds
         if (reposition) {
             TileComponent reposTile = mapCallback.tileArray[rowPosition][columnPosition];
             this.playerCollision.resetPosition(reposTile.collisionRect.exactCenterX(), reposTile.collisionRect.exactCenterY());
@@ -327,7 +323,6 @@ public class PlayerCrsh {
     public void move() {
         //Checking collisions
         checkTileCollisions();
-
         //If velocity is not 0 on both edges and there's no bounceback at all
         if ((xVelocity != 0 || yVelocity != 0) && (!bounceBackSmall) && (!bounceBackBig)) {
             playerCollision.move(xVelocity, yVelocity);

@@ -69,8 +69,12 @@ public class SceneCrsh {
         this.id = id;
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
+
+        //Back button
         if (backBtn == null) {
-            backBtn = new ButtonComponent(context, Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_AWESOME), context.getString(R.string.btnBack), screenWidth - screenWidth / 16, 0, screenWidth, screenWidth / 16, Color.TRANSPARENT, 0);
+            backBtn = new ButtonComponent(context,
+                    Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_AWESOME), context.getString(R.string.btnBack),
+                    screenWidth - screenWidth / 16, 0, screenWidth, screenWidth / 16, Color.TRANSPARENT, 0);
         }
     }
 

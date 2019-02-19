@@ -31,27 +31,27 @@ public class MainMenuScene extends SceneCrsh {
     /**
      * Array to store the backgrounds
      */
-    BackgroundComponent parallaxBackgrounds[];
+    private BackgroundComponent parallaxBackgrounds[];
     /**
      * Button for new game scene
      */
-    ButtonComponent btnNewGame;
+    private ButtonComponent btnNewGame;
     /**
      * Button for options scene
      */
-    ButtonComponent btnOptions;
+    private ButtonComponent btnOptions;
     /**
      * Button for records scene
      */
-    ButtonComponent btnRecords;
+    private ButtonComponent btnRecords;
     /**
      * Button for credits scene
      */
-    ButtonComponent btnCredits;
+    private ButtonComponent btnCredits;
     /**
      * Button for tutorial scene
      */
-    ButtonComponent btnTutorial;
+    private ButtonComponent btnTutorial;
 
 
     /**
@@ -131,8 +131,9 @@ public class MainMenuScene extends SceneCrsh {
      */
     @Override
     public void updatePhysics() {
+        //Move the parallax forward and reposition when necessary
         for (int i = 0; i < parallaxBackgrounds.length; i++) {
-            parallaxBackgrounds[i].move(i + 1);
+            parallaxBackgrounds[i].moveX(i + 1);
             if (parallaxBackgrounds[i].position.x > screenWidth) {
                 parallaxBackgrounds[i].position.x = screenWidth - parallaxBackgrounds[i].image.getWidth();
             }
@@ -170,7 +171,7 @@ public class MainMenuScene extends SceneCrsh {
      * Controls the events on the touchscreen
      *
      * @param event the touch event
-     * @return the pointerId;
+     * @return a new sceneId if it changed, or this id if it didn't change
      */
     public int onTouchEvent(MotionEvent event) {
         int action = event.getActionMasked();
@@ -181,6 +182,7 @@ public class MainMenuScene extends SceneCrsh {
 
             case MotionEvent.ACTION_UP:                     // Last finger up
             case MotionEvent.ACTION_POINTER_UP:  // Any other finger up
+                //When the finger is up, if any button for a scene change was clicked, change the scene
                 if (isClick(btnNewGame, event)) {
                     return 1;
                 } else if (isClick(btnOptions, event)) {
@@ -194,7 +196,6 @@ public class MainMenuScene extends SceneCrsh {
                 }
                 break;
             case MotionEvent.ACTION_MOVE: // Any finger moves
-
                 break;
             default:
                 Log.i("Other", "Undefined action: " + action);

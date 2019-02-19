@@ -15,6 +15,16 @@ import android.graphics.Rect;
 public class TileComponent extends DrawableComponent {
 
     /**
+     * Enumerates the various types of tile
+     */
+    public enum TILE_TYPE {
+        TILE_BORDER,    //0, border tile
+        TILE_PATH,      //1, path tile
+        TILE_BREAKONE,  //2, one hit breakable tile
+        TILE_BREAKTWO,  //3, two hit breakable tile
+    }
+
+    /**
      * Painter for test maps
      */
     public Paint testPaint;
@@ -42,30 +52,6 @@ public class TileComponent extends DrawableComponent {
     /**
      * Initializes a tile to it's parameters
      *
-     * @param context  The application's context
-     * @param drawable The tile's drawable, -1 for no drawable
-     * @param xPos     The tile's xPos, used as the Rect's top left x coordinate
-     * @param yPos     The tile's yPos, used as the Rect's top left y coordinate
-     * @param xBottom  The Rect's bottom right x coordinate
-     * @param yBottom  The Rect's bottom right y coordinate
-     * @param tileType The tile's type
-     */
-    public TileComponent(Context context, int drawable, int xPos, int yPos, int xBottom, int yBottom, TILE_TYPE tileType) {
-        this.context = context;
-        this.xPos = xPos;
-        this.yPos = yPos;
-        this.xBottom = xBottom;
-        this.yBottom = yBottom;
-        this.tileType = tileType;
-        this.collisionRect = new Rect(xPos, yPos, xBottom, yBottom);
-        this.testPaint = new Paint();
-        setPainter();
-
-    }
-
-    /**
-     * Initializes a tile to it's parameters
-     *
      * @param context       The application's context
      * @param drawable      The tile's drawable, -1 for no drawable
      * @param collisionRect The tile's collisionRect
@@ -81,6 +67,21 @@ public class TileComponent extends DrawableComponent {
         this.yBottom = collisionRect.bottom;
         this.testPaint = new Paint();
         setPainter();
+    }
+
+    /**
+     * Initializes a tile to it's parameters
+     *
+     * @param context  The application's context
+     * @param drawable The tile's drawable, -1 for no drawable
+     * @param xPos     The tile's xPos, used as the Rect's top left x coordinate
+     * @param yPos     The tile's yPos, used as the Rect's top left y coordinate
+     * @param xBottom  The Rect's bottom right x coordinate
+     * @param yBottom  The Rect's bottom right y coordinate
+     * @param tileType The tile's type
+     */
+    public TileComponent(Context context, int drawable, int xPos, int yPos, int xBottom, int yBottom, TILE_TYPE tileType) {
+        this(context, drawable, new Rect(xPos, yPos, xBottom, yBottom), tileType);
     }
 
     /**
@@ -176,6 +177,15 @@ public class TileComponent extends DrawableComponent {
         return this.tileImage;
     }
 
+    /**
+     * Indicates if there's a collision between a rect on the given parameters
+     *
+     * @param x      top right x coordinate
+     * @param y      top right y coordinate
+     * @param width  the rect's width
+     * @param height the rect's height
+     * @return
+     */
     public boolean getCollision(int x, int y, int width, int height) {
         return this.collisionRect.intersects(x, y, x + width, y + height);
     }
@@ -198,13 +208,5 @@ public class TileComponent extends DrawableComponent {
         this.tileType = tileType;
     }
 
-    /**
-     * Enumerates the various types of tile
-     */
-    public enum TILE_TYPE {
-        TILE_BORDER,    //0, border tile
-        TILE_PATH,      //1, path tile
-        TILE_BREAKONE,  //2, one hit breakable tile
-        TILE_BREAKTWO,  //3, two hit breakable tile
-    }
+
 }

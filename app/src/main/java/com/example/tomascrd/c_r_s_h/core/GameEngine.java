@@ -76,6 +76,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
      * @param context the application context
      */
     public GameEngine(Context context) {
+        //Initialize engine variables, options, callback, and thread
         super(context);
         this.surfaceHolder = getHolder();
         this.surfaceHolder.addCallback(this);
@@ -86,7 +87,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     /**
-     * Controls touch events on the screen
+     * Gets the callback from the touch events and manages the scene control
      *
      * @param event the thrown event
      * @return true if the function executes correctly until the end
@@ -96,6 +97,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
         synchronized (surfaceHolder) {
             int newScene = currentScene.onTouchEvent(event);
             if (newScene != currentScene.getId()) {
+                //If the scene changed, set the new scene
                 switch (newScene) {
                     case 0:
                         currentScene = new MainMenuScene(context, newScene, screenWidth, screenHeight);
@@ -149,13 +151,23 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
      */
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+        //Reset the width and height
         screenWidth = width;
         screenHeight = height;
+        //Reload the options
+        if (optionsManager == null) {
+            optionsManager = new OptionsManager(context);
+        }
         optionsManager.loadOptions();
-        currentScene = new MainMenuScene(context, 0, screenWidth, screenHeight);
+        //Reload the mainMenuScene if the current scene is not on memory anymore
+        if (currentScene == null) {
+            currentScene = new MainMenuScene(context, 0, screenWidth, screenHeight);
+        }
+        //Audio managing
         updateAudioObjects();
         updateVolume();
         updateMusicPlayer();
+        //Starting the thread
         thread.setWorking(true);
         if (thread.getState() == Thread.State.NEW) {
             thread.start();
@@ -174,6 +186,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
      */
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
+        //End the thread
         thread.setWorking(false);
         try {
             thread.join();
@@ -222,6 +235,9 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
      */
     public class GameThread extends Thread {
 
+        /**
+         * Indicates whether the canvas is locked
+         */
         private boolean canvasLocked = false;
 
         /**
@@ -229,9 +245,12 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
          */
         @Override
         public void run() {
+            //Variables for FPS control
             long timeRef = System.nanoTime();
             long timeSleep = 0;
+            //Thread loop
             while (gameWorking) {
+                //Retake the volume reference if it changed
                 updateVolume();
                 Canvas c = null;
                 try {
@@ -244,6 +263,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
                     }
                     if (c != null) {
                         synchronized (surfaceHolder) {
+                            //Call the currentScene working functions
                             currentScene.updatePhysics();
                             currentScene.draw(c);
                         }
@@ -288,7 +308,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
          */
         public void setSurfaceSize(int width, int height) {
             synchronized (surfaceHolder) {
-
+                
             }
         }
     }

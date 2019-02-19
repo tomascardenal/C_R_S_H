@@ -13,7 +13,10 @@ import android.view.Window;
  */
 public class MainActivity extends AppCompatActivity {
 
-    GameEngine gameEngine;
+    /**
+     * The gameEngine object to run this game and to be set as ContentView
+     */
+    private GameEngine gameEngine;
 
     /**
      * Controls the actions when this activity gets created

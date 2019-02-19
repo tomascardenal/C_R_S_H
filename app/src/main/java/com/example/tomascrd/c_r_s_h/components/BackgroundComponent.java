@@ -5,17 +5,18 @@ import android.graphics.Matrix;
 import android.graphics.PointF;
 
 /**
- * Represents a scrolling background for a horizontal parallax effect
+ * Represents a background component with the ability to scroll
  *
  * @author Tomás Cardenal López
  */
 public class BackgroundComponent {
+
     /**
-     * This background's position
+     * This backgrounds' position
      */
     public PointF position;
     /**
-     * This background's image
+     * This backgrounds' image
      */
     public Bitmap image;
 
@@ -41,7 +42,6 @@ public class BackgroundComponent {
         this(image, screenWidth - image.getWidth(), 0);
     }
 
-
     /**
      * Initializes a background for the indicated screen width and height
      *
@@ -59,12 +59,12 @@ public class BackgroundComponent {
      *
      * @param velocity
      */
-    public void move(int velocity) {
+    public void moveX(int velocity) {
         position.x += velocity;
     }
 
     /**
-     * Reverses this background's bitmap. Unused for the moment
+     * Reverses this backgrounds' bitmap. Unused for the moment
      *
      * @param horizontally true for horizontal flip, false for vertical flip
      */

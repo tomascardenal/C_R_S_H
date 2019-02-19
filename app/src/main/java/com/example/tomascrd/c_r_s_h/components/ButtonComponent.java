@@ -8,6 +8,7 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 
 //TODO Implement animated button with different rect border drawings
+
 /**
  * A button for the menus and interface for CRSH
  *
@@ -23,22 +24,18 @@ public class ButtonComponent extends DrawableComponent {
      * Bottom coordinate for this button's Rect
      */
     protected int yBottom;
-
     /**
      * Rect to draw this button
      */
     protected Rect btnRect;
-
     /**
      * Text to show on this button
      */
     private String text;
-
     /**
      * Paint object for the button
      */
     protected Paint pButton;
-
     /**
      * Paint object for the text
      */
@@ -56,6 +53,7 @@ public class ButtonComponent extends DrawableComponent {
      * @param yBottom the button's bottom right corner y position
      */
     public ButtonComponent(Context context, Typeface font, String text, int xPos, int yPos, int xRight, int yBottom) {
+        //Initialize parameters
         this.context = context;
         this.setText(text);
         this.xPos = xPos;
@@ -65,8 +63,12 @@ public class ButtonComponent extends DrawableComponent {
         this.width = xRight - xPos;
         this.height = yBottom - yPos;
         this.btnRect = new Rect(xPos, yPos, xRight, yBottom);
+
+        //Painter for the button
         pButton = new Paint();
         pButton.setColor(Color.GRAY);
+
+        //Painter for the text
         pText = new Paint();
         if (font != null) {
             pText.setTypeface(font);
@@ -89,10 +91,11 @@ public class ButtonComponent extends DrawableComponent {
      * @param xRight     the button's bottom right corner x position
      * @param yBottom    the button's bottom right corner y position
      * @param background the button's background color
-     * @param alpha  the button's background alpha
+     * @param alpha      the button's background alpha
      */
     public ButtonComponent(Context context, Typeface font, String text, int xPos, int yPos, int xRight, int yBottom, int background, int alpha) {
         this(context, font, text, xPos, yPos, xRight, yBottom);
+        //Reset color and alpha
         pButton.setColor(background);
         pButton.setAlpha(alpha);
     }

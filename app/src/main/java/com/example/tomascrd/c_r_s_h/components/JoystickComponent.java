@@ -3,7 +3,6 @@ package com.example.tomascrd.c_r_s_h.components;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.PointF;
-import android.util.Log;
 import android.view.MotionEvent;
 
 /**
@@ -90,10 +89,14 @@ public class JoystickComponent extends DrawableComponent {
      * @param yHandle the new y coordinate for the handle
      */
     public void moveHandle(float xHandle, float yHandle) {
+        //Calculate the displacement between the new coordinates
         float movement = (float) Math.sqrt(Math.pow(xHandle - xPos, 2) + Math.pow(yHandle - yPos, 2));
+        //Ratio for constraining the movement
         float hypotenuseRatio = maxRadius / movement;
+        //If the movement doesn't exceed the ratio, just reset it on the given new coordinates
         if (movement < maxRadius) {
             this.joystickHandle.resetPosition(xHandle, yHandle);
+            //If the movement exceeds the ratio, constrain it on the ratio
         } else {
             this.joystickHandle.resetPosition(xPos + (xHandle - xPos) * hypotenuseRatio, yPos + (yHandle - yPos) * hypotenuseRatio);
         }
@@ -149,7 +152,6 @@ public class JoystickComponent extends DrawableComponent {
     public PointF getDisplacement() {
         float xDisplacement = (this.joystickHandle.xPos - xPos) / maxRadius;
         float yDisplacement = (this.joystickHandle.yPos - yPos) / maxRadius;
-        Log.i("Handle moving: ", "X: " + xDisplacement + " Y: " + yDisplacement);
         return new PointF(xDisplacement, yDisplacement);
     }
 

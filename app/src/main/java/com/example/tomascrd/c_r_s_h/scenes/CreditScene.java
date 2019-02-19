@@ -24,7 +24,7 @@ public class CreditScene extends SceneCrsh {
     /**
      * Credits text painter
      */
-    Paint pCreditsText;
+    private Paint pCreditsText;
     /**
      * Reference to credit strings on strings.xml files
      */
@@ -170,7 +170,7 @@ public class CreditScene extends SceneCrsh {
      * Controls the events on the touchscreen
      *
      * @param event the touch event
-     * @return the pointerId;
+     * @return a new sceneId if it changed, or this id if it didn't change
      */
     public int onTouchEvent(MotionEvent event) {
         int action = event.getActionMasked();
