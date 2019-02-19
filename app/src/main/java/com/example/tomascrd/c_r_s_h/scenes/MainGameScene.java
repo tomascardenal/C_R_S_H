@@ -141,20 +141,23 @@ public class MainGameScene extends SceneCrsh {
      */
     @Override
     public void updatePhysics() {
-        if (joystickOne.isActive()) {
+        if (joystickOne.isActive() && !playerOne.onBounceBack()) {
             PointF joystickReference = joystickOne.getDisplacement();
             playerOne.setVelocity(
                     joystickReference.x * playerOne.getJoystickMultiplier(),
                     joystickReference.y * playerOne.getJoystickMultiplier());
-            playerOne.move();
+
         }
-        if (joystickTwo.isActive()) {
+        if (joystickTwo.isActive() && !playerTwo.onBounceBack()) {
             PointF joystickReference = joystickTwo.getDisplacement();
             playerTwo.setVelocity(
                     joystickReference.x * playerTwo.getJoystickMultiplier(),
                     joystickReference.y * playerTwo.getJoystickMultiplier());
-            playerTwo.move();
+
         }
+
+        playerOne.move();
+        playerTwo.move();
     }
 
     /**
