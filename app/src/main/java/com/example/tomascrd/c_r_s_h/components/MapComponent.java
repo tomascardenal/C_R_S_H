@@ -57,10 +57,12 @@ public class MapComponent extends DrawableComponent {
      */
     public float mapAreaWidth;
     /**
-     *
+     * X left coordinate for this map
      */
     public float xLeft;
-
+    /**
+     * X top coordinate for this map
+     */
     public float yTop;
 
     /**
@@ -93,7 +95,6 @@ public class MapComponent extends DrawableComponent {
         //Determine topx and topy positions
         this.xPos = screenWidth - (screenWidth - (reference * GameConstants.MAPAREA_COLUMNS));
         this.yPos = hReference;
-
         this.xLeft = 3 * reference;
         this.yTop = reference + hReference;
 

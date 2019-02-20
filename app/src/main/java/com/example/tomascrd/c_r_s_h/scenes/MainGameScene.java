@@ -7,12 +7,15 @@ import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Shader;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.util.Log;
 import android.view.MotionEvent;
 
+import com.example.tomascrd.c_r_s_h.R;
+import com.example.tomascrd.c_r_s_h.components.ButtonComponent;
 import com.example.tomascrd.c_r_s_h.components.CircleComponent;
 import com.example.tomascrd.c_r_s_h.components.GamepadComponent;
 import com.example.tomascrd.c_r_s_h.components.JoystickComponent;
@@ -20,6 +23,7 @@ import com.example.tomascrd.c_r_s_h.components.MapComponent;
 import com.example.tomascrd.c_r_s_h.components.PauseMenuComponent;
 import com.example.tomascrd.c_r_s_h.components.PlayerCrsh;
 import com.example.tomascrd.c_r_s_h.components.SceneCrsh;
+import com.example.tomascrd.c_r_s_h.core.GameConstants;
 import com.example.tomascrd.c_r_s_h.core.GameEngine;
 
 /**
@@ -96,6 +100,10 @@ public class MainGameScene extends SceneCrsh {
      * Pause menu
      */
     private PauseMenuComponent pauseMenu;
+    /**
+     * Pause button
+     */
+    private ButtonComponent btnPause;
 
     /**
      * Starts a new main game
@@ -140,8 +148,13 @@ public class MainGameScene extends SceneCrsh {
         gradientRightAttack = new LinearGradient(0, screenWidth, screenWidth, screenHeight, rightgradientColors, positions, Shader.TileMode.CLAMP);
         setGradients();
 
+        //Pause button
+        btnPause = new ButtonComponent(context,
+                Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_AWESOME), context.getString(R.string.btnPause),
+                screenWidth - screenWidth / 16, 0, screenWidth, screenWidth / 16, Color.TRANSPARENT, 0, false, 0);
+
         //Pause menu
-        this.pauseMenu = new PauseMenuComponent(this.mapLoad.xLeft, this.mapLoad.yTop, this.mapLoad.mapAreaWidth, this.mapLoad.mapAreaHeight, this);
+        this.pauseMenu = new PauseMenuComponent(this.context, this.mapLoad.xLeft, this.mapLoad.yTop, this.mapLoad.mapAreaWidth, this.mapLoad.mapAreaHeight, this);
     }
 
     /**
@@ -231,7 +244,7 @@ public class MainGameScene extends SceneCrsh {
             //Draw player Two
             playerTwo.draw(c);
             //Draw the back button TODO change this for an ingame pause menu
-            backBtn.draw(c);
+            btnPause.draw(c);
             //Draw the joysticks
             if (playerOne.getPlayerLifes() > 0) {
                 joystickOne.draw(c);
@@ -241,7 +254,6 @@ public class MainGameScene extends SceneCrsh {
             }
         } else {
             pauseMenu.draw(c);
-            backBtn.draw(c);
         }
 
     }
@@ -279,10 +291,24 @@ public class MainGameScene extends SceneCrsh {
                     if (event.getPointerId(event.getActionIndex()) == joystickTwo.getPointerId() && playerTwoArea) {
                         joystickTwo.deactivate();
                     }
+                } else {
+                    if (isClick(pauseMenu.getBtnUnpause(), event)) {
+                        onPause = false;
+                    }
+                    if (isClick(pauseMenu.getBtnOptions(), event)) {
+                        engineCallback.loadSavedScene = true;
+                        engineCallback.savedScene = this;
+                        return 2;
+                    }
+                    if (isClick(pauseMenu.getBtnEndGame(), event)) {
+                        engineCallback.loadSavedScene = false;
+                        return 1;
+                    }
                 }
-                if (isClick(backBtn, event)) {
-                    onPause = !onPause;
+                if (isClick(btnPause, event)) {
+                    onPause = true;
                 }
+
                 break;
             case MotionEvent.ACTION_MOVE: // Any finger moves
                 //Joystick moving

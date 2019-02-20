@@ -157,7 +157,11 @@ public class OptionsScene extends SceneCrsh {
             case MotionEvent.ACTION_UP:                     // Last finger up
             case MotionEvent.ACTION_POINTER_UP:  // Any other finger up
                 if (isClick(backBtn, event)) {
-                    return 0;
+                    if (engineCallback.loadSavedScene) {
+                        return 99;
+                    } else {
+                        return 0;
+                    }
                 }
                 if (isClick(btnMusic, event)) {
                     toggleMusic();

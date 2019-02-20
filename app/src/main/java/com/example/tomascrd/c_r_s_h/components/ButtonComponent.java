@@ -37,10 +37,6 @@ public class ButtonComponent extends DrawableComponent {
      */
     protected Paint pButton;
     /**
-     * Paint object for the text
-     */
-    protected Paint pText;
-    /**
      * Paint object for the border on the clicking effect
      */
     protected Paint pClickBorder;

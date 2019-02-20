@@ -2,6 +2,7 @@ package com.example.tomascrd.c_r_s_h.components;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 
 /**
  * Represents a drawable component for a SurfaceView GUI, and gameplay
@@ -30,6 +31,10 @@ public abstract class DrawableComponent {
      * Component width
      */
     public float width;
+    /**
+     * Paint object for the text
+     */
+    protected Paint pText;
 
     /**
      * Draws the components on screen

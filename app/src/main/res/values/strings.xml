@@ -27,5 +27,10 @@
     <string name="optSoundEffects">Efectos</string>
     <string name="creditsMusic">Música:\nLow Costa Perreo de YVNG N31L</string>
     <string name="creditsFonts">Fuentes:\nFontAwesome https://fontawesome.com/\nHomeSpun https://www.1001freefonts.com/homespun.font\nKarma Future https://www.dafont.com/karma-future.font\n</string>
-    <string name="creditsSoundEffects">Efectos de sonido: Tomás Cardenal López</string>
+    <string name="creditsSoundEffects">Efectos de sonido:\nTomás Cardenal López</string>
+    <string name="pauseTitle">Juego en pausa</string>
+    <string name="btnUnpause" translatable="false"></string>
+    <string name="btnPause" translatable="false"></string>
+    <string name="btnOptionsOnPause" translatable="false"></string>
+    <string name="btnEndGame" translatable="false"></string>
 </resources>
