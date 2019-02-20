@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.view.MotionEvent;
 
@@ -112,6 +113,17 @@ public class SceneCrsh {
      */
     public boolean isClick(ButtonComponent btn, MotionEvent event) {
         return btn.btnRect.contains((int) event.getX(event.getActionIndex()), (int) event.getY(event.getActionIndex()));
+    }
+
+    /**
+     * Determines if a rectangle is clicked by the ActionIndex of the event
+     *
+     * @param rect  the rect
+     * @param event the motion event detected
+     * @return true if the rect was clicked
+     */
+    public boolean isClick(Rect rect, MotionEvent event) {
+        return rect.contains((int) event.getX(event.getActionIndex()), (int) event.getY(event.getActionIndex()));
     }
 
     /**

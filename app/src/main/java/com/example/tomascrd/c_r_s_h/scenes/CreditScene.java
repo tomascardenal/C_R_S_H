@@ -1,12 +1,15 @@
 package com.example.tomascrd.c_r_s_h.scenes;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.Shader;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.util.Log;
 import android.view.MotionEvent;
 
@@ -50,6 +53,18 @@ public class CreditScene extends SceneCrsh {
      */
     private boolean rotateCredit;
     /**
+     * Rect for linking to FontAwesome's website
+     */
+    private Rect linkFontAwesome;
+    /**
+     * Rect for linking to HomeSpun's website
+     */
+    private Rect linkHomeSpun;
+    /**
+     * Rect for linking to KarmaFuture's website
+     */
+    private Rect linkKarmaFuture;
+    /**
      * Maximum number of cycles to stay with text at max alpha
      */
     private static final int MAX_ALPHA_CYCLES = 150;
@@ -57,6 +72,19 @@ public class CreditScene extends SceneCrsh {
      * Alpha incremental and decremental
      */
     private static final int ALPHA_SHIFT = 5;
+    /**
+     * measureText/2 value for fontawesome font line, used for building the link
+     */
+    private static final int HALFWIDTH_FONTAWESOME = 432;
+
+    /**
+     * measureText/2 value for homespun font line, used for building the link
+     */
+    private static final int HALFWIDTH_HOMESPUN = 390;
+    /**
+     * measureText/2 value for karmafuture font line, used for building the link
+     */
+    private static final int HALFWIDTH_KARMAFUTURE = 498;
 
     /**
      * Starts a credits scene
@@ -99,6 +127,13 @@ public class CreditScene extends SceneCrsh {
         this.gradientPaint = new Paint();
         this.gradientPaint.setShader(new LinearGradient(0, 0, screenWidth, screenHeight, Color.GREEN, Color.CYAN, Shader.TileMode.CLAMP));
 
+        //Link rects
+        this.linkFontAwesome = new Rect(screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9 - HALFWIDTH_FONTAWESOME, (int) ((screenHeight / GameConstants.MENUSCREEN_ROWS * 4) - (pCreditsText.getTextSize() / 2)),
+                (screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9) + HALFWIDTH_FONTAWESOME, (int) ((screenHeight / GameConstants.MENUSCREEN_ROWS * 4) + (pCreditsText.getTextSize() / 2)));
+        this.linkHomeSpun = new Rect(screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9 - HALFWIDTH_HOMESPUN, (int) ((screenHeight / GameConstants.MENUSCREEN_ROWS * 5) - (pCreditsText.getTextSize() / 2)),
+                (screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9) + HALFWIDTH_HOMESPUN, (int) ((screenHeight / GameConstants.MENUSCREEN_ROWS * 5) + (pCreditsText.getTextSize() / 2)));
+        this.linkKarmaFuture = new Rect(screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9 - HALFWIDTH_KARMAFUTURE, (int) ((screenHeight / GameConstants.MENUSCREEN_ROWS * 6) - (pCreditsText.getTextSize() / 2)),
+                (screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9) + HALFWIDTH_KARMAFUTURE, (int) ((screenHeight / GameConstants.MENUSCREEN_ROWS * 6) + (pCreditsText.getTextSize() / 2)));
     }
 
     /**
@@ -158,10 +193,10 @@ public class CreditScene extends SceneCrsh {
         int row = 3;
         //Draw all the lines shifted by a row
         for (String line : creditLines) {
+            Log.i("link for", line + " values: measureText " + pCreditsText.measureText(line) + " y " + screenHeight / GameConstants.MENUSCREEN_ROWS * row);
             c.drawText(line, screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9, screenHeight / GameConstants.MENUSCREEN_ROWS * row, pCreditsText);
             row++;
         }
-
         backBtn.draw(c);
 
     }
@@ -183,6 +218,24 @@ public class CreditScene extends SceneCrsh {
             case MotionEvent.ACTION_POINTER_UP:  // Any other finger up
                 if (isClick(backBtn, event)) {
                     return 0;
+                }
+                //Links to font sources
+                if (creditStrings[creditIndex] == R.string.creditsFonts) {
+                    Uri webpage = null;
+                    Intent webIntent;
+                    if (isClick(linkFontAwesome, event)) {
+                        webpage = Uri.parse(GameConstants.LINK_FONTAWESOME);
+                    }
+                    if (isClick(linkHomeSpun, event)) {
+                        webpage = Uri.parse(GameConstants.LINK_HOMESPUN);
+                    }
+                    if (isClick(linkKarmaFuture, event)) {
+                        webpage = Uri.parse(GameConstants.LINK_KARMAFUTURE);
+                    }
+                    if (webpage != null) {
+                        webIntent = new Intent(Intent.ACTION_VIEW, webpage);
+                        context.startActivity(webIntent);
+                    }
                 }
             case MotionEvent.ACTION_MOVE: // Any finger moves
 

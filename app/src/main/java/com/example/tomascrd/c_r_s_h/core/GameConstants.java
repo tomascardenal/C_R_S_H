@@ -106,4 +106,16 @@ public final class GameConstants {
      * KarmaFuture font path
      */
     public final static String FONT_KARMAFUTURE = "KarmaFuture.ttf";
+    /**
+     * Link to Fontawesome.com
+     */
+    public final static String LINK_FONTAWESOME = "https://fontawesome.com/";
+    /**
+     * Link to Homespun font source
+     */
+    public final static String LINK_HOMESPUN = "https://www.1001freefonts.com/homespun.font";
+    /**
+     * Link to KarmaFuture font source
+     */
+    public final static String LINK_KARMAFUTURE = "https://www.dafont.com/karma-future.font";
 }
