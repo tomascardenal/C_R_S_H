@@ -598,5 +598,6 @@ public class PlayerCrsh extends DrawableComponent {
     public void togglePlayerMode() {
         this.onAttack = !onAttack;
         setJoystickMultiplier();
+        gameCallback.setGradients();
     }
 }

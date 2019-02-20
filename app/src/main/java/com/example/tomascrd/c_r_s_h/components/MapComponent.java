@@ -67,15 +67,14 @@ public class MapComponent extends DrawableComponent {
         //Take a size reference from the width
         this.reference = screenWidth / GameConstants.GAMESCREEN_COLUMNS;
         //Width of the map
-        this.width = this.reference * GameConstants.GAMESCREEN_COLUMNS;
+        this.width = this.reference * GameConstants.MAPAREA_COLUMNS;
         //Height of the map
-        this.height = this.reference * GameConstants.GAMESCREEN_ROWS;
+        this.height = this.reference * GameConstants.MAPAREA_ROWS;
         //Height reference for adjusting, just the screen's height minus the map height between 2
-        this.hReference = (int) (screenHeight - this.height) / 2;
-
+        this.hReference = (int) (screenHeight - this.reference * GameConstants.GAMESCREEN_ROWS) / 2;
         //Determine topx and topy positions
-        this.xPos = screenWidth - (screenWidth - (reference * GameConstants.MAPAREA_COLUMNS));
-        this.yPos = hReference;
+        this.xPos = 3 * reference;
+        this.yPos = reference + hReference;
 
         //Load map - test map for the moment
         if (mapID == 666) {
@@ -106,7 +105,7 @@ public class MapComponent extends DrawableComponent {
             for (int i = 1; i < GameConstants.GAMESCREEN_ROWS - 1; i++) {
                 for (int j = 3; j < GameConstants.GAMESCREEN_COLUMNS - 3; j++) {
                     currentTile = tileArray[i - 1][j - 3];
-                    c.drawRect(currentTile.collisionRect, currentTile.testPaint);
+                    c.drawRect(currentTile.collisionRect, currentTile.rectPaint);
                 }
             }
         }
@@ -238,6 +237,24 @@ public class MapComponent extends DrawableComponent {
      */
     public int gethReference() {
         return hReference;
+    }
+
+    /**
+     * Returns the xPosition of the map (top right corner)
+     *
+     * @return the xPosition
+     */
+    public float getX() {
+        return this.xPos;
+    }
+
+    /**
+     * Returns the yPosition of the map (top right corner)
+     *
+     * @return the yPosition
+     */
+    public float getY() {
+        return this.yPos;
     }
 
 }

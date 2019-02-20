@@ -25,9 +25,9 @@ public class TileComponent extends DrawableComponent {
     }
 
     /**
-     * Painter for test maps
+     * Painter for the rects
      */
-    public Paint testPaint;
+    public Paint rectPaint;
     /**
      * This tile's type
      */
@@ -65,7 +65,7 @@ public class TileComponent extends DrawableComponent {
         this.yPos = collisionRect.top;
         this.xBottom = collisionRect.right;
         this.yBottom = collisionRect.bottom;
-        this.testPaint = new Paint();
+        this.rectPaint = new Paint();
         setPainter();
     }
 
@@ -134,16 +134,16 @@ public class TileComponent extends DrawableComponent {
     public void setPainter() {
         switch (this.tileType) {
             case TILE_BORDER:
-                testPaint.setColor(Color.BLACK);
+                rectPaint.setColor(Color.BLACK);
                 break;
             case TILE_PATH:
-                testPaint.setColor(Color.YELLOW);
+                rectPaint.setColor(Color.YELLOW);
                 break;
             case TILE_BREAKONE:
-                testPaint.setColor(Color.LTGRAY);
+                rectPaint.setColor(Color.LTGRAY);
                 break;
             case TILE_BREAKTWO:
-                testPaint.setColor(Color.GRAY);
+                rectPaint.setColor(Color.GRAY);
         }
     }
 

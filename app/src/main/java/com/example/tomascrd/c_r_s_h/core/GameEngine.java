@@ -71,6 +71,14 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
      * Options manager to access the values of the user selected options
      */
     public OptionsManager optionsManager;
+    /**
+     * Indicates if a saved scene should be loaded, or if a new scene should be instantiated
+     */
+    public boolean loadSavedScene;
+    /**
+     * Stores the savedScene
+     */
+    public SceneCrsh savedScene;
 
     /**
      * Starts a gameEngine within the given context
@@ -85,6 +93,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
         this.context = context;
         optionsManager = new OptionsManager(context);
         thread = new GameThread();
+        this.loadSavedScene = false;
         setFocusable(true);
     }
 
@@ -101,26 +110,54 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
             if (newScene != currentScene.getId() && newScene != -1) {
                 //If the scene changed, set the new scene
                 switch (newScene) {
-                    case 0:
-                        currentScene = new MainMenuScene(context, newScene, screenWidth, screenHeight);
+                    case 0: //MainMenuScene
+                        if (loadSavedScene && savedScene != null && savedScene instanceof MainMenuScene) {
+                            currentScene = savedScene;
+                        } else {
+                            currentScene = new MainMenuScene(context, newScene, screenWidth, screenHeight);
+                        }
                         break;
-                    case 1:
-                        currentScene = new NewGameScene(context, newScene, screenWidth, screenHeight);
+                    case 1: //NewGameScene
+                        if (loadSavedScene && savedScene != null && savedScene instanceof NewGameScene) {
+                            currentScene = savedScene;
+                        } else {
+                            currentScene = new NewGameScene(context, newScene, screenWidth, screenHeight);
+                        }
                         break;
-                    case 2:
-                        currentScene = new OptionsScene(context, newScene, screenWidth, screenHeight, this);
+                    case 2: //OptionsScene
+                        if (loadSavedScene && savedScene != null && savedScene instanceof OptionsScene) {
+                            currentScene = savedScene;
+                        } else {
+                            currentScene = new OptionsScene(context, newScene, screenWidth, screenHeight, this);
+                        }
                         break;
-                    case 3:
-                        currentScene = new CreditScene(context, newScene, screenWidth, screenHeight);
+                    case 3: //CreditScene
+                        if (loadSavedScene && savedScene != null && savedScene instanceof CreditScene) {
+                            currentScene = savedScene;
+                        } else {
+                            currentScene = new CreditScene(context, newScene, screenWidth, screenHeight);
+                        }
                         break;
-                    case 4:
-                        currentScene = new RecordsScene(context, newScene, screenWidth, screenHeight);
+                    case 4: //RecordsScene
+                        if (loadSavedScene && savedScene != null && savedScene instanceof RecordsScene) {
+                            currentScene = savedScene;
+                        } else {
+                            currentScene = new RecordsScene(context, newScene, screenWidth, screenHeight);
+                        }
                         break;
-                    case 5:
-                        currentScene = new TutorialScene(context, newScene, screenWidth, screenHeight);
+                    case 5: //TutorialScene
+                        if (loadSavedScene && savedScene != null && savedScene instanceof TutorialScene) {
+                            currentScene = savedScene;
+                        } else {
+                            currentScene = new TutorialScene(context, newScene, screenWidth, screenHeight);
+                        }
                         break;
-                    case 99:
-                        currentScene = new MainGameScene(context, newScene, screenWidth, screenHeight, this);
+                    case 99: //MainGameScene
+                        if (loadSavedScene && savedScene != null && savedScene instanceof MainGameScene) {
+                            currentScene = savedScene;
+                        } else {
+                            currentScene = new MainGameScene(context, newScene, screenWidth, screenHeight, this);
+                        }
                         break;
                 }
             }
@@ -211,7 +248,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
             try {
                 mediaPlayer.prepare();
             } catch (IllegalStateException | IOException e) {
-                Log.e("mediaPlayer error", ""+e.getLocalizedMessage());
+                Log.e("mediaPlayer error", "" + e.getLocalizedMessage());
             }
 
         }

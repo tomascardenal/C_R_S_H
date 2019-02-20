@@ -3,7 +3,10 @@ package com.example.tomascrd.c_r_s_h.scenes;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
+import android.graphics.Paint;
 import android.graphics.PointF;
+import android.graphics.Shader;
 import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
@@ -14,6 +17,7 @@ import com.example.tomascrd.c_r_s_h.components.CircleComponent;
 import com.example.tomascrd.c_r_s_h.components.GamepadComponent;
 import com.example.tomascrd.c_r_s_h.components.JoystickComponent;
 import com.example.tomascrd.c_r_s_h.components.MapComponent;
+import com.example.tomascrd.c_r_s_h.components.PauseMenuComponent;
 import com.example.tomascrd.c_r_s_h.components.PlayerCrsh;
 import com.example.tomascrd.c_r_s_h.components.SceneCrsh;
 import com.example.tomascrd.c_r_s_h.core.GameEngine;
@@ -72,6 +76,26 @@ public class MainGameScene extends SceneCrsh {
      * Callback to access the game engine
      */
     private GameEngine engineCallback;
+    /**
+     * Gradient for left side attacking
+     */
+    private LinearGradient gradientLeftAttack;
+    /**
+     * Gradient for right side attacking
+     */
+    private LinearGradient gradientRightAttack;
+    /**
+     * Reference for the tile size, indicates how much the side of the tile measures
+     */
+    public int tileSizeReference;
+    /**
+     * Indicates whether the game is paused or not
+     */
+    private boolean onPause;
+    /**
+     * Pause menu
+     */
+    private PauseMenuComponent pauseMenu;
 
     /**
      * Starts a new main game
@@ -83,12 +107,15 @@ public class MainGameScene extends SceneCrsh {
      * @param engineCallback callback to this game's engine
      */
     public MainGameScene(Context context, int id, int screenWidth, int screenHeight, GameEngine engineCallback) {
+        //Initialize variables
         super(context, id, screenWidth, screenHeight);
         this.engineCallback = engineCallback;
+        this.onPause = false;
 
         //Initialize map
         this.mapLoad = new MapComponent(666, context, screenWidth, screenHeight);
         this.mapLoad.loadTileArray();
+        this.tileSizeReference = mapLoad.getReference();
 
         //Initialize players
         PointF playerOneCenter = new PointF(mapLoad.tileArray[2][2].getCollisionRect().exactCenterX(), mapLoad.tileArray[2][2].getCollisionRect().exactCenterY());
@@ -104,7 +131,28 @@ public class MainGameScene extends SceneCrsh {
         //Initialize vibrator
         this.vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
 
+        //Gradient background
+        this.gradientPaint = new Paint();
+        int[] leftgradientColors = {Color.MAGENTA, Color.GREEN};
+        int[] rightgradientColors = {Color.GREEN, Color.MAGENTA};
+        float[] positions = {0, screenWidth / 2};
+        gradientLeftAttack = new LinearGradient(0, screenHeight, screenWidth, screenHeight, leftgradientColors, positions, Shader.TileMode.CLAMP);
+        gradientRightAttack = new LinearGradient(0, screenWidth, screenWidth, screenHeight, rightgradientColors, positions, Shader.TileMode.CLAMP);
+        setGradients();
 
+        //Pause menu
+        this.pauseMenu = new PauseMenuComponent(this.mapLoad.getX(), this.mapLoad.getY(), this.mapLoad.width, this.mapLoad.height, this);
+    }
+
+    /**
+     * Sets the gradient of the main game scene depending on the attack and defense modes
+     */
+    public void setGradients() {
+        if (playerOne.isOnAttack() && !playerTwo.isOnAttack()) {
+            gradientPaint.setShader(gradientRightAttack);
+        } else if (playerTwo.isOnAttack() && !playerOne.isOnAttack()) {
+            gradientPaint.setShader(gradientLeftAttack);
+        }
     }
 
     /**
@@ -140,27 +188,29 @@ public class MainGameScene extends SceneCrsh {
      */
     @Override
     public void updatePhysics() {
-        //If the joystick is active and there's no bounceback on the player, take the values of the joystick
-        if (joystickOne.isActive() && !playerOne.onBounceBack()) {
-            PointF joystickReference = joystickOne.getDisplacement();
-            playerOne.setVelocity(
-                    joystickReference.x * playerOne.getJoystickMultiplier(),
-                    joystickReference.y * playerOne.getJoystickMultiplier());
+        if (!onPause) {
+            //If the joystick is active and there's no bounceback on the player, take the values of the joystick
+            if (joystickOne.isActive() && !playerOne.onBounceBack()) {
+                PointF joystickReference = joystickOne.getDisplacement();
+                playerOne.setVelocity(
+                        joystickReference.x * playerOne.getJoystickMultiplier(),
+                        joystickReference.y * playerOne.getJoystickMultiplier());
 
-        }
-        if (joystickTwo.isActive() && !playerTwo.onBounceBack()) {
-            PointF joystickReference = joystickTwo.getDisplacement();
-            playerTwo.setVelocity(
-                    joystickReference.x * playerTwo.getJoystickMultiplier(),
-                    joystickReference.y * playerTwo.getJoystickMultiplier());
+            }
+            if (joystickTwo.isActive() && !playerTwo.onBounceBack()) {
+                PointF joystickReference = joystickTwo.getDisplacement();
+                playerTwo.setVelocity(
+                        joystickReference.x * playerTwo.getJoystickMultiplier(),
+                        joystickReference.y * playerTwo.getJoystickMultiplier());
 
-        }
-        //Move the players, if there's bounceback the movement would be the one generated by it
-        if (playerOne.getPlayerLifes() > 0) {
-            playerOne.move();
-        }
-        if (playerTwo.getPlayerLifes() > 0) {
-            playerTwo.move();
+            }
+            //Move the players, if there's bounceback the movement would be the one generated by it
+            if (playerOne.getPlayerLifes() > 0) {
+                playerOne.move();
+            }
+            if (playerTwo.getPlayerLifes() > 0) {
+                playerTwo.move();
+            }
         }
     }
 
@@ -172,22 +222,28 @@ public class MainGameScene extends SceneCrsh {
     @Override
     public void draw(Canvas c) {
         //General background
-        c.drawColor(Color.WHITE);
-        //Draw map
-        mapLoad.draw(c);
-        //Draw player One
-        playerOne.draw(c);
-        //Draw player Two
-        playerTwo.draw(c);
-        //Draw the back button TODO change this for an ingame pause menu
-        backBtn.draw(c);
-        //Draw the joysticks
-        if (playerOne.getPlayerLifes() > 0) {
-            joystickOne.draw(c);
+        c.drawPaint(gradientPaint);
+        if (!onPause) {
+            //Draw map
+            mapLoad.draw(c);
+            //Draw player One
+            playerOne.draw(c);
+            //Draw player Two
+            playerTwo.draw(c);
+            //Draw the back button TODO change this for an ingame pause menu
+            backBtn.draw(c);
+            //Draw the joysticks
+            if (playerOne.getPlayerLifes() > 0) {
+                joystickOne.draw(c);
+            }
+            if (playerTwo.getPlayerLifes() > 0) {
+                joystickTwo.draw(c);
+            }
+        } else {
+            pauseMenu.draw(c);
+            backBtn.draw(c);
         }
-        if (playerTwo.getPlayerLifes() > 0) {
-            joystickTwo.draw(c);
-        }
+
     }
 
     /**
@@ -203,34 +259,40 @@ public class MainGameScene extends SceneCrsh {
         switch (action) {
             case MotionEvent.ACTION_DOWN:           // First finger
             case MotionEvent.ACTION_POINTER_DOWN:  // Second finger and so on
-                //If there's a finger down on the player areas, activate the joystick for that player
-                if (playerOneArea && playerOne.getPlayerLifes() > 0) {
-                    joystickOne.activateJoystick(event);
-                }
-                if (playerTwoArea && playerTwo.getPlayerLifes() > 0) {
-                    joystickTwo.activateJoystick(event);
+                if (!onPause) {
+                    //If there's a finger down on the player areas, activate the joystick for that player
+                    if (playerOneArea && playerOne.getPlayerLifes() > 0) {
+                        joystickOne.activateJoystick(event);
+                    }
+                    if (playerTwoArea && playerTwo.getPlayerLifes() > 0) {
+                        joystickTwo.activateJoystick(event);
+                    }
                 }
                 break;
             case MotionEvent.ACTION_UP:                     // Last finger up
             case MotionEvent.ACTION_POINTER_UP:  // Any other finger up
-                //Joystick up
-                if (event.getPointerId(event.getActionIndex()) == joystickOne.getPointerId() && playerOneArea) {
-                    joystickOne.deactivate();
-                }
-                if (event.getPointerId(event.getActionIndex()) == joystickTwo.getPointerId() && playerTwoArea) {
-                    joystickTwo.deactivate();
+                if (!onPause) {
+                    //Joystick up
+                    if (event.getPointerId(event.getActionIndex()) == joystickOne.getPointerId() && playerOneArea) {
+                        joystickOne.deactivate();
+                    }
+                    if (event.getPointerId(event.getActionIndex()) == joystickTwo.getPointerId() && playerTwoArea) {
+                        joystickTwo.deactivate();
+                    }
                 }
                 if (isClick(backBtn, event)) {
-                    return 0;
+                    onPause = !onPause;
                 }
                 break;
             case MotionEvent.ACTION_MOVE: // Any finger moves
                 //Joystick moving
-                if (playerOne.getPlayerLifes() > 0) {
-                    joystickOne.onMoveEvent(event);
-                }
-                if (playerTwo.getPlayerLifes() > 0) {
-                    joystickTwo.onMoveEvent(event);
+                if (!onPause) {
+                    if (playerOne.getPlayerLifes() > 0) {
+                        joystickOne.onMoveEvent(event);
+                    }
+                    if (playerTwo.getPlayerLifes() > 0) {
+                        joystickTwo.onMoveEvent(event);
+                    }
                 }
                 break;
             default:
@@ -327,6 +389,10 @@ public class MainGameScene extends SceneCrsh {
                 playerCom.takeHit();
             }
         }
+    }
+
+    public void setOnPause(boolean onPause) {
+        this.onPause = onPause;
     }
 
 }
