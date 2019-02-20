@@ -19,6 +19,8 @@ import com.example.tomascrd.c_r_s_h.scenes.RecordsScene;
 import com.example.tomascrd.c_r_s_h.components.SceneCrsh;
 import com.example.tomascrd.c_r_s_h.scenes.TutorialScene;
 
+import java.io.IOException;
+
 /**
  * Main engine of this game, concentrates and controls the activities of different scenes. Contains the main game thread
  *
@@ -206,6 +208,12 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
         }
         if (mediaPlayer == null) {
             mediaPlayer = MediaPlayer.create(context, R.raw.crshmaintheme);
+            try {
+                mediaPlayer.prepare();
+            } catch (IllegalStateException | IOException e) {
+                Log.e("mediaPlayer error", ""+e.getLocalizedMessage());
+            }
+
         }
     }
 
