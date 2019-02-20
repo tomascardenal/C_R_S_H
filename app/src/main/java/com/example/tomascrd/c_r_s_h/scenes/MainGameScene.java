@@ -141,7 +141,7 @@ public class MainGameScene extends SceneCrsh {
         setGradients();
 
         //Pause menu
-        this.pauseMenu = new PauseMenuComponent(this.mapLoad.getX(), this.mapLoad.getY(), this.mapLoad.width, this.mapLoad.height, this);
+        this.pauseMenu = new PauseMenuComponent(this.mapLoad.xLeft, this.mapLoad.yTop, this.mapLoad.mapAreaWidth, this.mapLoad.mapAreaHeight, this);
     }
 
     /**

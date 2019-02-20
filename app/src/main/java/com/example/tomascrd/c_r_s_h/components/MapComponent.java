@@ -48,6 +48,20 @@ public class MapComponent extends DrawableComponent {
      * Height offset reference
      */
     private int hReference;
+    /**
+     * Real mapArea height reference
+     */
+    public float mapAreaHeight;
+    /**
+     * Real mapArea width reference
+     */
+    public float mapAreaWidth;
+    /**
+     *
+     */
+    public float xLeft;
+
+    public float yTop;
 
     /**
      * Starts a map on this ID and with the indicated reference
@@ -67,14 +81,21 @@ public class MapComponent extends DrawableComponent {
         //Take a size reference from the width
         this.reference = screenWidth / GameConstants.GAMESCREEN_COLUMNS;
         //Width of the map
-        this.width = this.reference * GameConstants.MAPAREA_COLUMNS;
+        this.width = this.reference * GameConstants.GAMESCREEN_COLUMNS;
         //Height of the map
-        this.height = this.reference * GameConstants.MAPAREA_ROWS;
+        this.height = this.reference * GameConstants.GAMESCREEN_ROWS;
+        //Width of the mapArea
+        this.mapAreaWidth = this.reference * GameConstants.MAPAREA_COLUMNS;
+        //Height of the mapArea
+        this.mapAreaHeight = this.reference * GameConstants.MAPAREA_ROWS;
         //Height reference for adjusting, just the screen's height minus the map height between 2
-        this.hReference = (int) (screenHeight - this.reference * GameConstants.GAMESCREEN_ROWS) / 2;
+        this.hReference = (int) (screenHeight - height) / 2;
         //Determine topx and topy positions
-        this.xPos = 3 * reference;
-        this.yPos = reference + hReference;
+        this.xPos = screenWidth - (screenWidth - (reference * GameConstants.MAPAREA_COLUMNS));
+        this.yPos = hReference;
+
+        this.xLeft = 3 * reference;
+        this.yTop = reference + hReference;
 
         //Load map - test map for the moment
         if (mapID == 666) {
