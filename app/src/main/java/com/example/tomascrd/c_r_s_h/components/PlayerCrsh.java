@@ -1,6 +1,8 @@
 package com.example.tomascrd.c_r_s_h.components;
 
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.PointF;
 import android.util.Log;
 
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
@@ -11,7 +13,7 @@ import com.example.tomascrd.c_r_s_h.scenes.MainGameScene;
  *
  * @author Tomás Cardenal López
  */
-public class PlayerCrsh {
+public class PlayerCrsh extends DrawableComponent {
 
     /**
      * The player's name
@@ -41,6 +43,14 @@ public class PlayerCrsh {
      * This player's y axis velocity
      */
     private float yVelocity;
+    /**
+     * This player's spawning point
+     */
+    private PointF spawnPoint;
+    /**
+     * This player's start radius
+     */
+    private int startRadius;
     /**
      * Callback to access the map
      */
@@ -77,6 +87,14 @@ public class PlayerCrsh {
      * Accelleration multiplier for the joystick
      */
     private int joystickMultiplier;
+    /**
+     * Triggers the hit animation and makes the player immune
+     */
+    private boolean takingHit;
+    /**
+     * Counter for the hit animation
+     */
+    private int takehitCounter;
 
     /**
      * Initializes a player to it's parameters, with a given CircleComponent
@@ -97,12 +115,16 @@ public class PlayerCrsh {
         this.playerId = playerId;
         this.onAttack = onAttack;
         this.playerCollision = playerCollision;
+        this.spawnPoint = new PointF(playerCollision.xPos, playerCollision.yPos);
+        this.startRadius = this.playerCollision.radius;
         this.playerLifes = 3;
         this.xVelocity = 0;
         this.yVelocity = 0;
         this.bounceBackCycle = 0;
         this.bounceBackBig = false;
         this.bounceBackSmall = false;
+        this.takingHit = false;
+        this.takehitCounter = 0;
 
         //Set the color of the player depending of it's ID
         switch (playerId) {
@@ -171,6 +193,50 @@ public class PlayerCrsh {
     public PlayerCrsh(MainGameScene gameCallback, MapComponent mapCallback, String playerName, int playerId, boolean onAttack, float xPos, float yPos, int radius, int lives) {
         this(gameCallback, mapCallback, playerName, playerId, onAttack, xPos, yPos, radius);
         this.setPlayerLifes(lives);
+    }
+
+    public void respawn() {
+        this.playerLifes = 3;
+        this.xVelocity = 0;
+        this.yVelocity = 0;
+        this.bounceBackCycle = 0;
+        this.bounceBackBig = false;
+        this.bounceBackSmall = false;
+        this.takingHit = false;
+        this.takehitCounter = 0;
+        this.playerCollision.resetPosition(this.spawnPoint.x, this.spawnPoint.y);
+        this.playerCollision.radius = startRadius;
+        setJoystickMultiplier();
+        setMapPosition();
+    }
+
+    /**
+     * Draws this player's components on screen
+     *
+     * @param c the canvas to draw
+     */
+    @Override
+    public void draw(Canvas c) {
+        if (playerLifes > 0) {
+            if (takingHit && takehitCounter < 10) {
+                takehitCounter++;
+                if (takehitCounter % 2 == 0) {
+                    playerCollision.setDrawingAlpha(40);
+                } else {
+                    playerCollision.setDrawingAlpha(255);
+                }
+            } else if (takingHit && takehitCounter >= 10) {
+                takehitCounter = 0;
+                playerCollision.setDrawingAlpha(255);
+                takingHit = false;
+            }
+        } else if (playerLifes == 0 && playerCollision.radius > 0) {
+            playerCollision.radius -= 0.2;
+            takingHit = true;
+        } else if (playerLifes == 0 && playerCollision.radius <= 0) {
+            respawn();
+        }
+        playerCollision.draw(c);
     }
 
     /**
@@ -455,7 +521,7 @@ public class PlayerCrsh {
         if (movedCircle.collision(opponentCircle)) {
             Log.i("Players collided!", "YEAH");
             if (this.onAttack) {
-
+                gameCallback.hitOpponent(this.playerId);
             } else {
 
             }
@@ -486,5 +552,24 @@ public class PlayerCrsh {
      */
     public void setJoystickMultiplier() {
         this.joystickMultiplier = this.onAttack ? GameConstants.ACCELERATION_MULTIPLIER_ONATTACK : GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE;
+    }
+
+    /**
+     * Makes this player take a hit and triggers the animation
+     */
+    public void takeHit() {
+        playerLifes--;
+        if (playerLifes > 0) {
+            takingHit = true;
+        }
+    }
+
+    /**
+     * Returns the value which indicates if this player is taking a hit and should be immune or not
+     *
+     * @return the value of takingHit
+     */
+    public boolean isTakingHit() {
+        return this.takingHit;
     }
 }

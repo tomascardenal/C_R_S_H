@@ -202,7 +202,7 @@ public class MainMenuScene extends SceneCrsh {
                 }
                 break;
             case MotionEvent.ACTION_MOVE: // Any finger moves
-                //Check all the buttons for click effect
+                //Check all the buttons for click effect, when entering and exiting buttons
                 for (ButtonComponent btn : buttonArray) {
                     if (!isClickByAny(btn, event) && btn.isHeldDown()) {
                         btn.setHeldDown(false);
