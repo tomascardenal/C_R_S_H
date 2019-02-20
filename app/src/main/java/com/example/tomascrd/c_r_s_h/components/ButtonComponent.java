@@ -41,9 +41,13 @@ public class ButtonComponent extends DrawableComponent {
      */
     protected Paint pText;
     /**
-     * Paint object for the clicking effect
+     * Paint object for the border on the clicking effect
      */
-    protected Paint pClick;
+    protected Paint pClickBorder;
+    /**
+     * Paint object for the shadow on the clicking effect
+     */
+    protected Paint pClickShadow;
     /**
      * Checks if the button is being held down
      */
@@ -56,6 +60,14 @@ public class ButtonComponent extends DrawableComponent {
      * Stroke width for click effect
      */
     private float strokeWidth;
+    /**
+     * Alpha value
+     */
+    private int alpha;
+    /**
+     * Id to return when changing scenes linked by this button, should be -1 if no scene change is planned
+     */
+    private int sceneId;
 
     /**
      * Creates a Button with the given parameters and gray background color
@@ -68,8 +80,9 @@ public class ButtonComponent extends DrawableComponent {
      * @param xRight      the button's bottom right corner x position
      * @param yBottom     the button's bottom right corner y position
      * @param clickEffect if this button should have the click effect or not
+     * @param sceneId     the id to return when changing scenes, -1 if no scene change is planned for this button
      */
-    public ButtonComponent(Context context, Typeface font, String text, int xPos, int yPos, int xRight, int yBottom, boolean clickEffect) {
+    public ButtonComponent(Context context, Typeface font, String text, int xPos, int yPos, int xRight, int yBottom, boolean clickEffect, int sceneId) {
         //Initialize parameters
         this.context = context;
         this.setText(text);
@@ -81,6 +94,7 @@ public class ButtonComponent extends DrawableComponent {
         this.height = yBottom - yPos;
         this.btnRect = new Rect(xPos, yPos, xRight, yBottom);
         this.clickEffect = clickEffect;
+        this.sceneId = sceneId;
 
         //Painter for the button
         pButton = new Paint();
@@ -99,11 +113,15 @@ public class ButtonComponent extends DrawableComponent {
 
         //Clickeffect
         if (clickEffect) {
+            pClickShadow = new Paint();
+            pClickShadow.setColor(Color.GRAY);
+
             this.strokeWidth = this.btnRect.height() / 20;
-            pClick = new Paint();
-            pClick.setColor(Color.DKGRAY);
-            pClick.setStyle(Paint.Style.STROKE);
-            pClick.setStrokeWidth(this.strokeWidth);
+            pClickBorder = new Paint();
+            pClickBorder.setColor(Color.rgb(169, 169, 169));
+            pClickBorder.setStyle(Paint.Style.STROKE);
+            pClickBorder.setStrokeWidth(this.strokeWidth);
+
         }
     }
 
@@ -120,12 +138,17 @@ public class ButtonComponent extends DrawableComponent {
      * @param background  the button's background color
      * @param alpha       the button's background alpha
      * @param clickEffect if this button should have the click effect or not
+     * @param sceneId     the id to return when changing scenes, -1 if no scene change is planned for this button
      */
-    public ButtonComponent(Context context, Typeface font, String text, int xPos, int yPos, int xRight, int yBottom, int background, int alpha, boolean clickEffect) {
-        this(context, font, text, xPos, yPos, xRight, yBottom, clickEffect);
+    public ButtonComponent(Context context, Typeface font, String text, int xPos, int yPos, int xRight, int yBottom, int background, int alpha, boolean clickEffect, int sceneId) {
+        this(context, font, text, xPos, yPos, xRight, yBottom, clickEffect, sceneId);
         //Reset color and alpha
+        this.alpha = alpha;
         pButton.setColor(background);
-        pButton.setAlpha(alpha);
+        pButton.setAlpha(this.alpha);
+        if (clickEffect) {
+            pClickShadow.setAlpha((int) this.alpha / 2);
+        }
     }
 
     /**
@@ -136,10 +159,17 @@ public class ButtonComponent extends DrawableComponent {
     @Override
     public void draw(Canvas c) {
         if (isHeldDown() && clickEffect) {
-            c.drawRect(btnRect.left - this.strokeWidth, btnRect.top - this.strokeWidth, btnRect.right + this.strokeWidth, btnRect.bottom + this.strokeWidth, pClick);
+            c.drawRect(btnRect.left + this.strokeWidth * 2, btnRect.top + this.strokeWidth * 2, btnRect.right + this.strokeWidth * 2, btnRect.bottom + this.strokeWidth * 2, pClickShadow);
+            c.drawRect(btnRect, pButton);
+            c.drawRect(btnRect.left + (this.strokeWidth / 2), btnRect.top + (this.strokeWidth / 2), btnRect.right - (this.strokeWidth / 2), btnRect.bottom - (this.strokeWidth / 2), pClickBorder);
+            c.drawText(getText(), btnRect.centerX(), btnRect.centerY() + height / 6, pText);
+            pButton.setAlpha(255);
+        } else {
+            pButton.setAlpha(this.alpha);
+            c.drawRect(btnRect, pButton);
+            c.drawText(getText(), btnRect.centerX(), btnRect.centerY() + height / 6, pText);
         }
-        c.drawRect(btnRect, pButton);
-        c.drawText(getText(), btnRect.centerX(), btnRect.centerY() + height / 6, pText);
+
     }
 
     /**
@@ -163,7 +193,7 @@ public class ButtonComponent extends DrawableComponent {
     /**
      * Checks if the button state is heldDown
      *
-     * @return
+     * @return the button state
      */
     public boolean isHeldDown() {
         return heldDown;
@@ -176,5 +206,23 @@ public class ButtonComponent extends DrawableComponent {
      */
     public void setHeldDown(boolean heldDown) {
         this.heldDown = heldDown;
+    }
+
+    /**
+     * Returns the value of the sceneId to change to
+     *
+     * @return the value of the sceneId
+     */
+    public int getSceneId() {
+        return this.sceneId;
+    }
+
+    /**
+     * Sets the value of the sceneId to change to, -1 if it shouldn't change
+     *
+     * @param sceneId the new value of the sceneId of this button
+     */
+    public void setSceneId(int sceneId) {
+        this.sceneId = sceneId;
     }
 }

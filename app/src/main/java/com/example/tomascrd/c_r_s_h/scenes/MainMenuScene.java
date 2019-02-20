@@ -52,6 +52,10 @@ public class MainMenuScene extends SceneCrsh {
      * Button for tutorial scene
      */
     private ButtonComponent btnTutorial;
+    /**
+     * Array for better button management
+     */
+    private ButtonComponent[] buttonArray;
 
 
     /**
@@ -90,7 +94,7 @@ public class MainMenuScene extends SceneCrsh {
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 7,
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 3,
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 11,
-                screenHeight / GameConstants.MENUSCREEN_ROWS * 4, Color.GRAY, 150, true);
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 4, Color.GRAY, 150, true, 1);
 
         btnOptions = new ButtonComponent(context,
                 Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN),
@@ -98,7 +102,7 @@ public class MainMenuScene extends SceneCrsh {
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS,
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 5,
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 4,
-                screenHeight / GameConstants.MENUSCREEN_ROWS * 6, Color.GRAY, 150, true);
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 6, Color.GRAY, 150, true, 2);
 
         btnCredits = new ButtonComponent(context,
                 Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN),
@@ -106,7 +110,7 @@ public class MainMenuScene extends SceneCrsh {
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 5,
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 5,
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 8,
-                screenHeight / GameConstants.MENUSCREEN_ROWS * 6, Color.GRAY, 150, true);
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 6, Color.GRAY, 150, true, 3);
 
         btnRecords = new ButtonComponent(context,
                 Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN),
@@ -114,7 +118,7 @@ public class MainMenuScene extends SceneCrsh {
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 10,
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 5,
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 13,
-                screenHeight / GameConstants.MENUSCREEN_ROWS * 6, Color.GRAY, 150, true);
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 6, Color.GRAY, 150, true, 4);
 
         btnTutorial = new ButtonComponent(context,
                 Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN),
@@ -122,7 +126,11 @@ public class MainMenuScene extends SceneCrsh {
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 14,
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 5,
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 17,
-                screenHeight / GameConstants.MENUSCREEN_ROWS * 6, Color.GRAY, 150, true);
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 6, Color.GRAY, 150, true, 5);
+
+        //Add buttons to the array to manage them
+        ButtonComponent[] btnAr = {btnNewGame, btnOptions, btnCredits, btnRecords, btnTutorial};
+        this.buttonArray = btnAr;
 
     }
 
@@ -160,11 +168,9 @@ public class MainMenuScene extends SceneCrsh {
         c.drawText(context.getString(R.string.app_name), screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9, screenHeight / GameConstants.MENUSCREEN_ROWS * 2, pTitleText);
 
         //Menu buttons
-        btnNewGame.draw(c);
-        btnOptions.draw(c);
-        btnCredits.draw(c);
-        btnRecords.draw(c);
-        btnTutorial.draw(c);
+        for (ButtonComponent btn : buttonArray) {
+            btn.draw(c);
+        }
     }
 
     /**
@@ -178,60 +184,32 @@ public class MainMenuScene extends SceneCrsh {
         switch (action) {
             case MotionEvent.ACTION_DOWN:           // First finger
             case MotionEvent.ACTION_POINTER_DOWN:  // Second finger and so on
-                if (isClick(btnNewGame, event)) {
-                    btnNewGame.setHeldDown(true);
-                } else if (isClick(btnOptions, event)) {
-                    btnOptions.setHeldDown(true);
-                } else if (isClick(btnCredits, event)) {
-                    btnCredits.setHeldDown(true);
-                } else if (isClick(btnRecords, event)) {
-                    btnRecords.setHeldDown(true);
-                } else if (isClick(btnTutorial, event)) {
-                    btnTutorial.setHeldDown(true);
+                //Check all the buttons for click effect
+                for (ButtonComponent btn : buttonArray) {
+                    if (isClick(btn, event)) { //Finger down on this button
+                        btn.setHeldDown(true);
+                    }
                 }
                 break;
             case MotionEvent.ACTION_UP:                     // Last finger up
             case MotionEvent.ACTION_POINTER_UP:  // Any other finger up
-                //When the finger is up, if any button for a scene change was clicked, change the scene
-                if (isClick(btnNewGame, event)) {
-                    btnNewGame.setHeldDown(false);
-                    return 1;
-                } else if (isClick(btnOptions, event)) {
-                    btnOptions.setHeldDown(false);
-                    return 2;
-                } else if (isClick(btnCredits, event)) {
-                    btnCredits.setHeldDown(false);
-                    return 3;
-                } else if (isClick(btnRecords, event)) {
-                    btnRecords.setHeldDown(false);
-                    return 4;
-                } else if (isClick(btnTutorial, event)) {
-                    btnTutorial.setHeldDown(false);
-                    return 5;
+                //Check all the buttons for click effect
+                for (ButtonComponent btn : buttonArray) {
+                    if (isClick(btn, event)) {
+                        btn.setHeldDown(false);
+                        return btn.getSceneId(); //When the finger is up, if any button for a scene change was clicked, change the scene
+                    }
                 }
                 break;
             case MotionEvent.ACTION_MOVE: // Any finger moves
-                if (!isClick(btnNewGame, event) && btnNewGame.isHeldDown()) {
-                    btnNewGame.setHeldDown(false);
-                } else if (!isClick(btnOptions, event) && btnOptions.isHeldDown()) {
-                    btnOptions.setHeldDown(false);
-                } else if (!isClick(btnCredits, event) && btnCredits.isHeldDown()) {
-                    btnCredits.setHeldDown(false);
-                } else if (!isClick(btnRecords, event) && btnRecords.isHeldDown()) {
-                    btnRecords.setHeldDown(false);
-                } else if (!isClick(btnTutorial, event) && btnTutorial.isHeldDown()) {
-                    btnTutorial.setHeldDown(false);
-                }
-                if (isClick(btnNewGame, event) && !btnNewGame.isHeldDown()) {
-                    btnNewGame.setHeldDown(false);
-                } else if (isClick(btnOptions, event) && !btnOptions.isHeldDown()) {
-                    btnOptions.setHeldDown(false);
-                } else if (isClick(btnCredits, event) && !btnCredits.isHeldDown()) {
-                    btnCredits.setHeldDown(false);
-                } else if (isClick(btnRecords, event) && !btnRecords.isHeldDown()) {
-                    btnRecords.setHeldDown(false);
-                } else if (isClick(btnTutorial, event) && !btnTutorial.isHeldDown()) {
-                    btnTutorial.setHeldDown(false);
+                //Check all the buttons for click effect
+                for (ButtonComponent btn : buttonArray) {
+                    if (!isClickByAny(btn, event) && btn.isHeldDown()) {
+                        btn.setHeldDown(false);
+                    }
+                    if (isClickByAny(btn, event) && !btn.isHeldDown()) {
+                        btn.setHeldDown(true);
+                    }
                 }
                 break;
             default:

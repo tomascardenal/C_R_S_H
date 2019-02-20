@@ -69,7 +69,7 @@ public class TextButtonComponent extends ButtonComponent {
      * @param borderRectX the TextButton's borderRectX
      */
     public TextButtonComponent(Context context, Typeface font, String text, int xLeft, int yTop, int xRight, int yBottom, int background, int alpha, String sideText, Typeface sideFont, TEXT_ALIGN textAlign, int xPadding, int borderRectX) {
-        super(context, font, text, xLeft, yTop, xRight, yBottom, background, alpha,false);
+        super(context, font, text, xLeft, yTop, xRight, yBottom, background, alpha,false,-1);
         this.setSideText(sideText);
         this.sideFont = sideFont;
         this.textAlign = textAlign;

@@ -96,7 +96,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
     public boolean onTouchEvent(MotionEvent event) {
         synchronized (surfaceHolder) {
             int newScene = currentScene.onTouchEvent(event);
-            if (newScene != currentScene.getId()) {
+            if (newScene != currentScene.getId() && newScene != -1) {
                 //If the scene changed, set the new scene
                 switch (newScene) {
                     case 0:
@@ -308,7 +308,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
          */
         public void setSurfaceSize(int width, int height) {
             synchronized (surfaceHolder) {
-                
+
             }
         }
     }

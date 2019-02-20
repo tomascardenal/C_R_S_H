@@ -55,7 +55,7 @@ public class NewGameScene extends SceneCrsh {
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 6,
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 6,
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 12,
-                screenHeight / GameConstants.MENUSCREEN_ROWS * 7, Color.RED, 150, true);
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 7, Color.RED, 150, true, 99);
     }
 
     /**

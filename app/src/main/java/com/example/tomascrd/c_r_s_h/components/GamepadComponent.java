@@ -71,51 +71,51 @@ public class GamepadComponent extends DrawableComponent {
                     Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_AWESOME),
                     context.getString(R.string.btnLeft1),
                     screenWidth - gridReference * 2, screenHeight - gridReference * 2, screenWidth, screenHeight,
-                    Color.TRANSPARENT, 255,false);
+                    Color.TRANSPARENT, 255, false, -1);
             btnRight = new ButtonComponent(
                     context,
                     Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_AWESOME),
                     context.getString(R.string.btnRight1),
                     screenWidth - gridReference * 2, screenHeight - gridReference * 4, screenWidth, screenHeight - gridReference * 2,
-                    Color.TRANSPARENT, 255,false);
+                    Color.TRANSPARENT, 255, false, -1);
             btnUp = new ButtonComponent(
                     context,
                     Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_AWESOME),
                     context.getString(R.string.btnUp1),
                     screenWidth - gridReference * 2, screenHeight - gridReference * 6, screenWidth, screenHeight - gridReference * 4,
-                    Color.TRANSPARENT, 255,false);
+                    Color.TRANSPARENT, 255, false, -1);
             btnDown = new ButtonComponent(
                     context,
                     Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_AWESOME),
                     context.getString(R.string.btnDown1),
                     screenWidth - gridReference * 2, screenHeight - gridReference * 8, screenWidth, screenHeight - gridReference * 6,
-                    Color.TRANSPARENT, 255,false);
+                    Color.TRANSPARENT, 255, false, -1);
         } else if (playerId == 2) {
             btnLeft = new ButtonComponent(
                     context,
                     Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_AWESOME),
                     context.getString(R.string.btnLeft2),
                     0, 0, gridReference * 2, gridReference * 2,
-                    Color.TRANSPARENT, 255,false);
+                    Color.TRANSPARENT, 255, false, -1);
             btnRight = new ButtonComponent(
                     context,
                     Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_AWESOME),
                     context.getString(R.string.btnRight2),
                     0, gridReference * 2, gridReference * 2, gridReference * 4,
-                    Color.TRANSPARENT, 255,false);
+                    Color.TRANSPARENT, 255, false, -1);
             btnUp = new ButtonComponent(
                     context,
                     Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_AWESOME),
                     context.getString(R.string.btnUp2),
                     0, gridReference * 4, gridReference * 2, gridReference * 6,
-                    Color.TRANSPARENT, 255,false);
+                    Color.TRANSPARENT, 255, false, -1);
 
             btnDown = new ButtonComponent(
                     context,
                     Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_AWESOME),
                     context.getString(R.string.btnDown2),
                     0, gridReference * 6, gridReference * 2, gridReference * 8,
-                    Color.TRANSPARENT, 255,false);
+                    Color.TRANSPARENT, 255, false, -1);
         }
 
     }

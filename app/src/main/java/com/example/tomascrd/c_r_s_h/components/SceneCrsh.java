@@ -74,7 +74,7 @@ public class SceneCrsh {
         if (backBtn == null) {
             backBtn = new ButtonComponent(context,
                     Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_AWESOME), context.getString(R.string.btnBack),
-                    screenWidth - screenWidth / 16, 0, screenWidth, screenWidth / 16, Color.TRANSPARENT, 0,false);
+                    screenWidth - screenWidth / 16, 0, screenWidth, screenWidth / 16, Color.TRANSPARENT, 0, false, 0);
         }
     }
 
@@ -112,6 +112,22 @@ public class SceneCrsh {
      */
     public boolean isClick(ButtonComponent btn, MotionEvent event) {
         return btn.btnRect.contains((int) event.getX(event.getActionIndex()), (int) event.getY(event.getActionIndex()));
+    }
+
+    /**
+     * Determines if a rectangle on a button is clicked by any of the pointers acting on the event
+     *
+     * @param btn   the button
+     * @param event the event
+     * @return true if the button was clicked or touched by any of the pointers
+     */
+    public boolean isClickByAny(ButtonComponent btn, MotionEvent event) {
+        for (int i = 0; i < event.getPointerCount(); i++) {
+            if (btn.btnRect.contains((int) event.getX(i), (int) event.getY(i))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
