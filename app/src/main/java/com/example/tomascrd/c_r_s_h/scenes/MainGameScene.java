@@ -309,11 +309,18 @@ public class MainGameScene extends SceneCrsh {
     }
 
     public void hitOpponent(int playerID) {
+        boolean tookHit = false;
         if (playerCom == null) {
-            if (playerID == 1 && !playerTwo.isTakingHit()) {
+            if (playerID == 1 && !playerOne.isTakingHit() && !playerTwo.isTakingHit()) {
                 playerTwo.takeHit();
-            } else if (playerID == 2 && !playerOne.isTakingHit()) {
+                tookHit = true;
+            } else if (playerID == 2 && !playerOne.isTakingHit() && !playerTwo.isTakingHit()) {
                 playerOne.takeHit();
+                tookHit = true;
+            }
+            if (tookHit) {
+                playerOne.togglePlayerMode();
+                playerTwo.togglePlayerMode();
             }
         } else {
             if (!playerCom.isTakingHit()) {

@@ -26,7 +26,7 @@ public class PlayerCrsh extends DrawableComponent {
     /**
      * The player mode (true for attacking, false for defense)
      */
-    public boolean onAttack;
+    private boolean onAttack;
     /**
      * The player's collision circle
      */
@@ -113,7 +113,7 @@ public class PlayerCrsh extends DrawableComponent {
         this.mapCallback = mapCallback;
         this.playerName = playerName;
         this.playerId = playerId;
-        this.onAttack = onAttack;
+        this.setOnAttack(onAttack);
         this.playerCollision = playerCollision;
         this.spawnPoint = new PointF(playerCollision.xPos, playerCollision.yPos);
         this.startRadius = this.playerCollision.radius;
@@ -218,14 +218,14 @@ public class PlayerCrsh extends DrawableComponent {
     @Override
     public void draw(Canvas c) {
         if (playerLifes > 0) {
-            if (takingHit && takehitCounter < 10) {
+            if (takingHit && takehitCounter < GameConstants.TAKEHIT_CYCLES) {
                 takehitCounter++;
                 if (takehitCounter % 2 == 0) {
                     playerCollision.setDrawingAlpha(40);
                 } else {
                     playerCollision.setDrawingAlpha(255);
                 }
-            } else if (takingHit && takehitCounter >= 10) {
+            } else if (takingHit && takehitCounter >= GameConstants.TAKEHIT_CYCLES) {
                 takehitCounter = 0;
                 playerCollision.setDrawingAlpha(255);
                 takingHit = false;
@@ -520,7 +520,7 @@ public class PlayerCrsh extends DrawableComponent {
         CircleComponent opponentCircle = gameCallback.getOpponentCollisionComponent(this.playerId);
         if (movedCircle.collision(opponentCircle)) {
             Log.i("Players collided!", "YEAH");
-            if (this.onAttack) {
+            if (this.isOnAttack()) {
                 gameCallback.hitOpponent(this.playerId);
             } else {
 
@@ -551,7 +551,7 @@ public class PlayerCrsh extends DrawableComponent {
      * Sets the value of the joystick acceleration multiplier based on the GameConstants
      */
     public void setJoystickMultiplier() {
-        this.joystickMultiplier = this.onAttack ? GameConstants.ACCELERATION_MULTIPLIER_ONATTACK : GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE;
+        this.joystickMultiplier = this.isOnAttack() ? GameConstants.ACCELERATION_MULTIPLIER_ONATTACK : GameConstants.ACCELERATION_MULTIPLIER_ONDEFENSE;
     }
 
     /**
@@ -571,5 +571,32 @@ public class PlayerCrsh extends DrawableComponent {
      */
     public boolean isTakingHit() {
         return this.takingHit;
+    }
+
+    /**
+     * Returns the player mode (true for attacking, false for defense)
+     *
+     * @return the player mode
+     */
+    public boolean isOnAttack() {
+        return onAttack;
+    }
+
+    /**
+     * Sets the attack mode
+     *
+     * @param onAttack true for attack mode
+     */
+    public void setOnAttack(boolean onAttack) {
+        this.onAttack = onAttack;
+        setJoystickMultiplier();
+    }
+
+    /**
+     * Toggles this player's attackMode
+     */
+    public void togglePlayerMode() {
+        this.onAttack = !onAttack;
+        setJoystickMultiplier();
     }
 }

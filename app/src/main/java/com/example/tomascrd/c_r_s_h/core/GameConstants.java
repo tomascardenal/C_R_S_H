@@ -43,6 +43,10 @@ public final class GameConstants {
      */
     public final static int BOUNCEBACK_BIG_CYCLES = 20;
     /**
+     * Take hit animation number of cycles
+     */
+    public final static int TAKEHIT_CYCLES = 40;
+    /**
      * Bounceback slowdown shift value
      */
     public final static float BOUNCEBACK_SLOWDOWN_SHIFT = (float) 0.2;
