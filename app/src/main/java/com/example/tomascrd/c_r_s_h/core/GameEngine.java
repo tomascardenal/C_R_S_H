@@ -10,6 +10,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import com.example.tomascrd.c_r_s_h.R;
+import com.example.tomascrd.c_r_s_h.scenes.AssetLoader;
 import com.example.tomascrd.c_r_s_h.scenes.CreditScene;
 import com.example.tomascrd.c_r_s_h.scenes.MainGameScene;
 import com.example.tomascrd.c_r_s_h.scenes.MainMenuScene;
@@ -79,6 +80,14 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
      * Stores the savedScene
      */
     public SceneCrsh savedScene;
+    /**
+     * Test for creating the main game scene on load
+     */
+    public MainGameScene mainGameScene;
+    /**
+     * Loader class for assets
+     */
+    public AssetLoader loader;
 
     /**
      * Starts a gameEngine within the given context
@@ -92,6 +101,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
         this.surfaceHolder.addCallback(this);
         this.context = context;
         optionsManager = new OptionsManager(context);
+        loader = new AssetLoader(context);
         thread = new GameThread();
         this.loadSavedScene = false;
         setFocusable(true);
@@ -156,14 +166,16 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
                         if (loadSavedScene && savedScene != null && savedScene instanceof MainGameScene && ((MainGameScene) savedScene).gameMode == MainGameScene.GAMEMODE.MODE_NRML_2P) {
                             currentScene = savedScene;
                         } else {
-                            currentScene = new MainGameScene(context, newScene, screenWidth, screenHeight, this, MainGameScene.GAMEMODE.MODE_NRML_2P);
+                            mainGameScene.setGameMode(MainGameScene.GAMEMODE.MODE_NRML_2P);
+                            currentScene = mainGameScene;
                         }
                         break;
                     case 100: //MainGameScene, GAMEMODE.MODE_CRSH_2P
                         if (loadSavedScene && savedScene != null && savedScene instanceof MainGameScene && ((MainGameScene) savedScene).gameMode == MainGameScene.GAMEMODE.MODE_CRSH_2P) {
                             currentScene = savedScene;
                         } else {
-                            currentScene = new MainGameScene(context, newScene, screenWidth, screenHeight, this, MainGameScene.GAMEMODE.MODE_CRSH_2P);
+                            mainGameScene.setGameMode(MainGameScene.GAMEMODE.MODE_CRSH_2P);
+                            currentScene = mainGameScene;
                         }
                         break;
                 }
@@ -197,12 +209,17 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
      */
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+
         //Reset the width and height
         screenWidth = width;
         screenHeight = height;
         //Reload the options
         if (optionsManager == null) {
             optionsManager = new OptionsManager(context);
+        }
+        //Reload the assets
+        if (loader == null) {
+            loader = new AssetLoader(context);
         }
         optionsManager.loadOptions();
         //Reload the mainMenuScene if the current scene is not on memory anymore
@@ -213,6 +230,10 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
         updateAudioObjects();
         updateVolume();
         updateMusicPlayer();
+        //
+        if (mainGameScene == null) {
+            mainGameScene = new MainGameScene(context, 99, screenWidth, screenHeight, this, MainGameScene.GAMEMODE.MODE_NRML_2P);
+        }
         //Starting the thread
         thread.setWorking(true);
         if (thread.getState() == Thread.State.NEW) {

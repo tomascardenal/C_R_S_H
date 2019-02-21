@@ -3,9 +3,13 @@ package com.example.tomascrd.c_r_s_h.components;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
+
+import com.example.tomascrd.c_r_s_h.R;
 
 /**
  * Represents a tile in the game
@@ -37,10 +41,6 @@ public class TileComponent extends DrawableComponent {
      */
     protected Rect collisionRect = null;
     /**
-     * This tile's bitmap
-     */
-    protected Bitmap tileImage;
-    /**
      * This tile's Rect right bottom x coordinate
      */
     protected int xBottom;
@@ -48,6 +48,7 @@ public class TileComponent extends DrawableComponent {
      * This tile's Rect right bottom y coordinate
      */
     protected int yBottom;
+
 
     /**
      * Initializes a tile to it's parameters
@@ -65,6 +66,8 @@ public class TileComponent extends DrawableComponent {
         this.yPos = collisionRect.top;
         this.xBottom = collisionRect.right;
         this.yBottom = collisionRect.bottom;
+        this.height = collisionRect.height();
+        this.width = collisionRect.width();
         this.rectPaint = new Paint();
         setPainter();
     }
@@ -128,6 +131,11 @@ public class TileComponent extends DrawableComponent {
         }
     }
 
+    @Override
+    public void draw(Canvas c) {
+
+    }
+
     /**
      * Sets the painter color (for test maps only)
      */
@@ -156,26 +164,6 @@ public class TileComponent extends DrawableComponent {
         return this.collisionRect;
     }
 
-    /**
-     * Sets the drawable as a Bitmap using BMPFactory
-     *
-     * @param context
-     * @param drawable
-     */
-    public void setTileImage(Context context, int drawable) {
-        //BitmapFactory.Options bmpOptions = new BitmapFactory.Options();
-        //bmpOptions.inJustDecodeBounds = true;
-        this.tileImage = BitmapFactory.decodeResource(context.getResources(), drawable);
-    }
-
-    /**
-     * Gets this tile's bitmap
-     *
-     * @return this bitmap
-     */
-    public Bitmap getTileImage() {
-        return this.tileImage;
-    }
 
     /**
      * Indicates if there's a collision between a rect on the given parameters

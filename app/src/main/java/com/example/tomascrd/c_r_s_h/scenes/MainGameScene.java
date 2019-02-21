@@ -41,7 +41,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
      * Enumerates the possible types of game mode
      */
     public enum GAMEMODE {
-        MODE_NRML_2P, MODE_CRSH_2P, MODE_NORMAL_COM, MODE_CRSH_COM
+        MODE_NRML_2P, MODE_CRSH_2P, MODE_NRML_COM, MODE_CRSH_COM
     }
 
     /**
@@ -145,7 +145,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         this.gameMode = gameMode;
 
         //Initialize map
-        this.mapLoad = new MapComponent(666, context, screenWidth, screenHeight);
+        this.mapLoad = new MapComponent(666, context, screenWidth, screenHeight,engineCallback.loader);
         this.mapLoad.loadTileArray();
         this.tileSizeReference = mapLoad.getReference();
 
@@ -160,13 +160,8 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         this.joystickOne = new JoystickComponent(context, joystickRadius, Color.GRAY, Color.CYAN);
         this.joystickTwo = new JoystickComponent(context, joystickRadius, Color.GRAY, Color.MAGENTA);
 
-
         //Initialize accelerometer
-        if (gameMode == GAMEMODE.MODE_CRSH_2P || gameMode == GAMEMODE.MODE_CRSH_COM) {
-            sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-            sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-            sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_GAME);
-        }
+        this.updateSensors();
 
         //Initialize vibrator
         this.vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
@@ -187,6 +182,19 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
 
         //Pause menu
         this.pauseMenu = new PauseMenuComponent(this.context, this.mapLoad.xLeft, this.mapLoad.yTop, this.mapLoad.mapAreaWidth, this.mapLoad.mapAreaHeight, this);
+    }
+
+    public void setGameMode(GAMEMODE gameMode) {
+        this.gameMode = gameMode;
+        updateSensors();
+    }
+
+    private void updateSensors() {
+        if ((gameMode == GAMEMODE.MODE_CRSH_2P || gameMode == GAMEMODE.MODE_CRSH_COM) && (sensor == null || sensorManager == null)) {
+            sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+            sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+            sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_GAME);
+        }
     }
 
     /**
@@ -298,7 +306,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
      */
     public int onTouchEvent(MotionEvent event) {
         switch (gameMode) {
-            case MODE_NORMAL_COM:
+            case MODE_NRML_COM:
                 return touchManagerNRMLVsCOM(event);
             case MODE_CRSH_COM:
                 return touchManagerCRSHVsCOM(event);

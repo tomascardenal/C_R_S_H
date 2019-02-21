@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
+import com.example.tomascrd.c_r_s_h.scenes.AssetLoader;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -64,6 +65,10 @@ public class MapComponent extends DrawableComponent {
      * X top coordinate for this map
      */
     public float yTop;
+    /**
+     * Loader for assets
+     */
+    AssetLoader loader;
 
     /**
      * Starts a map on this ID and with the indicated reference
@@ -72,13 +77,15 @@ public class MapComponent extends DrawableComponent {
      * @param context      The application context
      * @param screenWidth  The screen width
      * @param screenHeight The screen height
+     * @param loader       Loader for assets
      */
-    public MapComponent(int mapID, Context context, int screenWidth, int screenHeight) {
+    public MapComponent(int mapID, Context context, int screenWidth, int screenHeight, AssetLoader loader) {
         //Initialize variables
         this.context = context;
         this.mapID = mapID;
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
+        this.loader = loader;
 
         //Take a size reference from the width
         this.reference = screenWidth / GameConstants.GAMESCREEN_COLUMNS;
@@ -98,6 +105,7 @@ public class MapComponent extends DrawableComponent {
         this.xLeft = 3 * reference;
         this.yTop = reference + hReference;
 
+        loader.scaleBitmaps(this.reference, this.reference);
         //Load map - test map for the moment
         if (mapID == 666) {
             if (!loadMap(666)) {
@@ -127,7 +135,22 @@ public class MapComponent extends DrawableComponent {
             for (int i = 1; i < GameConstants.GAMESCREEN_ROWS - 1; i++) {
                 for (int j = 3; j < GameConstants.GAMESCREEN_COLUMNS - 3; j++) {
                     currentTile = tileArray[i - 1][j - 3];
-                    c.drawRect(currentTile.collisionRect, currentTile.rectPaint);
+                    //c.drawRect(currentTile.collisionRect, currentTile.rectPaint);
+                    switch (currentTile.tileType) {
+                        case TILE_BORDER:
+                            c.drawBitmap(loader.tileBorder, currentTile.xPos, currentTile.yPos, null);
+                            break;
+                        case TILE_PATH:
+                            c.drawBitmap(loader.tilePath, currentTile.xPos, currentTile.yPos, null);
+                            break;
+                        case TILE_BREAKONE:
+                            c.drawBitmap(loader.tileBreakOne, currentTile.xPos, currentTile.yPos, null);
+                            break;
+                        case TILE_BREAKTWO:
+                            c.drawBitmap(loader.tileBreakTwo, currentTile.xPos, currentTile.yPos, null);
+                            break;
+                    }
+
                 }
             }
         }
