@@ -14,4 +14,6 @@
     <string name="creditsFonts">"Fonts:\nFontAwesome, by FontAwesome\nHomeSpun, by Aenigma Fonts\nKarma Future, by Typodermic Fonts\n"</string>
     <string name="creditsSoundEffects">"Sound FX:\nTomás Cardenal López"</string>
     <string name="pauseTitle">Game paused</string>
+    <string name="btnCrshMode">C_R_S_H mode</string>
+    <string name="btnNormalMode">N_R_M_L mode</string>
 </resources>

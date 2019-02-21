@@ -26,6 +26,14 @@ public class NewGameScene extends SceneCrsh {
      * Button for starting a new game
      */
     private ButtonComponent btnStartGame;
+    /**
+     * Button for choosing Normal mode
+     */
+    private ButtonComponent btnNormalMode;
+    /**
+     * Button for choosing CRSH mode
+     */
+    private ButtonComponent btnCRSHmode;
 
     /**
      * Starts a new game menu
@@ -49,13 +57,28 @@ public class NewGameScene extends SceneCrsh {
         this.gradientPaint.setShader(new LinearGradient(0, 0, screenWidth, screenHeight, Color.GREEN, Color.CYAN, Shader.TileMode.CLAMP));
 
         //Buttons
-        btnStartGame = new ButtonComponent(context,
-                Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN),
-                context.getString(R.string.btnStartGame),
+        Typeface homespun = Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN);
+        btnNormalMode = new ButtonComponent(context, homespun, context.getString(R.string.btnNormalMode),
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 2,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 3,
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 8,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 4, Color.CYAN, 150, true, 99);
+        btnNormalMode.setClickEffectParameters(Color.BLUE, Color.DKGRAY, 255, 50);
+
+        btnCRSHmode = new ButtonComponent(context, homespun, context.getString(R.string.btnCrshMode),
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 10,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 3,
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 16,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 4, Color.MAGENTA, 150, true, 100);
+        btnCRSHmode.setClickEffectParameters(Color.RED, Color.DKGRAY, 255, 50);
+
+        btnStartGame = new ButtonComponent(context, homespun, context.getString(R.string.btnStartGame),
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 6,
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 6,
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 12,
-                screenHeight / GameConstants.MENUSCREEN_ROWS * 7, Color.RED, 150, true, 99);
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 7, Color.BLUE, 150, true, 99);
+
+        btnNormalMode.setHeldDown(true);
     }
 
     /**
@@ -79,6 +102,8 @@ public class NewGameScene extends SceneCrsh {
         c.drawText(context.getString(R.string.titleNewGame), screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9, screenHeight / GameConstants.MENUSCREEN_ROWS, pTitleText);
         //Buttons
         backBtn.draw(c);
+        btnNormalMode.draw(c);
+        btnCRSHmode.draw(c);
         btnStartGame.draw(c);
     }
 
@@ -97,10 +122,17 @@ public class NewGameScene extends SceneCrsh {
 
             case MotionEvent.ACTION_UP:                     // Last finger up
             case MotionEvent.ACTION_POINTER_UP:  // Any other finger up
+                if (isClick(btnNormalMode, event)) {
+                    toggleModeButtons(false);
+                } else if (isClick(btnCRSHmode, event)) {
+                    toggleModeButtons(true);
+                }
+
                 if (isClick(backBtn, event)) {
                     return 0;
-                } else if (isClick(btnStartGame, event)) {
-                    return 99;
+                }
+                if (isClick(btnStartGame, event)) {
+                    return btnStartGame.getSceneId();
                 }
 
             case MotionEvent.ACTION_MOVE: // Any finger moves
@@ -110,5 +142,19 @@ public class NewGameScene extends SceneCrsh {
                 Log.i("Other", "Undefined action: " + action);
         }
         return this.id;
+    }
+
+    public void toggleModeButtons(boolean crshSelected) {
+        if (crshSelected) {
+            btnCRSHmode.setHeldDown(true);
+            btnNormalMode.setHeldDown(false);
+            btnStartGame.setSceneId(btnCRSHmode.getSceneId());
+            btnStartGame.setColor(Color.RED);
+        } else {
+            btnNormalMode.setHeldDown(true);
+            btnCRSHmode.setHeldDown(false);
+            btnStartGame.setSceneId(btnNormalMode.getSceneId());
+            btnStartGame.setColor(Color.BLUE);
+        }
     }
 }

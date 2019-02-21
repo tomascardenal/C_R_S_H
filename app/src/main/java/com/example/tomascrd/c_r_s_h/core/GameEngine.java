@@ -152,11 +152,18 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
                             currentScene = new TutorialScene(context, newScene, screenWidth, screenHeight);
                         }
                         break;
-                    case 99: //MainGameScene
-                        if (loadSavedScene && savedScene != null && savedScene instanceof MainGameScene) {
+                    case 99: //MainGameScene GAMEMODE.MODE_NORMAL
+                        if (loadSavedScene && savedScene != null && savedScene instanceof MainGameScene && ((MainGameScene) savedScene).gameMode == MainGameScene.GAMEMODE.MODE_NORMAL) {
                             currentScene = savedScene;
                         } else {
-                            currentScene = new MainGameScene(context, newScene, screenWidth, screenHeight, this);
+                            currentScene = new MainGameScene(context, newScene, screenWidth, screenHeight, this, MainGameScene.GAMEMODE.MODE_NORMAL);
+                        }
+                        break;
+                    case 100: //MainGameScene, GAMEMODE.MODE_CRSH
+                        if (loadSavedScene && savedScene != null && savedScene instanceof MainGameScene && ((MainGameScene) savedScene).gameMode == MainGameScene.GAMEMODE.MODE_CRSH) {
+                            currentScene = savedScene;
+                        } else {
+                            currentScene = new MainGameScene(context, newScene, screenWidth, screenHeight, this, MainGameScene.GAMEMODE.MODE_CRSH);
                         }
                         break;
                 }

@@ -8,6 +8,10 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Shader;
 import android.graphics.Typeface;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
@@ -31,7 +35,12 @@ import com.example.tomascrd.c_r_s_h.core.GameEngine;
  *
  * @author Tomás Cardenal López
  */
-public class MainGameScene extends SceneCrsh {
+public class MainGameScene extends SceneCrsh implements SensorEventListener {
+
+
+    public enum GAMEMODE {
+        MODE_NORMAL, MODE_CRSH
+    }
 
     /**
      * Map to load on the main game scene
@@ -104,6 +113,18 @@ public class MainGameScene extends SceneCrsh {
      * Pause button
      */
     private ButtonComponent btnPause;
+    /**
+     * Sensor manager for the accelerometer
+     */
+    private SensorManager sensorManager;
+    /**
+     * Accelerometer sensor
+     */
+    private Sensor sensor;
+    /**
+     * This instance's game mode
+     */
+    public GAMEMODE gameMode;
 
     /**
      * Starts a new main game
@@ -114,11 +135,12 @@ public class MainGameScene extends SceneCrsh {
      * @param screenHeight   this screen's height
      * @param engineCallback callback to this game's engine
      */
-    public MainGameScene(Context context, int id, int screenWidth, int screenHeight, GameEngine engineCallback) {
+    public MainGameScene(Context context, int id, int screenWidth, int screenHeight, GameEngine engineCallback, GAMEMODE gameMode) {
         //Initialize variables
         super(context, id, screenWidth, screenHeight);
         this.engineCallback = engineCallback;
         this.onPause = false;
+        this.gameMode = gameMode;
 
         //Initialize map
         this.mapLoad = new MapComponent(666, context, screenWidth, screenHeight);
@@ -135,6 +157,14 @@ public class MainGameScene extends SceneCrsh {
         int joystickRadius = (int) Math.floor(mapLoad.getReference() * 1.5);
         this.joystickOne = new JoystickComponent(context, joystickRadius, Color.GRAY, Color.CYAN);
         this.joystickTwo = new JoystickComponent(context, joystickRadius, Color.GRAY, Color.MAGENTA);
+
+
+        //Initialize accelerometer
+        if (gameMode == GAMEMODE.MODE_CRSH) {
+            sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+            sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+            sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_GAME);
+        }
 
         //Initialize vibrator
         this.vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
@@ -420,5 +450,16 @@ public class MainGameScene extends SceneCrsh {
     public void setOnPause(boolean onPause) {
         this.onPause = onPause;
     }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
+
 
 }

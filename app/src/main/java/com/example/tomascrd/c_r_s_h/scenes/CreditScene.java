@@ -31,7 +31,7 @@ public class CreditScene extends SceneCrsh {
     /**
      * Reference to credit strings on strings.xml files
      */
-    private static int[] creditStrings = {R.string.creditsFonts, R.string.creditsMusic, R.string.creditsSoundEffects};
+    private static int[] creditReference = {R.string.creditsFonts, R.string.creditsMusic, R.string.creditsSoundEffects};
     /**
      * Index of the current credit string to show
      */
@@ -76,7 +76,6 @@ public class CreditScene extends SceneCrsh {
      * measureText/2 value for fontawesome font line, used for building the link
      */
     private static final int HALFWIDTH_FONTAWESOME = 432;
-
     /**
      * measureText/2 value for homespun font line, used for building the link
      */
@@ -145,7 +144,7 @@ public class CreditScene extends SceneCrsh {
         if (rotateCredit) {
             rotateCredit = false;
             creditIndex++;
-            if (creditIndex > creditStrings.length - 1) {
+            if (creditIndex > creditReference.length - 1) {
                 creditIndex = 0;
             }
         }
@@ -189,7 +188,7 @@ public class CreditScene extends SceneCrsh {
         c.drawText(context.getString(R.string.btnCredits), screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9, screenHeight / GameConstants.MENUSCREEN_ROWS, pTitleText);
         //Credits text with alpha effect
         pCreditsText.setAlpha(textAlpha);
-        String[] creditLines = context.getString(creditStrings[creditIndex]).split("\n");
+        String[] creditLines = context.getString(creditReference[creditIndex]).split("\n");
         int row = 3;
         //Draw all the lines shifted by a row
         for (String line : creditLines) {
@@ -198,7 +197,6 @@ public class CreditScene extends SceneCrsh {
             row++;
         }
         backBtn.draw(c);
-
     }
 
     /**
@@ -220,7 +218,7 @@ public class CreditScene extends SceneCrsh {
                     return 0;
                 }
                 //Links to font sources
-                if (creditStrings[creditIndex] == R.string.creditsFonts) {
+                if (creditReference[creditIndex] == R.string.creditsFonts) {
                     Uri webpage = null;
                     Intent webIntent;
                     if (isClick(linkFontAwesome, event)) {

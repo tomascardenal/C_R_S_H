@@ -64,6 +64,10 @@ public class ButtonComponent extends DrawableComponent {
      * Id to return when changing scenes linked by this button, should be -1 if no scene change is planned
      */
     private int sceneId;
+    /**
+     * Alpha value when held down
+     */
+    private int onClickAlpha;
 
     /**
      * Creates a Button with the given parameters and gray background color
@@ -91,6 +95,7 @@ public class ButtonComponent extends DrawableComponent {
         this.btnRect = new Rect(xPos, yPos, xRight, yBottom);
         this.clickEffect = clickEffect;
         this.sceneId = sceneId;
+        this.onClickAlpha = 255;
 
         //Painter for the button
         pButton = new Paint();
@@ -148,6 +153,21 @@ public class ButtonComponent extends DrawableComponent {
     }
 
     /**
+     * Sets the values for the click effect, for different cases than default
+     *
+     * @param borderColor  the color for the border on the click effect
+     * @param shadowColor  the color for the shadow on the click effect
+     * @param onClickAlpha the alpha value for the onClick alpha of the button and it's border
+     * @param shadowAlpha  the alpha value for the shadow
+     */
+    public void setClickEffectParameters(int borderColor, int shadowColor, int onClickAlpha, int shadowAlpha) {
+        this.pClickBorder.setColor(borderColor);
+        this.pClickShadow.setColor(shadowColor);
+        this.onClickAlpha = onClickAlpha;
+        this.pClickShadow.setAlpha(shadowAlpha);
+    }
+
+    /**
      * Draws the button on the screen
      *
      * @param c the canvas to draw
@@ -159,7 +179,7 @@ public class ButtonComponent extends DrawableComponent {
             c.drawRect(btnRect, pButton);
             c.drawRect(btnRect.left + (this.strokeWidth / 2), btnRect.top + (this.strokeWidth / 2), btnRect.right - (this.strokeWidth / 2), btnRect.bottom - (this.strokeWidth / 2), pClickBorder);
             c.drawText(getText(), btnRect.centerX(), btnRect.centerY() + height / 6, pText);
-            pButton.setAlpha(255);
+            pButton.setAlpha(this.onClickAlpha);
         } else {
             pButton.setAlpha(this.alpha);
             c.drawRect(btnRect, pButton);
@@ -220,5 +240,14 @@ public class ButtonComponent extends DrawableComponent {
      */
     public void setSceneId(int sceneId) {
         this.sceneId = sceneId;
+    }
+
+    /**
+     * Sets the color of the button on a non-clicked state
+     *
+     * @param color the new color of the button
+     */
+    public void setColor(int color) {
+        this.pButton.setColor(color);
     }
 }
