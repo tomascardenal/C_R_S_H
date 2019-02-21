@@ -23,6 +23,10 @@ public class OptionsManager {
      */
     private boolean doVibrate;
     /**
+     * Determines if the player keeps the velocity after the joystick gets deactivated or not
+     */
+    private boolean keepJoystickVelocity;
+    /**
      * SharedPreferences to store the options
      */
     private SharedPreferences preferences;
@@ -49,6 +53,7 @@ public class OptionsManager {
         playMusic = preferences.getBoolean(GameConstants.PREFERENCES_MUSIC, true);
         playSoundEffects = preferences.getBoolean(GameConstants.PREFERENCES_SOUNDEFFECTS, true);
         doVibrate = preferences.getBoolean(GameConstants.PREFERENCES_VIBRATE, true);
+        keepJoystickVelocity = preferences.getBoolean(GameConstants.PREFERENCES_KEEPJOYSTICKVELOCITY, true);
     }
 
     /**
@@ -59,6 +64,7 @@ public class OptionsManager {
         editor.putBoolean(GameConstants.PREFERENCES_MUSIC, playMusic);
         editor.putBoolean(GameConstants.PREFERENCES_SOUNDEFFECTS, playSoundEffects);
         editor.putBoolean(GameConstants.PREFERENCES_VIBRATE, doVibrate);
+        editor.putBoolean(GameConstants.PREFERENCES_KEEPJOYSTICKVELOCITY, keepJoystickVelocity);
         editor.commit();
     }
 
@@ -114,5 +120,23 @@ public class OptionsManager {
      */
     public void setDoVibrate(boolean doVibrate) {
         this.doVibrate = doVibrate;
+    }
+
+    /**
+     * Determines if the player keeps the velocity after the joystick gets deactivated or not
+     *
+     * @return whether the option is on or not
+     */
+    public boolean isKeepJoystickVelocity() {
+        return this.keepJoystickVelocity;
+    }
+
+    /**
+     * Sets the value of the keepJoystickVelocity option
+     *
+     * @param keepJoystickVelocity the new value of the option
+     */
+    public void setKeepJoystickVelocity(boolean keepJoystickVelocity) {
+        this.keepJoystickVelocity = keepJoystickVelocity;
     }
 }

@@ -37,9 +37,11 @@ import com.example.tomascrd.c_r_s_h.core.GameEngine;
  */
 public class MainGameScene extends SceneCrsh implements SensorEventListener {
 
-
+    /**
+     * Enumerates the possible types of game mode
+     */
     public enum GAMEMODE {
-        MODE_NORMAL, MODE_CRSH
+        MODE_NRML_2P, MODE_CRSH_2P, MODE_NORMAL_COM, MODE_CRSH_COM
     }
 
     /**
@@ -160,7 +162,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
 
 
         //Initialize accelerometer
-        if (gameMode == GAMEMODE.MODE_CRSH) {
+        if (gameMode == GAMEMODE.MODE_CRSH_2P || gameMode == GAMEMODE.MODE_CRSH_COM) {
             sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
             sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
             sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_GAME);
@@ -289,12 +291,109 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
     }
 
     /**
-     * Controls the events on the touchscreen
+     * Controls the events on the touchscreen and sends it to the corresponding touchManager
      *
      * @param event the touch event
      * @return a new sceneId if it changed, or this id if it didn't change
      */
     public int onTouchEvent(MotionEvent event) {
+        switch (gameMode) {
+            case MODE_NORMAL_COM:
+                return touchManagerNRMLVsCOM(event);
+            case MODE_CRSH_COM:
+                return touchManagerCRSHVsCOM(event);
+            case MODE_NRML_2P:
+                return touchManagerNRMLTwoPlayers(event);
+            case MODE_CRSH_2P:
+                return touchManagerCRSHTwoPlayers(event);
+        }
+        return this.id;
+    }
+
+    /**
+     * Controls the events on the touchscreen for GAMEMODE.MODE_CRSH_2P
+     *
+     * @param event the touch event
+     * @return a new sceneId if it changed, or this id if it didn't change
+     */
+    public int touchManagerCRSHTwoPlayers(MotionEvent event) {
+        int action = event.getActionMasked();
+        boolean playerOneArea = event.getX(event.getActionIndex()) > screenWidth / 2 + 100;
+        boolean playerTwoArea = event.getX(event.getActionIndex()) < screenWidth / 2 - 100;
+        switch (action) {
+            case MotionEvent.ACTION_DOWN:           // First finger
+            case MotionEvent.ACTION_POINTER_DOWN:  // Second finger and so on
+                if (!onPause) {
+                    //If there's a finger down on the player areas and it's not attacking, activate the joystick for that player
+                    if (playerOneArea && playerOne.getPlayerLifes() > 0 && !playerOne.isOnAttack()) {
+                        joystickOne.activateJoystick(event);
+                    }
+                    if (playerTwoArea && playerTwo.getPlayerLifes() > 0 && !playerTwo.isOnAttack()) {
+                        joystickTwo.activateJoystick(event);
+                    }
+                }
+                break;
+            case MotionEvent.ACTION_UP:                     // Last finger up
+            case MotionEvent.ACTION_POINTER_UP:  // Any other finger up
+                if (!onPause) {
+                    //Joystick up
+                    if (event.getPointerId(event.getActionIndex()) == joystickOne.getPointerId() && playerOneArea && !playerOne.isOnAttack()) {
+                        joystickOne.deactivate();
+                        //If it's not bouncing back and the option is off, don't keep velocity
+                        if (!playerOne.onBounceBack() && !engineCallback.optionsManager.isKeepJoystickVelocity()) {
+                            playerOne.setVelocity(0, 0);
+                        }
+                    }
+                    if (event.getPointerId(event.getActionIndex()) == joystickTwo.getPointerId() && playerTwoArea && !playerTwo.isOnAttack()) {
+                        joystickTwo.deactivate();
+                        //If it's not bouncing back and the option is off, don't keep velocity
+                        if (!playerTwo.onBounceBack() && !engineCallback.optionsManager.isKeepJoystickVelocity()) {
+                            playerTwo.setVelocity(0, 0);
+                        }
+                    }
+                    if (isClick(btnPause, event)) {
+                        onPause = true;
+                    }
+                } else {
+                    if (isClick(pauseMenu.getBtnUnpause(), event)) {
+                        onPause = false;
+                    }
+                    if (isClick(pauseMenu.getBtnOptions(), event)) {
+                        engineCallback.loadSavedScene = true;
+                        engineCallback.savedScene = this;
+                        return 2;
+                    }
+                    if (isClick(pauseMenu.getBtnEndGame(), event)) {
+                        engineCallback.loadSavedScene = false;
+                        return 1;
+                    }
+                }
+                break;
+            case MotionEvent.ACTION_MOVE: // Any finger moves
+                //Joystick moving
+                if (!onPause) {
+                    if (playerOne.getPlayerLifes() > 0 && !playerOne.isOnAttack()) {
+                        joystickOne.onMoveEvent(event);
+                    }
+                    if (playerTwo.getPlayerLifes() > 0 && !playerTwo.isOnAttack()) {
+                        joystickTwo.onMoveEvent(event);
+                    }
+                }
+                break;
+            default:
+                Log.i("Other", "Undefined action: " + action);
+        }
+        return this.id;
+    }
+
+    /**
+     * Controls the events on the touchscreen for GAMEMODE.MODE_NRML_2P
+     *
+     * @param event the touch event
+     * @return a new sceneId if it changed, or this id if it didn't change
+     */
+    public int touchManagerNRMLTwoPlayers(MotionEvent event) {
+
         int action = event.getActionMasked();
         boolean playerOneArea = event.getX(event.getActionIndex()) > screenWidth / 2 + 100;
         boolean playerTwoArea = event.getX(event.getActionIndex()) < screenWidth / 2 - 100;
@@ -317,9 +416,17 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
                     //Joystick up
                     if (event.getPointerId(event.getActionIndex()) == joystickOne.getPointerId() && playerOneArea) {
                         joystickOne.deactivate();
+                        //If it's not bouncing back and the option is off, don't keep velocity
+                        if (!playerOne.onBounceBack() && !engineCallback.optionsManager.isKeepJoystickVelocity()) {
+                            playerOne.setVelocity(0, 0);
+                        }
                     }
                     if (event.getPointerId(event.getActionIndex()) == joystickTwo.getPointerId() && playerTwoArea) {
                         joystickTwo.deactivate();
+                        //If it's not bouncing back and the option is off, don't keep velocity
+                        if (!playerTwo.onBounceBack() && !engineCallback.optionsManager.isKeepJoystickVelocity()) {
+                            playerTwo.setVelocity(0, 0);
+                        }
                     }
                 } else {
                     if (isClick(pauseMenu.getBtnUnpause(), event)) {
@@ -354,6 +461,26 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
             default:
                 Log.i("Other", "Undefined action: " + action);
         }
+        return this.id;
+    }
+
+    /**
+     * Controls the events on the touchscreen for GAMEMODE.MODE_CRSH_COM
+     *
+     * @param event the touch event
+     * @return a new sceneId if it changed, or this id if it didn't change
+     */
+    public int touchManagerCRSHVsCOM(MotionEvent event) {
+        return this.id;
+    }
+
+    /**
+     * Controls the events on the touchscreen for GAMEMODE.MODE_NRML_COM
+     *
+     * @param event the touch event
+     * @return a new sceneId if it changed, or this id if it didn't change
+     */
+    public int touchManagerNRMLVsCOM(MotionEvent event) {
         return this.id;
     }
 
@@ -426,6 +553,11 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         return null;
     }
 
+    /**
+     * Makes a player hit the opponent player
+     *
+     * @param playerID
+     */
     public void hitOpponent(int playerID) {
         boolean tookHit = false;
         if (playerCom == null) {
@@ -439,6 +571,13 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
             if (tookHit) {
                 playerOne.togglePlayerMode();
                 playerTwo.togglePlayerMode();
+                if (gameMode == GAMEMODE.MODE_CRSH_2P) {
+                    if (playerOne.isOnAttack()) {
+                        deactivateJoystick(1);
+                    } else if (playerTwo.isOnAttack()) {
+                        deactivateJoystick(2);
+                    }
+                }
             }
         } else {
             if (!playerCom.isTakingHit()) {
@@ -447,19 +586,75 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         }
     }
 
+    /**
+     * Sets the onPause value of the game
+     *
+     * @param onPause the new onPause value
+     */
     public void setOnPause(boolean onPause) {
         this.onPause = onPause;
     }
 
+    /**
+     * Detects the changes on the registered sensors
+     *
+     * @param event the event calling the function
+     */
     @Override
     public void onSensorChanged(SensorEvent event) {
-
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            float xAccel = event.values[0];
+            float yAccel = event.values[1];
+            Log.i("Accel values ", "x " + xAccel + " y " + yAccel);
+            if (Math.abs(xAccel) < GameConstants.ACCELEROMETER_MIN_THRESHOLD) {
+                xAccel = 0;
+            } else if (Math.abs(xAccel) > GameConstants.ACCELEROMETER_MAX_THRESHOLD) {
+                if (xAccel < 0) {
+                    xAccel = GameConstants.ACCELEROMETER_MAX_THRESHOLD * -1;
+                } else {
+                    xAccel = GameConstants.ACCELEROMETER_MAX_THRESHOLD;
+                }
+            }
+            if (Math.abs(yAccel) < GameConstants.ACCELEROMETER_MIN_THRESHOLD) {
+                yAccel = 0;
+            } else if (Math.abs(yAccel) > GameConstants.ACCELEROMETER_MAX_THRESHOLD) {
+                if (yAccel < 0) {
+                    yAccel = GameConstants.ACCELEROMETER_MAX_THRESHOLD * -1;
+                } else {
+                    yAccel = GameConstants.ACCELEROMETER_MAX_THRESHOLD;
+                }
+            }
+            if (playerOne.isOnAttack() && !playerOne.onBounceBack()) {
+                playerOne.setVelocity(yAccel * GameConstants.ACCELEROMETER_MULTIPLIER, xAccel * GameConstants.ACCELEROMETER_MULTIPLIER);
+            } else if (playerTwo.isOnAttack() && !playerTwo.onBounceBack()) {
+                playerTwo.setVelocity(yAccel * GameConstants.ACCELEROMETER_MULTIPLIER, xAccel * GameConstants.ACCELEROMETER_MULTIPLIER);
+            }
+        }
     }
 
+    /**
+     * Detects changes on accuracy of the sensor
+     *
+     * @param sensor   The sensor sending the event
+     * @param accuracy The new accuracy
+     */
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
 
+    /**
+     * Deactivates the indicated joystick
+     *
+     * @param playerId the playerID for the joystick to deactivate
+     */
+    public void deactivateJoystick(int playerId) {
+        if (playerId == 1) {
+            joystickOne.deactivate();
+        }
+        if (playerId == 2) {
+            joystickTwo.deactivate();
+        }
+    }
 
 }

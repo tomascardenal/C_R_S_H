@@ -152,18 +152,18 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
                             currentScene = new TutorialScene(context, newScene, screenWidth, screenHeight);
                         }
                         break;
-                    case 99: //MainGameScene GAMEMODE.MODE_NORMAL
-                        if (loadSavedScene && savedScene != null && savedScene instanceof MainGameScene && ((MainGameScene) savedScene).gameMode == MainGameScene.GAMEMODE.MODE_NORMAL) {
+                    case 99: //MainGameScene GAMEMODE.MODE_NRML_2P
+                        if (loadSavedScene && savedScene != null && savedScene instanceof MainGameScene && ((MainGameScene) savedScene).gameMode == MainGameScene.GAMEMODE.MODE_NRML_2P) {
                             currentScene = savedScene;
                         } else {
-                            currentScene = new MainGameScene(context, newScene, screenWidth, screenHeight, this, MainGameScene.GAMEMODE.MODE_NORMAL);
+                            currentScene = new MainGameScene(context, newScene, screenWidth, screenHeight, this, MainGameScene.GAMEMODE.MODE_NRML_2P);
                         }
                         break;
-                    case 100: //MainGameScene, GAMEMODE.MODE_CRSH
-                        if (loadSavedScene && savedScene != null && savedScene instanceof MainGameScene && ((MainGameScene) savedScene).gameMode == MainGameScene.GAMEMODE.MODE_CRSH) {
+                    case 100: //MainGameScene, GAMEMODE.MODE_CRSH_2P
+                        if (loadSavedScene && savedScene != null && savedScene instanceof MainGameScene && ((MainGameScene) savedScene).gameMode == MainGameScene.GAMEMODE.MODE_CRSH_2P) {
                             currentScene = savedScene;
                         } else {
-                            currentScene = new MainGameScene(context, newScene, screenWidth, screenHeight, this, MainGameScene.GAMEMODE.MODE_CRSH);
+                            currentScene = new MainGameScene(context, newScene, screenWidth, screenHeight, this, MainGameScene.GAMEMODE.MODE_CRSH_2P);
                         }
                         break;
                 }

@@ -127,16 +127,13 @@ public class NewGameScene extends SceneCrsh {
                 } else if (isClick(btnCRSHmode, event)) {
                     toggleModeButtons(true);
                 }
-
                 if (isClick(backBtn, event)) {
                     return 0;
                 }
                 if (isClick(btnStartGame, event)) {
                     return btnStartGame.getSceneId();
                 }
-
             case MotionEvent.ACTION_MOVE: // Any finger moves
-
                 break;
             default:
                 Log.i("Other", "Undefined action: " + action);
@@ -157,4 +154,6 @@ public class NewGameScene extends SceneCrsh {
             btnStartGame.setColor(Color.BLUE);
         }
     }
+
+
 }

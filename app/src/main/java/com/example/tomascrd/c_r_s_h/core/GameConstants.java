@@ -19,6 +19,18 @@ public final class GameConstants {
      */
     public final static int TIME_FRAGMENT = TPS / FPS;
     /**
+     * Accelerometer min read value
+     */
+    public final static float ACCELEROMETER_MIN_THRESHOLD = 0.1f;
+    /**
+     * Accelerometer max read value
+     */
+    public final static float ACCELEROMETER_MAX_THRESHOLD = 1.0f;
+    /**
+     * Accelerometer mode multiplier
+     */
+    public final static float ACCELEROMETER_MULTIPLIER = 12;
+    /**
      * Value to multiply the acceleration from the Joystick on attack mode
      */
     public final static int ACCELERATION_MULTIPLIER_ONATTACK = 8;
@@ -94,6 +106,10 @@ public final class GameConstants {
      * Reference for the vibrate option
      */
     public final static String PREFERENCES_VIBRATE = "vibrate";
+    /**
+     * Reference for the keepJoystickVelocity option
+     */
+    public final static String PREFERENCES_KEEPJOYSTICKVELOCITY = "joystickVelocity";
     /**
      * Font awesome path
      */
