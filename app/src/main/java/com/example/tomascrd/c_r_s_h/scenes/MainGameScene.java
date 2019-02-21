@@ -340,14 +340,14 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
                     if (event.getPointerId(event.getActionIndex()) == joystickOne.getPointerId() && playerOneArea && !playerOne.isOnAttack()) {
                         joystickOne.deactivate();
                         //If it's not bouncing back and the option is off, don't keep velocity
-                        if (!playerOne.onBounceBack() && !engineCallback.optionsManager.isKeepJoystickVelocity()) {
+                        if (!playerOne.onBounceBack() && !engineCallback.optionsManager.isKeepJoystickVelocityP1()) {
                             playerOne.setVelocity(0, 0);
                         }
                     }
                     if (event.getPointerId(event.getActionIndex()) == joystickTwo.getPointerId() && playerTwoArea && !playerTwo.isOnAttack()) {
                         joystickTwo.deactivate();
                         //If it's not bouncing back and the option is off, don't keep velocity
-                        if (!playerTwo.onBounceBack() && !engineCallback.optionsManager.isKeepJoystickVelocity()) {
+                        if (!playerTwo.onBounceBack() && !engineCallback.optionsManager.isKeepJoystickVelocityP2()) {
                             playerTwo.setVelocity(0, 0);
                         }
                     }
@@ -373,10 +373,10 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
                 //Joystick moving
                 if (!onPause) {
                     if (playerOne.getPlayerLifes() > 0 && !playerOne.isOnAttack()) {
-                        joystickOne.onMoveEvent(event);
+                        joystickOne.onMoveEvent(event, screenWidth / 2 + 100, true);
                     }
                     if (playerTwo.getPlayerLifes() > 0 && !playerTwo.isOnAttack()) {
-                        joystickTwo.onMoveEvent(event);
+                        joystickTwo.onMoveEvent(event, screenWidth / 2 - 100, false);
                     }
                 }
                 break;
@@ -414,17 +414,17 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
             case MotionEvent.ACTION_POINTER_UP:  // Any other finger up
                 if (!onPause) {
                     //Joystick up
-                    if (event.getPointerId(event.getActionIndex()) == joystickOne.getPointerId() && playerOneArea) {
+                    if (event.getPointerId(event.getActionIndex()) == joystickOne.getPointerId()) {
                         joystickOne.deactivate();
                         //If it's not bouncing back and the option is off, don't keep velocity
-                        if (!playerOne.onBounceBack() && !engineCallback.optionsManager.isKeepJoystickVelocity()) {
+                        if (!playerOne.onBounceBack() && !engineCallback.optionsManager.isKeepJoystickVelocityP1()) {
                             playerOne.setVelocity(0, 0);
                         }
                     }
-                    if (event.getPointerId(event.getActionIndex()) == joystickTwo.getPointerId() && playerTwoArea) {
+                    if (event.getPointerId(event.getActionIndex()) == joystickTwo.getPointerId()) {
                         joystickTwo.deactivate();
                         //If it's not bouncing back and the option is off, don't keep velocity
-                        if (!playerTwo.onBounceBack() && !engineCallback.optionsManager.isKeepJoystickVelocity()) {
+                        if (!playerTwo.onBounceBack() && !engineCallback.optionsManager.isKeepJoystickVelocityP2()) {
                             playerTwo.setVelocity(0, 0);
                         }
                     }
@@ -451,10 +451,10 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
                 //Joystick moving
                 if (!onPause) {
                     if (playerOne.getPlayerLifes() > 0) {
-                        joystickOne.onMoveEvent(event);
+                        joystickOne.onMoveEvent(event, screenWidth / 2 + 100, true);
                     }
                     if (playerTwo.getPlayerLifes() > 0) {
-                        joystickTwo.onMoveEvent(event);
+                        joystickTwo.onMoveEvent(event, screenWidth / 2 - 100, false);
                     }
                 }
                 break;

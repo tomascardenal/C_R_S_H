@@ -195,6 +195,9 @@ public class PlayerCrsh extends DrawableComponent {
         this.setPlayerLifes(lives);
     }
 
+    /**
+     * Respawns the player on the starting position
+     */
     public void respawn() {
         this.playerLifes = 3;
         this.xVelocity = 0;

@@ -107,9 +107,13 @@ public final class GameConstants {
      */
     public final static String PREFERENCES_VIBRATE = "vibrate";
     /**
-     * Reference for the keepJoystickVelocity option
+     * Reference for the keepJoystickVelocityP1 option
      */
-    public final static String PREFERENCES_KEEPJOYSTICKVELOCITY = "joystickVelocity";
+    public final static String PREFERENCES_KEEPJOYSTICKVELOCITY_P1 = "joystickVelocity1";
+    /**
+     * Reference for the keepJoystickVelocityP2 option
+     */
+    public final static String PREFERENCES_KEEPJOYSTICKVELOCITY_P2 = "joystickVelocity2";
     /**
      * Font awesome path
      */

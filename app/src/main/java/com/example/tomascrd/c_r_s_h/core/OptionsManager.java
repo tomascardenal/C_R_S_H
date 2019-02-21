@@ -23,9 +23,13 @@ public class OptionsManager {
      */
     private boolean doVibrate;
     /**
-     * Determines if the player keeps the velocity after the joystick gets deactivated or not
+     * Determines if the player 1 keeps the velocity after the joystick gets deactivated or not
      */
-    private boolean keepJoystickVelocity;
+    private boolean keepJoystickVelocityP1;
+    /**
+     * Determines if the player 2 keeps the velocity after the joystick gets deactivated or not
+     */
+    private boolean keepJoystickVelocityP2;
     /**
      * SharedPreferences to store the options
      */
@@ -53,7 +57,8 @@ public class OptionsManager {
         playMusic = preferences.getBoolean(GameConstants.PREFERENCES_MUSIC, true);
         playSoundEffects = preferences.getBoolean(GameConstants.PREFERENCES_SOUNDEFFECTS, true);
         doVibrate = preferences.getBoolean(GameConstants.PREFERENCES_VIBRATE, true);
-        keepJoystickVelocity = preferences.getBoolean(GameConstants.PREFERENCES_KEEPJOYSTICKVELOCITY, true);
+        keepJoystickVelocityP1 = preferences.getBoolean(GameConstants.PREFERENCES_KEEPJOYSTICKVELOCITY_P1, true);
+        keepJoystickVelocityP2 = preferences.getBoolean(GameConstants.PREFERENCES_KEEPJOYSTICKVELOCITY_P2, true);
     }
 
     /**
@@ -64,7 +69,8 @@ public class OptionsManager {
         editor.putBoolean(GameConstants.PREFERENCES_MUSIC, playMusic);
         editor.putBoolean(GameConstants.PREFERENCES_SOUNDEFFECTS, playSoundEffects);
         editor.putBoolean(GameConstants.PREFERENCES_VIBRATE, doVibrate);
-        editor.putBoolean(GameConstants.PREFERENCES_KEEPJOYSTICKVELOCITY, keepJoystickVelocity);
+        editor.putBoolean(GameConstants.PREFERENCES_KEEPJOYSTICKVELOCITY_P1, keepJoystickVelocityP1);
+        editor.putBoolean(GameConstants.PREFERENCES_KEEPJOYSTICKVELOCITY_P1, keepJoystickVelocityP2);
         editor.commit();
     }
 
@@ -123,20 +129,38 @@ public class OptionsManager {
     }
 
     /**
-     * Determines if the player keeps the velocity after the joystick gets deactivated or not
+     * Determines if the player one keeps the velocity after the joystick gets deactivated or not
      *
      * @return whether the option is on or not
      */
-    public boolean isKeepJoystickVelocity() {
-        return this.keepJoystickVelocity;
+    public boolean isKeepJoystickVelocityP1() {
+        return this.keepJoystickVelocityP1;
     }
 
     /**
-     * Sets the value of the keepJoystickVelocity option
+     * Sets the value of the keepJoystickVelocityP1 option
      *
-     * @param keepJoystickVelocity the new value of the option
+     * @param keepJoystickVelocityP1 the new value of the option
      */
-    public void setKeepJoystickVelocity(boolean keepJoystickVelocity) {
-        this.keepJoystickVelocity = keepJoystickVelocity;
+    public void setKeepJoystickVelocityP1(boolean keepJoystickVelocityP1) {
+        this.keepJoystickVelocityP1 = keepJoystickVelocityP1;
+    }
+
+    /**
+     * Determines if the player two keeps the velocity after the joystick gets deactivated or not
+     *
+     * @return whether the option is on or not
+     */
+    public boolean isKeepJoystickVelocityP2() {
+        return this.keepJoystickVelocityP2;
+    }
+
+    /**
+     * Sets the value of the keepJoystickVelocityP1 option
+     *
+     * @param keepJoystickVelocityP2 the new value of the option
+     */
+    public void setKeepJoystickVelocityP2(boolean keepJoystickVelocityP2) {
+        this.keepJoystickVelocityP2 = keepJoystickVelocityP2;
     }
 }

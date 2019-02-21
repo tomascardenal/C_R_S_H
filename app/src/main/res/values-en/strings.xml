@@ -16,4 +16,6 @@
     <string name="pauseTitle">Game paused</string>
     <string name="btnCrshMode">C_R_S_H mode</string>
     <string name="btnNormalMode">N_R_M_L mode</string>
+    <string name="optKeepJoystickP1">P1: Swipe mode</string>
+    <string name="optKeepJoystickP2">P2: Swipe mode</string>
 </resources>

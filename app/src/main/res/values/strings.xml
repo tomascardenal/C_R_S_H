@@ -35,4 +35,8 @@
     <string name="btnEndGame" translatable="false"></string>
     <string name="btnCrshMode">Modo C_R_S_H</string>
     <string name="btnNormalMode">Modo N_R_M_L</string>
+    <string name="optKeepJoystickP1">J1: Modo Swipe</string>
+    <string name="optKeepJoystickP2">J2: Modo Swipe</string>
+    <string name="btnKeepJoystickOn" translatable="false"></string>
+    <string name="btnKeepJoystickOff" translatable="false"></string>
 </resources>

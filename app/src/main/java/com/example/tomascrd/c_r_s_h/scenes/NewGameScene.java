@@ -141,6 +141,11 @@ public class NewGameScene extends SceneCrsh {
         return this.id;
     }
 
+    /**
+     * Toggles the mode buttons and the mode itself to be launched
+     *
+     * @param crshSelected if CRSH mode is selected
+     */
     public void toggleModeButtons(boolean crshSelected) {
         if (crshSelected) {
             btnCRSHmode.setHeldDown(true);

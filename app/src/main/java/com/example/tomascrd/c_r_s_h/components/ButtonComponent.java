@@ -112,7 +112,7 @@ public class ButtonComponent extends DrawableComponent {
         pText.setTextAlign(Paint.Align.CENTER);
         pText.setTextSize(btnRect.height() / 2);
 
-        //Clickeffect
+        //Click effect
         if (clickEffect) {
             pClickShadow = new Paint();
             pClickShadow.setColor(Color.GRAY);
@@ -122,7 +122,6 @@ public class ButtonComponent extends DrawableComponent {
             pClickBorder.setColor(Color.rgb(169, 169, 169));
             pClickBorder.setStyle(Paint.Style.STROKE);
             pClickBorder.setStrokeWidth(this.strokeWidth);
-
         }
     }
 

@@ -134,12 +134,30 @@ public class JoystickComponent extends DrawableComponent {
     /**
      * Moves the handle of the joystick on the correspondent pointer id
      *
-     * @param e the event triggering the movement
+     * @param e           the event triggering the movement
+     * @param limit       the limit for the area of move events
+     * @param joystickOne whether this is the joystick number one or two
      */
-    public void onMoveEvent(MotionEvent e) {
-        for (int i = 0; i < e.getPointerCount(); i++) {
-            if (e.getPointerId(i) == this.getPointerId()) {
-                moveHandle(e.getX(i), e.getY(i));
+    public void onMoveEvent(MotionEvent e, float limit, boolean joystickOne) {
+        if (joystickOne) {
+            for (int i = 0; i < e.getPointerCount(); i++) {
+                if (e.getPointerId(i) == this.getPointerId()) {
+                    if (e.getX(i) < limit) {
+                        moveHandle(limit, e.getY(i));
+                    } else {
+                        moveHandle(e.getX(i), e.getY(i));
+                    }
+                }
+            }
+        } else {
+            for (int i = 0; i < e.getPointerCount(); i++) {
+                if (e.getPointerId(i) == this.getPointerId()) {
+                    if (e.getX(i) > limit) {
+                        moveHandle(limit, e.getY(i));
+                    } else {
+                        moveHandle(e.getX(i), e.getY(i));
+                    }
+                }
             }
         }
     }
