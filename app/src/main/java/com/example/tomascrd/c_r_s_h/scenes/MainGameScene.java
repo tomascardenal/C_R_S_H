@@ -657,4 +657,14 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         }
     }
 
+    /**
+     * Returns whether the indicated player's joystick is being used
+     *
+     * @param playerId the joystick
+     * @return the value of the joystick activity
+     */
+    public boolean isJoystickActive(int playerId) {
+        return playerId == 1 ? joystickOne.isActive() : joystickTwo.isActive();
+    }
+
 }

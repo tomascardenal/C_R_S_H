@@ -95,6 +95,14 @@ public class PlayerCrsh extends DrawableComponent {
      * Counter for the hit animation
      */
     private int takehitCounter;
+    /**
+     * Saves the Xvelocity values for restoring half the velocity on the bounceback stop cycles
+     */
+    private float bouncebackRestoreX;
+    /**
+     * Saves the Yvelocity values for restoring half the velocity on the bounceback stop cycles
+     */
+    private float bouncebackRestoreY;
 
     /**
      * Initializes a player to it's parameters, with a given CircleComponent
@@ -470,6 +478,7 @@ public class PlayerCrsh extends DrawableComponent {
                         currentTile.tileType = TileComponent.TILE_TYPE.TILE_PATH;
                         currentTile.setPainter();
                         bounceBackSmall = true;
+                        bouncebackRestoreX = xVelocity;
                         xVelocity = xVelocity / GameConstants.BOUNCEBACK_SMALL_DIVISOR;
                         reverseXVelocity();
                         break;
@@ -478,6 +487,7 @@ public class PlayerCrsh extends DrawableComponent {
                         currentTile.tileType = TileComponent.TILE_TYPE.TILE_BREAKONE;
                         currentTile.setPainter();
                         bounceBackBig = true;
+                        bouncebackRestoreY = yVelocity;
                         xVelocity = xVelocity / GameConstants.BOUNCEBACK_BIG_DIVISOR;
                         reverseXVelocity();
                         break;
