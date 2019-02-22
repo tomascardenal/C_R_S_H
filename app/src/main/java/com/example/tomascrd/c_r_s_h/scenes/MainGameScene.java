@@ -25,6 +25,7 @@ import com.example.tomascrd.c_r_s_h.components.GamepadComponent;
 import com.example.tomascrd.c_r_s_h.components.JoystickComponent;
 import com.example.tomascrd.c_r_s_h.components.MapComponent;
 import com.example.tomascrd.c_r_s_h.components.PauseMenuComponent;
+import com.example.tomascrd.c_r_s_h.components.PlayerComCrsh;
 import com.example.tomascrd.c_r_s_h.components.PlayerCrsh;
 import com.example.tomascrd.c_r_s_h.components.SceneCrsh;
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
@@ -60,7 +61,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
     /**
      * COM Player
      */
-    private PlayerCrsh playerCom;
+    private PlayerComCrsh playerCom;
     /**
      * Joystick for player one
      */
@@ -156,12 +157,19 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         PointF playerOneCenter = new PointF(mapLoad.tileArray[2][2].getCollisionRect().exactCenterX(), mapLoad.tileArray[2][2].getCollisionRect().exactCenterY());
         this.playerOne = new PlayerCrsh(this, mapLoad, "TestP1", 1, false, new CircleComponent(playerOneCenter, mapLoad.getReference() / 2));
         PointF playerTwoCenter = new PointF(mapLoad.tileArray[mapLoad.tileArray.length - 3][mapLoad.tileArray[mapLoad.tileArray.length - 3].length - 3].getCollisionRect().exactCenterX(), mapLoad.tileArray[mapLoad.tileArray.length - 3][mapLoad.tileArray[mapLoad.tileArray.length - 3].length - 3].getCollisionRect().exactCenterY());
-        this.playerTwo = new PlayerCrsh(this, mapLoad, "testP2", 2, true, new CircleComponent(playerTwoCenter, mapLoad.getReference() / 2));
+        if (this.gameMode == GAMEMODE.MODE_CRSH_COM || this.gameMode == GAMEMODE.MODE_NRML_COM) {
+            this.playerCom = new PlayerComCrsh(this, mapLoad, true, new CircleComponent(playerTwoCenter, mapLoad.getReference() / 2));
+
+        } else {
+            this.playerTwo = new PlayerCrsh(this, mapLoad, "testP2", 2, true, new CircleComponent(playerTwoCenter, mapLoad.getReference() / 2));
+        }
 
         //Initialize joysticks
         int joystickRadius = (int) Math.floor(mapLoad.getReference() * 1.5);
         this.joystickOne = new JoystickComponent(context, joystickRadius, Color.GRAY, Color.CYAN);
-        this.joystickTwo = new JoystickComponent(context, joystickRadius, Color.GRAY, Color.MAGENTA);
+        if (this.gameMode == GAMEMODE.MODE_CRSH_2P || this.gameMode == GAMEMODE.MODE_NRML_2P) {
+            this.joystickTwo = new JoystickComponent(context, joystickRadius, Color.GRAY, Color.MAGENTA);
+        }
 
         //Initialize accelerometer
         this.updateSensors();
@@ -221,6 +229,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         this.mapLoad = null;
         this.playerOne = null;
         this.playerTwo = null;
+        this.playerCom = null;
         this.onPause = false;
         //Initialize map
         this.mapLoad = new MapComponent(this.getMapLoadID(), context, screenWidth, screenHeight, engineCallback.loader);
@@ -231,7 +240,11 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         this.playerOne = new PlayerCrsh(this, mapLoad, "TestP1", 1, false, new CircleComponent(playerOneCenter, mapLoad.getReference() / 2));
         //Player Two
         PointF playerTwoCenter = new PointF(mapLoad.tileArray[mapLoad.tileArray.length - 3][mapLoad.tileArray[mapLoad.tileArray.length - 3].length - 3].getCollisionRect().exactCenterX(), mapLoad.tileArray[mapLoad.tileArray.length - 3][mapLoad.tileArray[mapLoad.tileArray.length - 3].length - 3].getCollisionRect().exactCenterY());
-        this.playerTwo = new PlayerCrsh(this, mapLoad, "testP2", 2, true, new CircleComponent(playerTwoCenter, mapLoad.getReference() / 2));
+        if (this.gameMode == GAMEMODE.MODE_CRSH_COM || this.gameMode == GAMEMODE.MODE_NRML_COM) {
+            this.playerCom = new PlayerComCrsh(this, mapLoad, true, new CircleComponent(playerTwoCenter, mapLoad.getReference() / 2));
+        } else {
+            this.playerTwo = new PlayerCrsh(this, mapLoad, "testP2", 2, true, new CircleComponent(playerTwoCenter, mapLoad.getReference() / 2));
+        }
         //Gradients
         setGradients();
     }
@@ -240,10 +253,18 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
      * Sets the gradient of the main game scene depending on the attack and defense modes
      */
     public void setGradients() {
-        if (playerOne.isOnAttack() && !playerTwo.isOnAttack()) {
-            gradientPaint.setShader(gradientRightAttack);
-        } else if (playerTwo.isOnAttack() && !playerOne.isOnAttack()) {
-            gradientPaint.setShader(gradientLeftAttack);
+        if (gameMode == GAMEMODE.MODE_CRSH_2P || gameMode == GAMEMODE.MODE_NRML_2P) {
+            if (playerOne.isOnAttack() && !playerTwo.isOnAttack()) {
+                gradientPaint.setShader(gradientRightAttack);
+            } else if (playerTwo.isOnAttack() && !playerOne.isOnAttack()) {
+                gradientPaint.setShader(gradientLeftAttack);
+            }
+        } else {
+            if (playerOne.isOnAttack() && !playerCom.isOnAttack()) {
+                gradientPaint.setShader(gradientRightAttack);
+            } else if (playerCom.isOnAttack() && !playerOne.isOnAttack()) {
+                gradientPaint.setShader(gradientLeftAttack);
+            }
         }
     }
 
@@ -289,7 +310,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
                         joystickReference.y * playerOne.getJoystickMultiplier());
 
             }
-            if (joystickTwo.isActive() && !playerTwo.onBounceBack()) {
+            if (joystickTwo.isActive() && !playerTwo.onBounceBack() && gameMode == GAMEMODE.MODE_CRSH_2P || gameMode == GAMEMODE.MODE_NRML_2P) {
                 PointF joystickReference = joystickTwo.getDisplacement();
                 playerTwo.setVelocity(
                         joystickReference.x * playerTwo.getJoystickMultiplier(),
@@ -300,8 +321,14 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
             if (playerOne.getPlayerLifes() > 0) {
                 playerOne.move();
             }
-            if (playerTwo.getPlayerLifes() > 0) {
-                playerTwo.move();
+            if (gameMode == GAMEMODE.MODE_CRSH_2P || gameMode == GAMEMODE.MODE_NRML_2P) {
+                if ((playerTwo.getPlayerLifes() > 0 && !playerTwo.onBounceBack())) {
+                    playerTwo.move();
+                }
+            } else if (gameMode == GAMEMODE.MODE_CRSH_COM || gameMode == GAMEMODE.MODE_NRML_COM) {
+                if (playerCom.getPlayerLifes() > 0) {
+                    playerCom.move();
+                }
             }
         }
     }
@@ -320,16 +347,23 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
             mapLoad.draw(c);
             //Draw player One
             playerOne.draw(c);
-            //Draw player Two
-            playerTwo.draw(c);
+            if (this.gameMode == GAMEMODE.MODE_NRML_2P || this.gameMode == GAMEMODE.MODE_CRSH_2P) {
+                //Draw player Two
+                playerTwo.draw(c);
+            } else {
+                //Draw player COM
+                playerCom.draw(c);
+            }
             //Draw the back button TODO change this for an ingame pause menu
             btnPause.draw(c);
             //Draw the joysticks
             if (playerOne.getPlayerLifes() > 0) {
                 joystickOne.draw(c);
             }
-            if (playerTwo.getPlayerLifes() > 0) {
-                joystickTwo.draw(c);
+            if (this.gameMode == GAMEMODE.MODE_NRML_2P || this.gameMode == GAMEMODE.MODE_CRSH_2P) {
+                if (playerTwo.getPlayerLifes() > 0) {
+                    joystickTwo.draw(c);
+                }
             }
         } else {
             pauseMenu.draw(c);
@@ -528,6 +562,57 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
      * @return a new sceneId if it changed, or this id if it didn't change
      */
     public int touchManagerCRSHVsCOM(MotionEvent event) {
+        int action = event.getActionMasked();
+        switch (action) {
+            case MotionEvent.ACTION_DOWN:           // First finger
+            case MotionEvent.ACTION_POINTER_DOWN:  // Second finger and so on
+                if (!onPause) {
+                    //If there's a finger down on the player areas and it's not attacking, activate the joystick for that player
+                    if (playerOne.getPlayerLifes() > 0 && !playerOne.isOnAttack()) {
+                        joystickOne.activateJoystick(event);
+                    }
+                }
+                break;
+            case MotionEvent.ACTION_UP:                     // Last finger up
+            case MotionEvent.ACTION_POINTER_UP:  // Any other finger up
+                if (!onPause) {
+                    //Joystick up
+                    if (event.getPointerId(event.getActionIndex()) == joystickOne.getPointerId() && !playerOne.isOnAttack()) {
+                        joystickOne.deactivate();
+                        //If it's not bouncing back and the option is off, don't keep velocity
+                        if (!playerOne.onBounceBack() && !engineCallback.optionsManager.isKeepJoystickVelocityP1()) {
+                            playerOne.setVelocity(0, 0);
+                        }
+                    }
+                    if (isClick(btnPause, event)) {
+                        onPause = true;
+                    }
+                } else {
+                    if (isClick(pauseMenu.getBtnUnpause(), event)) {
+                        onPause = false;
+                    }
+                    if (isClick(pauseMenu.getBtnOptions(), event)) {
+                        engineCallback.loadSavedScene = true;
+                        engineCallback.savedScene = this;
+                        return 2;
+                    }
+                    if (isClick(pauseMenu.getBtnEndGame(), event)) {
+                        engineCallback.loadSavedScene = false;
+                        return 1;
+                    }
+                }
+                break;
+            case MotionEvent.ACTION_MOVE: // Any finger moves
+                //Joystick moving
+                if (!onPause) {
+                    if (playerOne.getPlayerLifes() > 0 && !playerOne.isOnAttack()) {
+                        joystickOne.onMoveEvent(event);
+                    }
+                }
+                break;
+            default:
+                Log.i("Other", "Undefined action: " + action);
+        }
         return this.id;
     }
 
@@ -538,6 +623,68 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
      * @return a new sceneId if it changed, or this id if it didn't change
      */
     public int touchManagerNRMLVsCOM(MotionEvent event) {
+        int action = event.getActionMasked();
+        switch (action) {
+            case MotionEvent.ACTION_DOWN:           // First finger
+            case MotionEvent.ACTION_POINTER_DOWN:  // Second finger and so on
+                if (!onPause) {
+                    //If there's a finger down on the player areas, activate the joystick for that player
+                    if (playerOne.getPlayerLifes() > 0) {
+                        joystickOne.activateJoystick(event);
+                    }
+                }
+                break;
+            case MotionEvent.ACTION_UP:                     // Last finger up
+            case MotionEvent.ACTION_POINTER_UP:  // Any other finger up
+                if (!onPause) {
+                    //Joystick up
+                    if (event.getPointerId(event.getActionIndex()) == joystickOne.getPointerId()) {
+                        joystickOne.deactivate();
+                        //If it's not bouncing back and the option is off, don't keep velocity
+                        if (!playerOne.onBounceBack() && !engineCallback.optionsManager.isKeepJoystickVelocityP1()) {
+                            playerOne.setVelocity(0, 0);
+                        }
+                    }
+                } else {
+                    if (pauseMenu.isConfirming()) {
+                        if (isClick(pauseMenu.getBtnConfirmYes(), event)) {
+                            pauseMenu.setConfirming(false);
+                            engineCallback.loadSavedScene = false;
+                            this.reloadMap();
+                            return 1;
+                        } else if (isClick(pauseMenu.getBtnConfirmNo(), event)) {
+                            pauseMenu.setConfirming(false);
+                        }
+                    } else {
+                        if (isClick(pauseMenu.getBtnUnpause(), event)) {
+                            onPause = false;
+                        }
+                        if (isClick(pauseMenu.getBtnOptions(), event)) {
+                            engineCallback.loadSavedScene = true;
+                            engineCallback.savedScene = this;
+                            return 2;
+                        }
+                        if (isClick(pauseMenu.getBtnEndGame(), event)) {
+                            pauseMenu.setConfirming(true);
+                        }
+                    }
+                }
+                if (isClick(btnPause, event)) {
+                    onPause = true;
+                }
+
+                break;
+            case MotionEvent.ACTION_MOVE: // Any finger moves
+                //Joystick moving
+                if (!onPause) {
+                    if (playerOne.getPlayerLifes() > 0) {
+                        joystickOne.onMoveEvent(event);
+                    }
+                }
+                break;
+            default:
+                Log.i("Other", "Undefined action: " + action);
+        }
         return this.id;
     }
 
@@ -617,7 +764,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
      */
     public void hitOpponent(int playerID) {
         boolean tookHit = false;
-        if (playerCom == null) {
+        if (gameMode == GAMEMODE.MODE_CRSH_2P || gameMode == GAMEMODE.MODE_NRML_2P) {
             if (playerID == 1 && !playerOne.isTakingHit() && !playerTwo.isTakingHit()) {
                 playerTwo.takeHit();
                 tookHit = true;
@@ -636,9 +783,22 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
                     }
                 }
             }
-        } else {
-            if (!playerCom.isTakingHit()) {
+        } else if (gameMode == GAMEMODE.MODE_CRSH_COM || gameMode == GAMEMODE.MODE_NRML_COM) {
+            if (playerID == 1 && !playerCom.isTakingHit()) {
                 playerCom.takeHit();
+                tookHit = true;
+            } else if (playerID == 0 && !playerOne.isTakingHit()) {
+                playerOne.takeHit();
+                tookHit = true;
+            }
+            if (tookHit) {
+                playerOne.togglePlayerMode();
+                playerCom.togglePlayerMode();
+                if (gameMode == GAMEMODE.MODE_CRSH_COM) {
+                    if (playerOne.isOnAttack()) {
+                        deactivateJoystick(1);
+                    }
+                }
             }
         }
     }
@@ -683,7 +843,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
             }
             if (playerOne.isOnAttack() && !playerOne.onBounceBack()) {
                 playerOne.setVelocity(yAccel * GameConstants.ACCELEROMETER_MULTIPLIER, xAccel * GameConstants.ACCELEROMETER_MULTIPLIER);
-            } else if (playerTwo.isOnAttack() && !playerTwo.onBounceBack()) {
+            } else if (playerTwo != null && gameMode == GAMEMODE.MODE_CRSH_2P && playerTwo.isOnAttack() && !playerTwo.onBounceBack()) {
                 playerTwo.setVelocity(yAccel * GameConstants.ACCELEROMETER_MULTIPLIER, xAccel * GameConstants.ACCELEROMETER_MULTIPLIER);
             }
         }
@@ -730,7 +890,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
      * @return the human player position as a PointF
      */
     public PointF getHumanPosition() {
-        return new PointF(playerOne.getXPosition(), playerTwo.getYPosition());
+        return new PointF(playerOne.getXPosition(), playerOne.getYPosition());
     }
 
     /**

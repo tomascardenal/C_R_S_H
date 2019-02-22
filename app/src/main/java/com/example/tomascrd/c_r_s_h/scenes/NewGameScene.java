@@ -27,6 +27,14 @@ public class NewGameScene extends SceneCrsh {
      */
     private ButtonComponent btnStartGame;
     /**
+     * Button for choosing P1 vs COM
+     */
+    private ButtonComponent btnVsCOM;
+    /**
+     * Button for choosing P1 vs P2
+     */
+    private ButtonComponent btnPvP;
+    /**
      * Button for choosing Normal mode
      */
     private ButtonComponent btnNormalMode;
@@ -58,18 +66,33 @@ public class NewGameScene extends SceneCrsh {
 
         //Buttons
         Typeface homespun = Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN);
+
+        btnVsCOM = new ButtonComponent(context, homespun, context.getString(R.string.btnVsCom),
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 2,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 2,
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 8,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 3, Color.YELLOW, 150, true, 99);
+        btnVsCOM.setClickEffectParameters(Color.YELLOW, Color.DKGRAY, 255, 50);
+
+        btnPvP = new ButtonComponent(context, homespun, context.getString(R.string.btnPvP),
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 10,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 2,
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 16,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 3, Color.GREEN, 150, true, 99);
+        btnPvP.setClickEffectParameters(Color.GREEN, Color.DKGRAY, 255, 50);
+
         btnNormalMode = new ButtonComponent(context, homespun, context.getString(R.string.btnNormalMode),
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 2,
-                screenHeight / GameConstants.MENUSCREEN_ROWS * 3,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 4,
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 8,
-                screenHeight / GameConstants.MENUSCREEN_ROWS * 4, Color.CYAN, 150, true, 99);
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 5, Color.CYAN, 150, true, 99);
         btnNormalMode.setClickEffectParameters(Color.BLUE, Color.DKGRAY, 255, 50);
 
         btnCRSHmode = new ButtonComponent(context, homespun, context.getString(R.string.btnCrshMode),
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 10,
-                screenHeight / GameConstants.MENUSCREEN_ROWS * 3,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 4,
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 16,
-                screenHeight / GameConstants.MENUSCREEN_ROWS * 4, Color.MAGENTA, 150, true, 100);
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 5, Color.MAGENTA, 150, true, 100);
         btnCRSHmode.setClickEffectParameters(Color.RED, Color.DKGRAY, 255, 50);
 
         btnStartGame = new ButtonComponent(context, homespun, context.getString(R.string.btnStartGame),
@@ -79,6 +102,7 @@ public class NewGameScene extends SceneCrsh {
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 7, Color.BLUE, 150, true, 99);
 
         btnNormalMode.setHeldDown(true);
+        btnPvP.setHeldDown(true);
     }
 
     /**
@@ -102,6 +126,8 @@ public class NewGameScene extends SceneCrsh {
         c.drawText(context.getString(R.string.titleNewGame), screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9, screenHeight / GameConstants.MENUSCREEN_ROWS, pTitleText);
         //Buttons
         backBtn.draw(c);
+        btnVsCOM.draw(c);
+        btnPvP.draw(c);
         btnNormalMode.draw(c);
         btnCRSHmode.draw(c);
         btnStartGame.draw(c);
@@ -127,6 +153,11 @@ public class NewGameScene extends SceneCrsh {
                 } else if (isClick(btnCRSHmode, event)) {
                     toggleModeButtons(true);
                 }
+                if (isClick(btnVsCOM, event)) {
+                    togglePlayerModeButtons(true);
+                } else if (isClick(btnPvP, event)) {
+                    togglePlayerModeButtons(false);
+                }
                 if (isClick(backBtn, event)) {
                     return 0;
                 }
@@ -150,13 +181,46 @@ public class NewGameScene extends SceneCrsh {
         if (crshSelected) {
             btnCRSHmode.setHeldDown(true);
             btnNormalMode.setHeldDown(false);
-            btnStartGame.setSceneId(btnCRSHmode.getSceneId());
             btnStartGame.setColor(Color.RED);
+            if (btnVsCOM.isHeldDown()) {
+                btnStartGame.setSceneId(98);
+            } else {
+                btnStartGame.setSceneId(100);
+            }
         } else {
             btnNormalMode.setHeldDown(true);
             btnCRSHmode.setHeldDown(false);
-            btnStartGame.setSceneId(btnNormalMode.getSceneId());
             btnStartGame.setColor(Color.BLUE);
+            if (btnVsCOM.isHeldDown()) {
+                btnStartGame.setSceneId(97);
+            } else {
+                btnStartGame.setSceneId(99);
+            }
+        }
+    }
+
+    /**
+     * Toggles the player mode buttons and the playerMode itself to be launched
+     *
+     * @param vsComSelected if vsCom is selected
+     */
+    public void togglePlayerModeButtons(boolean vsComSelected) {
+        if (vsComSelected) {
+            btnVsCOM.setHeldDown(true);
+            btnPvP.setHeldDown(false);
+            if (btnNormalMode.isHeldDown()) {
+                btnStartGame.setSceneId(97);
+            } else {
+                btnStartGame.setSceneId(98);
+            }
+        } else {
+            btnPvP.setHeldDown(true);
+            btnVsCOM.setHeldDown(false);
+            if (btnNormalMode.isHeldDown()) {
+                btnStartGame.setSceneId(99);
+            } else {
+                btnStartGame.setSceneId(100);
+            }
         }
     }
 

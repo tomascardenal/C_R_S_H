@@ -47,4 +47,6 @@
     <string name="confirmQuit">¿Salir de la partida?</string>
     <string name="btnConfirmYes" translatable="false"></string>
     <string name="btnConfirmNo" translatable="false"></string>
+    <string name="btnVsCom" translatable="false">P1 vs. COM</string>
+    <string name="btnPvP">P1 vs. P2</string>
 </resources>

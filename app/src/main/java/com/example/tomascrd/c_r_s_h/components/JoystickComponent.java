@@ -163,6 +163,20 @@ public class JoystickComponent extends DrawableComponent {
     }
 
     /**
+     * Moves the handle of the joystick on the correspondent pointer id, for vs COM games
+     *
+     * @param e the event triggering the movement
+     */
+    public void onMoveEvent(MotionEvent e) {
+        for (int i = 0; i < e.getPointerCount(); i++) {
+            if (e.getPointerId(i) == this.getPointerId()) {
+                moveHandle(e.getX(i), e.getY(i));
+            }
+        }
+    }
+
+
+    /**
      * Returns a PointF with x and y values for the displacement between 0 and 1
      *
      * @return the PointF representing the displacement

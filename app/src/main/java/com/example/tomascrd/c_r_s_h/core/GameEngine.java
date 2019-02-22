@@ -175,6 +175,26 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
                             currentScene = new MapCreatorScene(context, newScene, screenWidth, screenHeight, this);
                         }
                         break;
+                    case 97: //MainGameScene GAMEMODE.MODE_NRML_COM
+                        if (loadSavedScene && savedScene != null && savedScene instanceof MainGameScene && ((MainGameScene) savedScene).gameMode == MainGameScene.GAMEMODE.MODE_NRML_COM) {
+                            currentScene = savedScene;
+                        } else {
+                            mainGameScene.setGameMode(MainGameScene.GAMEMODE.MODE_NRML_COM);
+                            mainGameScene.setMapLoadID(currentMapID);
+                            mainGameScene.reloadMap();
+                            currentScene = mainGameScene;
+                        }
+                        break;
+                    case 98: //MainGameScene GAMEMODE.MODE_CRSH_COM
+                        if (loadSavedScene && savedScene != null && savedScene instanceof MainGameScene && ((MainGameScene) savedScene).gameMode == MainGameScene.GAMEMODE.MODE_CRSH_COM) {
+                            currentScene = savedScene;
+                        } else {
+                            mainGameScene.setGameMode(MainGameScene.GAMEMODE.MODE_CRSH_2P);
+                            mainGameScene.setMapLoadID(currentMapID);
+                            mainGameScene.reloadMap();
+                            currentScene = mainGameScene;
+                        }
+                        break;
                     case 99: //MainGameScene GAMEMODE.MODE_NRML_2P
                         if (loadSavedScene && savedScene != null && savedScene instanceof MainGameScene && ((MainGameScene) savedScene).gameMode == MainGameScene.GAMEMODE.MODE_NRML_2P) {
                             currentScene = savedScene;
