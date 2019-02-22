@@ -18,4 +18,8 @@
     <string name="btnNormalMode">N_R_M_L mode</string>
     <string name="optKeepJoystickP1">P1: Swipe mode</string>
     <string name="optKeepJoystickP2">P2: Swipe mode</string>
+    <string name="btnCreator">Map Creator</string>
+    <string name="savemenuTitle">Creator paused</string>
+    <string name="confirmTitle">Confirm changes?</string>
+    <string name="confirmQuit">Quit game?</string>
 </resources>

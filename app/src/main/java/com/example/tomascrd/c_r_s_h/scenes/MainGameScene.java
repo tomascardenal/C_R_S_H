@@ -37,6 +37,7 @@ import com.example.tomascrd.c_r_s_h.core.GameEngine;
  */
 public class MainGameScene extends SceneCrsh implements SensorEventListener {
 
+
     /**
      * Enumerates the possible types of game mode
      */
@@ -123,6 +124,10 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
      * This instance's game mode
      */
     public GAMEMODE gameMode;
+    /**
+     * The current loaded map's ID number
+     */
+    private int mapLoadID;
 
     /**
      * Starts a new main game
@@ -132,16 +137,18 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
      * @param screenWidth    this screen's width
      * @param screenHeight   this screen's height
      * @param engineCallback callback to this game's engine
+     * @param mapLoadID      id of the map to be loaded
      */
-    public MainGameScene(Context context, int id, int screenWidth, int screenHeight, GameEngine engineCallback, GAMEMODE gameMode) {
+    public MainGameScene(Context context, int id, int screenWidth, int screenHeight, GameEngine engineCallback, GAMEMODE gameMode, int mapLoadID) {
         //Initialize variables
         super(context, id, screenWidth, screenHeight);
         this.engineCallback = engineCallback;
         this.onPause = false;
         this.gameMode = gameMode;
+        this.setMapLoadID(mapLoadID);
 
         //Initialize map
-        this.mapLoad = new MapComponent(666, context, screenWidth, screenHeight,engineCallback.loader);
+        this.mapLoad = new MapComponent(this.getMapLoadID(), context, screenWidth, screenHeight, engineCallback.loader);
         this.mapLoad.loadTileArray();
         this.tileSizeReference = mapLoad.getReference();
 
@@ -180,17 +187,53 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         this.pauseMenu = new PauseMenuComponent(this.context, this.mapLoad.xLeft, this.mapLoad.yTop, this.mapLoad.mapAreaWidth, this.mapLoad.mapAreaHeight, this);
     }
 
+    /**
+     * Sets the gameMode and updates the sensors
+     *
+     * @param gameMode the new game mode
+     */
     public void setGameMode(GAMEMODE gameMode) {
         this.gameMode = gameMode;
         updateSensors();
     }
 
+    /**
+     * Updates the sensors
+     */
     private void updateSensors() {
         if ((gameMode == GAMEMODE.MODE_CRSH_2P || gameMode == GAMEMODE.MODE_CRSH_COM) && (sensor == null || sensorManager == null)) {
             sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
             sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
             sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_GAME);
+        } else if ((gameMode == GAMEMODE.MODE_NRML_2P || gameMode == GAMEMODE.MODE_NRML_COM && (sensor != null || sensorManager != null))) {
+            if (sensorManager != null && sensor != null) {
+                sensorManager.unregisterListener(this, sensor);
+            }
+            sensorManager = null;
+            sensor = null;
         }
+    }
+
+    /**
+     * Reload the map and reset the values for the players
+     */
+    public void reloadMap() {
+        this.mapLoad = null;
+        this.playerOne = null;
+        this.playerTwo = null;
+        this.onPause = false;
+        //Initialize map
+        this.mapLoad = new MapComponent(this.getMapLoadID(), context, screenWidth, screenHeight, engineCallback.loader);
+        this.mapLoad.loadTileArray();
+        this.tileSizeReference = mapLoad.getReference();
+        //Player One
+        PointF playerOneCenter = new PointF(mapLoad.tileArray[2][2].getCollisionRect().exactCenterX(), mapLoad.tileArray[2][2].getCollisionRect().exactCenterY());
+        this.playerOne = new PlayerCrsh(this, mapLoad, "TestP1", 1, false, new CircleComponent(playerOneCenter, mapLoad.getReference() / 2));
+        //Player Two
+        PointF playerTwoCenter = new PointF(mapLoad.tileArray[mapLoad.tileArray.length - 3][mapLoad.tileArray[mapLoad.tileArray.length - 3].length - 3].getCollisionRect().exactCenterX(), mapLoad.tileArray[mapLoad.tileArray.length - 3][mapLoad.tileArray[mapLoad.tileArray.length - 3].length - 3].getCollisionRect().exactCenterY());
+        this.playerTwo = new PlayerCrsh(this, mapLoad, "testP2", 2, true, new CircleComponent(playerTwoCenter, mapLoad.getReference() / 2));
+        //Gradients
+        setGradients();
     }
 
     /**
@@ -433,17 +476,27 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
                         }
                     }
                 } else {
-                    if (isClick(pauseMenu.getBtnUnpause(), event)) {
-                        onPause = false;
-                    }
-                    if (isClick(pauseMenu.getBtnOptions(), event)) {
-                        engineCallback.loadSavedScene = true;
-                        engineCallback.savedScene = this;
-                        return 2;
-                    }
-                    if (isClick(pauseMenu.getBtnEndGame(), event)) {
-                        engineCallback.loadSavedScene = false;
-                        return 1;
+                    if (pauseMenu.isConfirming()) {
+                        if (isClick(pauseMenu.getBtnConfirmYes(), event)) {
+                            pauseMenu.setConfirming(false);
+                            engineCallback.loadSavedScene = false;
+                            this.reloadMap();
+                            return 1;
+                        } else if (isClick(pauseMenu.getBtnConfirmNo(), event)) {
+                            pauseMenu.setConfirming(false);
+                        }
+                    } else {
+                        if (isClick(pauseMenu.getBtnUnpause(), event)) {
+                            onPause = false;
+                        }
+                        if (isClick(pauseMenu.getBtnOptions(), event)) {
+                            engineCallback.loadSavedScene = true;
+                            engineCallback.savedScene = this;
+                            return 2;
+                        }
+                        if (isClick(pauseMenu.getBtnEndGame(), event)) {
+                            pauseMenu.setConfirming(true);
+                        }
                     }
                 }
                 if (isClick(btnPause, event)) {
@@ -671,4 +724,21 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         return playerId == 1 ? joystickOne.isActive() : joystickTwo.isActive();
     }
 
+    /**
+     * Gets the value of the current loaded map's ID number
+     *
+     * @return the value
+     */
+    public int getMapLoadID() {
+        return mapLoadID;
+    }
+
+    /**
+     * Sets the value of the mapId
+     *
+     * @param mapLoadID the new mapID
+     */
+    public void setMapLoadID(int mapLoadID) {
+        this.mapLoadID = mapLoadID;
+    }
 }

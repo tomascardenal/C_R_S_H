@@ -39,4 +39,12 @@
     <string name="optKeepJoystickP2">J2: Modo Swipe</string>
     <string name="btnKeepJoystickOn" translatable="false"></string>
     <string name="btnKeepJoystickOff" translatable="false"></string>
+    <string name="btnSaveMap" translatable="false"></string>
+    <string name="btnLoadMap" translatable="false"></string>
+    <string name="btnCreator">Crear Mapas</string>
+    <string name="savemenuTitle">Creador en pausa</string>
+    <string name="confirmTitle">¿Confirmar cambios?</string>
+    <string name="confirmQuit">¿Salir de la partida?</string>
+    <string name="btnConfirmYes" translatable="false"></string>
+    <string name="btnConfirmNo" translatable="false"></string>
 </resources>

@@ -1,5 +1,7 @@
 package com.example.tomascrd.c_r_s_h.core;
 
+import com.example.tomascrd.c_r_s_h.components.TileComponent;
+
 /**
  * Constants of common use in the whole game
  *
@@ -114,6 +116,10 @@ public final class GameConstants {
      * Reference for the keepJoystickVelocityP2 option
      */
     public final static String PREFERENCES_KEEPJOYSTICKVELOCITY_P2 = "joystickVelocity2";
+    /**
+     * Array containing the values of the tile_types
+     */
+    public final static TileComponent.TILE_TYPE[] TILE_TYPES = TileComponent.TILE_TYPE.values();
     /**
      * Font awesome path
      */

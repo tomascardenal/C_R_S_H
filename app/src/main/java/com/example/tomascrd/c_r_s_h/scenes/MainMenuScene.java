@@ -53,6 +53,10 @@ public class MainMenuScene extends SceneCrsh {
      */
     private ButtonComponent btnTutorial;
     /**
+     * Button for creator scene
+     */
+    private ButtonComponent btnCreator;
+    /**
      * Array for better button management
      */
     private ButtonComponent[] buttonArray;
@@ -88,48 +92,48 @@ public class MainMenuScene extends SceneCrsh {
         }
 
         //Initialize buttons
-        btnNewGame = new ButtonComponent(context,
-                Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN),
-                context.getString(R.string.btnPlay),
-                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 7,
+        Typeface homespun = Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN);
+        btnNewGame = new ButtonComponent(context, homespun, context.getString(R.string.btnPlay),
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS*2,
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 3,
-                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 11,
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 7,
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 4, Color.GRAY, 150, true, 1);
 
-        btnOptions = new ButtonComponent(context,
-                Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN),
+        btnOptions = new ButtonComponent(context, homespun,
                 context.getString(R.string.btnOptions),
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS,
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 5,
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 4,
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 6, Color.GRAY, 150, true, 2);
 
-        btnCredits = new ButtonComponent(context,
-                Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN),
+        btnCredits = new ButtonComponent(context, homespun,
                 context.getString(R.string.btnCredits),
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 5,
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 5,
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 8,
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 6, Color.GRAY, 150, true, 3);
 
-        btnRecords = new ButtonComponent(context,
-                Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN),
+        btnRecords = new ButtonComponent(context, homespun,
                 context.getString(R.string.btnRecords),
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 10,
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 5,
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 13,
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 6, Color.GRAY, 150, true, 4);
 
-        btnTutorial = new ButtonComponent(context,
-                Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN),
-                context.getString(R.string.btnTutorial),
+        btnTutorial = new ButtonComponent(context, homespun, context.getString(R.string.btnTutorial),
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 14,
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 5,
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 17,
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 6, Color.GRAY, 150, true, 5);
 
+        btnCreator = new ButtonComponent(context, homespun, context.getString(R.string.btnCreator),
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 11,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 3,
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 16,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 4, Color.GRAY, 150, true, 6);
+
         //Add buttons to the array to manage them
-        ButtonComponent[] btnAr = {btnNewGame, btnOptions, btnCredits, btnRecords, btnTutorial};
+        ButtonComponent[] btnAr = {btnNewGame, btnOptions, btnCredits, btnRecords, btnTutorial, btnCreator};
         this.buttonArray = btnAr;
 
     }

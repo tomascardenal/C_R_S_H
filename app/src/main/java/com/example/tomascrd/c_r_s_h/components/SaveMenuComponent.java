@@ -13,11 +13,9 @@ import com.example.tomascrd.c_r_s_h.R;
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
 
 /**
- * Represents the pause menu
- *
- * @author Tomás Cardenal López
+ * Represents a Save Menu
  */
-public class PauseMenuComponent extends DrawableComponent {
+public class SaveMenuComponent extends DrawableComponent {
     /**
      * Button for options
      */
@@ -27,9 +25,17 @@ public class PauseMenuComponent extends DrawableComponent {
      */
     private ButtonComponent btnUnpause;
     /**
-     * Button for going back to the newGameMenu
+     * Button for going back to the main menu
      */
-    private ButtonComponent btnEndGame;
+    private ButtonComponent btnExitToMenu;
+    /**
+     * Button for saving a map
+     */
+    private ButtonComponent btnSaveMap;
+    /**
+     * Button for loading a map
+     */
+    private ButtonComponent btnLoadMap;
     /**
      * Button for confirming an action
      */
@@ -38,6 +44,22 @@ public class PauseMenuComponent extends DrawableComponent {
      * Button for unconfirming an action
      */
     private ButtonComponent btnConfirmNo;
+    /**
+     * Indicates whether changes were made to the map and should be confirmed
+     */
+    private boolean confirmChanges;
+    /**
+     * Indicates whether the user is being shown the confirm menu
+     */
+    private boolean isConfirming;
+    /**
+     * Indicates whether it should quit the Map Creator after confirming
+     */
+    public boolean quitAfterConfirm;
+    /**
+     * Indicates whether a new map should be loaded after confirming
+     */
+    public boolean loadAfterConfirm;
     /**
      * The current state of the game to be saved if necessary
      */
@@ -54,10 +76,6 @@ public class PauseMenuComponent extends DrawableComponent {
      * Painter for border
      */
     private Paint borderPaint;
-    /**
-     * Indicates whether the user is being shown the confirm menu
-     */
-    private boolean isConfirming;
 
     /**
      * Initializes a new PauseMenu
@@ -69,7 +87,7 @@ public class PauseMenuComponent extends DrawableComponent {
      * @param height         the pauseMenu's height
      * @param gameSceneState the current GameScene state
      */
-    public PauseMenuComponent(Context context, float xRight, float yTop, float width, float height, SceneCrsh gameSceneState) {
+    public SaveMenuComponent(Context context, float xRight, float yTop, float width, float height, SceneCrsh gameSceneState) {
         //Initializing variables
         this.context = context;
         this.gameSceneState = gameSceneState;
@@ -77,8 +95,9 @@ public class PauseMenuComponent extends DrawableComponent {
         this.yPos = yTop;
         this.width = width;
         this.height = height;
-        this.setConfirming(false);
-
+        this.setConfirmChanges(false);
+        this.isConfirming = false;
+        this.quitAfterConfirm = false;
 
         //Border rectangle
         borderRect = new Rect(
@@ -104,34 +123,43 @@ public class PauseMenuComponent extends DrawableComponent {
         pText.setTextSize(gameSceneState.tileSizeReference * 1.5f);
 
         //Buttons
-
         Typeface fontawesome = Typeface.createFromAsset(this.context.getAssets(), GameConstants.FONT_AWESOME);
+
         this.btnUnpause = new ButtonComponent(context, fontawesome,
                 context.getString(R.string.btnUnpause),
-                (int) (borderRect.exactCenterX() - gameSceneState.tileSizeReference * 2), (int) borderRect.exactCenterY(),
-                (int) (borderRect.exactCenterX() + gameSceneState.tileSizeReference * 2), (int) (borderRect.exactCenterY() + gameSceneState.tileSizeReference * 2),
+                (int) (borderRect.exactCenterX() - gameSceneState.tileSizeReference * 2), (int) borderRect.exactCenterY() + gameSceneState.tileSizeReference,
+                (int) (borderRect.exactCenterX() + gameSceneState.tileSizeReference * 2), (int) (borderRect.exactCenterY() + gameSceneState.tileSizeReference * 3),
                 Color.TRANSPARENT, 0,
                 false, -1);
 
         this.btnOptions = new ButtonComponent(context, fontawesome,
                 context.getString(R.string.btnOptionsOnPause),
-                btnUnpause.btnRect.left - btnUnpause.btnRect.width(), btnUnpause.btnRect.top, btnUnpause.btnRect.left, btnUnpause.btnRect.bottom, Color.TRANSPARENT, 0,
+                btnUnpause.btnRect.left - btnUnpause.btnRect.width(), btnUnpause.btnRect.top + btnUnpause.btnRect.height(), btnUnpause.btnRect.left, btnUnpause.btnRect.bottom + btnUnpause.btnRect.height(), Color.TRANSPARENT, 0,
                 false, -1);
 
-
-        this.btnEndGame = new ButtonComponent(context, fontawesome,
+        this.btnExitToMenu = new ButtonComponent(context, fontawesome,
                 context.getString(R.string.btnEndGame),
-                btnUnpause.btnRect.right, btnUnpause.btnRect.bottom - btnUnpause.btnRect.height(), btnUnpause.btnRect.right + btnUnpause.btnRect.width(), btnUnpause.btnRect.bottom, Color.TRANSPARENT, 0,
+                btnUnpause.btnRect.right, btnUnpause.btnRect.bottom, btnUnpause.btnRect.right + btnUnpause.btnRect.width(), btnUnpause.btnRect.bottom + btnUnpause.btnRect.height(), Color.TRANSPARENT, 0,
+                false, -1);
+
+        this.btnSaveMap = new ButtonComponent(context, fontawesome,
+                context.getString(R.string.btnSaveMap),
+                btnOptions.btnRect.left, btnOptions.btnRect.top - btnOptions.btnRect.height() * 2, btnOptions.btnRect.left + btnOptions.btnRect.width(), btnOptions.btnRect.top - btnOptions.btnRect.height(), Color.TRANSPARENT, 0,
+                false, -1);
+
+        this.btnLoadMap = new ButtonComponent(context, fontawesome,
+                context.getString(R.string.btnLoadMap),
+                btnExitToMenu.btnRect.left, btnExitToMenu.btnRect.top - btnExitToMenu.btnRect.height() * 2, btnExitToMenu.btnRect.left + btnExitToMenu.btnRect.width(), btnExitToMenu.btnRect.top - btnExitToMenu.btnRect.height(), Color.TRANSPARENT, 0,
                 false, -1);
 
         this.btnConfirmYes = new ButtonComponent(context, fontawesome,
-                context.getString(R.string.btnConfirmYes),
-                btnUnpause.btnRect.left - btnUnpause.btnRect.width(), btnUnpause.btnRect.top, btnUnpause.btnRect.left, btnUnpause.btnRect.bottom, Color.TRANSPARENT, 0,
+                context.getString(R.string.btnConfirmNo),
+                btnOptions.btnRect.left, btnOptions.btnRect.top - btnOptions.btnRect.height() * 2, btnOptions.btnRect.left + btnOptions.btnRect.width(), btnOptions.btnRect.top - btnOptions.btnRect.height(), Color.TRANSPARENT, 0,
                 false, -1);
 
         this.btnConfirmNo = new ButtonComponent(context, fontawesome,
-                context.getString(R.string.btnConfirmNo),
-                btnUnpause.btnRect.right, btnUnpause.btnRect.bottom - btnUnpause.btnRect.height(), btnUnpause.btnRect.right + btnUnpause.btnRect.width(), btnUnpause.btnRect.bottom, Color.TRANSPARENT, 0,
+                context.getString(R.string.btnConfirmYes),
+                btnExitToMenu.btnRect.left, btnExitToMenu.btnRect.top - btnExitToMenu.btnRect.height() * 2, btnExitToMenu.btnRect.left + btnExitToMenu.btnRect.width(), btnExitToMenu.btnRect.top - btnExitToMenu.btnRect.height(), Color.TRANSPARENT, 0,
                 false, -1);
 
     }
@@ -150,22 +178,23 @@ public class PauseMenuComponent extends DrawableComponent {
         //Draw title pause text
         String pauseText;
         if (isConfirming) {
-            pauseText = context.getString(R.string.confirmQuit);
+            pauseText = context.getString(R.string.confirmTitle);
         } else {
-            pauseText = context.getString(R.string.pauseTitle);
+            pauseText = context.getString(R.string.savemenuTitle);
         }
         c.drawText(pauseText, borderRect.exactCenterX(), this.borderRect.height() / GameConstants.GAMESCREEN_ROWS * 6, pText);
 
         //Button
-        if (isConfirming()) {
+        if (isConfirming) {
             btnConfirmYes.draw(c);
             btnConfirmNo.draw(c);
         } else {
             btnOptions.draw(c);
             btnUnpause.draw(c);
-            btnEndGame.draw(c);
+            btnExitToMenu.draw(c);
+            btnLoadMap.draw(c);
+            btnSaveMap.draw(c);
         }
-
     }
 
     /**
@@ -187,12 +216,30 @@ public class PauseMenuComponent extends DrawableComponent {
     }
 
     /**
-     * Returns btnEndGame, for click events
+     * Returns btnExitToMenu, for click events
      *
-     * @return the end game button
+     * @return the exit to menu button
      */
-    public ButtonComponent getBtnEndGame() {
-        return btnEndGame;
+    public ButtonComponent getBtnExitToMenu() {
+        return btnExitToMenu;
+    }
+
+    /**
+     * Returns btnSaveMap, for click events
+     *
+     * @return the save map button
+     */
+    public ButtonComponent getBtnSaveMap() {
+        return btnSaveMap;
+    }
+
+    /**
+     * Returns btnLoadMap, for click events
+     *
+     * @return the load map button
+     */
+    public ButtonComponent getBtnLoadMap() {
+        return btnLoadMap;
     }
 
     /**
@@ -211,6 +258,24 @@ public class PauseMenuComponent extends DrawableComponent {
      */
     public ButtonComponent getBtnConfirmNo() {
         return btnConfirmNo;
+    }
+
+    /**
+     * Determines if the current saveMenu is ready to confirm changes
+     *
+     * @return the value of the field
+     */
+    public boolean isConfirmChanges() {
+        return confirmChanges;
+    }
+
+    /**
+     * Sets the value that determines if changes should be confirmed
+     *
+     * @param confirmChanges the new value to set
+     */
+    public void setConfirmChanges(boolean confirmChanges) {
+        this.confirmChanges = confirmChanges;
     }
 
     /**

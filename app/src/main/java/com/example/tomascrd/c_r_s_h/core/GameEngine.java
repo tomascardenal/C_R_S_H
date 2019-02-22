@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -88,6 +89,10 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
      * Loader class for assets
      */
     public AssetLoader loader;
+    /**
+     * Current map Id to be loaded
+     */
+    public int currentMapID;
 
     /**
      * Starts a gameEngine within the given context
@@ -100,6 +105,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
         this.surfaceHolder = getHolder();
         this.surfaceHolder.addCallback(this);
         this.context = context;
+        this.currentMapID = 666;
         optionsManager = new OptionsManager(context);
         loader = new AssetLoader(context);
         thread = new GameThread();
@@ -174,6 +180,8 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
                             currentScene = savedScene;
                         } else {
                             mainGameScene.setGameMode(MainGameScene.GAMEMODE.MODE_NRML_2P);
+                            mainGameScene.setMapLoadID(currentMapID);
+                            mainGameScene.reloadMap();
                             currentScene = mainGameScene;
                         }
                         break;
@@ -182,6 +190,8 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
                             currentScene = savedScene;
                         } else {
                             mainGameScene.setGameMode(MainGameScene.GAMEMODE.MODE_CRSH_2P);
+                            mainGameScene.setMapLoadID(currentMapID);
+                            mainGameScene.reloadMap();
                             currentScene = mainGameScene;
                         }
                         break;
@@ -239,7 +249,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
         updateMusicPlayer();
         //
         if (mainGameScene == null) {
-            mainGameScene = new MainGameScene(context, 99, screenWidth, screenHeight, this, MainGameScene.GAMEMODE.MODE_NRML_2P);
+            mainGameScene = new MainGameScene(context, 99, screenWidth, screenHeight, this, MainGameScene.GAMEMODE.MODE_NRML_2P, currentMapID);
         }
         //Starting the thread
         thread.setWorking(true);
@@ -308,6 +318,20 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     /**
+     * Updates the Game Scene to the currentMapId
+     *
+     * @param nullifyMap whether the GameScene should be totally reloaded or not
+     */
+    public void updateGameScene(boolean nullifyMap) {
+        if (mainGameScene == null) {
+            mainGameScene = new MainGameScene(context, 99, screenWidth, screenHeight, this, MainGameScene.GAMEMODE.MODE_NRML_2P, currentMapID);
+        }
+        if (nullifyMap) {
+
+        }
+    }
+
+    /**
      * Main thread of the game
      *
      * @author Tomás Cardenal
@@ -337,7 +361,13 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
                         continue;
                     }
                     if (!canvasLocked) {
-                        c = surfaceHolder.lockCanvas();
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            c = surfaceHolder.lockHardwareCanvas();
+                            Log.i("CanvasLocked", "Hardware canvas");
+                        } else {
+                            c = surfaceHolder.lockCanvas();
+                            Log.i("CanvasLocked", "canvas");
+                        }
                         canvasLocked = true;
                     }
                     if (c != null) {
