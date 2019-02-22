@@ -10,10 +10,10 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import com.example.tomascrd.c_r_s_h.R;
-import com.example.tomascrd.c_r_s_h.scenes.AssetLoader;
 import com.example.tomascrd.c_r_s_h.scenes.CreditScene;
 import com.example.tomascrd.c_r_s_h.scenes.MainGameScene;
 import com.example.tomascrd.c_r_s_h.scenes.MainMenuScene;
+import com.example.tomascrd.c_r_s_h.scenes.MapCreatorScene;
 import com.example.tomascrd.c_r_s_h.scenes.NewGameScene;
 import com.example.tomascrd.c_r_s_h.scenes.OptionsScene;
 import com.example.tomascrd.c_r_s_h.scenes.RecordsScene;
@@ -162,6 +162,13 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
                             currentScene = new TutorialScene(context, newScene, screenWidth, screenHeight);
                         }
                         break;
+                    case 6: //MapCreatorScene
+                        if (loadSavedScene && savedScene != null && savedScene instanceof MapCreatorScene) {
+                            currentScene = savedScene;
+                        } else {
+                            currentScene = new MapCreatorScene(context, newScene, screenWidth, screenHeight, this);
+                        }
+                        break;
                     case 99: //MainGameScene GAMEMODE.MODE_NRML_2P
                         if (loadSavedScene && savedScene != null && savedScene instanceof MainGameScene && ((MainGameScene) savedScene).gameMode == MainGameScene.GAMEMODE.MODE_NRML_2P) {
                             currentScene = savedScene;
@@ -278,7 +285,6 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
             } catch (IllegalStateException | IOException e) {
                 Log.e("mediaPlayer error", "" + e.getLocalizedMessage());
             }
-
         }
     }
 

@@ -55,6 +55,10 @@ public class SceneCrsh {
      * Title text painter
      */
     protected Paint pTitleText;
+    /**
+     * Reference for the tile size, indicates how much the side of the tile measures
+     */
+    public int tileSizeReference;
 
 
     /**

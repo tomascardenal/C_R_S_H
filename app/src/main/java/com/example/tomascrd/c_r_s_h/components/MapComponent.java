@@ -6,7 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
-import com.example.tomascrd.c_r_s_h.scenes.AssetLoader;
+import com.example.tomascrd.c_r_s_h.core.AssetLoader;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -68,7 +68,7 @@ public class MapComponent extends DrawableComponent {
     /**
      * Loader for assets
      */
-    AssetLoader loader;
+    private AssetLoader loader;
 
     /**
      * Starts a map on this ID and with the indicated reference
@@ -109,7 +109,12 @@ public class MapComponent extends DrawableComponent {
         //Load map - test map for the moment
         if (mapID == 666) {
             if (!loadMap(666)) {
-                dataArray = testMap();
+                createTestMap();
+                saveMap();
+            }
+        } else if (mapID == 0) {
+            if (!loadMap(0)) {
+                loadEmptyMap();
                 saveMap();
             }
         }
@@ -195,11 +200,9 @@ public class MapComponent extends DrawableComponent {
     }
 
     /**
-     * Creates an array for a test map
-     *
-     * @return the test map created
+     * Creates and stores an in dataArray an array for a test map
      */
-    private TileComponent.TILE_TYPE[][] testMap() {
+    private void createTestMap() {
         this.mapID = 666;
         TileComponent.TILE_TYPE[][] testArray = new TileComponent.TILE_TYPE[GameConstants.MAPAREA_ROWS][GameConstants.MAPAREA_COLUMNS];
         for (int i = 0; i < testArray.length; i++) {
@@ -215,7 +218,24 @@ public class MapComponent extends DrawableComponent {
                 }
             }
         }
-        return testArray;
+        dataArray = testArray;
+    }
+
+    /**
+     * Creates and stores in dataArray an array for an empty map, with only borders
+     */
+    private void loadEmptyMap() {
+        TileComponent.TILE_TYPE[][] emptyArray = new TileComponent.TILE_TYPE[GameConstants.MAPAREA_ROWS][GameConstants.MAPAREA_COLUMNS];
+        for (int i = 0; i < emptyArray.length; i++) {
+            for (int j = 0; j < emptyArray[i].length; j++) {
+                if (i == 0 || i == emptyArray.length - 1 || j == 0 || j == emptyArray[i].length - 1) {
+                    emptyArray[i][j] = TileComponent.intToTileType(0);
+                } else {
+                    emptyArray[i][j] = TileComponent.intToTileType(1);
+                }
+            }
+        }
+        dataArray = emptyArray;
     }
 
     /**

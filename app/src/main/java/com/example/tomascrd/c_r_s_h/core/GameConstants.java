@@ -33,7 +33,7 @@ public final class GameConstants {
     /**
      * Value to multiply the acceleration from the Joystick on attack mode
      */
-    public final static int ACCELERATION_MULTIPLIER_ONATTACK = 8;
+    public final static int ACCELERATION_MULTIPLIER_ONATTACK = 10;
     /**
      * Value to multiply the acceleration from the Joystick on defense mode
      */
@@ -49,11 +49,11 @@ public final class GameConstants {
     /**
      * Small bounceback number of cycles
      */
-    public final static int BOUNCEBACK_SMALL_CYCLES = 10;
+    public final static int BOUNCEBACK_SMALL_CYCLES = 6;
     /**
      * Large bounceback number of cycles
      */
-    public final static int BOUNCEBACK_BIG_CYCLES = 20;
+    public final static int BOUNCEBACK_BIG_CYCLES = 12;
     /**
      * Take hit animation number of cycles
      */

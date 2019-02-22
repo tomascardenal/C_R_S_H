@@ -406,51 +406,73 @@ public class PlayerCrsh extends DrawableComponent {
             playerCollision.move(xVelocity, yVelocity);
             //If there's bounceback
         } else if (bounceBackSmall || bounceBackBig) {
-            //Cycles for the bounceback
-            int cycles = bounceBackSmall ? GameConstants.BOUNCEBACK_SMALL_CYCLES : GameConstants.BOUNCEBACK_BIG_CYCLES;
-            //If it's the first cycle, vibrate
-            if (bounceBackCycle == 0) {
-                gameCallback.doShortVibration();
-                bounceBackCycle++;
-                //If it's still cycling
-            } else if (bounceBackCycle < cycles) {
-                bounceBackCycle++;
-                //Start slowdown
-                if (bounceBackCycle > cycles / 2) {
-                    if (this.xVelocity - GameConstants.BOUNCEBACK_SLOWDOWN_SHIFT > 0) {
-                        this.xVelocity -= GameConstants.BOUNCEBACK_SLOWDOWN_SHIFT;
-                    }
-                    if (this.yVelocity - GameConstants.BOUNCEBACK_SLOWDOWN_SHIFT > 0) {
-                        this.yVelocity -= GameConstants.BOUNCEBACK_SLOWDOWN_SHIFT;
-                    }
-                } else if (this.xVelocity - GameConstants.BOUNCEBACK_SLOWDOWN_SHIFT <= 0 && this.yVelocity - GameConstants.BOUNCEBACK_SLOWDOWN_SHIFT <= 0) {
-                    bounceBackCycle = cycles;
-                }
-                //Ending slowdown and bounceback
-            } else {
-                boolean stopX = false;
-                boolean stopY = false;
-                if (this.xVelocity - GameConstants.BOUNCEBACK_SLOWDOWN_SHIFT > 0) {
-                    this.xVelocity -= GameConstants.BOUNCEBACK_SLOWDOWN_SHIFT;
-                } else {
-                    stopX = true;
-                }
-                if (this.yVelocity - GameConstants.BOUNCEBACK_SLOWDOWN_SHIFT > 0) {
-                    this.yVelocity -= GameConstants.BOUNCEBACK_SLOWDOWN_SHIFT;
-                } else {
-                    stopY = true;
-                }
-                if (stopX && stopY) {
-                    bounceBackCycle = 0;
-                    bounceBackBig = false;
-                    bounceBackSmall = false;
-                    this.xVelocity = 0;
-                    this.yVelocity = 0;
-                }
-            }
+            bounceBackRoutine();
         }
         setMapPosition();
     }
+
+    /**
+     * Bounceback effect algorithm
+     */
+    private void bounceBackRoutine() {
+        //Cycles for the bounceback
+        int cycles = bounceBackSmall ? GameConstants.BOUNCEBACK_SMALL_CYCLES : GameConstants.BOUNCEBACK_BIG_CYCLES;
+        //If it's the first cycle, vibrate
+        if (bounceBackCycle == 0) {
+            gameCallback.doShortVibration();
+            bounceBackCycle++;
+            //If it's still cycling
+        } else if (bounceBackCycle < cycles) {
+            bounceBackCycle++;
+            //Start slowdown
+            if (bounceBackCycle > cycles / 2) {
+                if (this.xVelocity > 0) {
+                    if (this.xVelocity - GameConstants.BOUNCEBACK_SLOWDOWN_SHIFT > 0) {
+                        this.xVelocity -= GameConstants.BOUNCEBACK_SLOWDOWN_SHIFT;
+                    }
+                } else {
+                    if (this.xVelocity + GameConstants.BOUNCEBACK_SLOWDOWN_SHIFT < 0) {
+                        this.xVelocity += GameConstants.BOUNCEBACK_SLOWDOWN_SHIFT;
+                    }
+                }
+                if (this.yVelocity > 0) {
+                    if (this.yVelocity - GameConstants.BOUNCEBACK_SLOWDOWN_SHIFT > 0) {
+                        this.yVelocity -= GameConstants.BOUNCEBACK_SLOWDOWN_SHIFT;
+                    }
+                } else {
+                    if (this.yVelocity + GameConstants.BOUNCEBACK_SLOWDOWN_SHIFT < 0) {
+                        this.yVelocity += GameConstants.BOUNCEBACK_SLOWDOWN_SHIFT;
+                    }
+                }
+            } else if (this.xVelocity - GameConstants.BOUNCEBACK_SLOWDOWN_SHIFT <= 0 || this.xVelocity + GameConstants.BOUNCEBACK_SLOWDOWN_SHIFT >= 0
+                    && this.yVelocity - GameConstants.BOUNCEBACK_SLOWDOWN_SHIFT <= 0 || this.yVelocity + GameConstants.BOUNCEBACK_SLOWDOWN_SHIFT >= 0) {
+                bounceBackCycle = cycles;
+            }
+            //Ending slowdown and bounceback
+        } else {
+            boolean stopX = false;
+            boolean stopY = false;
+            if (this.xVelocity - GameConstants.BOUNCEBACK_SLOWDOWN_SHIFT > 0.5) {
+                this.xVelocity -= GameConstants.BOUNCEBACK_SLOWDOWN_SHIFT;
+            } else {
+                stopX = true;
+            }
+            if (this.yVelocity - GameConstants.BOUNCEBACK_SLOWDOWN_SHIFT > 0.5) {
+                this.yVelocity -= GameConstants.BOUNCEBACK_SLOWDOWN_SHIFT;
+            } else {
+                stopY = true;
+            }
+            if (stopX && stopY) {
+                bounceBackCycle = 0;
+                bounceBackBig = false;
+                bounceBackSmall = false;
+                this.xVelocity = 0;
+                this.yVelocity = 0;
+            }
+        }
+        playerCollision.move(xVelocity, yVelocity);
+    }
+
 
     /**
      * Checks for tile collisions
@@ -519,10 +541,6 @@ public class PlayerCrsh extends DrawableComponent {
                 }
             }
         }
-        //Move if there's no bounceback
-        if (bounceBackSmall || bounceBackBig) {
-            playerCollision.move(xVelocity, yVelocity);
-        }
     }
 
     /**
@@ -535,8 +553,6 @@ public class PlayerCrsh extends DrawableComponent {
             Log.i("Players collided!", "YEAH");
             if (this.isOnAttack()) {
                 gameCallback.hitOpponent(this.playerId);
-            } else {
-
             }
         }
     }

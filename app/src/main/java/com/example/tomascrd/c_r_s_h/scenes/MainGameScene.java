@@ -100,10 +100,6 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
      */
     private LinearGradient gradientRightAttack;
     /**
-     * Reference for the tile size, indicates how much the side of the tile measures
-     */
-    public int tileSizeReference;
-    /**
      * Indicates whether the game is paused or not
      */
     private boolean onPause;

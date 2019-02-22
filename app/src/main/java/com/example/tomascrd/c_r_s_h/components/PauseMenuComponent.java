@@ -34,7 +34,7 @@ public class PauseMenuComponent extends DrawableComponent {
     /**
      * The current state of the game to be saved if necessary
      */
-    private MainGameScene gameSceneState;
+    private SceneCrsh gameSceneState;
     /**
      * Rectangle for this border
      */
@@ -58,7 +58,7 @@ public class PauseMenuComponent extends DrawableComponent {
      * @param height         the pauseMenu's height
      * @param gameSceneState the current GameScene state
      */
-    public PauseMenuComponent(Context context, float xRight, float yTop, float width, float height, MainGameScene gameSceneState) {
+    public PauseMenuComponent(Context context, float xRight, float yTop, float width, float height, SceneCrsh gameSceneState) {
         //Initializing variables
         this.context = context;
         this.gameSceneState = gameSceneState;
