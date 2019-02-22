@@ -725,6 +725,15 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
     }
 
     /**
+     * Gets the human player position on COM matches
+     *
+     * @return the human player position as a PointF
+     */
+    public PointF getHumanPosition() {
+        return new PointF(playerOne.getXPosition(), playerTwo.getYPosition());
+    }
+
+    /**
      * Gets the value of the current loaded map's ID number
      *
      * @return the value

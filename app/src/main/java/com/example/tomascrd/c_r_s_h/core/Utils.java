@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Random;
 
 /**
  * Utilities and functions
@@ -40,5 +41,20 @@ public class Utils {
         } catch (IOException e) {
             return null;
         }
+    }
+
+    /**
+     * Generates a new pseudorandom integer value between the given values
+     *
+     * @param min the minimum bound, inclusive
+     * @param max the maximum bound, inclusive
+     * @return the pseudorandom number, or gets
+     */
+    public static int getRandom(int min, int max) {
+        if (min >= max) {
+            throw new IllegalArgumentException("The max value can't be less or equal than the min value");
+        }
+        Random r = new Random();
+        return r.nextInt((max - min) + 1) + min;
     }
 }

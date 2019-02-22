@@ -26,7 +26,7 @@ public class PlayerCrsh extends DrawableComponent {
     /**
      * The player mode (true for attacking, false for defense)
      */
-    private boolean onAttack;
+    protected boolean onAttack;
     /**
      * The player's collision circle
      */
@@ -34,75 +34,75 @@ public class PlayerCrsh extends DrawableComponent {
     /**
      * The player's lifes
      */
-    private int playerLifes;
+    protected int playerLifes;
     /**
      * This player's x axis velocity
      */
-    private float xVelocity;
+    protected float xVelocity;
     /**
      * This player's y axis velocity
      */
-    private float yVelocity;
+    protected float yVelocity;
     /**
      * This player's spawning point
      */
-    private PointF spawnPoint;
+    protected PointF spawnPoint;
     /**
      * This player's start radius
      */
-    private int startRadius;
+    protected int startRadius;
     /**
      * Callback to access the map
      */
-    private MapComponent mapCallback;
+    protected MapComponent mapCallback;
     /**
      * Callback to access the game scene
      */
-    private MainGameScene gameCallback;
+    protected MainGameScene gameCallback;
     /**
      * The player columnPosition
      */
-    private int columnPosition;
+    protected int columnPosition;
     /**
      * The player rowPosition
      */
-    private int rowPosition;
+    protected int rowPosition;
     /**
      * The surrounding tiles
      */
-    private TileComponent[] surroundingTiles;
+    protected TileComponent[] surroundingTiles;
     /**
      * Determines if this player bounced back with a small bounce
      */
-    private boolean bounceBackSmall;
+    protected boolean bounceBackSmall;
     /**
      * Determines if this player bounced back with a big bounce
      */
-    private boolean bounceBackBig;
+    protected boolean bounceBackBig;
     /**
      * The current bounceBackSmall cycle, if on bounceBackSmall
      */
-    private int bounceBackCycle;
+    protected int bounceBackCycle;
     /**
      * Accelleration multiplier for the joystick
      */
-    private int joystickMultiplier;
+    protected int joystickMultiplier;
     /**
      * Triggers the hit animation and makes the player immune
      */
-    private boolean takingHit;
+    protected boolean takingHit;
     /**
      * Counter for the hit animation
      */
-    private int takehitCounter;
+    protected int takehitCounter;
     /**
      * Saves the Xvelocity values for restoring half the velocity on the bounceback stop cycles
      */
-    private float bouncebackRestoreX;
+    protected float bouncebackRestoreX;
     /**
      * Saves the Yvelocity values for restoring half the velocity on the bounceback stop cycles
      */
-    private float bouncebackRestoreY;
+    protected float bouncebackRestoreY;
 
     /**
      * Initializes a player to it's parameters, with a given CircleComponent
@@ -628,5 +628,23 @@ public class PlayerCrsh extends DrawableComponent {
         this.onAttack = !onAttack;
         setJoystickMultiplier();
         gameCallback.setGradients();
+    }
+
+    /**
+     * Gets the value of the current xPosition
+     *
+     * @return the current value of xPos
+     */
+    public float getXPosition() {
+        return this.playerCollision.xPos;
+    }
+
+    /**
+     * Gets the value of the current yPosition
+     *
+     * @return the current value of yPos
+     */
+    public float getYPosition() {
+        return this.playerCollision.yPos;
     }
 }
