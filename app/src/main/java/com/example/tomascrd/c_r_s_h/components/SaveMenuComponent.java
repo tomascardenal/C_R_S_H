@@ -153,12 +153,12 @@ public class SaveMenuComponent extends DrawableComponent {
                 false, -1);
 
         this.btnConfirmYes = new ButtonComponent(context, fontawesome,
-                context.getString(R.string.btnConfirmNo),
+                context.getString(R.string.btnConfirmYes),
                 btnOptions.btnRect.left, btnOptions.btnRect.top - btnOptions.btnRect.height() * 2, btnOptions.btnRect.left + btnOptions.btnRect.width(), btnOptions.btnRect.top - btnOptions.btnRect.height(), Color.TRANSPARENT, 0,
                 false, -1);
 
         this.btnConfirmNo = new ButtonComponent(context, fontawesome,
-                context.getString(R.string.btnConfirmYes),
+                context.getString(R.string.btnConfirmNo),
                 btnExitToMenu.btnRect.left, btnExitToMenu.btnRect.top - btnExitToMenu.btnRect.height() * 2, btnExitToMenu.btnRect.left + btnExitToMenu.btnRect.width(), btnExitToMenu.btnRect.top - btnExitToMenu.btnRect.height(), Color.TRANSPARENT, 0,
                 false, -1);
 

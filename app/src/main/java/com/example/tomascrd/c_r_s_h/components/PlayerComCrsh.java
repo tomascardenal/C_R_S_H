@@ -1,12 +1,11 @@
 package com.example.tomascrd.c_r_s_h.components;
 
 import android.graphics.PointF;
+import android.util.Log;
 
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
 import com.example.tomascrd.c_r_s_h.core.Utils;
 import com.example.tomascrd.c_r_s_h.scenes.MainGameScene;
-
-import java.util.Random;
 
 /**
  * Represents a computer player for the game C_R_S_H
@@ -87,12 +86,18 @@ public class PlayerComCrsh extends PlayerCrsh {
      */
     @Override
     public void move() {
+        //If theres no more cycles to run on the previous velocity
         if (currentCycles == 0) {
+            //Draw the human position for a reference
             PointF currentHumanPosition = gameCallback.getHumanPosition();
+            //Draw a new random number of cycles to move
             currentCycles = Utils.getRandom(GameConstants.COM_MIN_CYCLES, GameConstants.COM_MAX_CYCLES);
-            this.setxVelocity(Utils.getRandom(GameConstants.COM_MIN_CYCLES, GameConstants.COM_MAX_CYCLES));
-            this.setyVelocity(Utils.getRandom(GameConstants.COM_MIN_CYCLES, GameConstants.COM_MAX_CYCLES));
+            //Draw new random velocities
+            this.xVelocity = Utils.getRandom(GameConstants.COM_MIN_VELOCITY, GameConstants.COM_MAX_VELOCITY);
+            this.yVelocity = Utils.getRandom(GameConstants.COM_MIN_VELOCITY, GameConstants.COM_MAX_VELOCITY);
+
             if (onAttack) {
+                //If attacking, and the human is on a lesser x, go on negative x velocity, same with the y coordinates
                 if (currentHumanPosition.x < this.xPos) {
                     this.reverseXVelocity();
                 }
@@ -100,6 +105,7 @@ public class PlayerComCrsh extends PlayerCrsh {
                     this.reverseYVelocity();
                 }
             } else {
+                //If defending, and the human is on a greater x, go on negative x velocity, same with the y coordinates
                 if (currentHumanPosition.x > this.xPos) {
                     this.reverseXVelocity();
                 }
@@ -107,9 +113,30 @@ public class PlayerComCrsh extends PlayerCrsh {
                     this.reverseYVelocity();
                 }
             }
-        } else {
-            currentCycles--;
+        } else if (currentCycles > 0) {
+            //If going against borders, reverse the velocity
+            if (againstBorderXPositive) {
+                this.xVelocity = Utils.getRandom(GameConstants.COM_MIN_VELOCITY, GameConstants.COM_MAX_VELOCITY);
+                this.reverseXVelocity();
+            }
+            if (againstBorderXNegative) {
+                this.xVelocity = Utils.getRandom(GameConstants.COM_MIN_VELOCITY, GameConstants.COM_MAX_VELOCITY);
+            }
+            if (againstBorderYPositive) {
+                this.yVelocity = Utils.getRandom(GameConstants.COM_MIN_VELOCITY, GameConstants.COM_MAX_VELOCITY);
+                this.reverseYVelocity();
+            }
+            if (againstBorderYNegative) {
+                this.yVelocity = Utils.getRandom(GameConstants.COM_MIN_VELOCITY, GameConstants.COM_MAX_VELOCITY);
+            }
+            //If there's still velocity, decrement a cycle, else, go back to zero and start again
+            if (this.xVelocity != 0 || this.yVelocity != 0) {
+                currentCycles--;
+            } else {
+                currentCycles = 0;
+            }
         }
+        //Log.i("COM", "new movement on xVel: " + this.xVelocity + " yVel: " + this.yVelocity + "remaining cycles: " + currentCycles);
         super.move();
     }
 }

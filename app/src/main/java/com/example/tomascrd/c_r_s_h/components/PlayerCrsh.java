@@ -103,6 +103,22 @@ public class PlayerCrsh extends DrawableComponent {
      * Saves the Yvelocity values for restoring half the velocity on the bounceback stop cycles
      */
     protected float bouncebackRestoreY;
+    /**
+     * Indicates if this player is colliding against a border tile on the X coordinate with positive X velocity
+     */
+    protected boolean againstBorderXPositive;
+    /**
+     * Indicates if this player is colliding against a border tile on the Y coordinate with positive Y velocity
+     */
+    protected boolean againstBorderYPositive;
+    /**
+     * Indicates if this player is colliding against a border tile on the X coordinate with negative X velocity
+     */
+    protected boolean againstBorderXNegative;
+    /**
+     * Indicates if this player is colliding against a border tile on the Y coordinate with negative Y velocity
+     */
+    protected boolean againstBorderYNegative;
 
     /**
      * Initializes a player to it's parameters, with a given CircleComponent
@@ -137,7 +153,7 @@ public class PlayerCrsh extends DrawableComponent {
         //Set the color of the player depending of it's ID
         switch (playerId) {
             case 0:
-                this.playerCollision.setColor(Color.MAGENTA);
+                this.playerCollision.setColor(Color.BLACK);
                 break;
             case 1:
                 this.playerCollision.setColor(Color.BLUE);
@@ -480,7 +496,10 @@ public class PlayerCrsh extends DrawableComponent {
     private void checkTileCollisions() {
         //Declaring current tile
         TileComponent currentTile;
-
+        againstBorderXPositive = false;
+        againstBorderXNegative = false;
+        againstBorderYPositive = false;
+        againstBorderYNegative = false;
         //The circle moved in both components
         CircleComponent xMovedCircle = new CircleComponent(this.playerCollision.xPos + xVelocity, this.playerCollision.yPos, this.playerCollision.radius);
         CircleComponent yMovedCircle = new CircleComponent(this.playerCollision.xPos, this.playerCollision.yPos + yVelocity, this.playerCollision.radius);
@@ -493,6 +512,11 @@ public class PlayerCrsh extends DrawableComponent {
                 switch (currentTile.tileType) {
                     case TILE_BORDER:
                         Log.i("COLLISION", "BORDER TILE on X");
+                        if (xVelocity > 0) {
+                            againstBorderXPositive = true;
+                        } else if (xVelocity < 0) {
+                            againstBorderXNegative = true;
+                        }
                         xVelocity = 0;
                         break;
                     case TILE_BREAKONE:
@@ -520,6 +544,11 @@ public class PlayerCrsh extends DrawableComponent {
                 switch (currentTile.tileType) {
                     case TILE_BORDER:
                         Log.i("COLLISION", "BORDER TILE on Y");
+                        if (yVelocity > 0) {
+                            againstBorderYPositive = true;
+                        } else if (yVelocity < 0) {
+                            againstBorderYNegative = true;
+                        }
                         yVelocity = 0;
                         break;
                     case TILE_BREAKONE:

@@ -161,7 +161,8 @@ public class MapCreatorScene extends SceneCrsh {
                     } else {
                         if (isClick(saveMenu.getBtnSaveMap(), event)) {
                             creatorMap.mapID = newId;
-                            creatorMap.saveMap();
+                            boolean didIt = creatorMap.saveMap();
+                            Log.i("Saved map", didIt + "");
                             saveMenu.setConfirmChanges(false);
                         }
                         if (isClick(saveMenu.getBtnLoadMap(), event)) {
@@ -169,7 +170,8 @@ public class MapCreatorScene extends SceneCrsh {
                                 saveMenu.setConfirming(true);
                                 saveMenu.loadAfterConfirm = true;
                             } else {
-                                creatorMap.loadMap(newId);
+                                boolean didIt = creatorMap.loadMap(newId);
+                                Log.i("Loading map", didIt + "");
                                 creatorMap.loadTileArray();
                             }
                         }
@@ -212,8 +214,6 @@ public class MapCreatorScene extends SceneCrsh {
         //Deduce the column and row position from the touchX and touchY coordinates
         columnPosition = (int) (touchX / this.creatorMap.getReference());
         rowPosition = (int) (touchY / this.creatorMap.getReference()) - 1;
-        //Checking for out of bounds positions. Border tiles are ALWAYS border tiles
-        Log.i("TOUCH TILE ", "ROW:" + rowPosition + " COLUMN:" + columnPosition);
         return new Point(columnPosition, rowPosition);
     }
 
@@ -234,6 +234,8 @@ public class MapCreatorScene extends SceneCrsh {
                 currentType = 0;
             }
             editTile.setTileType(TileComponent.intToTileType(currentType));
+            creatorMap.tileArray[touchPoint.y][touchPoint.x] = editTile;
+            creatorMap.updateDataArray(editTile.getTileType(), touchPoint.y, touchPoint.x);
             saveMenu.setConfirmChanges(true);
         }
     }

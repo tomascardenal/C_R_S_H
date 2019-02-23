@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
 import com.example.tomascrd.c_r_s_h.core.AssetLoader;
@@ -200,6 +201,20 @@ public class MapComponent extends DrawableComponent {
     }
 
     /**
+     * Updates the dataArray on the given parameters
+     *
+     * @param tileType the new tileType
+     * @param i        the first index
+     * @param j        the second index
+     */
+    public void updateDataArray(TileComponent.TILE_TYPE tileType, int i, int j) {
+        if (i < 0 || i > dataArray.length - 1 || j < 0 || j > dataArray[i].length - 1) {
+            throw new IllegalArgumentException("Out of dataArray bounds");
+        }
+        dataArray[i][j] = tileType;
+    }
+
+    /**
      * Creates and stores an in dataArray an array for a test map
      */
     private void createTestMap() {
@@ -246,6 +261,7 @@ public class MapComponent extends DrawableComponent {
      */
     public boolean loadMap(int mapID) {
         //Initialize dataArray
+        this.mapID = mapID;
         this.dataArray = new TileComponent.TILE_TYPE[GameConstants.MAPAREA_ROWS][GameConstants.MAPAREA_COLUMNS];
         //Open the input stream
         try (FileInputStream fis = context.openFileInput(mapID + GameConstants.MAPFILE_NAME)) {
@@ -253,6 +269,7 @@ public class MapComponent extends DrawableComponent {
             for (int i = 0; i < dataArray.length; i++) {
                 for (int j = 0; j < dataArray[i].length; j++) {
                     dataArray[i][j] = TileComponent.intToTileType(input.readInt());
+                    Log.i("TEST LOADING ", "" + dataArray[i][j]);
                 }
             }
         } catch (IOException e) {
@@ -274,6 +291,7 @@ public class MapComponent extends DrawableComponent {
                 DataOutputStream output = new DataOutputStream(fos);
                 for (int i = 0; i < dataArray.length; i++) {
                     for (int j = 0; j < dataArray[i].length; j++) {
+                        Log.i("TEST SAVING ", "" + dataArray[i][j]);
                         output.writeInt(TileComponent.tileTypeToInt(dataArray[i][j]));
                     }
                 }
