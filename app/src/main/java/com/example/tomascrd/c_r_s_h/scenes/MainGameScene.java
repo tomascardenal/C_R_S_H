@@ -842,31 +842,35 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
      */
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            float xAccel = event.values[0];
-            float yAccel = event.values[1];
-            if (Math.abs(xAccel) < GameConstants.ACCELEROMETER_MIN_THRESHOLD) {
-                xAccel = 0;
-            } else if (Math.abs(xAccel) > GameConstants.ACCELEROMETER_MAX_THRESHOLD) {
-                if (xAccel < 0) {
-                    xAccel = GameConstants.ACCELEROMETER_MAX_THRESHOLD * -1;
-                } else {
-                    xAccel = GameConstants.ACCELEROMETER_MAX_THRESHOLD;
+        Log.i("SensorChanged ","gameMode is "+gameMode);
+        if ((gameMode == GAMEMODE.MODE_CRSH_COM && playerOne.isOnAttack()) ||
+                gameMode == GAMEMODE.MODE_CRSH_2P) {
+            if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+                float xAccel = event.values[0];
+                float yAccel = event.values[1];
+                if (Math.abs(xAccel) < GameConstants.ACCELEROMETER_MIN_THRESHOLD) {
+                    xAccel = 0;
+                } else if (Math.abs(xAccel) > GameConstants.ACCELEROMETER_MAX_THRESHOLD) {
+                    if (xAccel < 0) {
+                        xAccel = GameConstants.ACCELEROMETER_MAX_THRESHOLD * -1;
+                    } else {
+                        xAccel = GameConstants.ACCELEROMETER_MAX_THRESHOLD;
+                    }
                 }
-            }
-            if (Math.abs(yAccel) < GameConstants.ACCELEROMETER_MIN_THRESHOLD) {
-                yAccel = 0;
-            } else if (Math.abs(yAccel) > GameConstants.ACCELEROMETER_MAX_THRESHOLD) {
-                if (yAccel < 0) {
-                    yAccel = GameConstants.ACCELEROMETER_MAX_THRESHOLD * -1;
-                } else {
-                    yAccel = GameConstants.ACCELEROMETER_MAX_THRESHOLD;
+                if (Math.abs(yAccel) < GameConstants.ACCELEROMETER_MIN_THRESHOLD) {
+                    yAccel = 0;
+                } else if (Math.abs(yAccel) > GameConstants.ACCELEROMETER_MAX_THRESHOLD) {
+                    if (yAccel < 0) {
+                        yAccel = GameConstants.ACCELEROMETER_MAX_THRESHOLD * -1;
+                    } else {
+                        yAccel = GameConstants.ACCELEROMETER_MAX_THRESHOLD;
+                    }
                 }
-            }
-            if (playerOne.isOnAttack() && !playerOne.onBounceBack()) {
-                playerOne.setVelocity(yAccel * GameConstants.ACCELEROMETER_MULTIPLIER, xAccel * GameConstants.ACCELEROMETER_MULTIPLIER);
-            } else if (playerTwo != null && gameMode == GAMEMODE.MODE_CRSH_2P && playerTwo.isOnAttack() && !playerTwo.onBounceBack()) {
-                playerTwo.setVelocity(yAccel * GameConstants.ACCELEROMETER_MULTIPLIER, xAccel * GameConstants.ACCELEROMETER_MULTIPLIER);
+                if (playerOne.isOnAttack() && !playerOne.onBounceBack()) {
+                    playerOne.setVelocity(yAccel * GameConstants.ACCELEROMETER_MULTIPLIER, xAccel * GameConstants.ACCELEROMETER_MULTIPLIER);
+                } else if (playerTwo != null && gameMode == GAMEMODE.MODE_CRSH_2P && playerTwo.isOnAttack() && !playerTwo.onBounceBack()) {
+                    playerTwo.setVelocity(yAccel * GameConstants.ACCELEROMETER_MULTIPLIER, xAccel * GameConstants.ACCELEROMETER_MULTIPLIER);
+                }
             }
         }
     }
