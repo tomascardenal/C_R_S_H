@@ -147,7 +147,30 @@ public class MapComponent extends DrawableComponent {
                             c.drawBitmap(loader.tileBorder, currentTile.xPos, currentTile.yPos, null);
                             break;
                         case TILE_PATH:
-                            c.drawBitmap(loader.tilePath, currentTile.xPos, currentTile.yPos, null);
+                            //c.drawBitmap(loader.tilePath, currentTile.xPos, currentTile.yPos, null);
+                            if (i == 2) {//If on the first row of grass
+                                if (j == 4) {//If on upper left corner
+                                    c.drawBitmap(loader.tileGrassUpLeft, currentTile.xPos, currentTile.yPos, null);
+                                } else if (j == GameConstants.GAMESCREEN_COLUMNS - 5) {//If on top right corner
+                                    c.drawBitmap(loader.tileGrassUpRight, currentTile.xPos, currentTile.yPos, null);
+                                } else {//If just on upper border
+                                    c.drawBitmap(loader.tileGrassUp, currentTile.xPos, currentTile.yPos, null);
+                                }
+                            } else if (i == GameConstants.GAMESCREEN_ROWS - 3) {//If on the last row of grass
+                                if (j == 4) {//If on upper left corner
+                                    c.drawBitmap(loader.tileGrassDownLeft, currentTile.xPos, currentTile.yPos, null);
+                                } else if (j == GameConstants.GAMESCREEN_COLUMNS - 5) {//If on top right corner
+                                    c.drawBitmap(loader.tileGrassDownRight, currentTile.xPos, currentTile.yPos, null);
+                                } else {//If just on upper border
+                                    c.drawBitmap(loader.tileGrassDown, currentTile.xPos, currentTile.yPos, null);
+                                }
+                            } else if (j == 4) {//If on the left border
+                                c.drawBitmap(loader.tileGrassLeft, currentTile.xPos, currentTile.yPos, null);
+                            } else if (j == GameConstants.GAMESCREEN_COLUMNS - 5) {//If on the right border
+                                c.drawBitmap(loader.tileGrassRight, currentTile.xPos, currentTile.yPos, null);
+                            } else {
+                                c.drawBitmap(loader.tileGrassMid, currentTile.xPos, currentTile.yPos, null);
+                            }
                             break;
                         case TILE_BREAKONE:
                             c.drawBitmap(loader.tileBreakOne, currentTile.xPos, currentTile.yPos, null);

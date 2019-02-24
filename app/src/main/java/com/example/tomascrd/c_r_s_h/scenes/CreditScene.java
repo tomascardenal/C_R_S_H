@@ -29,9 +29,13 @@ public class CreditScene extends SceneCrsh {
      */
     private Paint pCreditsText;
     /**
+     * Link icon painter
+     */
+    private Paint pLink;
+    /**
      * Reference to credit strings on strings.xml files
      */
-    private static int[] creditReference = {R.string.creditsFonts, R.string.creditsMusic, R.string.creditsSoundEffects};
+    private static int[] creditReference = {R.string.creditsFonts, R.string.creditsMusic, R.string.creditsSoundEffects, R.string.creditsGraphics};
     /**
      * Index of the current credit string to show
      */
@@ -84,6 +88,10 @@ public class CreditScene extends SceneCrsh {
      * measureText/2 value for karmafuture font line, used for building the link
      */
     private static final int HALFWIDTH_KARMAFUTURE = 498;
+    /**
+     * The link icon string
+     */
+    private String linkIcon;
 
     /**
      * Starts a credits scene
@@ -102,6 +110,7 @@ public class CreditScene extends SceneCrsh {
         this.maxAlphaCounter = 0;
         this.incrementAlpha = true;
         this.rotateCredit = false;
+        this.linkIcon = context.getString(R.string.link);
 
         //Title text
         pTitleText = new Paint();
@@ -118,6 +127,15 @@ public class CreditScene extends SceneCrsh {
         pCreditsText.setTextSize((float) (screenHeight / GameConstants.MENUSCREEN_COLUMNS));
         pCreditsText.setAlpha(this.textAlpha);
 
+        //Link
+        pLink = new Paint();
+        pLink.setTypeface(Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_AWESOME));
+        pLink.setColor(Color.BLACK);
+        pLink.setTextAlign(Paint.Align.LEFT);
+        pLink.setTextSize((float) (screenHeight / GameConstants.MENUSCREEN_COLUMNS));
+        pLink.setAlpha(this.textAlpha);
+
+
         //Gradient paint
         this.gradientPaint = new Paint();
         this.gradientPaint.setShader(new LinearGradient(0, 0, screenWidth, screenHeight, Color.GREEN, Color.CYAN, Shader.TileMode.CLAMP));
@@ -127,12 +145,13 @@ public class CreditScene extends SceneCrsh {
         this.gradientPaint.setShader(new LinearGradient(0, 0, screenWidth, screenHeight, Color.GREEN, Color.CYAN, Shader.TileMode.CLAMP));
 
         //Link rects
-        this.linkFontAwesome = new Rect(screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9 - HALFWIDTH_FONTAWESOME, (int) ((screenHeight / GameConstants.MENUSCREEN_ROWS * 4) - (pCreditsText.getTextSize() / 2)),
-                (screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9) + HALFWIDTH_FONTAWESOME, (int) ((screenHeight / GameConstants.MENUSCREEN_ROWS * 4) + (pCreditsText.getTextSize() / 2)));
-        this.linkHomeSpun = new Rect(screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9 - HALFWIDTH_HOMESPUN, (int) ((screenHeight / GameConstants.MENUSCREEN_ROWS * 5) - (pCreditsText.getTextSize() / 2)),
-                (screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9) + HALFWIDTH_HOMESPUN, (int) ((screenHeight / GameConstants.MENUSCREEN_ROWS * 5) + (pCreditsText.getTextSize() / 2)));
-        this.linkKarmaFuture = new Rect(screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9 - HALFWIDTH_KARMAFUTURE, (int) ((screenHeight / GameConstants.MENUSCREEN_ROWS * 6) - (pCreditsText.getTextSize() / 2)),
-                (screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9) + HALFWIDTH_KARMAFUTURE, (int) ((screenHeight / GameConstants.MENUSCREEN_ROWS * 6) + (pCreditsText.getTextSize() / 2)));
+        float offset = pLink.measureText(linkIcon);
+        this.linkFontAwesome = new Rect((int) (screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9 - HALFWIDTH_FONTAWESOME - offset), (int) ((screenHeight / GameConstants.MENUSCREEN_ROWS * 4) - (pCreditsText.getTextSize() / 2)),
+                (int) ((screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9) + HALFWIDTH_FONTAWESOME + offset), (int) ((screenHeight / GameConstants.MENUSCREEN_ROWS * 4) + (pCreditsText.getTextSize() / 2)));
+        this.linkHomeSpun = new Rect((int) (screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9 - HALFWIDTH_HOMESPUN - offset), (int) ((screenHeight / GameConstants.MENUSCREEN_ROWS * 5) - (pCreditsText.getTextSize() / 2)),
+                (int) ((screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9) + HALFWIDTH_HOMESPUN + offset), (int) ((screenHeight / GameConstants.MENUSCREEN_ROWS * 5) + (pCreditsText.getTextSize() / 2)));
+        this.linkKarmaFuture = new Rect((int) (screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9 - HALFWIDTH_KARMAFUTURE - offset), (int) ((screenHeight / GameConstants.MENUSCREEN_ROWS * 6) - (pCreditsText.getTextSize() / 2)),
+                (int) ((screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9) + HALFWIDTH_KARMAFUTURE + offset), (int) ((screenHeight / GameConstants.MENUSCREEN_ROWS * 6) + (pCreditsText.getTextSize() / 2)));
     }
 
     /**
@@ -188,12 +207,21 @@ public class CreditScene extends SceneCrsh {
         c.drawText(context.getString(R.string.btnCredits), screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9, screenHeight / GameConstants.MENUSCREEN_ROWS, pTitleText);
         //Credits text with alpha effect
         pCreditsText.setAlpha(textAlpha);
+        pLink.setAlpha(textAlpha);
         String[] creditLines = context.getString(creditReference[creditIndex]).split("\n");
         int row = 3;
         //Draw all the lines shifted by a row
         for (String line : creditLines) {
-            Log.i("link for", line + " values: measureText " + pCreditsText.measureText(line) + " y " + screenHeight / GameConstants.MENUSCREEN_ROWS * row);
-            c.drawText(line, screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9, screenHeight / GameConstants.MENUSCREEN_ROWS * row, pCreditsText);
+            float x = screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9;
+            float y = screenHeight / GameConstants.MENUSCREEN_ROWS * row;
+            if (creditReference[creditIndex] == R.string.creditsFonts && row != 3) {
+                float offset = pLink.measureText(linkIcon);
+                c.drawText(linkIcon, x + pCreditsText.measureText(line) / 2, y, pLink);
+                c.drawText(line, x - offset, y, pCreditsText);
+
+            } else {
+                c.drawText(line, x, y, pCreditsText);
+            }
             row++;
         }
         backBtn.draw(c);

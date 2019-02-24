@@ -28,6 +28,7 @@
     <string name="creditsMusic">Música:\nLow Costa Perreo de YVNG N31L</string>
     <string name="creditsFonts">Fuentes:\nFontAwesome, de FontAwesome\nHomeSpun, de AEnigma fonts\nKarma Future, de Typodermic Fonts\n</string>
     <string name="creditsSoundEffects">Efectos de sonido:\nTomás Cardenal López</string>
+    <string name="creditsGraphics">"Graphics:\nTiles de hierba por Alba Pereira\nOtros tiles por OpenGameArt</string>
     <string name="pauseTitle">Juego en pausa</string>
     <string name="btnUnpause" translatable="false"></string>
     <string name="btnPause" translatable="false"></string>
@@ -48,5 +49,6 @@
     <string name="btnConfirmYes" translatable="false"></string>
     <string name="btnConfirmNo" translatable="false"></string>
     <string name="btnVsCom" translatable="false">P1 vs. COM</string>
-    <string name="btnPvP">P1 vs. P2</string>
+    <string name="btnPvP" translatable="false">P1 vs. P2</string>
+    <string name="link" translatable="false"></string>
 </resources>

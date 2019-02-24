@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.PointF;
+import android.graphics.Rect;
 import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.hardware.Sensor;
@@ -28,6 +29,7 @@ import com.example.tomascrd.c_r_s_h.components.PauseMenuComponent;
 import com.example.tomascrd.c_r_s_h.components.PlayerComCrsh;
 import com.example.tomascrd.c_r_s_h.components.PlayerCrsh;
 import com.example.tomascrd.c_r_s_h.components.SceneCrsh;
+import com.example.tomascrd.c_r_s_h.components.VisualTimerComponent;
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
 import com.example.tomascrd.c_r_s_h.core.GameEngine;
 
@@ -50,6 +52,10 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
      * Map to load on the main game scene
      */
     private MapComponent mapLoad;
+    /**
+     * Timer for turn switching
+     */
+    private VisualTimerComponent timer;
     /**
      * Player 1
      */
@@ -153,6 +159,13 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         this.mapLoad.loadTileArray();
         this.tileSizeReference = mapLoad.getReference();
 
+        //Timer
+        int left = this.mapLoad.tileArray[0][0].getCollisionRect().left;
+        int top = this.mapLoad.tileArray[0][0].getCollisionRect().top;
+        int right = this.mapLoad.tileArray[0][GameConstants.MAPAREA_COLUMNS - 1].getCollisionRect().right;
+        int bottom = this.mapLoad.tileArray[0][GameConstants.MAPAREA_COLUMNS - 1].getCollisionRect().bottom;
+        this.timer = new VisualTimerComponent(this.context, this, new Rect(left, top, right, bottom));
+
         //Initialize players
         PointF playerOneCenter = new PointF(mapLoad.tileArray[2][2].getCollisionRect().exactCenterX(), mapLoad.tileArray[2][2].getCollisionRect().exactCenterY());
         this.playerOne = new PlayerCrsh(this, mapLoad, "TestP1", 1, false, new CircleComponent(playerOneCenter, mapLoad.getReference() / 2));
@@ -245,6 +258,15 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         this.joystickOne = new JoystickComponent(context, joystickRadius, Color.GRAY, Color.CYAN);
         if (this.gameMode == GAMEMODE.MODE_CRSH_2P || this.gameMode == GAMEMODE.MODE_NRML_2P) {
             this.joystickTwo = new JoystickComponent(context, joystickRadius, Color.GRAY, Color.MAGENTA);
+        }
+
+        //Timer
+        if (timer == null) {
+            int left = this.mapLoad.tileArray[0][0].getCollisionRect().left;
+            int top = this.mapLoad.tileArray[0][0].getCollisionRect().top;
+            int right = this.mapLoad.tileArray[GameConstants.MAPAREA_ROWS - 2][0].getCollisionRect().right;
+            int bottom = this.mapLoad.tileArray[GameConstants.MAPAREA_ROWS - 2][0].getCollisionRect().bottom;
+            this.timer = new VisualTimerComponent(this.context, this, new Rect(left, top, right, bottom));
         }
 
         //Player One
@@ -347,6 +369,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
                     playerCom.move();
                 }
             }
+            timer.updateTimer();
         }
     }
 
@@ -362,6 +385,8 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         if (!onPause) {
             //Draw map
             mapLoad.draw(c);
+            //Timer
+            timer.draw(c);
             //Draw player One
             playerOne.draw(c);
             if (this.gameMode == GAMEMODE.MODE_NRML_2P || this.gameMode == GAMEMODE.MODE_CRSH_2P) {
@@ -785,7 +810,6 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
      * @param playerID
      */
     public void hitOpponent(int playerID) {
-
         boolean tookHit = false;
         if (gameMode == GAMEMODE.MODE_CRSH_2P || gameMode == GAMEMODE.MODE_NRML_2P) {
             if (playerID == 1 && !playerOne.isTakingHit() && !playerTwo.isTakingHit()) {
@@ -798,6 +822,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
             if (tookHit) {
                 playerOne.togglePlayerMode();
                 playerTwo.togglePlayerMode();
+                timer.resetTimer();
                 if (gameMode == GAMEMODE.MODE_CRSH_2P) {
                     if (playerOne.isOnAttack()) {
                         deactivateJoystick(1);
@@ -815,6 +840,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
                 tookHit = true;
             }
             if (tookHit) {
+                timer.resetTimer();
                 playerOne.togglePlayerMode();
                 playerCom.togglePlayerMode();
                 if (gameMode == GAMEMODE.MODE_CRSH_COM) {
@@ -823,6 +849,16 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
                     }
                 }
             }
+        }
+    }
+
+    public void togglePlayerModes() {
+        if (gameMode == GAMEMODE.MODE_NRML_2P || gameMode == GAMEMODE.MODE_CRSH_2P) {
+            playerOne.togglePlayerMode();
+            playerTwo.togglePlayerMode();
+        } else if (gameMode == GAMEMODE.MODE_NRML_COM || gameMode == GAMEMODE.MODE_CRSH_COM) {
+            playerOne.togglePlayerMode();
+            playerCom.togglePlayerMode();
         }
     }
 
@@ -836,13 +872,22 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
     }
 
     /**
+     * Gives back the current onPause value
+     *
+     * @return the current onPause value
+     */
+    public boolean isOnPause() {
+        return this.onPause;
+    }
+
+    /**
      * Detects the changes on the registered sensors
      *
      * @param event the event calling the function
      */
     @Override
     public void onSensorChanged(SensorEvent event) {
-        Log.i("SensorChanged ","gameMode is "+gameMode);
+        Log.i("SensorChanged ", "gameMode is " + gameMode);
         if ((gameMode == GAMEMODE.MODE_CRSH_COM && playerOne.isOnAttack()) ||
                 gameMode == GAMEMODE.MODE_CRSH_2P) {
             if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
