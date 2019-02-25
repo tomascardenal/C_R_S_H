@@ -66,29 +66,29 @@ public class GameSettingsScene extends SceneCrsh {
         //Buttons
         String joystick1Value = engineCallback.optionsManager.isKeepJoystickVelocityP1() ? context.getString(R.string.btnKeepJoystickOn) : context.getString(R.string.btnKeepJoystickOff);
         btnKeepJoystickVelocityP1 = new TextButtonComponent(context, Typeface.createFromAsset(getContext().getAssets(), GameConstants.FONT_AWESOME), joystick1Value,
-                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 11,
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 6,
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 2,
-                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 12,
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 7,
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 3,
                 Color.TRANSPARENT, 0,
                 getContext().getString(R.string.optKeepJoystickP1),
                 Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN),
                 TextButtonComponent.TEXT_ALIGN.ALIGN_LEFT,
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS / 3,
-                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 6);
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS);
 
         String joystick2Value = engineCallback.optionsManager.isKeepJoystickVelocityP2() ? context.getString(R.string.btnKeepJoystickOn) : context.getString(R.string.btnKeepJoystickOff);
         btnKeepJoystickVelocityP2 = new TextButtonComponent(context, Typeface.createFromAsset(getContext().getAssets(), GameConstants.FONT_AWESOME), joystick2Value,
-                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 11,
-                screenHeight / GameConstants.MENUSCREEN_ROWS * 4,
-                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 12,
-                screenHeight / GameConstants.MENUSCREEN_ROWS * 5,
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 16,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 2,
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 17,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 3,
                 Color.TRANSPARENT, 0,
                 getContext().getString(R.string.optKeepJoystickP2),
                 Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN),
                 TextButtonComponent.TEXT_ALIGN.ALIGN_LEFT,
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS / 3,
-                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 6);
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 11);
     }
 
     /**
