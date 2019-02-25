@@ -197,7 +197,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         float[] positions = {0, screenWidth / 2};
         gradientLeftAttack = new LinearGradient(0, screenHeight, screenWidth, screenHeight, leftgradientColors, positions, Shader.TileMode.CLAMP);
         gradientRightAttack = new LinearGradient(0, screenWidth, screenWidth, screenHeight, rightgradientColors, positions, Shader.TileMode.CLAMP);
-        setGradients();
+        setAttackIndicator();
 
         //Pause button
         btnPause = new ButtonComponent(context,
@@ -285,13 +285,13 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
             this.playerTwo.respawn();
         }
         //Gradients
-        setGradients();
+        setAttackIndicator();
     }
 
     /**
-     * Sets the gradient of the main game scene depending on the attack and defense modes
+     * Sets the rect indicating the attack and defense modes
      */
-    public void setGradients() {
+    public void setAttackIndicator() {
         if (gameMode == GAMEMODE.MODE_CRSH_2P || gameMode == GAMEMODE.MODE_NRML_2P) {
             if (playerOne.isOnAttack() && !playerTwo.isOnAttack()) {
                 gradientPaint.setShader(gradientRightAttack);

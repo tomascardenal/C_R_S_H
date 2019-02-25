@@ -37,6 +37,10 @@ public class VisualTimerComponent extends DrawableComponent {
      */
     private Rect area;
     /**
+     * The border rectangle
+     */
+    private Rect borderRect;
+    /**
      * The area to show the time left
      */
     private Rect leftTime;
@@ -85,6 +89,15 @@ public class VisualTimerComponent extends DrawableComponent {
         this.borderPaint = new Paint();
         this.borderPaint.setStyle(Paint.Style.STROKE);
         this.borderPaint.setStrokeWidth(gameCallback.tileSizeReference / 10);
+
+        this.borderRect = new Rect(
+                (int)(area.left+borderPaint.getStrokeWidth()/2),
+                (int)(area.top+borderPaint.getStrokeWidth()/2),
+                (int)(area.right-borderPaint.getStrokeWidth()/2),
+                (int)(area.bottom-borderPaint.getStrokeWidth()/2)
+        );
+
+
         this.leftPaint = new Paint();
         this.leftPaint.setShader(new LinearGradient(this.area.left, this.area.top + this.area.height() / 2, this.area.right, this.area.bottom - this.area.height() / 2, Color.GREEN, Color.RED, Shader.TileMode.CLAMP));
 
@@ -127,6 +140,7 @@ public class VisualTimerComponent extends DrawableComponent {
     public void draw(Canvas c) {
         c.drawRect(pastTime, pastPaint);
         c.drawRect(leftTime, leftPaint);
+        c.drawRect(borderRect, borderPaint);
     }
 
     /**
