@@ -42,6 +42,10 @@ public class NewGameScene extends SceneCrsh {
      * Button for choosing CRSH mode
      */
     private ButtonComponent btnCRSHmode;
+    /**
+     * Button for game settings
+     */
+    private ButtonComponent btnGameSettings;
 
     /**
      * Starts a new game menu
@@ -66,6 +70,8 @@ public class NewGameScene extends SceneCrsh {
 
         //Buttons
         Typeface homespun = Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN);
+
+        backBtn.setSceneId(0);
 
         btnVsCOM = new ButtonComponent(context, homespun, context.getString(R.string.btnVsCom),
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 2,
@@ -101,8 +107,15 @@ public class NewGameScene extends SceneCrsh {
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 12,
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 7, Color.BLUE, 150, true, 99);
 
+        btnGameSettings = new ButtonComponent(context, Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_AWESOME), context.getString(R.string.btnGameSettings),
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 14,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 6,
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 16,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 7, Color.GRAY, 100, true, 7);
+        btnGameSettings.setClickEffectParameters(Color.GRAY,Color.DKGRAY, 190,50);
+
         btnNormalMode.setHeldDown(true);
-        btnPvP.setHeldDown(true);
+        btnPvP.setHeldDown(false);
     }
 
     /**
@@ -131,6 +144,7 @@ public class NewGameScene extends SceneCrsh {
         btnNormalMode.draw(c);
         btnCRSHmode.draw(c);
         btnStartGame.draw(c);
+        btnGameSettings.draw(c);
     }
 
     /**
@@ -144,6 +158,9 @@ public class NewGameScene extends SceneCrsh {
         switch (action) {
             case MotionEvent.ACTION_DOWN:           // First finger
             case MotionEvent.ACTION_POINTER_DOWN:  // Second finger and so on
+                if(isClick(btnGameSettings,event)){
+                    btnGameSettings.setHeldDown(true);
+                }
                 break;
 
             case MotionEvent.ACTION_UP:                     // Last finger up
@@ -159,12 +176,21 @@ public class NewGameScene extends SceneCrsh {
                     togglePlayerModeButtons(false);
                 }
                 if (isClick(backBtn, event)) {
-                    return 0;
+                    return backBtn.getSceneId();
+                }
+                if (isClick(btnGameSettings, event)) {
+                    return btnGameSettings.getSceneId();
                 }
                 if (isClick(btnStartGame, event)) {
                     return btnStartGame.getSceneId();
                 }
             case MotionEvent.ACTION_MOVE: // Any finger moves
+                if (!isClickByAny(btnGameSettings, event) && btnGameSettings.isHeldDown()) {
+                    btnGameSettings.setHeldDown(false);
+                }
+                if (isClickByAny(btnGameSettings, event) && !btnGameSettings.isHeldDown()) {
+                    btnGameSettings.setHeldDown(true);
+                }
                 break;
             default:
                 Log.i("Other", "Undefined action: " + action);

@@ -12,6 +12,7 @@ import android.view.SurfaceView;
 
 import com.example.tomascrd.c_r_s_h.R;
 import com.example.tomascrd.c_r_s_h.scenes.CreditScene;
+import com.example.tomascrd.c_r_s_h.scenes.GameSettingsScene;
 import com.example.tomascrd.c_r_s_h.scenes.MainGameScene;
 import com.example.tomascrd.c_r_s_h.scenes.MainMenuScene;
 import com.example.tomascrd.c_r_s_h.scenes.MapCreatorScene;
@@ -175,6 +176,13 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
                             currentScene = new MapCreatorScene(context, newScene, screenWidth, screenHeight, this);
                         }
                         break;
+                    case 7://GameSettingsScene
+                        if (loadSavedScene && savedScene != null && savedScene instanceof GameSettingsScene) {
+                            currentScene = savedScene;
+                        } else {
+                            currentScene = new GameSettingsScene(context, newScene, screenWidth, screenHeight, this);
+                        }
+                        break;
                     case 97: //MainGameScene GAMEMODE.MODE_NRML_COM
                         if (loadSavedScene && savedScene != null && savedScene instanceof MainGameScene && ((MainGameScene) savedScene).gameMode == MainGameScene.GAMEMODE.MODE_NRML_COM) {
                             currentScene = savedScene;
@@ -184,7 +192,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
                             mainGameScene.reloadMap();
                             currentScene = mainGameScene;
                         }
-                        if(!loader.loadedTiles){
+                        if (!loader.loadedTiles) {
                             loader.loadTiles();
                         }
                         break;
@@ -197,7 +205,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
                             mainGameScene.reloadMap();
                             currentScene = mainGameScene;
                         }
-                        if(!loader.loadedTiles){
+                        if (!loader.loadedTiles) {
                             loader.loadTiles();
                         }
                         break;
@@ -220,7 +228,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
                             mainGameScene.reloadMap();
                             currentScene = mainGameScene;
                         }
-                        if(!loader.loadedTiles){
+                        if (!loader.loadedTiles) {
                             loader.loadTiles();
                         }
                         break;

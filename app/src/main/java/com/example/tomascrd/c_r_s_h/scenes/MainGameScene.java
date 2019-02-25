@@ -164,7 +164,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         int top = this.mapLoad.tileArray[0][0].getCollisionRect().top;
         int right = this.mapLoad.tileArray[0][GameConstants.MAPAREA_COLUMNS - 1].getCollisionRect().right;
         int bottom = this.mapLoad.tileArray[0][GameConstants.MAPAREA_COLUMNS - 1].getCollisionRect().bottom;
-        this.timer = new VisualTimerComponent(this.context, this, new Rect(left, top, right, bottom));
+        this.timer = new VisualTimerComponent(this.context, this, new Rect(left, top, right, bottom), VisualTimerComponent.TIMER_SPEED.TIMER_FAST);
 
         //Initialize players
         PointF playerOneCenter = new PointF(mapLoad.tileArray[2][2].getCollisionRect().exactCenterX(), mapLoad.tileArray[2][2].getCollisionRect().exactCenterY());
@@ -266,7 +266,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
             int top = this.mapLoad.tileArray[0][0].getCollisionRect().top;
             int right = this.mapLoad.tileArray[GameConstants.MAPAREA_ROWS - 2][0].getCollisionRect().right;
             int bottom = this.mapLoad.tileArray[GameConstants.MAPAREA_ROWS - 2][0].getCollisionRect().bottom;
-            this.timer = new VisualTimerComponent(this.context, this, new Rect(left, top, right, bottom));
+            this.timer = new VisualTimerComponent(this.context, this, new Rect(left, top, right, bottom), VisualTimerComponent.TIMER_SPEED.TIMER_FAST);
         }else{
             this.timer.resetTimer();
         }

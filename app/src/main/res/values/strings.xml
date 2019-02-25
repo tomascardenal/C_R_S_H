@@ -51,4 +51,5 @@
     <string name="btnVsCom" translatable="false">P1 vs. COM</string>
     <string name="btnPvP" translatable="false">P1 vs. P2</string>
     <string name="link" translatable="false"></string>
+    <string name="btnGameSettings" translatable="false"></string>
 </resources>

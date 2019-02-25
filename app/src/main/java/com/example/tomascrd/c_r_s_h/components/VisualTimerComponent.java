@@ -23,6 +23,16 @@ import java.util.TimerTask;
 public class VisualTimerComponent extends DrawableComponent {
 
     /**
+     * Describes the possible timer speeds to set
+     */
+    public enum TIMER_SPEED {
+        TIMER_SLOW,
+        TIMER_MID,
+        TIMER_FAST,
+        TIMER_OHNO
+    }
+
+    /**
      * The area to draw this timer to
      */
     private Rect area;
@@ -61,15 +71,16 @@ public class VisualTimerComponent extends DrawableComponent {
      * @param c            The context for the Timer
      * @param gameCallback The current game instance
      * @param area         The area to draw this timer to
+     * @param speed        The initial speed of this timer
      */
-    public VisualTimerComponent(Context c, MainGameScene gameCallback, Rect area) {
+    public VisualTimerComponent(Context c, MainGameScene gameCallback, Rect area, TIMER_SPEED speed) {
         this.context = c;
         this.gameCallback = gameCallback;
         this.area = area;
+
         this.leftTime = new Rect(area.left, area.top, area.right, area.bottom);
         this.pastTime = new Rect(area.left, area.top, area.left, area.bottom);
-        this.speed = 1;
-
+        setTimerSpeed(speed);
 
         this.borderPaint = new Paint();
         this.borderPaint.setStyle(Paint.Style.STROKE);
@@ -123,7 +134,20 @@ public class VisualTimerComponent extends DrawableComponent {
      *
      * @speed the new speed
      */
-    public void setTimerSpeed(int speed) {
-        this.speed = speed;
+    public void setTimerSpeed(TIMER_SPEED speed) {
+        switch (speed) {
+            case TIMER_SLOW:
+                this.speed = 1;
+                break;
+            case TIMER_MID:
+                this.speed = 3;
+                break;
+            case TIMER_FAST:
+                this.speed = 6;
+                break;
+            case TIMER_OHNO:
+                this.speed = 12;
+                break;
+        }
     }
 }

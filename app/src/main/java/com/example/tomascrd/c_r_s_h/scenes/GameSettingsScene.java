@@ -16,31 +16,12 @@ import com.example.tomascrd.c_r_s_h.components.TextButtonComponent;
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
 import com.example.tomascrd.c_r_s_h.core.GameEngine;
 
-//TODO implement
-
-/**
- * Represents the options menu
- *
- * @author Tomás Cardenal López
- */
-public class OptionsScene extends SceneCrsh {
+public class GameSettingsScene extends SceneCrsh {
 
     /**
      * Options text painter
      */
     private Paint pOptionsText;
-    /**
-     * Music toggle button
-     */
-    private TextButtonComponent btnMusic;
-    /**
-     * Vibration toggle button
-     */
-    private TextButtonComponent btnVibrate;
-    /**
-     * Sound effects toggle button
-     */
-    private TextButtonComponent btnEffects;
     /**
      * Keep joystick velocity toggle button for player one
      */
@@ -60,7 +41,7 @@ public class OptionsScene extends SceneCrsh {
      * @param screenHeight   this screen's height
      * @param engineCallback callback to access gameEngine data
      */
-    public OptionsScene(Context context, int id, int screenWidth, int screenHeight, GameEngine engineCallback) {
+    public GameSettingsScene(Context context, int id, int screenWidth, int screenHeight, GameEngine engineCallback) {
         super(context, id, screenWidth, screenHeight);
         this.engineCallback = engineCallback;
 
@@ -83,44 +64,31 @@ public class OptionsScene extends SceneCrsh {
         this.gradientPaint.setShader(new LinearGradient(0, 0, screenWidth, screenHeight, Color.GREEN, Color.CYAN, Shader.TileMode.CLAMP));
 
         //Buttons
-        String musicValue = engineCallback.optionsManager.isPlayMusic() ? getContext().getString(R.string.btnMusicOn) : getContext().getString(R.string.btnMusicOff);
-        btnMusic = new TextButtonComponent(context, Typeface.createFromAsset(getContext().getAssets(), GameConstants.FONT_AWESOME), musicValue,
-                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 4,
+        String joystick1Value = engineCallback.optionsManager.isKeepJoystickVelocityP1() ? context.getString(R.string.btnKeepJoystickOn) : context.getString(R.string.btnKeepJoystickOff);
+        btnKeepJoystickVelocityP1 = new TextButtonComponent(context, Typeface.createFromAsset(getContext().getAssets(), GameConstants.FONT_AWESOME), joystick1Value,
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 11,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 2,
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 12,
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 3,
-                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 5,
-                screenHeight / GameConstants.MENUSCREEN_ROWS * 4,
                 Color.TRANSPARENT, 0,
-                getContext().getString(R.string.optMusic),
+                getContext().getString(R.string.optKeepJoystickP1),
                 Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN),
                 TextButtonComponent.TEXT_ALIGN.ALIGN_LEFT,
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS / 3,
-                screenWidth / GameConstants.MENUSCREEN_COLUMNS);
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 6);
 
-        String vibrateValue = engineCallback.optionsManager.isDoVibrate() ? getContext().getString(R.string.btnToggleOn) : getContext().getString(R.string.btnToggleOff);
-        btnVibrate = new TextButtonComponent(context, Typeface.createFromAsset(getContext().getAssets(), GameConstants.FONT_AWESOME), vibrateValue,
-                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 10,
-                screenHeight / GameConstants.MENUSCREEN_ROWS * 3,
+        String joystick2Value = engineCallback.optionsManager.isKeepJoystickVelocityP2() ? context.getString(R.string.btnKeepJoystickOn) : context.getString(R.string.btnKeepJoystickOff);
+        btnKeepJoystickVelocityP2 = new TextButtonComponent(context, Typeface.createFromAsset(getContext().getAssets(), GameConstants.FONT_AWESOME), joystick2Value,
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 11,
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 4,
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 12,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 5,
                 Color.TRANSPARENT, 0,
-                getContext().getString(R.string.optVibrate),
+                getContext().getString(R.string.optKeepJoystickP2),
                 Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN),
                 TextButtonComponent.TEXT_ALIGN.ALIGN_LEFT,
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS / 3,
-                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 7);
-
-        String effectsValue = engineCallback.optionsManager.isPlaySoundEffects() ? context.getString(R.string.btnPlayOn) : context.getString(R.string.btnPlayOff);
-        btnEffects = new TextButtonComponent(context, Typeface.createFromAsset(getContext().getAssets(), GameConstants.FONT_AWESOME), effectsValue,
-                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 16,
-                screenHeight / GameConstants.MENUSCREEN_ROWS * 3,
-                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 17,
-                screenHeight / GameConstants.MENUSCREEN_ROWS * 4,
-                Color.TRANSPARENT, 0,
-                getContext().getString(R.string.optSoundEffects),
-                Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN),
-                TextButtonComponent.TEXT_ALIGN.ALIGN_LEFT,
-                screenWidth / GameConstants.MENUSCREEN_COLUMNS / 3,
-                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 13);
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 6);
     }
 
     /**
@@ -142,12 +110,10 @@ public class OptionsScene extends SceneCrsh {
         c.drawPaint(gradientPaint);
         //Title text
         c.drawText(context.getString(R.string.btnOptions), screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9, screenHeight / GameConstants.MENUSCREEN_ROWS, pTitleText);
-        //Options text
         //Buttons
         backBtn.draw(c);
-        btnMusic.draw(c);
-        btnVibrate.draw(c);
-        btnEffects.draw(c);
+        btnKeepJoystickVelocityP1.draw(c);
+        btnKeepJoystickVelocityP2.draw(c);
     }
 
     /**
@@ -169,17 +135,14 @@ public class OptionsScene extends SceneCrsh {
                     if (engineCallback.loadSavedScene) {
                         return 99;
                     } else {
-                        return 0;
+                        return 1;
                     }
                 }
-                if (isClick(btnMusic, event)) {
-                    toggleMusic();
+                if (isClick(btnKeepJoystickVelocityP1, event)) {
+                    toggleJoystickVelocityModeP1();
                 }
-                if (isClick(btnVibrate, event)) {
-                    toggleVibration();
-                }
-                if (isClick(btnEffects, event)) {
-                    toggleEffects();
+                if (isClick(btnKeepJoystickVelocityP2, event)) {
+                    toggleJoystickVelocityModeP2();
                 }
             case MotionEvent.ACTION_MOVE: // Any finger moves
 
@@ -190,43 +153,30 @@ public class OptionsScene extends SceneCrsh {
         return this.id;
     }
 
-    /**
-     * Toggles the music theme on or off
-     */
-    public void toggleMusic() {
-        if (btnMusic.getText().equals(context.getString(R.string.btnMusicOn))) {
-            btnMusic.setText(context.getString(R.string.btnMusicOff));
-            engineCallback.optionsManager.setPlayMusic(false);
-        } else {
-            btnMusic.setText(context.getString(R.string.btnMusicOn));
-            engineCallback.optionsManager.setPlayMusic(true);
-        }
-        engineCallback.updateMusicPlayer();
-    }
 
     /**
-     * Toggles the vibration on or off
+     * Toggles the keep joystick velocity value on or off for player 1
      */
-    public void toggleVibration() {
-        if (btnVibrate.getText().equals(context.getString(R.string.btnToggleOn))) {
-            btnVibrate.setText(context.getString(R.string.btnToggleOff));
-            engineCallback.optionsManager.setDoVibrate(false);
+    public void toggleJoystickVelocityModeP1() {
+        if (btnKeepJoystickVelocityP1.getText().equals(context.getString(R.string.btnKeepJoystickOn))) {
+            btnKeepJoystickVelocityP1.setText(context.getString(R.string.btnKeepJoystickOff));
+            engineCallback.optionsManager.setKeepJoystickVelocityP1(false);
         } else {
-            btnVibrate.setText(context.getString(R.string.btnToggleOn));
-            engineCallback.optionsManager.setDoVibrate(true);
+            btnKeepJoystickVelocityP1.setText(context.getString(R.string.btnKeepJoystickOn));
+            engineCallback.optionsManager.setKeepJoystickVelocityP1(true);
         }
     }
 
     /**
-     * Toggles the sound effects on or off
+     * Toggles the keep joystick velocity value on or off for player 2
      */
-    public void toggleEffects() {
-        if (btnEffects.getText().equals(context.getString(R.string.btnPlayOn))) {
-            btnEffects.setText(context.getString(R.string.btnPlayOff));
-            engineCallback.optionsManager.setPlaySoundEffects(false);
+    public void toggleJoystickVelocityModeP2() {
+        if (btnKeepJoystickVelocityP2.getText().equals(context.getString(R.string.btnKeepJoystickOn))) {
+            btnKeepJoystickVelocityP2.setText(context.getString(R.string.btnKeepJoystickOff));
+            engineCallback.optionsManager.setKeepJoystickVelocityP2(false);
         } else {
-            btnEffects.setText(context.getString(R.string.btnPlayOn));
-            engineCallback.optionsManager.setPlaySoundEffects(true);
+            btnKeepJoystickVelocityP2.setText(context.getString(R.string.btnKeepJoystickOn));
+            engineCallback.optionsManager.setKeepJoystickVelocityP2(true);
         }
     }
 }
