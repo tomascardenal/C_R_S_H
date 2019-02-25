@@ -71,6 +71,8 @@ public class MapComponent extends DrawableComponent {
      */
     private AssetLoader loader;
 
+
+
     /**
      * Starts a map on this ID and with the indicated reference
      *
@@ -105,8 +107,10 @@ public class MapComponent extends DrawableComponent {
         this.yPos = hReference;
         this.xLeft = 3 * reference;
         this.yTop = reference + hReference;
-
-        loader.scaleBitmaps(this.reference, this.reference);
+        if(!loader.loadedTiles){
+            loader.loadTiles();
+        }
+        loader.scaleTileBitmaps(this.reference, this.reference);
         //Load map - test map for the moment
         if (mapID == 666) {
             if (!loadMap(666)) {

@@ -184,6 +184,9 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
                             mainGameScene.reloadMap();
                             currentScene = mainGameScene;
                         }
+                        if(!loader.loadedTiles){
+                            loader.loadTiles();
+                        }
                         break;
                     case 98: //MainGameScene GAMEMODE.MODE_CRSH_COM
                         if (loadSavedScene && savedScene != null && savedScene instanceof MainGameScene && ((MainGameScene) savedScene).gameMode == MainGameScene.GAMEMODE.MODE_CRSH_COM) {
@@ -193,6 +196,9 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
                             mainGameScene.setMapLoadID(currentMapID);
                             mainGameScene.reloadMap();
                             currentScene = mainGameScene;
+                        }
+                        if(!loader.loadedTiles){
+                            loader.loadTiles();
                         }
                         break;
                     case 99: //MainGameScene GAMEMODE.MODE_NRML_2P
@@ -213,6 +219,9 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
                             mainGameScene.setMapLoadID(currentMapID);
                             mainGameScene.reloadMap();
                             currentScene = mainGameScene;
+                        }
+                        if(!loader.loadedTiles){
+                            loader.loadTiles();
                         }
                         break;
                 }

@@ -3,13 +3,19 @@ package com.example.tomascrd.c_r_s_h.core;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import com.example.tomascrd.c_r_s_h.R;
+import com.example.tomascrd.c_r_s_h.components.BackgroundComponent;
 
 /**
  * Loads data from assets
  */
 public class AssetLoader {
+    /**
+     * Application context
+     */
+    private Context context;
     /**
      * Border tile bitmap
      */
@@ -62,6 +68,15 @@ public class AssetLoader {
      * Grass tiles, down right corner
      */
     public Bitmap tileGrassDownRight;
+    /**
+     * Indicates if the tiles were loaded
+     */
+    public boolean loadedTiles;
+    /**
+     * Indicates the previous loaded sky hour
+     */
+    public int previousHour;
+
 
 
     /**
@@ -70,28 +85,18 @@ public class AssetLoader {
      * @param context the application context
      */
     public AssetLoader(Context context) {
-        this.tileBorder = BitmapFactory.decodeResource(context.getResources(), R.mipmap.tile_border);
-        this.tilePath = BitmapFactory.decodeResource(context.getResources(), R.mipmap.tile_path);
-        this.tileBreakOne = BitmapFactory.decodeResource(context.getResources(), R.mipmap.tile_breakone);
-        this.tileBreakTwo = BitmapFactory.decodeResource(context.getResources(), R.mipmap.tile_breaktwo);
-        this.tileGrassMid = BitmapFactory.decodeResource(context.getResources(), R.mipmap.tile_grass_genial);
-        this.tileGrassUp = BitmapFactory.decodeResource(context.getResources(), R.mipmap.tile_grass_up);
-        this.tileGrassDown = BitmapFactory.decodeResource(context.getResources(), R.mipmap.tile_grass_down);
-        this.tileGrassLeft = BitmapFactory.decodeResource(context.getResources(), R.mipmap.tile_grass_left);
-        this.tileGrassRight = BitmapFactory.decodeResource(context.getResources(), R.mipmap.tile_grass_right);
-        this.tileGrassUpLeft = BitmapFactory.decodeResource(context.getResources(), R.mipmap.tile_grass_upleft);
-        this.tileGrassUpRight = BitmapFactory.decodeResource(context.getResources(), R.mipmap.tile_grass_upright);
-        this.tileGrassDownLeft = BitmapFactory.decodeResource(context.getResources(), R.mipmap.tile_grass_downleft);
-        this.tileGrassDownRight = BitmapFactory.decodeResource(context.getResources(), R.mipmap.tile_grass_downright);
+        this.context = context;
+        this.loadedTiles = false;
+        this.previousHour = -1;
     }
 
     /**
      * Scales the bitmaps and prepares them to be drawn on screen
      *
-     * @param width
-     * @param height
+     * @param width  the width to scale
+     * @param height the height to scale
      */
-    public void scaleBitmaps(int width, int height) {
+    public void scaleTileBitmaps(int width, int height) {
         this.tileBorder = Bitmap.createScaledBitmap(this.tileBorder, width, height, true);
         this.tilePath = Bitmap.createScaledBitmap(this.tilePath, width, height, true);
         this.tileBreakOne = Bitmap.createScaledBitmap(this.tileBreakOne, width, height, true);
@@ -105,5 +110,23 @@ public class AssetLoader {
         this.tileGrassUpRight = Bitmap.createScaledBitmap(this.tileGrassUpRight, width, height, true);
         this.tileGrassDownLeft = Bitmap.createScaledBitmap(this.tileGrassDownLeft, width, height, true);
         this.tileGrassDownRight = Bitmap.createScaledBitmap(this.tileGrassDownRight, width, height, true);
+    }
+
+
+    public void loadTiles() {
+        this.tileBorder = BitmapFactory.decodeResource(context.getResources(), R.mipmap.tile_border);
+        this.tilePath = BitmapFactory.decodeResource(context.getResources(), R.mipmap.tile_path);
+        this.tileBreakOne = BitmapFactory.decodeResource(context.getResources(), R.mipmap.tile_breakone);
+        this.tileBreakTwo = BitmapFactory.decodeResource(context.getResources(), R.mipmap.tile_breaktwo);
+        this.tileGrassMid = BitmapFactory.decodeResource(context.getResources(), R.mipmap.tile_grass_genial);
+        this.tileGrassUp = BitmapFactory.decodeResource(context.getResources(), R.mipmap.tile_grass_up);
+        this.tileGrassDown = BitmapFactory.decodeResource(context.getResources(), R.mipmap.tile_grass_down);
+        this.tileGrassLeft = BitmapFactory.decodeResource(context.getResources(), R.mipmap.tile_grass_left);
+        this.tileGrassRight = BitmapFactory.decodeResource(context.getResources(), R.mipmap.tile_grass_right);
+        this.tileGrassUpLeft = BitmapFactory.decodeResource(context.getResources(), R.mipmap.tile_grass_upleft);
+        this.tileGrassUpRight = BitmapFactory.decodeResource(context.getResources(), R.mipmap.tile_grass_upright);
+        this.tileGrassDownLeft = BitmapFactory.decodeResource(context.getResources(), R.mipmap.tile_grass_downleft);
+        this.tileGrassDownRight = BitmapFactory.decodeResource(context.getResources(), R.mipmap.tile_grass_downright);
+        loadedTiles = true;
     }
 }

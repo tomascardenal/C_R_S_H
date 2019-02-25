@@ -55,7 +55,7 @@ public class NewGameScene extends SceneCrsh {
         super(context, id, screenWidth, screenHeight);
         //Title text
         pTitleText = new Paint();
-        pTitleText.setTypeface(Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_KARMAFUTURE));
+        pTitleText.setTypeface(Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN));
         pTitleText.setColor(Color.BLACK);
         pTitleText.setTextAlign(Paint.Align.CENTER);
         pTitleText.setTextSize((float) ((screenHeight / GameConstants.MENUSCREEN_COLUMNS) * 2));

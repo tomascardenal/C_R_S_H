@@ -267,6 +267,8 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
             int right = this.mapLoad.tileArray[GameConstants.MAPAREA_ROWS - 2][0].getCollisionRect().right;
             int bottom = this.mapLoad.tileArray[GameConstants.MAPAREA_ROWS - 2][0].getCollisionRect().bottom;
             this.timer = new VisualTimerComponent(this.context, this, new Rect(left, top, right, bottom));
+        }else{
+            this.timer.resetTimer();
         }
 
         //Player One
