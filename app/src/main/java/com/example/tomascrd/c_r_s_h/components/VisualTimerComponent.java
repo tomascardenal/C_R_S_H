@@ -7,12 +7,9 @@ import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Shader;
-import android.util.Log;
 
 import com.example.tomascrd.c_r_s_h.scenes.MainGameScene;
 
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * A game component to time a turn switch and implement it's drawing on screen

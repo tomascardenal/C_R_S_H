@@ -4,7 +4,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.example.tomascrd.c_r_s_h.components.VisualTimerComponent;
-import com.example.tomascrd.c_r_s_h.scenes.GameSettingsScene;
+
+import java.io.DataOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Options manager for the game
@@ -38,6 +42,10 @@ public class OptionsManager {
      */
     private VisualTimerComponent.TIMER_SPEED timerSpeed;
     /**
+     * Table containing the map names
+     */
+    private ArrayList<MapReference> mapNames;
+    /**
      * SharedPreferences to store the options
      */
     private SharedPreferences preferences;
@@ -45,6 +53,11 @@ public class OptionsManager {
      * The application's Context
      */
     private Context context;
+
+    public final class MapReference {
+        public int mapId;
+        public String mapName;
+    }
 
     /**
      * Default constructor, initalizes a new OptionsManager with the given Context
@@ -66,7 +79,7 @@ public class OptionsManager {
         doVibrate = preferences.getBoolean(GameConstants.PREFERENCES_VIBRATE, true);
         keepJoystickVelocityP1 = preferences.getBoolean(GameConstants.PREFERENCES_KEEPJOYSTICKVELOCITY_P1, true);
         keepJoystickVelocityP2 = preferences.getBoolean(GameConstants.PREFERENCES_KEEPJOYSTICKVELOCITY_P2, true);
-        timerSpeed = VisualTimerComponent.intToTimerSpeed(preferences.getInt(GameConstants.PREFERENCES_TIMERSPEED,1));
+        timerSpeed = VisualTimerComponent.intToTimerSpeed(preferences.getInt(GameConstants.PREFERENCES_TIMERSPEED, 1));
     }
 
     /**
@@ -189,5 +202,19 @@ public class OptionsManager {
      */
     public void setTimerSpeed(VisualTimerComponent.TIMER_SPEED timerSpeed) {
         this.timerSpeed = timerSpeed;
+    }
+
+    //TODO data consistency on maps and saving map names
+    public boolean saveMapList() {
+        try (FileOutputStream fos = context.openFileOutput(GameConstants.MAPLIST_FILE_NAME, Context.MODE_PRIVATE)) {
+            DataOutputStream output = new DataOutputStream(fos);
+            for (int i = 0; i < mapNames.size(); i++) {
+                MapReference currentRef = mapNames.get(i);
+
+            }
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
     }
 }

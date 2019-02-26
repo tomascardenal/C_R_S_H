@@ -6,16 +6,14 @@ package com.example.tomascrd.c_r_s_h.components;
  *
  * @author Tomás Cardenal López
  */
-public class PowerUpComponent extends DrawableComponent {
+public class PowerUpComponent {
     /**
      * Enumerates the various types of power ups
      */
     public enum POWERUP_TYPE {
         POWERUP_1UP,
-        POWERUP_3UP,
-        POWERUP_TIME_REDUCTION,
+        POWERUP_TIME_SPEEDER,
         POWERUP_ONE_HIT_WEAPON,
-        POWERUP_FIRE_WEAPON,
         POWERUP_BLOCK,
         POWERUP_INVINCIBLE,
         POWERUP_SLOWDOWN

@@ -12,6 +12,11 @@ import android.view.MotionEvent;
 import com.example.tomascrd.c_r_s_h.R;
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
 
+/**
+ * Represents a keyboard for user input
+ *
+ * @author Tomás Cardenal López
+ */
 public class KeyboardComponent extends DrawableComponent {
 
     /**
@@ -87,14 +92,14 @@ public class KeyboardComponent extends DrawableComponent {
                         startYTop + keyboardReference * (i + 1),
                         Color.BLACK, 100, true, -1
                 );
-                keyboardButtons[i][j].drawOnlyBorder(true);
+                keyboardButtons[i][j].drawOnlyBorder(true, Color.BLACK);
             }
         }
         Rect lastKeyRect = keyboardButtons[keyboardButtons.length - 1][keyboardButtons[keyboardButtons.length - 1].length - 1].getBtnRect();
         this.btnBackSpace = new ButtonComponent(context, Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_AWESOME), context.getString(R.string.btnBackspace),
                 lastKeyRect.left + lastKeyRect.width(), lastKeyRect.top, lastKeyRect.right + lastKeyRect.width(), lastKeyRect.bottom,
                 Color.BLACK, 100, true, -1);
-        this.btnBackSpace.drawOnlyBorder(true);
+        this.btnBackSpace.drawOnlyBorder(true, Color.BLACK);
 
         int left = keyboardButtons[0][0].btnRect.left;
         int top = keyboardButtons[0][0].btnRect.top - keyboardButtons[0][0].btnRect.height();
@@ -157,30 +162,67 @@ public class KeyboardComponent extends DrawableComponent {
         switch (action) {
             case MotionEvent.ACTION_DOWN:           // First finger
             case MotionEvent.ACTION_POINTER_DOWN:  // Second finger and so on
+                for (ButtonComponent[] row : keyboardButtons) {
+                    for (ButtonComponent key : row) {
+                        if (isClick(key, event)) {
+                            key.setKeyboardEffect(true);
+                            key.pointerId = event.getPointerId(event.getActionIndex());
+                        }
+                    }
+                }
+                if (isClick(btnBackSpace, event)) {
+                    btnBackSpace.setKeyboardEffect(true);
+                    btnBackSpace.pointerId = event.getPointerId(event.getActionIndex());
+                }
                 break;
             case MotionEvent.ACTION_UP:                     // Last finger up
             case MotionEvent.ACTION_POINTER_UP:  // Any other finger up
-
                 for (ButtonComponent[] row : keyboardButtons) {
                     for (ButtonComponent key : row) {
                         if (isClick(key, event)) {
                             if (userInput.length() <= MAX_CHAR) {
                                 userInput += key.getText();
                             }
+                            key.setKeyboardEffect(false);
+                        }
+                        for (int i = 0; i < event.getPointerCount(); i++) {
+                            if (event.getPointerId(i) == key.pointerId) {
+                                key.setKeyboardEffect(false);
+                            }
                         }
                     }
                 }
                 if (isClick(btnBackSpace, event)) {
+                    btnBackSpace.setKeyboardEffect(false);
                     if (userInput.length() > 0) {
                         userInput = userInput.substring(0, userInput.length() - 1);
+                    }
+                    for (int i = 0; i < event.getPointerCount(); i++) {
+                        if (event.getPointerId(i) == btnBackSpace.pointerId) {
+                            btnBackSpace.setKeyboardEffect(false);
+                        }
                     }
                 }
                 break;
             case MotionEvent.ACTION_MOVE: // Any finger moves
+                for (ButtonComponent[] row : keyboardButtons) {
+                    for (ButtonComponent key : row) {
+                        if (!isClickByAny(key, event)) {
+                            key.setKeyboardEffect(false);
+                        }
+                        if (isClickByAny(key, event)) {
+                            key.setKeyboardEffect(true);
+                        }
+                    }
+                }
+                if (!isClickByAny(btnBackSpace, event)) {
+                    btnBackSpace.setKeyboardEffect(false);
+                }
+                if (isClickByAny(btnBackSpace, event)) {
+                    btnBackSpace.setKeyboardEffect(true);
+                }
 
                 break;
-            default:
-                Log.i("Other", "Undefined action: " + action);
         }
     }
 
@@ -193,5 +235,21 @@ public class KeyboardComponent extends DrawableComponent {
      */
     public boolean isClick(ButtonComponent btn, MotionEvent event) {
         return btn.btnRect.contains((int) event.getX(event.getActionIndex()), (int) event.getY(event.getActionIndex()));
+    }
+
+    /**
+     * Determines if a rectangle on a button is clicked by any of the pointers acting on the event
+     *
+     * @param btn   the button
+     * @param event the event
+     * @return true if the button was clicked or touched by any of the pointers
+     */
+    public boolean isClickByAny(ButtonComponent btn, MotionEvent event) {
+        for (int i = 0; i < event.getPointerCount(); i++) {
+            if (btn.btnRect.contains((int) event.getX(i), (int) event.getY(i))) {
+                return true;
+            }
+        }
+        return false;
     }
 }

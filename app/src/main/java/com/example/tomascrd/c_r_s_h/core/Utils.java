@@ -1,18 +1,7 @@
 package com.example.tomascrd.c_r_s_h.core;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.text.InputType;
-import android.util.Log;
-import android.widget.EditText;
 
-import com.example.tomascrd.c_r_s_h.R;
-
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Random;
 
 /**
@@ -49,5 +38,4 @@ public class Utils {
         Random r = new Random();
         return r.nextInt((max - min) + 1) + min;
     }
-
 }

@@ -263,6 +263,11 @@ public class GameSettingsScene extends SceneCrsh {
         }
     }
 
+    /**
+     * Toggles between the speed buttons
+     *
+     * @param speed The new speed clicked
+     */
     public void toggleSpeedButtons(VisualTimerComponent.TIMER_SPEED speed) {
         switch (speed) {
             case TIMER_SLOW:

@@ -114,7 +114,6 @@ public class PauseMenuComponent extends DrawableComponent {
         infoPaint.setTextSize(gameSceneState.tileSizeReference * 0.75f);
 
         //Buttons
-
         Typeface fontawesome = Typeface.createFromAsset(this.context.getAssets(), GameConstants.FONT_AWESOME);
         this.btnUnpause = new ButtonComponent(context, fontawesome,
                 context.getString(R.string.btnUnpause),

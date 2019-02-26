@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
 
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
 import com.example.tomascrd.c_r_s_h.core.AssetLoader;
@@ -296,7 +295,6 @@ public class MapComponent extends DrawableComponent {
             for (int i = 0; i < dataArray.length; i++) {
                 for (int j = 0; j < dataArray[i].length; j++) {
                     dataArray[i][j] = TileComponent.intToTileType(input.readInt());
-                    Log.i("TEST LOADING ", "" + dataArray[i][j]);
                 }
             }
         } catch (IOException e) {
@@ -318,7 +316,6 @@ public class MapComponent extends DrawableComponent {
                 DataOutputStream output = new DataOutputStream(fos);
                 for (int i = 0; i < dataArray.length; i++) {
                     for (int j = 0; j < dataArray[i].length; j++) {
-                        Log.i("TEST SAVING ", "" + dataArray[i][j]);
                         output.writeInt(TileComponent.tileTypeToInt(dataArray[i][j]));
                     }
                 }

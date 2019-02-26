@@ -3,10 +3,8 @@ package com.example.tomascrd.c_r_s_h.core;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 
 import com.example.tomascrd.c_r_s_h.R;
-import com.example.tomascrd.c_r_s_h.components.BackgroundComponent;
 
 /**
  * Loads data from assets

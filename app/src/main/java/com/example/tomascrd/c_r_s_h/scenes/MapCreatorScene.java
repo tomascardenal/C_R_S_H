@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -134,6 +133,8 @@ public class MapCreatorScene extends SceneCrsh {
             case MotionEvent.ACTION_POINTER_DOWN:  // Second finger and so on
                 if (!onPause) {
 
+                } else if (saveMenu.isOnKeyboard()) {
+                    onSaveMenu(event);
                 }
                 break;
             case MotionEvent.ACTION_UP:                     // Last finger up
@@ -153,6 +154,8 @@ public class MapCreatorScene extends SceneCrsh {
             case MotionEvent.ACTION_MOVE: // Any finger moves
                 if (!onPause) {
 
+                } else if (saveMenu.isOnKeyboard()) {
+                    onSaveMenu(event);
                 }
                 break;
             default:

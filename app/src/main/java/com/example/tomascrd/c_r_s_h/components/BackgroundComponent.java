@@ -1,7 +1,6 @@
 package com.example.tomascrd.c_r_s_h.components;
 
 import android.graphics.Bitmap;
-import android.graphics.Matrix;
 import android.graphics.PointF;
 
 /**
@@ -19,28 +18,6 @@ public class BackgroundComponent {
      * This backgrounds' image
      */
     public Bitmap image;
-
-    /**
-     * Initializes a background on the indicated positions
-     *
-     * @param image the image
-     * @param x     the x coordinate
-     * @param y     the y coordinate
-     */
-    public BackgroundComponent(Bitmap image, float x, float y) {
-        this.image = image;
-        this.position = new PointF(x, y);
-    }
-
-    /**
-     * Initializes a background for the indicated screen width
-     *
-     * @param image       the image
-     * @param screenWidth the screen width
-     */
-    public BackgroundComponent(Bitmap image, int screenWidth) {
-        this(image, screenWidth - image.getWidth(), 0);
-    }
 
     /**
      * Initializes a background for the indicated screen width and height
@@ -62,20 +39,4 @@ public class BackgroundComponent {
     public void moveX(int velocity) {
         position.x += velocity;
     }
-
-    /**
-     * Reverses this backgrounds' bitmap. Unused for the moment
-     *
-     * @param horizontally true for horizontal flip, false for vertical flip
-     */
-    public void reverseBitmap(boolean horizontally) {
-        Matrix matrix = new Matrix();
-        if (horizontally) {
-            matrix.preScale(-1, 1);
-        } else {
-            matrix.preScale(1, -1);
-        }
-        this.image = Bitmap.createBitmap(this.image, 0, 0, image.getWidth(), image.getHeight(), matrix, false);
-    }
-
 }

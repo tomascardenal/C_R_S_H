@@ -1,7 +1,6 @@
 package com.example.tomascrd.c_r_s_h.components;
 
 import android.graphics.PointF;
-import android.util.Log;
 
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
 import com.example.tomascrd.c_r_s_h.core.Utils;
@@ -136,7 +135,6 @@ public class PlayerComCrsh extends PlayerCrsh {
                 currentCycles = 0;
             }
         }
-        //Log.i("COM", "new movement on xVel: " + this.xVelocity + " yVel: " + this.yVelocity + "remaining cycles: " + currentCycles);
         super.move();
     }
 }

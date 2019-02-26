@@ -96,14 +96,6 @@ public class PlayerCrsh extends DrawableComponent {
      */
     protected int takehitCounter;
     /**
-     * Saves the Xvelocity values for restoring half the velocity on the bounceback stop cycles
-     */
-    protected float bouncebackRestoreX;
-    /**
-     * Saves the Yvelocity values for restoring half the velocity on the bounceback stop cycles
-     */
-    protected float bouncebackRestoreY;
-    /**
      * Indicates if this player is colliding against a border tile on the X coordinate with positive X velocity
      */
     protected boolean againstBorderXPositive;
@@ -413,7 +405,7 @@ public class PlayerCrsh extends DrawableComponent {
             TileComponent reposTile = mapCallback.tileArray[rowPosition][columnPosition];
             this.playerCollision.resetPosition(reposTile.collisionRect.exactCenterX(), reposTile.collisionRect.exactCenterY());
         }
-        Log.i("PLAYER " + this.playerId + " GRID POSITION ", "ROW:" + rowPosition + " COLUMN:" + columnPosition);
+        Log.i("CrshDebug", "Grid position p" + this.playerId + " row:" + rowPosition + " col:" + columnPosition);
     }
 
     /**
@@ -517,7 +509,7 @@ public class PlayerCrsh extends DrawableComponent {
             if (xMovedCircle.collision(currentTile.collisionRect)) {
                 switch (currentTile.tileType) {
                     case TILE_BORDER:
-                        Log.i("COLLISION", "BORDER TILE on X");
+                        Log.i("CrshDebug", "Collision border on X for p" + playerId);
                         if (xVelocity > 0) {
                             againstBorderXPositive = true;
                         } else if (xVelocity < 0) {
@@ -526,20 +518,18 @@ public class PlayerCrsh extends DrawableComponent {
                         xVelocity = 0;
                         break;
                     case TILE_BREAKONE:
-                        Log.i("COLLISION", "BREAKONE TILE on X");
+                        Log.i("CrshDebug", "Collision breakone on X for p" + playerId);
                         currentTile.tileType = TileComponent.TILE_TYPE.TILE_PATH;
                         currentTile.setPainter();
                         bounceBackSmall = true;
-                        bouncebackRestoreX = xVelocity;
                         xVelocity = xVelocity / GameConstants.BOUNCEBACK_SMALL_DIVISOR;
                         reverseXVelocity();
                         break;
                     case TILE_BREAKTWO:
-                        Log.i("COLLISION", "BREAKTWO TILE on Y");
+                        Log.i("CrshDebug", "Collision breaktwo on X for p" + playerId);
                         currentTile.tileType = TileComponent.TILE_TYPE.TILE_BREAKONE;
                         currentTile.setPainter();
                         bounceBackBig = true;
-                        bouncebackRestoreY = yVelocity;
                         xVelocity = xVelocity / GameConstants.BOUNCEBACK_BIG_DIVISOR;
                         reverseXVelocity();
                         break;
@@ -549,7 +539,7 @@ public class PlayerCrsh extends DrawableComponent {
             if (yMovedCircle.collision(currentTile.collisionRect)) {
                 switch (currentTile.tileType) {
                     case TILE_BORDER:
-                        Log.i("COLLISION", "BORDER TILE on Y");
+                        Log.i("CrshDebug", "Collision border on Y for p" + playerId);
                         if (yVelocity > 0) {
                             againstBorderYPositive = true;
                         } else if (yVelocity < 0) {
@@ -558,7 +548,7 @@ public class PlayerCrsh extends DrawableComponent {
                         yVelocity = 0;
                         break;
                     case TILE_BREAKONE:
-                        Log.i("COLLISION", "BREAKONE TILE on Y");
+                        Log.i("CrshDebug", "Collision breakone on Y for p" + playerId);
                         currentTile.tileType = TileComponent.TILE_TYPE.TILE_PATH;
                         currentTile.setPainter();
                         bounceBackSmall = true;
@@ -566,7 +556,7 @@ public class PlayerCrsh extends DrawableComponent {
                         reverseYVelocity();
                         break;
                     case TILE_BREAKTWO:
-                        Log.i("COLLISION", "BREAKTWO TILE on Y");
+                        Log.i("CrshDebug", "Collision breaktwo on Y for p" + playerId);
                         currentTile.tileType = TileComponent.TILE_TYPE.TILE_BREAKONE;
                         currentTile.setPainter();
                         bounceBackBig = true;
@@ -585,7 +575,7 @@ public class PlayerCrsh extends DrawableComponent {
         CircleComponent movedCircle = new CircleComponent(this.playerCollision.xPos + xVelocity, this.playerCollision.yPos + yVelocity, this.playerCollision.radius);
         CircleComponent opponentCircle = gameCallback.getOpponentCollisionComponent(this.playerId);
         if (movedCircle.collision(opponentCircle)) {
-            Log.i("Players collided!", "YEAH");
+            Log.i("CrshDebug", "Collision between players");
             if (this.isOnAttack()) {
                 gameCallback.hitOpponent(this.playerId);
             }

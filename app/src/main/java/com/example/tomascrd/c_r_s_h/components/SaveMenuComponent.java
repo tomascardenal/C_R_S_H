@@ -214,7 +214,7 @@ public class SaveMenuComponent extends DrawableComponent {
                 Color.TRANSPARENT, 0, false, -1);
 
         //KEYBOARD BUILDING
-        int offset = (int) this.borderPaint.getStrokeWidth() / 2;
+        int offset = (int) this.borderPaint.getStrokeWidth() / 4;
         Rect r = new Rect(this.borderRect.left + offset, this.borderRect.top + offset,
                 this.borderRect.right - offset, this.borderRect.bottom - offset);
         keyboard = new KeyboardComponent(context, r, (int) this.borderPaint.getStrokeWidth() / 4);
@@ -242,16 +242,14 @@ public class SaveMenuComponent extends DrawableComponent {
      */
     @Override
     public void draw(Canvas c) {
-        //Draw background and border
+        //Draw background
         c.drawRect(borderRect, backgroundPaint);
-        c.drawRect(borderRect, borderPaint);
 
         //Draw title pause text
         String pauseText;
         if (isConfirming) {
             pauseText = context.getString(R.string.confirmTitle);
-        }
-        if (onKeyboard) {
+        } else if (onKeyboard) {
             pauseText = context.getString(R.string.titleInsertName);
         } else {
             pauseText = context.getString(R.string.savemenuTitle);
@@ -277,6 +275,9 @@ public class SaveMenuComponent extends DrawableComponent {
             btnUnpause.draw(c);
             btnExitToMenu.draw(c);
         }
+
+        //Draw border
+        c.drawRect(borderRect, borderPaint);
     }
 
     /**

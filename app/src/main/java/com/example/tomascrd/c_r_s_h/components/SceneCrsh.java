@@ -1,7 +1,6 @@
 package com.example.tomascrd.c_r_s_h.components;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
@@ -43,10 +42,6 @@ public class SceneCrsh {
      * The screen height
      */
     public int screenHeight;
-    /**
-     * If avaliable, this scene's background image
-     */
-    public Bitmap backImage;
     /**
      * Callback to access the game engine, not used in default constructor
      */
@@ -288,23 +283,5 @@ public class SceneCrsh {
      */
     public void setScreenHeight(int screenHeight) {
         this.screenHeight = screenHeight;
-    }
-
-    /**
-     * Gets the background image from this scene
-     *
-     * @return the background image
-     */
-    public Bitmap getBackImage() {
-        return backImage;
-    }
-
-    /**
-     * Sets a new background image for this scene
-     *
-     * @param backImage the new background image
-     */
-    public void setBackImage(Bitmap backImage) {
-        this.backImage = backImage;
     }
 }

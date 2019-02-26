@@ -7,8 +7,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 
-//TODO Implement animated button with different rect border drawings
-
 /**
  * A button for the menus and interface for CRSH
  *
@@ -53,6 +51,10 @@ public class ButtonComponent extends DrawableComponent {
      */
     protected boolean clickEffect;
     /**
+     * Boolean which indicates if the keyboard click effect is on or not
+     */
+    private boolean keyboardEffect;
+    /**
      * Stroke width for click effect
      */
     private float strokeWidth;
@@ -68,6 +70,10 @@ public class ButtonComponent extends DrawableComponent {
      * Alpha value when held down
      */
     private int onClickAlpha;
+    /**
+     * Current pointer id
+     */
+    public int pointerId = -99;
 
     /**
      * Creates a Button with the given parameters and gray background color
@@ -94,6 +100,7 @@ public class ButtonComponent extends DrawableComponent {
         this.height = yBottom - yPos;
         this.btnRect = new Rect(xPos, yPos, xRight, yBottom);
         this.clickEffect = clickEffect;
+        this.keyboardEffect = false;
         this.sceneId = sceneId;
         this.onClickAlpha = 255;
 
@@ -175,13 +182,31 @@ public class ButtonComponent extends DrawableComponent {
      */
     @Override
     public void draw(Canvas c) {
-        if (isHeldDown() && clickEffect) {
+        if (isHeldDown() && clickEffect) {//Click effect drawing
+
+            pButton.setAlpha(this.onClickAlpha);
             c.drawRect(btnRect.left + this.strokeWidth * 2, btnRect.top + this.strokeWidth * 2, btnRect.right + this.strokeWidth * 2, btnRect.bottom + this.strokeWidth * 2, pClickShadow);
             c.drawRect(btnRect, pButton);
             c.drawRect(btnRect.left + (this.strokeWidth / 2), btnRect.top + (this.strokeWidth / 2), btnRect.right - (this.strokeWidth / 2), btnRect.bottom - (this.strokeWidth / 2), pClickBorder);
             c.drawText(getText(), btnRect.centerX(), btnRect.centerY() + height / 6, pText);
-            pButton.setAlpha(this.onClickAlpha);
-        } else {
+
+        } else if (keyboardEffect) {//Keyboard effect drawing
+
+            pButton.setAlpha(255);
+            int previousColor = pButton.getColor();
+            pButton.setColor(Color.LTGRAY);
+            pButton.setStyle(Paint.Style.FILL_AND_STROKE);
+            c.drawRect(btnRect, pButton);
+
+            pButton.setAlpha(this.alpha);
+            pButton.setColor(previousColor);
+            pButton.setStyle(Paint.Style.STROKE);
+            pButton.setStrokeWidth(pClickBorder.getStrokeWidth());
+
+            c.drawRect(btnRect, pButton);
+            c.drawText(getText(), btnRect.centerX(), btnRect.centerY() + height / 6, pText);
+
+        } else {//Regular drawing (or border only)
             pButton.setAlpha(this.alpha);
             c.drawRect(btnRect, pButton);
             c.drawText(getText(), btnRect.centerX(), btnRect.centerY() + height / 6, pText);
@@ -189,16 +214,31 @@ public class ButtonComponent extends DrawableComponent {
     }
 
     /**
-     * Sets the painter to draw the button or only it's border
+     * Sets the painter to draw the button or only it's border, asks for a new color
      *
      * @param value
+     * @param newColor the new color of the button
      */
-    public void drawOnlyBorder(boolean value) {
+    public void drawOnlyBorder(boolean value, int newColor) {
         if (value) {
             pButton.setStyle(Paint.Style.STROKE);
             pButton.setStrokeWidth(pClickBorder.getStrokeWidth());
         } else {
             pButton.setStyle(Paint.Style.FILL);
+        }
+        pButton.setColor(newColor);
+    }
+
+    /**
+     * Held down effect setter for keyboard keys
+     *
+     * @param heldDown the new value
+     */
+    public void setKeyboardEffect(boolean heldDown) {
+        if (heldDown) {
+            keyboardEffect = true;
+        } else {
+            keyboardEffect = false;
         }
     }
 

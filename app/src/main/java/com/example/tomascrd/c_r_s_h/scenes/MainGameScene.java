@@ -65,7 +65,6 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
      * Constant id for MainGameScene on CRSH/2players mode
      */
     public static final int CRSH_2P_ID = 100;
-
     /**
      * Map to load on the main game scene
      */
@@ -125,14 +124,6 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
      * Callback to access the game engine
      */
     private GameEngine engineCallback;
-    /**
-     * Gradient for left side attacking
-     */
-    private LinearGradient gradientLeftAttack;
-    /**
-     * Gradient for right side attacking
-     */
-    private LinearGradient gradientRightAttack;
     /**
      * Indicates whether the game is paused or not
      */
@@ -1006,16 +997,16 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
     public void setId() {
         switch (this.gameMode) {
             case MODE_NRML_COM:
-                this.id = 97;
+                this.id = NRML_COM_ID;
                 break;
             case MODE_CRSH_COM:
-                this.id = 98;
+                this.id = CRSH_COM_ID;
                 break;
             case MODE_NRML_2P:
-                this.id = 99;
+                this.id = NRML_2P_ID;
                 break;
             case MODE_CRSH_2P:
-                this.id = 100;
+                this.id = CRSH_2P_ID;
                 break;
         }
     }

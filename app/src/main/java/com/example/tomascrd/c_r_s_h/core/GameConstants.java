@@ -109,6 +109,10 @@ public final class GameConstants {
      */
     public final static String MAPFILE_NAME = "map.crsh";
     /**
+     * Reference name for the map list
+     */
+    public final static String MAPLIST_FILE_NAME = "maplist.crsh";
+    /**
      * Reference for the SharedPreferences
      */
     public final static String PREFERENCES_NAME = "options.crsh";
@@ -135,7 +139,7 @@ public final class GameConstants {
     /**
      * Reference for the timerSpeed option
      */
-    public final static String PREFERENCES_TIMERSPEED= "timerSpeed";
+    public final static String PREFERENCES_TIMERSPEED = "timerSpeed";
     /**
      * Array containing the values of the tile_types
      */
