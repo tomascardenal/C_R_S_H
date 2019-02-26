@@ -188,7 +188,7 @@ public class MapCreatorScene extends SceneCrsh {
                 currentMapName = saveMenu.keyboard.getUserInput();
                 Toast.makeText(this.context, context.getString(R.string.toastChangedNameTo) + currentMapName, Toast.LENGTH_SHORT).show();
                 saveMenu.setOnKeyboard(false);
-            } else if (isClick(saveMenu.getBtnConfirmNo(), event)) {
+            } else if (isClick(saveMenu.getBtnKeyConfirmNo(), event)) {
                 saveMenu.setOnKeyboard(false);
             }
         } else {
