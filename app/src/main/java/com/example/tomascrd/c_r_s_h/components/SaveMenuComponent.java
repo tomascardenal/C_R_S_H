@@ -37,6 +37,10 @@ public class SaveMenuComponent extends DrawableComponent {
      */
     private ButtonComponent btnLoadMap;
     /**
+     * Button for naming a map
+     */
+    private ButtonComponent btnNameMap;
+    /**
      * Button for confirming an action
      */
     private ButtonComponent btnConfirmYes;
@@ -76,6 +80,10 @@ public class SaveMenuComponent extends DrawableComponent {
      * Painter for border
      */
     private Paint borderPaint;
+    /**
+     * Painter for info
+     */
+    private Paint infoPaint;
 
     /**
      * Initializes a new PauseMenu
@@ -122,29 +130,39 @@ public class SaveMenuComponent extends DrawableComponent {
         pText.setTextAlign(Paint.Align.CENTER);
         pText.setTextSize(gameSceneState.tileSizeReference * 1.5f);
 
+        infoPaint = new Paint();
+        infoPaint.setTypeface(Typeface.createFromAsset(this.context.getAssets(), GameConstants.FONT_HOMESPUN));
+        infoPaint.setColor(Color.BLACK);
+        infoPaint.setTextAlign(Paint.Align.CENTER);
+        infoPaint.setTextSize(gameSceneState.tileSizeReference * 0.75f);
+
         //Buttons
         Typeface fontawesome = Typeface.createFromAsset(this.context.getAssets(), GameConstants.FONT_AWESOME);
 
         this.btnUnpause = new ButtonComponent(context, fontawesome,
                 context.getString(R.string.btnUnpause),
-                (int) (borderRect.exactCenterX() - gameSceneState.tileSizeReference * 2), (int) borderRect.exactCenterY() + gameSceneState.tileSizeReference,
-                (int) (borderRect.exactCenterX() + gameSceneState.tileSizeReference * 2), (int) (borderRect.exactCenterY() + gameSceneState.tileSizeReference * 3),
+                (int) (borderRect.exactCenterX() - gameSceneState.tileSizeReference * 2), (int) borderRect.exactCenterY() + gameSceneState.tileSizeReference * 3,
+                (int) (borderRect.exactCenterX() + gameSceneState.tileSizeReference * 2), (int) (borderRect.exactCenterY() + gameSceneState.tileSizeReference * 5),
                 Color.TRANSPARENT, 0,
                 false, -1);
 
         this.btnOptions = new ButtonComponent(context, fontawesome,
                 context.getString(R.string.btnOptionsOnPause),
-                btnUnpause.btnRect.left - btnUnpause.btnRect.width(), btnUnpause.btnRect.top + btnUnpause.btnRect.height(), btnUnpause.btnRect.left, btnUnpause.btnRect.bottom + btnUnpause.btnRect.height(), Color.TRANSPARENT, 0,
+                btnUnpause.btnRect.left - btnUnpause.btnRect.width(), btnUnpause.btnRect.top, btnUnpause.btnRect.left, btnUnpause.btnRect.bottom, Color.TRANSPARENT, 0,
                 false, -1);
 
         this.btnExitToMenu = new ButtonComponent(context, fontawesome,
                 context.getString(R.string.btnEndGame),
-                btnUnpause.btnRect.right, btnUnpause.btnRect.bottom, btnUnpause.btnRect.right + btnUnpause.btnRect.width(), btnUnpause.btnRect.bottom + btnUnpause.btnRect.height(), Color.TRANSPARENT, 0,
+                btnUnpause.btnRect.right, btnUnpause.btnRect.top, btnUnpause.btnRect.right + btnUnpause.btnRect.width(), btnUnpause.btnRect.bottom, Color.TRANSPARENT, 0,
                 false, -1);
 
         this.btnSaveMap = new ButtonComponent(context, fontawesome,
                 context.getString(R.string.btnSaveMap),
                 btnOptions.btnRect.left, btnOptions.btnRect.top - btnOptions.btnRect.height() * 2, btnOptions.btnRect.left + btnOptions.btnRect.width(), btnOptions.btnRect.top - btnOptions.btnRect.height(), Color.TRANSPARENT, 0,
+                false, -1);
+
+        this.btnNameMap = new ButtonComponent(context, fontawesome, context.getString(R.string.btnEditName),
+                btnUnpause.btnRect.right, btnUnpause.btnRect.top - btnUnpause.btnRect.height() * 2, btnUnpause.btnRect.left, btnUnpause.btnRect.bottom - btnUnpause.btnRect.height() * 2 ,
                 false, -1);
 
         this.btnLoadMap = new ButtonComponent(context, fontawesome,
@@ -189,11 +207,14 @@ public class SaveMenuComponent extends DrawableComponent {
             btnConfirmYes.draw(c);
             btnConfirmNo.draw(c);
         } else {
+            c.drawText(context.getString(R.string.infoSave),borderRect.exactCenterX(),this.borderRect.height() /GameConstants.GAMESCREEN_ROWS * 9,infoPaint);
+            btnSaveMap.draw(c);
+            btnNameMap.draw(c);
+            btnLoadMap.draw(c);
+            c.drawText(context.getString(R.string.infoPause),borderRect.exactCenterX(),this.borderRect.height() /GameConstants.GAMESCREEN_ROWS * 14,infoPaint);
             btnOptions.draw(c);
             btnUnpause.draw(c);
             btnExitToMenu.draw(c);
-            btnLoadMap.draw(c);
-            btnSaveMap.draw(c);
         }
     }
 

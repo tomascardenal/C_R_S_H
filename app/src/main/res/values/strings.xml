@@ -52,4 +52,14 @@
     <string name="btnPvP" translatable="false">P1 vs. P2</string>
     <string name="link" translatable="false"></string>
     <string name="btnGameSettings" translatable="false"></string>
+    <string name="dialogOk" translatable="false">Ok</string>
+    <string name="dialogCancel">Cancelar</string>
+    <string name="btnEditName" translatable="false"></string>
+    <string name="infoSave">Guardar/Nombrar/Cargar</string>
+    <string name="infoPause">Opciones/Continuar/Salir</string>
+    <string name="btnSpeedSlow">Lenta</string>
+    <string name="btnSpeedMid">Media</string>
+    <string name="btnSpeedFast">Rápida</string>
+    <string name="btnSpeedOhno">¡Oh, no!</string>
+    <string name="optSpeed">Velocidad del temporizador</string>
 </resources>

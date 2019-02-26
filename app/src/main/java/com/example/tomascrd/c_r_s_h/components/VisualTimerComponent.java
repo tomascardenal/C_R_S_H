@@ -88,13 +88,14 @@ public class VisualTimerComponent extends DrawableComponent {
 
         this.borderPaint = new Paint();
         this.borderPaint.setStyle(Paint.Style.STROKE);
+        this.borderPaint.setColor(Color.DKGRAY);
         this.borderPaint.setStrokeWidth(gameCallback.tileSizeReference / 10);
 
         this.borderRect = new Rect(
-                (int)(area.left+borderPaint.getStrokeWidth()/2),
-                (int)(area.top+borderPaint.getStrokeWidth()/2),
-                (int)(area.right-borderPaint.getStrokeWidth()/2),
-                (int)(area.bottom-borderPaint.getStrokeWidth()/2)
+                (int) (area.left + borderPaint.getStrokeWidth() / 2),
+                (int) (area.top + borderPaint.getStrokeWidth() / 2),
+                (int) (area.right - borderPaint.getStrokeWidth() / 2),
+                (int) (area.bottom - borderPaint.getStrokeWidth() / 2)
         );
 
 
@@ -103,6 +104,46 @@ public class VisualTimerComponent extends DrawableComponent {
 
         this.pastPaint = new Paint();
         this.pastPaint.setShader(new LinearGradient(this.area.left, this.area.top + this.area.height() / 2, this.area.right, this.area.bottom - this.area.height() / 2, Color.BLACK, Color.WHITE, Shader.TileMode.CLAMP));
+    }
+
+    /**
+     * Transforms a TIMER_SPEED into an int
+     *
+     * @param timerSpeed the TIMER_SPEED to parse
+     * @return the int corresponding to the TIMER_SPEED
+     */
+    public static int timerSpeedToInt(TIMER_SPEED timerSpeed) {
+        switch (timerSpeed) {
+            case TIMER_SLOW:
+                return 0;
+            case TIMER_MID:
+                return 1;
+            case TIMER_FAST:
+                return 2;
+            case TIMER_OHNO:
+                return 3;
+        }
+        return -1;
+    }
+
+    /**
+     * Transforms an int into a TIMER_SPEED
+     *
+     * @param timerSpeed the int to parse
+     * @return the TIMER_SPEED corresponding to the int
+     */
+    public static TIMER_SPEED intToTimerSpeed(int timerSpeed) {
+        switch (timerSpeed) {
+            case 0:
+                return TIMER_SPEED.TIMER_SLOW;
+            case 1:
+                return TIMER_SPEED.TIMER_MID;
+            case 2:
+                return TIMER_SPEED.TIMER_FAST;
+            case 3:
+                return TIMER_SPEED.TIMER_OHNO;
+        }
+        return null;
     }
 
     /**
@@ -154,13 +195,13 @@ public class VisualTimerComponent extends DrawableComponent {
                 this.speed = 1;
                 break;
             case TIMER_MID:
-                this.speed = 3;
+                this.speed = 2;
                 break;
             case TIMER_FAST:
-                this.speed = 6;
+                this.speed = 3;
                 break;
             case TIMER_OHNO:
-                this.speed = 12;
+                this.speed = 5;
                 break;
         }
     }

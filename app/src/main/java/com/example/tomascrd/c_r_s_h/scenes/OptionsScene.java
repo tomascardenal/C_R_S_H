@@ -5,7 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
-import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -78,10 +77,6 @@ public class OptionsScene extends SceneCrsh {
         pOptionsText.setTextAlign(Paint.Align.CENTER);
         pOptionsText.setTextSize((float) ((screenHeight / GameConstants.MENUSCREEN_COLUMNS) * 1));
 
-        //Gradient paint
-        this.gradientPaint = new Paint();
-        this.gradientPaint.setShader(new LinearGradient(0, 0, screenWidth, screenHeight, Color.GREEN, Color.CYAN, Shader.TileMode.CLAMP));
-
         //Buttons
         String musicValue = engineCallback.optionsManager.isPlayMusic() ? getContext().getString(R.string.btnMusicOn) : getContext().getString(R.string.btnMusicOff);
         btnMusic = new TextButtonComponent(context, Typeface.createFromAsset(getContext().getAssets(), GameConstants.FONT_AWESOME), musicValue,
@@ -128,7 +123,7 @@ public class OptionsScene extends SceneCrsh {
      */
     @Override
     public void updatePhysics() {
-
+        super.updatePhysics();
     }
 
     /**
@@ -139,7 +134,7 @@ public class OptionsScene extends SceneCrsh {
     @Override
     public void draw(Canvas c) {
         //General background
-        c.drawPaint(gradientPaint);
+        super.draw(c);
         //Title text
         c.drawText(context.getString(R.string.btnOptions), screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9, screenHeight / GameConstants.MENUSCREEN_ROWS, pTitleText);
         //Options text

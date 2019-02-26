@@ -5,17 +5,23 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
-import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.util.Log;
 import android.view.MotionEvent;
 
 import com.example.tomascrd.c_r_s_h.R;
+import com.example.tomascrd.c_r_s_h.components.ButtonComponent;
 import com.example.tomascrd.c_r_s_h.components.SceneCrsh;
 import com.example.tomascrd.c_r_s_h.components.TextButtonComponent;
+import com.example.tomascrd.c_r_s_h.components.VisualTimerComponent;
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
 import com.example.tomascrd.c_r_s_h.core.GameEngine;
 
+/**
+ * Represents a scene with this game's settings
+ *
+ * @author Tomás Cardenal López
+ */
 public class GameSettingsScene extends SceneCrsh {
 
     /**
@@ -30,6 +36,22 @@ public class GameSettingsScene extends SceneCrsh {
      * Keep joystick velocity toggle button for player two
      */
     private TextButtonComponent btnKeepJoystickVelocityP2;
+    /**
+     * Button for choosing the speed of the game
+     */
+    private ButtonComponent btnSpeedSlow;
+    /**
+     * Button for choosing the speed of the game
+     */
+    private ButtonComponent btnSpeedMid;
+    /**
+     * Button for choosing the speed of the game
+     */
+    private ButtonComponent btnSpeedFast;
+    /**
+     * Button for choosing the speed of the game
+     */
+    private ButtonComponent btnSpeedOHNO;
 
 
     /**
@@ -57,11 +79,7 @@ public class GameSettingsScene extends SceneCrsh {
         pOptionsText.setTypeface(Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN));
         pOptionsText.setColor(Color.BLACK);
         pOptionsText.setTextAlign(Paint.Align.CENTER);
-        pOptionsText.setTextSize((float) ((screenHeight / GameConstants.MENUSCREEN_COLUMNS) * 1));
-
-        //Gradient paint
-        this.gradientPaint = new Paint();
-        this.gradientPaint.setShader(new LinearGradient(0, 0, screenWidth, screenHeight, Color.GREEN, Color.CYAN, Shader.TileMode.CLAMP));
+        pOptionsText.setTextSize((float) ((screenHeight / GameConstants.MENUSCREEN_COLUMNS) * 1.5));
 
         //Buttons
         String joystick1Value = engineCallback.optionsManager.isKeepJoystickVelocityP1() ? context.getString(R.string.btnKeepJoystickOn) : context.getString(R.string.btnKeepJoystickOff);
@@ -89,6 +107,50 @@ public class GameSettingsScene extends SceneCrsh {
                 TextButtonComponent.TEXT_ALIGN.ALIGN_LEFT,
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS / 3,
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 11);
+
+        btnSpeedSlow = new ButtonComponent(context, Typeface.createFromAsset(getContext().getAssets(), GameConstants.FONT_HOMESPUN), context.getString(R.string.btnSpeedSlow),
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 2,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 6,
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 4,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 7, Color.GREEN, 150,
+                true, -1);
+        btnSpeedSlow.setClickEffectParameters(Color.BLACK, Color.DKGRAY, 255, 50);
+        if (engineCallback.getCurrentSpeed() == VisualTimerComponent.TIMER_SPEED.TIMER_SLOW) {
+            btnSpeedSlow.setHeldDown(true);
+        }
+
+        btnSpeedMid = new ButtonComponent(context, Typeface.createFromAsset(getContext().getAssets(), GameConstants.FONT_HOMESPUN), context.getString(R.string.btnSpeedMid),
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 6,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 6,
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 8,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 7, Color.YELLOW, 150,
+                true, -1);
+        btnSpeedMid.setClickEffectParameters(Color.BLACK, Color.DKGRAY, 255, 50);
+        if (engineCallback.getCurrentSpeed() == VisualTimerComponent.TIMER_SPEED.TIMER_MID) {
+            btnSpeedMid.setHeldDown(true);
+        }
+
+        btnSpeedFast = new ButtonComponent(context, Typeface.createFromAsset(getContext().getAssets(), GameConstants.FONT_HOMESPUN), context.getString(R.string.btnSpeedFast),
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 10,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 6,
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 12,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 7, Color.MAGENTA, 150,
+                true, -1);
+        btnSpeedFast.setClickEffectParameters(Color.BLACK, Color.DKGRAY, 255, 50);
+        if (engineCallback.getCurrentSpeed() == VisualTimerComponent.TIMER_SPEED.TIMER_FAST) {
+            btnSpeedFast.setHeldDown(true);
+        }
+
+        btnSpeedOHNO = new ButtonComponent(context, Typeface.createFromAsset(getContext().getAssets(), GameConstants.FONT_HOMESPUN), context.getString(R.string.btnSpeedOhno),
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 14,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 6,
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 16,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 7, Color.RED, 150,
+                true, -1);
+        btnSpeedOHNO.setClickEffectParameters(Color.BLACK, Color.DKGRAY, 255, 50);
+        if (engineCallback.getCurrentSpeed() == VisualTimerComponent.TIMER_SPEED.TIMER_OHNO) {
+            btnSpeedOHNO.setHeldDown(true);
+        }
     }
 
     /**
@@ -96,7 +158,7 @@ public class GameSettingsScene extends SceneCrsh {
      */
     @Override
     public void updatePhysics() {
-
+        super.updatePhysics();
     }
 
     /**
@@ -107,13 +169,20 @@ public class GameSettingsScene extends SceneCrsh {
     @Override
     public void draw(Canvas c) {
         //General background
-        c.drawPaint(gradientPaint);
+        super.draw(c);
         //Title text
         c.drawText(context.getString(R.string.btnOptions), screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9, screenHeight / GameConstants.MENUSCREEN_ROWS, pTitleText);
         //Buttons
         backBtn.draw(c);
         btnKeepJoystickVelocityP1.draw(c);
         btnKeepJoystickVelocityP2.draw(c);
+
+        c.drawText(context.getString(R.string.optSpeed), screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9, screenHeight / GameConstants.MENUSCREEN_ROWS * 5, pOptionsText);
+        btnSpeedSlow.draw(c);
+        btnSpeedMid.draw(c);
+        btnSpeedFast.draw(c);
+        btnSpeedOHNO.draw(c);
+
     }
 
     /**
@@ -127,10 +196,12 @@ public class GameSettingsScene extends SceneCrsh {
         switch (action) {
             case MotionEvent.ACTION_DOWN:           // First finger
             case MotionEvent.ACTION_POINTER_DOWN:  // Second finger and so on
+
                 break;
 
             case MotionEvent.ACTION_UP:                     // Last finger up
             case MotionEvent.ACTION_POINTER_UP:  // Any other finger up
+
                 if (isClick(backBtn, event)) {
                     if (engineCallback.loadSavedScene) {
                         return 99;
@@ -143,6 +214,15 @@ public class GameSettingsScene extends SceneCrsh {
                 }
                 if (isClick(btnKeepJoystickVelocityP2, event)) {
                     toggleJoystickVelocityModeP2();
+                }
+                if (isClick(btnSpeedSlow, event)) {
+                    toggleSpeedButtons(VisualTimerComponent.TIMER_SPEED.TIMER_SLOW);
+                } else if (isClick(btnSpeedMid, event)) {
+                    toggleSpeedButtons(VisualTimerComponent.TIMER_SPEED.TIMER_MID);
+                } else if (isClick(btnSpeedFast, event)) {
+                    toggleSpeedButtons(VisualTimerComponent.TIMER_SPEED.TIMER_FAST);
+                } else if (isClick(btnSpeedOHNO, event)) {
+                    toggleSpeedButtons(VisualTimerComponent.TIMER_SPEED.TIMER_OHNO);
                 }
             case MotionEvent.ACTION_MOVE: // Any finger moves
 
@@ -178,6 +258,36 @@ public class GameSettingsScene extends SceneCrsh {
             btnKeepJoystickVelocityP2.setText(context.getString(R.string.btnKeepJoystickOn));
             engineCallback.optionsManager.setKeepJoystickVelocityP2(true);
         }
+    }
+
+    public void toggleSpeedButtons(VisualTimerComponent.TIMER_SPEED speed) {
+        switch (speed) {
+            case TIMER_SLOW:
+                btnSpeedSlow.setHeldDown(true);
+                btnSpeedMid.setHeldDown(false);
+                btnSpeedFast.setHeldDown(false);
+                btnSpeedOHNO.setHeldDown(false);
+                break;
+            case TIMER_MID:
+                btnSpeedSlow.setHeldDown(false);
+                btnSpeedMid.setHeldDown(true);
+                btnSpeedFast.setHeldDown(false);
+                btnSpeedOHNO.setHeldDown(false);
+                break;
+            case TIMER_FAST:
+                btnSpeedSlow.setHeldDown(false);
+                btnSpeedMid.setHeldDown(false);
+                btnSpeedFast.setHeldDown(true);
+                btnSpeedOHNO.setHeldDown(false);
+                break;
+            case TIMER_OHNO:
+                btnSpeedSlow.setHeldDown(false);
+                btnSpeedMid.setHeldDown(false);
+                btnSpeedFast.setHeldDown(false);
+                btnSpeedOHNO.setHeldDown(true);
+                break;
+        }
+        engineCallback.setCurrentSpeed(speed);
     }
 }
 

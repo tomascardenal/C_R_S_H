@@ -141,7 +141,7 @@ public class PlayerCrsh extends DrawableComponent {
         this.playerCollision = playerCollision;
         this.spawnPoint = new PointF(playerCollision.xPos, playerCollision.yPos);
         this.startRadius = this.playerCollision.radius;
-        this.playerLifes = 3;
+        this.playerLifes = 4;
         this.xVelocity = 0;
         this.yVelocity = 0;
         this.bounceBackCycle = 0;
@@ -223,7 +223,7 @@ public class PlayerCrsh extends DrawableComponent {
      * Respawns the player on the starting position
      */
     public void respawn() {
-        this.playerLifes = 3;
+        this.playerLifes = 4;
         this.xVelocity = 0;
         this.yVelocity = 0;
         this.bounceBackCycle = 0;
@@ -262,6 +262,11 @@ public class PlayerCrsh extends DrawableComponent {
             takingHit = true;
         } else if (playerLifes == 0 && playerCollision.radius <= 0) {
             respawn();
+            if(this.playerId==1){
+                gameCallback.lifeOne.resetLife();
+            }else{
+                gameCallback.lifeTwo.resetLife();
+            }
         }
         playerCollision.draw(c);
     }

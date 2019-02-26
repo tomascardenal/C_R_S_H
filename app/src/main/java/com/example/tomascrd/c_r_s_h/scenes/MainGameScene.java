@@ -7,7 +7,6 @@ import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Rect;
-import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -24,6 +23,7 @@ import com.example.tomascrd.c_r_s_h.components.ButtonComponent;
 import com.example.tomascrd.c_r_s_h.components.CircleComponent;
 import com.example.tomascrd.c_r_s_h.components.GamepadComponent;
 import com.example.tomascrd.c_r_s_h.components.JoystickComponent;
+import com.example.tomascrd.c_r_s_h.components.LifeComponent;
 import com.example.tomascrd.c_r_s_h.components.MapComponent;
 import com.example.tomascrd.c_r_s_h.components.PauseMenuComponent;
 import com.example.tomascrd.c_r_s_h.components.PlayerComCrsh;
@@ -32,6 +32,7 @@ import com.example.tomascrd.c_r_s_h.components.SceneCrsh;
 import com.example.tomascrd.c_r_s_h.components.VisualTimerComponent;
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
 import com.example.tomascrd.c_r_s_h.core.GameEngine;
+import com.example.tomascrd.c_r_s_h.core.OptionsManager;
 
 /**
  * Represents the main game
@@ -56,6 +57,14 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
      * Timer for turn switching
      */
     private VisualTimerComponent timer;
+    /**
+     * Life indicator for player one
+     */
+    public LifeComponent lifeOne;
+    /**
+     * Life indicator for player two
+     */
+    public LifeComponent lifeTwo;
     /**
      * Player 1
      */
@@ -135,6 +144,23 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
      * The current loaded map's ID number
      */
     private int mapLoadID;
+    /**
+     * Rect for indicating the player one mode
+     */
+    private Rect modeOne;
+    /**
+     * Rect for indicating the player two mode
+     */
+    private Rect modeTwo;
+    /**
+     * Paint for mode one
+     */
+    private Paint paintModeOne;
+    /**
+     * Paint for mode two
+     */
+    private Paint paintModeTwo;
+
 
     /**
      * Starts a new main game
@@ -158,13 +184,6 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         this.mapLoad = new MapComponent(this.getMapLoadID(), context, screenWidth, screenHeight, engineCallback.loader);
         this.mapLoad.loadTileArray();
         this.tileSizeReference = mapLoad.getReference();
-
-        //Timer
-        int left = this.mapLoad.tileArray[0][0].getCollisionRect().left;
-        int top = this.mapLoad.tileArray[0][0].getCollisionRect().top;
-        int right = this.mapLoad.tileArray[0][GameConstants.MAPAREA_COLUMNS - 1].getCollisionRect().right;
-        int bottom = this.mapLoad.tileArray[0][GameConstants.MAPAREA_COLUMNS - 1].getCollisionRect().bottom;
-        this.timer = new VisualTimerComponent(this.context, this, new Rect(left, top, right, bottom), VisualTimerComponent.TIMER_SPEED.TIMER_FAST);
 
         //Initialize players
         PointF playerOneCenter = new PointF(mapLoad.tileArray[2][2].getCollisionRect().exactCenterX(), mapLoad.tileArray[2][2].getCollisionRect().exactCenterY());
@@ -190,13 +209,47 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         //Initialize vibrator
         this.vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
 
-        //Gradient background
-        this.gradientPaint = new Paint();
-        int[] leftgradientColors = {Color.MAGENTA, Color.GREEN};
-        int[] rightgradientColors = {Color.GREEN, Color.MAGENTA};
-        float[] positions = {0, screenWidth / 2};
-        gradientLeftAttack = new LinearGradient(0, screenHeight, screenWidth, screenHeight, leftgradientColors, positions, Shader.TileMode.CLAMP);
-        gradientRightAttack = new LinearGradient(0, screenWidth, screenWidth, screenHeight, rightgradientColors, positions, Shader.TileMode.CLAMP);
+        //Timer
+        int left = this.mapLoad.tileArray[0][0].getCollisionRect().left;
+        int top = this.mapLoad.tileArray[0][0].getCollisionRect().top;
+        int right = this.mapLoad.tileArray[0][GameConstants.MAPAREA_COLUMNS - 1].getCollisionRect().right;
+        int bottom = this.mapLoad.tileArray[0][GameConstants.MAPAREA_COLUMNS - 1].getCollisionRect().bottom;
+        this.timer = new VisualTimerComponent(this.context, this, new Rect(left, top, right, bottom), engineCallback.optionsManager.getTimerSpeed());
+
+        //Life Component one
+        left = this.mapLoad.tileArray[1][0].getCollisionRect().left;
+        top = this.mapLoad.tileArray[1][0].getCollisionRect().top;
+        right = this.mapLoad.tileArray[GameConstants.MAPAREA_ROWS - 2][0].getCollisionRect().right;
+        bottom = this.mapLoad.tileArray[GameConstants.MAPAREA_ROWS - 2][0].getCollisionRect().bottom;
+        this.lifeOne = new LifeComponent(this.context, this, new Rect(left, top, right, bottom), playerOne.getPlayerLifes());
+
+        //Life Component two
+        left = this.mapLoad.tileArray[1][GameConstants.MAPAREA_COLUMNS - 1].getCollisionRect().left;
+        top = this.mapLoad.tileArray[1][GameConstants.MAPAREA_COLUMNS - 1].getCollisionRect().top;
+        right = this.mapLoad.tileArray[GameConstants.MAPAREA_ROWS - 2][GameConstants.MAPAREA_COLUMNS - 1].getCollisionRect().right;
+        bottom = this.mapLoad.tileArray[GameConstants.MAPAREA_ROWS - 2][GameConstants.MAPAREA_COLUMNS - 1].getCollisionRect().bottom;
+        if (this.gameMode == GAMEMODE.MODE_CRSH_COM || this.gameMode == GAMEMODE.MODE_NRML_COM) {
+            this.lifeTwo = new LifeComponent(this.context, this, new Rect(left, top, right, bottom), playerCom.getPlayerLifes());
+        } else {
+            this.lifeTwo = new LifeComponent(this.context, this, new Rect(left, top, right, bottom), playerTwo.getPlayerLifes());
+        }
+
+        //Mode one rect
+        left = this.mapLoad.tileArray[GameConstants.MAPAREA_ROWS - 1][0].getCollisionRect().left;
+        top = this.mapLoad.tileArray[GameConstants.MAPAREA_ROWS - 1][0].getCollisionRect().top;
+        right = this.mapLoad.tileArray[GameConstants.MAPAREA_ROWS - 1][12].getCollisionRect().right;
+        bottom = this.mapLoad.tileArray[GameConstants.MAPAREA_ROWS - 1][12].getCollisionRect().bottom;
+        this.modeOne = new Rect(left, top, right, bottom);
+        this.paintModeOne = new Paint();
+
+        //Mode two rect
+        left = this.mapLoad.tileArray[GameConstants.MAPAREA_ROWS - 1][13].getCollisionRect().left;
+        top = this.mapLoad.tileArray[GameConstants.MAPAREA_ROWS - 1][13].getCollisionRect().top;
+        right = this.mapLoad.tileArray[GameConstants.MAPAREA_ROWS - 1][GameConstants.MAPAREA_COLUMNS - 1].getCollisionRect().right;
+        bottom = this.mapLoad.tileArray[GameConstants.MAPAREA_ROWS - 1][GameConstants.MAPAREA_COLUMNS - 1].getCollisionRect().bottom;
+        this.modeTwo = new Rect(left, top, right, bottom);
+        this.paintModeTwo = new Paint();
+
         setAttackIndicator();
 
         //Pause button
@@ -266,8 +319,8 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
             int top = this.mapLoad.tileArray[0][0].getCollisionRect().top;
             int right = this.mapLoad.tileArray[GameConstants.MAPAREA_ROWS - 2][0].getCollisionRect().right;
             int bottom = this.mapLoad.tileArray[GameConstants.MAPAREA_ROWS - 2][0].getCollisionRect().bottom;
-            this.timer = new VisualTimerComponent(this.context, this, new Rect(left, top, right, bottom), VisualTimerComponent.TIMER_SPEED.TIMER_FAST);
-        }else{
+            this.timer = new VisualTimerComponent(this.context, this, new Rect(left, top, right, bottom), engineCallback.getCurrentSpeed());
+        } else {
             this.timer.resetTimer();
         }
 
@@ -289,20 +342,33 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
     }
 
     /**
+     * Sets the timerComponent speed
+     *
+     * @param timerSpeed the new speed
+     */
+    public void setTimerSpeed(VisualTimerComponent.TIMER_SPEED timerSpeed) {
+        this.timer.setTimerSpeed(timerSpeed);
+    }
+
+    /**
      * Sets the rect indicating the attack and defense modes
      */
     public void setAttackIndicator() {
         if (gameMode == GAMEMODE.MODE_CRSH_2P || gameMode == GAMEMODE.MODE_NRML_2P) {
             if (playerOne.isOnAttack() && !playerTwo.isOnAttack()) {
-                gradientPaint.setShader(gradientRightAttack);
+                paintModeOne.setColor(Color.RED);
+                paintModeTwo.setColor(Color.GRAY);
             } else if (playerTwo.isOnAttack() && !playerOne.isOnAttack()) {
-                gradientPaint.setShader(gradientLeftAttack);
+                paintModeTwo.setColor(Color.RED);
+                paintModeOne.setColor(Color.GRAY);
             }
         } else {
             if (playerOne.isOnAttack() && !playerCom.isOnAttack()) {
-                gradientPaint.setShader(gradientRightAttack);
+                paintModeOne.setColor(Color.RED);
+                paintModeTwo.setColor(Color.GRAY);
             } else if (playerCom.isOnAttack() && !playerOne.isOnAttack()) {
-                gradientPaint.setShader(gradientLeftAttack);
+                paintModeTwo.setColor(Color.RED);
+                paintModeOne.setColor(Color.GRAY);
             }
         }
     }
@@ -340,6 +406,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
      */
     @Override
     public void updatePhysics() {
+        super.updatePhysics();
         if (!onPause) {
             //If the joystick is active and there's no bounceback on the player, take the values of the joystick
             if (joystickOne.isActive() && !playerOne.onBounceBack()) {
@@ -383,12 +450,18 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
     @Override
     public void draw(Canvas c) {
         //General background
-        c.drawPaint(gradientPaint);
+        super.draw(c);
         if (!onPause) {
             //Draw map
             mapLoad.draw(c);
             //Timer
             timer.draw(c);
+            //Life
+            lifeOne.draw(c);
+            lifeTwo.draw(c);
+            //
+            c.drawRect(modeOne, paintModeOne);
+            c.drawRect(modeTwo, paintModeTwo);
             //Draw player One
             playerOne.draw(c);
             if (this.gameMode == GAMEMODE.MODE_NRML_2P || this.gameMode == GAMEMODE.MODE_CRSH_2P) {
@@ -816,9 +889,11 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         if (gameMode == GAMEMODE.MODE_CRSH_2P || gameMode == GAMEMODE.MODE_NRML_2P) {
             if (playerID == 1 && !playerOne.isTakingHit() && !playerTwo.isTakingHit()) {
                 playerTwo.takeHit();
+                lifeTwo.loseALife();
                 tookHit = true;
             } else if (playerID == 2 && !playerOne.isTakingHit() && !playerTwo.isTakingHit()) {
                 playerOne.takeHit();
+                lifeOne.loseALife();
                 tookHit = true;
             }
             if (tookHit) {
@@ -836,9 +911,11 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         } else if (gameMode == GAMEMODE.MODE_CRSH_COM || gameMode == GAMEMODE.MODE_NRML_COM) {
             if (playerID == 1 && !playerCom.isTakingHit() && !playerOne.isTakingHit()) {
                 playerCom.takeHit();
+                lifeTwo.loseALife();
                 tookHit = true;
             } else if (playerID == 0 && !playerOne.isTakingHit() && !playerCom.isTakingHit()) {
                 playerOne.takeHit();
+                lifeOne.loseALife();
                 tookHit = true;
             }
             if (tookHit) {

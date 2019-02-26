@@ -133,6 +133,10 @@ public final class GameConstants {
      */
     public final static String PREFERENCES_KEEPJOYSTICKVELOCITY_P2 = "joystickVelocity2";
     /**
+     * Reference for the timerSpeed option
+     */
+    public final static String PREFERENCES_TIMERSPEED= "timerSpeed";
+    /**
      * Array containing the values of the tile_types
      */
     public final static TileComponent.TILE_TYPE[] TILE_TYPES = TileComponent.TILE_TYPE.values();

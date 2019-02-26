@@ -23,4 +23,12 @@
     <string name="savemenuTitle">Map creator paused</string>
     <string name="confirmTitle">Confirm changes?</string>
     <string name="confirmQuit">Quit game?</string>
+    <string name="dialogCancel">Cancel</string>
+    <string name="infoSave">"Save/Name/Load"</string>
+    <string name="infoPause">Options/Continue/Quit</string>
+    <string name="btnSpeedSlow">Slow</string>
+    <string name="btnSpeedMid">Mid</string>
+    <string name="btnSpeedFast">Fast</string>
+    <string name="btnSpeedOhno">Oh, no!</string>
+    <string name="optSpeed">Timer speed</string>
 </resources>

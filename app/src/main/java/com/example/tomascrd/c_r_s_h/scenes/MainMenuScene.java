@@ -1,13 +1,11 @@
 package com.example.tomascrd.c_r_s_h.scenes;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
-import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -16,10 +14,8 @@ import com.example.tomascrd.c_r_s_h.R;
 import com.example.tomascrd.c_r_s_h.components.ButtonComponent;
 import com.example.tomascrd.c_r_s_h.components.BackgroundComponent;
 import com.example.tomascrd.c_r_s_h.components.SceneCrsh;
-import com.example.tomascrd.c_r_s_h.core.AssetLoader;
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
-
-import java.util.Calendar;
+import com.example.tomascrd.c_r_s_h.core.GameEngine;
 
 /**
  * This game's main menu
@@ -64,26 +60,6 @@ public class MainMenuScene extends SceneCrsh {
      * Array for better button management
      */
     private ButtonComponent[] buttonArray;
-    /**
-     * Previous hour to see if we change gradients
-     */
-    private int previousHour;
-    /**
-     * Gradient during the day
-     */
-    private LinearGradient gradientDay;
-    /**
-     * Gradient during the night
-     */
-    private LinearGradient gradientNight;
-    /**
-     * Gradient during sunrise
-     */
-    private LinearGradient gradientSunrise;
-    /**
-     * Gradient during nightfall
-     */
-    private LinearGradient gradientNightFall;
 
 
     /**
@@ -93,11 +69,12 @@ public class MainMenuScene extends SceneCrsh {
      * @param id           this scene's id (0 is recommended by default for the main menu)
      * @param screenWidth  this screen's width
      * @param screenHeight this screen's height
+     * @param engineCallback callback to access gameEngine data
      */
-    public MainMenuScene(Context context, int id, int screenWidth, int screenHeight) {
+    public MainMenuScene(Context context, int id, int screenWidth, int screenHeight, GameEngine engineCallback) {
         super(context, id, screenWidth, screenHeight);
+        this.engineCallback = engineCallback;
         this.context = context;
-        this.previousHour = -1;
 
         //Title text
         pTitleText = new Paint();
@@ -105,27 +82,6 @@ public class MainMenuScene extends SceneCrsh {
         pTitleText.setColor(Color.BLACK);
         pTitleText.setTextAlign(Paint.Align.CENTER);
         pTitleText.setTextSize((float) ((screenHeight / GameConstants.MENUSCREEN_COLUMNS) * 2.5));
-
-        //Gradient paint
-        this.gradientPaint = new Paint();
-
-        int[] gradientColors = {Color.BLUE, Color.YELLOW, Color.CYAN};
-        float[] positions = {0, screenWidth / 2, screenWidth};
-        gradientSunrise = new LinearGradient(0, 0, screenWidth, screenHeight, gradientColors, positions, Shader.TileMode.CLAMP);
-
-        int[] gradientColors2 = {Color.rgb(17,	30,	108), Color.DKGRAY, Color.CYAN};
-        float[] positions2 = {0, screenWidth / 2, screenWidth};
-        gradientNight = new LinearGradient(0, 0, screenWidth, screenHeight, gradientColors2, positions2, Shader.TileMode.CLAMP);
-
-        int[] gradientColors3 = {Color.rgb(0,	178,	255), Color.YELLOW, Color.CYAN};
-        float[] positions3 = {0, screenWidth / 2, screenWidth};
-        gradientDay = new LinearGradient(0, 0, screenWidth, screenHeight, gradientColors3, positions3, Shader.TileMode.CLAMP);
-
-        int[] gradientColors4 = {Color.BLUE, Color.RED, Color.CYAN};
-        float[] positions4 = {0, screenWidth / 2, screenWidth};
-        gradientNightFall = new LinearGradient(0, 0, screenWidth, screenHeight, gradientColors4, positions4, Shader.TileMode.CLAMP);
-
-        setSkyBackground();
 
         //Parallax Backgrounds
         parallaxBackgrounds = new BackgroundComponent[3];
@@ -184,6 +140,7 @@ public class MainMenuScene extends SceneCrsh {
      */
     @Override
     public void updatePhysics() {
+        super.updatePhysics();
         //Move the parallax forward and reposition when necessary
         for (int i = 0; i < parallaxBackgrounds.length; i++) {
             parallaxBackgrounds[i].moveX(i + 1);
@@ -191,41 +148,8 @@ public class MainMenuScene extends SceneCrsh {
                 parallaxBackgrounds[i].position.x = screenWidth - parallaxBackgrounds[i].image.getWidth();
             }
         }
+
     }
-
-    /**
-     * Sets the sky on the background depending on the the system hour
-     */
-    public void setSkyBackground() {
-
-        Calendar now = Calendar.getInstance();
-        int currentHour = now.get(Calendar.HOUR_OF_DAY);
-        if (currentHour <= 6 || currentHour >= 21) {
-            if (!(previousHour <= 6) && !(previousHour >= 21) || previousHour == -1) {
-                this.gradientPaint.setShader(gradientNight);
-                previousHour = currentHour;
-            }
-        } else if (currentHour > 8 && currentHour < 20) {
-            if (!(previousHour > 8) && !(previousHour < 20) || previousHour == -1) {
-                this.gradientPaint.setShader(gradientDay);
-                previousHour = currentHour;
-
-            }
-        } else if (currentHour >= 7 && currentHour <= 8) {
-            if (!(previousHour == 7) && !(previousHour == 8) || previousHour == -1) {
-                this.gradientPaint.setShader(gradientSunrise);
-                previousHour = currentHour;
-
-            }
-        } else if (currentHour == 20) {
-            if (!(previousHour == 20) || previousHour == -1) {
-                this.gradientPaint.setShader(gradientNightFall);
-                previousHour = currentHour;
-            }
-        }
-        previousHour = currentHour;
-    }
-
 
     /**
      * Draws the main menu
@@ -235,8 +159,7 @@ public class MainMenuScene extends SceneCrsh {
     @Override
     public void draw(Canvas c) {
         //General background
-        setSkyBackground();
-        c.drawPaint(gradientPaint);
+        super.draw(c);
         //Parallax background FIXME This are placeholder images
         for (int i = 0; i < parallaxBackgrounds.length; i++) {
             Log.i("setsky", "drawing parallax number" + i);

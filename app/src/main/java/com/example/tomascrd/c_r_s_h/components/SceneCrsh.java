@@ -4,14 +4,18 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.view.MotionEvent;
 
 import com.example.tomascrd.c_r_s_h.R;
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
 import com.example.tomascrd.c_r_s_h.core.GameEngine;
+
+import java.util.Calendar;
 
 /**
  * Represents the general idea of a screen of the game
@@ -59,6 +63,26 @@ public class SceneCrsh {
      * Reference for the tile size, indicates how much the side of the tile measures
      */
     public int tileSizeReference;
+    /**
+     * Previous hour to see if we change gradients
+     */
+    private int previousHour;
+    /**
+     * Gradient during the day
+     */
+    private LinearGradient gradientDay;
+    /**
+     * Gradient during the night
+     */
+    private LinearGradient gradientNight;
+    /**
+     * Gradient during sunrise
+     */
+    private LinearGradient gradientSunrise;
+    /**
+     * Gradient during nightfall
+     */
+    private LinearGradient gradientNightFall;
 
 
     /**
@@ -81,6 +105,61 @@ public class SceneCrsh {
                     Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_AWESOME), context.getString(R.string.btnBack),
                     screenWidth - screenWidth / 16, 0, screenWidth, screenWidth / 16, Color.TRANSPARENT, 0, false, 0);
         }
+
+        this.previousHour = -1;
+
+        this.gradientPaint = new Paint();
+
+        int[] gradientColors = {Color.BLUE, Color.YELLOW, Color.CYAN};
+        float[] positions = {0, screenWidth / 2, screenWidth};
+        gradientSunrise = new LinearGradient(0, 0, screenWidth, screenHeight, gradientColors, positions, Shader.TileMode.CLAMP);
+
+        int[] gradientColors2 = {Color.rgb(17,	30,	108), Color.DKGRAY, Color.CYAN};
+        float[] positions2 = {0, screenWidth / 2, screenWidth};
+        gradientNight = new LinearGradient(0, 0, screenWidth, screenHeight, gradientColors2, positions2, Shader.TileMode.CLAMP);
+
+        int[] gradientColors3 = {Color.rgb(0,	178,	255), Color.YELLOW, Color.CYAN};
+        float[] positions3 = {0, screenWidth / 2, screenWidth};
+        gradientDay = new LinearGradient(0, 0, screenWidth, screenHeight, gradientColors3, positions3, Shader.TileMode.CLAMP);
+
+        int[] gradientColors4 = {Color.BLUE, Color.RED, Color.CYAN};
+        float[] positions4 = {0, screenWidth / 2, screenWidth};
+        gradientNightFall = new LinearGradient(0, 0, screenWidth, screenHeight, gradientColors4, positions4, Shader.TileMode.CLAMP);
+
+        setSkyBackground();
+    }
+
+    /**
+     * Sets the sky on the background depending on the the system hour
+     */
+    public void setSkyBackground() {
+
+        Calendar now = Calendar.getInstance();
+        int currentHour = now.get(Calendar.HOUR_OF_DAY);
+        if (currentHour <= 6 || currentHour >= 21) {
+            if (!(previousHour <= 6) && !(previousHour >= 21) || previousHour == -1) {
+                this.gradientPaint.setShader(gradientNight);
+                previousHour = currentHour;
+            }
+        } else if (currentHour > 8 && currentHour < 20) {
+            if (!(previousHour > 8) && !(previousHour < 20) || previousHour == -1) {
+                this.gradientPaint.setShader(gradientDay);
+                previousHour = currentHour;
+
+            }
+        } else if (currentHour >= 7 && currentHour <= 8) {
+            if (!(previousHour == 7) && !(previousHour == 8) || previousHour == -1) {
+                this.gradientPaint.setShader(gradientSunrise);
+                previousHour = currentHour;
+
+            }
+        } else if (currentHour == 20) {
+            if (!(previousHour == 20) || previousHour == -1) {
+                this.gradientPaint.setShader(gradientNightFall);
+                previousHour = currentHour;
+            }
+        }
+        previousHour = currentHour;
     }
 
     /**
@@ -97,7 +176,7 @@ public class SceneCrsh {
      * Updates the physics of the components on the screen
      */
     public void updatePhysics() {
-
+        setSkyBackground();
     }
 
     /**
@@ -106,6 +185,8 @@ public class SceneCrsh {
      * @param c the canvas to draw
      */
     public void draw(Canvas c) {
+        //General background
+        c.drawPaint(gradientPaint);
     }
 
     /**

@@ -3,6 +3,9 @@ package com.example.tomascrd.c_r_s_h.core;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.example.tomascrd.c_r_s_h.components.VisualTimerComponent;
+import com.example.tomascrd.c_r_s_h.scenes.GameSettingsScene;
+
 /**
  * Options manager for the game
  *
@@ -30,6 +33,10 @@ public class OptionsManager {
      * Determines if the player 2 keeps the velocity after the joystick gets deactivated or not
      */
     private boolean keepJoystickVelocityP2;
+    /**
+     * Timer Speed for game settings
+     */
+    private VisualTimerComponent.TIMER_SPEED timerSpeed;
     /**
      * SharedPreferences to store the options
      */
@@ -59,6 +66,7 @@ public class OptionsManager {
         doVibrate = preferences.getBoolean(GameConstants.PREFERENCES_VIBRATE, true);
         keepJoystickVelocityP1 = preferences.getBoolean(GameConstants.PREFERENCES_KEEPJOYSTICKVELOCITY_P1, true);
         keepJoystickVelocityP2 = preferences.getBoolean(GameConstants.PREFERENCES_KEEPJOYSTICKVELOCITY_P2, true);
+        timerSpeed = VisualTimerComponent.intToTimerSpeed(preferences.getInt(GameConstants.PREFERENCES_TIMERSPEED,1));
     }
 
     /**
@@ -71,6 +79,7 @@ public class OptionsManager {
         editor.putBoolean(GameConstants.PREFERENCES_VIBRATE, doVibrate);
         editor.putBoolean(GameConstants.PREFERENCES_KEEPJOYSTICKVELOCITY_P1, keepJoystickVelocityP1);
         editor.putBoolean(GameConstants.PREFERENCES_KEEPJOYSTICKVELOCITY_P1, keepJoystickVelocityP2);
+        editor.putInt(GameConstants.PREFERENCES_TIMERSPEED, VisualTimerComponent.timerSpeedToInt(timerSpeed));
         editor.commit();
     }
 
@@ -162,5 +171,23 @@ public class OptionsManager {
      */
     public void setKeepJoystickVelocityP2(boolean keepJoystickVelocityP2) {
         this.keepJoystickVelocityP2 = keepJoystickVelocityP2;
+    }
+
+    /**
+     * Returns the current TIMER_SPEED
+     *
+     * @return the TIMER_SPEED
+     */
+    public VisualTimerComponent.TIMER_SPEED getTimerSpeed() {
+        return timerSpeed;
+    }
+
+    /**
+     * Sets the current TIMER_SPEED
+     *
+     * @param timerSpeed the TIMER_SPEED to set
+     */
+    public void setTimerSpeed(VisualTimerComponent.TIMER_SPEED timerSpeed) {
+        this.timerSpeed = timerSpeed;
     }
 }

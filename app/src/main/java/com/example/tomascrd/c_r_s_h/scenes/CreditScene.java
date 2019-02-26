@@ -16,6 +16,7 @@ import android.view.MotionEvent;
 import com.example.tomascrd.c_r_s_h.R;
 import com.example.tomascrd.c_r_s_h.components.SceneCrsh;
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
+import com.example.tomascrd.c_r_s_h.core.GameEngine;
 
 /**
  * Scene which contains this game's credits
@@ -96,13 +97,15 @@ public class CreditScene extends SceneCrsh {
     /**
      * Starts a credits scene
      *
-     * @param context      the application context
-     * @param id           this scene's id (0 is recommended by default for the main menu)
-     * @param screenWidth  this screen's width
-     * @param screenHeight this screen's height
+     * @param context        the application context
+     * @param id             this scene's id (0 is recommended by default for the main menu)
+     * @param screenWidth    this screen's width
+     * @param screenHeight   this screen's height
+     * @param engineCallback callback to access gameEngine data
      */
-    public CreditScene(Context context, int id, int screenWidth, int screenHeight) {
+    public CreditScene(Context context, int id, int screenWidth, int screenHeight, GameEngine engineCallback) {
         super(context, id, screenWidth, screenHeight);
+        this.engineCallback = engineCallback;
 
         //Alpha effect variables
         this.textAlpha = 0;
@@ -135,11 +138,6 @@ public class CreditScene extends SceneCrsh {
         pLink.setTextSize((float) (screenHeight / GameConstants.MENUSCREEN_COLUMNS));
         pLink.setAlpha(this.textAlpha);
 
-
-        //Gradient paint
-        this.gradientPaint = new Paint();
-        this.gradientPaint.setShader(new LinearGradient(0, 0, screenWidth, screenHeight, Color.GREEN, Color.CYAN, Shader.TileMode.CLAMP));
-
         //Gradient paint
         this.gradientPaint = new Paint();
         this.gradientPaint.setShader(new LinearGradient(0, 0, screenWidth, screenHeight, Color.GREEN, Color.CYAN, Shader.TileMode.CLAMP));
@@ -159,6 +157,8 @@ public class CreditScene extends SceneCrsh {
      */
     @Override
     public void updatePhysics() {
+        super.updatePhysics();
+
         //Credit variables
         if (rotateCredit) {
             rotateCredit = false;
@@ -191,7 +191,6 @@ public class CreditScene extends SceneCrsh {
                 rotateCredit = true;
             }
         }
-
     }
 
     /**
@@ -202,7 +201,7 @@ public class CreditScene extends SceneCrsh {
     @Override
     public void draw(Canvas c) {
         //General background
-        c.drawPaint(gradientPaint);
+        super.draw(c);
         //Title text
         c.drawText(context.getString(R.string.btnCredits), screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9, screenHeight / GameConstants.MENUSCREEN_ROWS, pTitleText);
         //Credits text with alpha effect

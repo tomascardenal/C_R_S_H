@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -19,6 +18,7 @@ import com.example.tomascrd.c_r_s_h.components.SceneCrsh;
 import com.example.tomascrd.c_r_s_h.components.TileComponent;
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
 import com.example.tomascrd.c_r_s_h.core.GameEngine;
+import com.example.tomascrd.c_r_s_h.core.Utils;
 
 /**
  * A scene representing a map creator
@@ -30,6 +30,10 @@ public class MapCreatorScene extends SceneCrsh {
      * Callback to access the game engine
      */
     private GameEngine engineCallback;
+    /**
+     * Set of utils
+     */
+    private Utils utils;
     /**
      * Map to load on the creator scene
      */
@@ -63,6 +67,7 @@ public class MapCreatorScene extends SceneCrsh {
     public MapCreatorScene(Context context, int id, int screenWidth, int screenHeight, GameEngine engineCallback) {
         super(context, id, screenWidth, screenHeight);
         this.engineCallback = engineCallback;
+        this.utils = new Utils(context);
 
         //TODO this is only a test id, ask for id from user
         newId = 1337;
@@ -70,13 +75,6 @@ public class MapCreatorScene extends SceneCrsh {
         this.creatorMap = new MapComponent(0, context, screenWidth, screenHeight, engineCallback.loader);
         this.creatorMap.loadTileArray();
         this.tileSizeReference = this.creatorMap.getReference();
-
-        //Gradient background
-        this.gradientPaint = new Paint();
-        int[] leftgradientColors = {Color.GREEN, Color.BLUE, Color.CYAN};
-        float[] positions = {0, screenWidth / 2, screenWidth};
-        LinearGradient gradientBackground = new LinearGradient(0, screenHeight, screenWidth, screenHeight, leftgradientColors, positions, Shader.TileMode.CLAMP);
-        this.gradientPaint.setShader(gradientBackground);
 
         //Pause button
         btnPause = new ButtonComponent(context,
@@ -92,9 +90,7 @@ public class MapCreatorScene extends SceneCrsh {
      */
     @Override
     public void updatePhysics() {
-        if (!onPause) {
-
-        }
+        super.updatePhysics();
     }
 
     /**
@@ -105,7 +101,7 @@ public class MapCreatorScene extends SceneCrsh {
     @Override
     public void draw(Canvas c) {
         //General background
-        c.drawPaint(gradientPaint);
+        super.draw(c);
         if (!onPause) {
             //Draw map
             creatorMap.draw(c);

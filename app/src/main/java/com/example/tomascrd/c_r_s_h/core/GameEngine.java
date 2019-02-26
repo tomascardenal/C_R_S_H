@@ -2,6 +2,10 @@ package com.example.tomascrd.c_r_s_h.core;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.LinearGradient;
+import android.graphics.Paint;
+import android.graphics.Shader;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Build;
@@ -11,6 +15,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import com.example.tomascrd.c_r_s_h.R;
+import com.example.tomascrd.c_r_s_h.components.VisualTimerComponent;
 import com.example.tomascrd.c_r_s_h.scenes.CreditScene;
 import com.example.tomascrd.c_r_s_h.scenes.GameSettingsScene;
 import com.example.tomascrd.c_r_s_h.scenes.MainGameScene;
@@ -23,6 +28,7 @@ import com.example.tomascrd.c_r_s_h.components.SceneCrsh;
 import com.example.tomascrd.c_r_s_h.scenes.TutorialScene;
 
 import java.io.IOException;
+import java.util.Calendar;
 
 /**
  * Main engine of this game, concentrates and controls the activities of different scenes. Contains the main game thread
@@ -94,6 +100,11 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
      * Current map Id to be loaded
      */
     public int currentMapID;
+    /**
+     * Speed for game timer
+     */
+    private VisualTimerComponent.TIMER_SPEED currentSpeed;
+
 
     /**
      * Starts a gameEngine within the given context
@@ -131,14 +142,14 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
                         if (loadSavedScene && savedScene != null && savedScene instanceof MainMenuScene) {
                             currentScene = savedScene;
                         } else {
-                            currentScene = new MainMenuScene(context, newScene, screenWidth, screenHeight);
+                            currentScene = new MainMenuScene(context, newScene, screenWidth, screenHeight, this);
                         }
                         break;
                     case 1: //NewGameScene
                         if (loadSavedScene && savedScene != null && savedScene instanceof NewGameScene) {
                             currentScene = savedScene;
                         } else {
-                            currentScene = new NewGameScene(context, newScene, screenWidth, screenHeight);
+                            currentScene = new NewGameScene(context, newScene, screenWidth, screenHeight, this);
                         }
                         break;
                     case 2: //OptionsScene
@@ -152,21 +163,21 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
                         if (loadSavedScene && savedScene != null && savedScene instanceof CreditScene) {
                             currentScene = savedScene;
                         } else {
-                            currentScene = new CreditScene(context, newScene, screenWidth, screenHeight);
+                            currentScene = new CreditScene(context, newScene, screenWidth, screenHeight, this);
                         }
                         break;
                     case 4: //RecordsScene
                         if (loadSavedScene && savedScene != null && savedScene instanceof RecordsScene) {
                             currentScene = savedScene;
                         } else {
-                            currentScene = new RecordsScene(context, newScene, screenWidth, screenHeight);
+                            currentScene = new RecordsScene(context, newScene, screenWidth, screenHeight, this);
                         }
                         break;
                     case 5: //TutorialScene
                         if (loadSavedScene && savedScene != null && savedScene instanceof TutorialScene) {
                             currentScene = savedScene;
                         } else {
-                            currentScene = new TutorialScene(context, newScene, screenWidth, screenHeight);
+                            currentScene = new TutorialScene(context, newScene, screenWidth, screenHeight, this);
                         }
                         break;
                     case 6: //MapCreatorScene
@@ -263,7 +274,6 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
      */
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-
         //Reset the width and height
         screenWidth = width;
         screenHeight = height;
@@ -278,7 +288,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
         optionsManager.loadOptions();
         //Reload the mainMenuScene if the current scene is not on memory anymore
         if (currentScene == null) {
-            currentScene = new MainMenuScene(context, 0, screenWidth, screenHeight);
+            currentScene = new MainMenuScene(context, 0, screenWidth, screenHeight, this);
         }
         //Audio managing
         updateAudioObjects();
@@ -365,6 +375,26 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
         }
         if (nullifyMap) {
 
+        }
+    }
+
+    /**
+     * Gets the timer speed
+     *
+     * @return the new timer speed
+     */
+    public VisualTimerComponent.TIMER_SPEED getCurrentSpeed() {
+        if (this.currentSpeed == null) {
+            currentSpeed = optionsManager.getTimerSpeed();
+        }
+        return currentSpeed;
+    }
+
+    public void setCurrentSpeed(VisualTimerComponent.TIMER_SPEED currentSpeed) {
+        this.currentSpeed = currentSpeed;
+        this.optionsManager.setTimerSpeed(currentSpeed);
+        if (this.mainGameScene != null) {
+            this.mainGameScene.setTimerSpeed(currentSpeed);
         }
     }
 

@@ -5,7 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
-import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -13,6 +12,7 @@ import android.view.MotionEvent;
 import com.example.tomascrd.c_r_s_h.R;
 import com.example.tomascrd.c_r_s_h.components.SceneCrsh;
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
+import com.example.tomascrd.c_r_s_h.core.GameEngine;
 
 /**
  * Represents the tutorial for the game
@@ -28,19 +28,17 @@ public class TutorialScene extends SceneCrsh {
      * @param id           this scene's id (0 is recommended by default for the main menu)
      * @param screenWidth  this screen's width
      * @param screenHeight this screen's height
+     * @param engineCallback callback to access gameEngine data
      */
-    public TutorialScene(Context context, int id, int screenWidth, int screenHeight) {
+    public TutorialScene(Context context, int id, int screenWidth, int screenHeight, GameEngine engineCallback) {
         super(context, id, screenWidth, screenHeight);
+        this.engineCallback = engineCallback;
         //Title text
         pTitleText = new Paint();
         pTitleText.setTypeface(Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN));
         pTitleText.setColor(Color.BLACK);
         pTitleText.setTextAlign(Paint.Align.CENTER);
         pTitleText.setTextSize((float) ((screenHeight / GameConstants.MENUSCREEN_COLUMNS) * 2));
-
-        //Gradient paint
-        this.gradientPaint = new Paint();
-        this.gradientPaint.setShader(new LinearGradient(0, 0, screenWidth, screenHeight, Color.GREEN, Color.CYAN, Shader.TileMode.CLAMP));
     }
 
     /**
@@ -48,7 +46,7 @@ public class TutorialScene extends SceneCrsh {
      */
     @Override
     public void updatePhysics() {
-
+        super.updatePhysics();
     }
 
     /**
@@ -59,7 +57,7 @@ public class TutorialScene extends SceneCrsh {
     @Override
     public void draw(Canvas c) {
         //General background
-        c.drawPaint(gradientPaint);
+        super.draw(c);
         //Title text
         c.drawText(context.getString(R.string.btnTutorial), screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9, screenHeight / GameConstants.MENUSCREEN_ROWS, pTitleText);
         //Buttons

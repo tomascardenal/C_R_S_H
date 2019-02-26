@@ -55,6 +55,10 @@ public class PauseMenuComponent extends DrawableComponent {
      */
     private Paint borderPaint;
     /**
+     * Painter for info
+     */
+    private Paint infoPaint;
+    /**
      * Indicates whether the user is being shown the confirm menu
      */
     private boolean isConfirming;
@@ -102,6 +106,12 @@ public class PauseMenuComponent extends DrawableComponent {
         pText.setColor(Color.BLACK);
         pText.setTextAlign(Paint.Align.CENTER);
         pText.setTextSize(gameSceneState.tileSizeReference * 1.5f);
+
+        infoPaint = new Paint();
+        infoPaint.setTypeface(Typeface.createFromAsset(this.context.getAssets(), GameConstants.FONT_HOMESPUN));
+        infoPaint.setColor(Color.BLACK);
+        infoPaint.setTextAlign(Paint.Align.CENTER);
+        infoPaint.setTextSize(gameSceneState.tileSizeReference * 0.75f);
 
         //Buttons
 
@@ -161,6 +171,7 @@ public class PauseMenuComponent extends DrawableComponent {
             btnConfirmYes.draw(c);
             btnConfirmNo.draw(c);
         } else {
+            c.drawText(context.getString(R.string.infoPause),borderRect.exactCenterX(),this.borderRect.height() /GameConstants.GAMESCREEN_ROWS *10,infoPaint);
             btnOptions.draw(c);
             btnUnpause.draw(c);
             btnEndGame.draw(c);
