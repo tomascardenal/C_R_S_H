@@ -163,7 +163,7 @@ public class MainMenuScene extends SceneCrsh {
     public void draw(Canvas c) {
         //General background
         super.draw(c);
-        //Parallax background FIXME This are placeholder images
+        //Parallax background
         for (int i = 0; i < parallaxBackgrounds.length; i++) {
             Log.i("setsky", "drawing parallax number" + i);
             c.drawBitmap(parallaxBackgrounds[i].image, parallaxBackgrounds[i].position.x, parallaxBackgrounds[i].position.y, null);

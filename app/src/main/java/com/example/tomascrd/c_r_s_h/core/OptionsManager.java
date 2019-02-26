@@ -3,9 +3,12 @@ package com.example.tomascrd.c_r_s_h.core;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.example.tomascrd.c_r_s_h.components.TileComponent;
 import com.example.tomascrd.c_r_s_h.components.VisualTimerComponent;
 
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -54,9 +57,14 @@ public class OptionsManager {
      */
     private Context context;
 
-    public final class MapReference {
+    public class MapReference {
         public int mapId;
         public String mapName;
+
+        public MapReference(int mapId, String mapName) {
+            this.mapId = mapId;
+            this.mapName = mapName;
+        }
     }
 
     /**
@@ -68,6 +76,7 @@ public class OptionsManager {
         this.context = context;
         preferences = context.getSharedPreferences(GameConstants.PREFERENCES_NAME, Context.MODE_PRIVATE);
         loadOptions();
+        loadMapList();
     }
 
     /**
@@ -205,12 +214,47 @@ public class OptionsManager {
     }
 
     //TODO data consistency on maps and saving map names
+
+    /**
+     * Saves the list of maps as a pair of id's and names
+     *
+     * @return true if the task was done correctly, false if not
+     */
     public boolean saveMapList() {
+        DataOutputStream output = null;
         try (FileOutputStream fos = context.openFileOutput(GameConstants.MAPLIST_FILE_NAME, Context.MODE_PRIVATE)) {
-            DataOutputStream output = new DataOutputStream(fos);
+            output = new DataOutputStream(fos);
             for (int i = 0; i < mapNames.size(); i++) {
                 MapReference currentRef = mapNames.get(i);
+                output.writeInt(currentRef.mapId);
+                output.writeUTF(currentRef.mapName);
+            }
+        } catch (IOException e) {
+            return false;
+        }
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt(GameConstants.PREFERENCES_MAPCOUNT, mapNames.size());
+        editor.commit();
+        return true;
+    }
 
+    /**
+     * Loads the current map list from private files into memory
+     *
+     * @return true if the task was done correctly, false if not
+     */
+    public boolean loadMapList() {
+        int mapCount = preferences.getInt(GameConstants.PREFERENCES_MAPCOUNT, 0);
+        this.mapNames = new ArrayList<MapReference>();
+        try (FileInputStream fis = context.openFileInput(GameConstants.MAPLIST_FILE_NAME)) {
+            DataInputStream input = new DataInputStream(fis);
+            MapReference currentMap;
+            for (int i = 0; i < mapCount; i++) {
+                currentMap = new MapReference(
+                        input.readInt(),
+                        input.readUTF()
+                );
+                mapNames.add(currentMap);
             }
             return true;
         } catch (IOException e) {

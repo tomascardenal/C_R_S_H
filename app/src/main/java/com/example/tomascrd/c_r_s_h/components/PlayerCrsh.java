@@ -36,6 +36,10 @@ public class PlayerCrsh extends DrawableComponent {
      */
     protected int playerLifes;
     /**
+     * The player's score
+     */
+    private int playerScore;
+    /**
      * This player's x axis velocity
      */
     protected float xVelocity;
@@ -111,6 +115,15 @@ public class PlayerCrsh extends DrawableComponent {
      * Indicates if this player is colliding against a border tile on the Y coordinate with negative Y velocity
      */
     protected boolean againstBorderYNegative;
+    /**
+     * Indicator for the player one
+     */
+    private CircleComponent playerOneIndicator[];
+
+    /**
+     * Indicator for the player two
+     */
+    private CircleComponent playerTwoIndicator[];
 
     /**
      * Initializes a player to it's parameters, with a given CircleComponent
@@ -141,6 +154,7 @@ public class PlayerCrsh extends DrawableComponent {
         this.bounceBackSmall = false;
         this.takingHit = false;
         this.takehitCounter = 0;
+        this.playerScore = 0;
 
         //Set the color of the player depending of it's ID
         switch (playerId) {

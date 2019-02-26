@@ -78,6 +78,10 @@ public class SaveMenuComponent extends DrawableComponent {
      */
     private boolean onKeyboard;
     /**
+     * Indicates whether the player is loading a map
+     */
+    private boolean onLoadMap;
+    /**
      * The current state of the game to be saved if necessary
      */
     private SceneCrsh gameSceneState;
@@ -120,10 +124,11 @@ public class SaveMenuComponent extends DrawableComponent {
         this.yPos = yTop;
         this.width = width;
         this.height = height;
-        this.setConfirmChanges(false);
+        this.confirmChanges = false;
         this.isConfirming = false;
-        this.setQuitAfterConfirm(false);
+        this.quitAfterConfirm = false;
         this.onKeyboard = false;
+        this.onLoadMap = false;
 
         //Border rectangle
         borderRect = new Rect(
@@ -233,6 +238,8 @@ public class SaveMenuComponent extends DrawableComponent {
                 r.centerY() - btnConfirmYes.btnRect.height() - (int) this.borderPaint.getStrokeWidth() / 4,
                 Color.TRANSPARENT, 0, false, -1);
 
+        //TODO Loading map options
+
     }
 
     /**
@@ -265,6 +272,8 @@ public class SaveMenuComponent extends DrawableComponent {
             btnKeyConfirmYes.draw(c);
             btnKeyConfirmNo.draw(c);
             keyboard.draw(c);
+        } else if (onLoadMap) {
+
         } else if (!isConfirming && !onKeyboard) {
             c.drawText(context.getString(R.string.infoSave), borderRect.exactCenterX(), this.borderRect.height() / GameConstants.GAMESCREEN_ROWS * 9, infoPaint);
             btnSaveMap.draw(c);
@@ -275,7 +284,6 @@ public class SaveMenuComponent extends DrawableComponent {
             btnUnpause.draw(c);
             btnExitToMenu.draw(c);
         }
-
         //Draw border
         c.drawRect(borderRect, borderPaint);
     }

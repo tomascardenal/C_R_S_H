@@ -141,6 +141,10 @@ public final class GameConstants {
      */
     public final static String PREFERENCES_TIMERSPEED = "timerSpeed";
     /**
+     * Reference for the number of saved maps
+     */
+    public final static String PREFERENCES_MAPCOUNT = "mapCount";
+    /**
      * Array containing the values of the tile_types
      */
     public final static TileComponent.TILE_TYPE[] TILE_TYPES = TileComponent.TILE_TYPE.values();

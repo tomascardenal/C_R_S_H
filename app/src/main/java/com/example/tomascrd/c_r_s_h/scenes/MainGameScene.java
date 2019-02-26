@@ -168,7 +168,10 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
      * Paint for mode two
      */
     private Paint paintModeTwo;
-
+    /**
+     * Paint for mid line
+     */
+    private Paint paintMidLine;
 
     /**
      * Starts a new main game
@@ -194,14 +197,13 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         this.tileSizeReference = mapLoad.getReference();
 
         //Initialize players
-        PointF playerOneCenter = new PointF(mapLoad.tileArray[2][2].getCollisionRect().exactCenterX(), mapLoad.tileArray[2][2].getCollisionRect().exactCenterY());
-        this.playerOne = new PlayerCrsh(this, mapLoad, "TestP1", 1, false, new CircleComponent(playerOneCenter, mapLoad.getReference() / 2));
-        PointF playerTwoCenter = new PointF(mapLoad.tileArray[mapLoad.tileArray.length - 3][mapLoad.tileArray[mapLoad.tileArray.length - 3].length - 3].getCollisionRect().exactCenterX(), mapLoad.tileArray[mapLoad.tileArray.length - 3][mapLoad.tileArray[mapLoad.tileArray.length - 3].length - 3].getCollisionRect().exactCenterY());
+        PointF playerOneCenter = new PointF(mapLoad.tileArray[mapLoad.tileArray.length - 3][mapLoad.tileArray[mapLoad.tileArray.length - 3].length - 3].getCollisionRect().exactCenterX(), mapLoad.tileArray[mapLoad.tileArray.length - 3][mapLoad.tileArray[mapLoad.tileArray.length - 3].length - 3].getCollisionRect().exactCenterY());
+        this.playerOne = new PlayerCrsh(this, mapLoad, "TestP1", 1, true, new CircleComponent(playerOneCenter, mapLoad.getReference() / 2));
+        PointF playerTwoCenter = new PointF(mapLoad.tileArray[2][2].getCollisionRect().exactCenterX(), mapLoad.tileArray[2][2].getCollisionRect().exactCenterY());
         if (this.gameMode == GAMEMODE.MODE_CRSH_COM || this.gameMode == GAMEMODE.MODE_NRML_COM) {
             this.playerCom = new PlayerComCrsh(this, mapLoad, true, new CircleComponent(playerTwoCenter, mapLoad.getReference() / 2));
-
         } else {
-            this.playerTwo = new PlayerCrsh(this, mapLoad, "testP2", 2, true, new CircleComponent(playerTwoCenter, mapLoad.getReference() / 2));
+            this.playerTwo = new PlayerCrsh(this, mapLoad, "testP2", 2, false, new CircleComponent(playerTwoCenter, mapLoad.getReference() / 2));
         }
 
         //Initialize joysticks
@@ -257,6 +259,11 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         bottom = this.mapLoad.tileArray[GameConstants.MAPAREA_ROWS - 1][GameConstants.MAPAREA_COLUMNS - 1].getCollisionRect().bottom;
         this.modeTwo = new Rect(left, top, right, bottom);
         this.paintModeTwo = new Paint();
+
+        //Mid line
+        this.paintMidLine = new Paint();
+        this.paintMidLine.setColor(Color.LTGRAY);
+        this.paintMidLine.setAlpha(80);
 
         setAttackIndicator();
 
@@ -334,12 +341,14 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         }
 
         //Player One
-        PointF playerOneCenter = new PointF(mapLoad.tileArray[2][2].getCollisionRect().exactCenterX(), mapLoad.tileArray[2][2].getCollisionRect().exactCenterY());
+        PointF playerOneCenter = new PointF(mapLoad.tileArray[mapLoad.tileArray.length - 3][mapLoad.tileArray[mapLoad.tileArray.length - 3].length - 3].getCollisionRect().exactCenterX(), mapLoad.tileArray[mapLoad.tileArray.length - 3][mapLoad.tileArray[mapLoad.tileArray.length - 3].length - 3].getCollisionRect().exactCenterY());
         this.playerOne = new PlayerCrsh(this, mapLoad, "TestP1", 1, false, new CircleComponent(playerOneCenter, mapLoad.getReference() / 2));
         this.playerOne.respawn();
 
         //Player Two or COM
-        PointF playerTwoCenter = new PointF(mapLoad.tileArray[mapLoad.tileArray.length - 3][mapLoad.tileArray[mapLoad.tileArray.length - 3].length - 3].getCollisionRect().exactCenterX(), mapLoad.tileArray[mapLoad.tileArray.length - 3][mapLoad.tileArray[mapLoad.tileArray.length - 3].length - 3].getCollisionRect().exactCenterY());
+        PointF playerTwoCenter = new PointF(mapLoad.tileArray[2][2].getCollisionRect().exactCenterX(), mapLoad.tileArray[2][2].getCollisionRect().exactCenterY());
+
+
         if (this.gameMode == GAMEMODE.MODE_CRSH_COM || this.gameMode == GAMEMODE.MODE_NRML_COM) {
             this.playerCom = new PlayerComCrsh(this, mapLoad, true, new CircleComponent(playerTwoCenter, mapLoad.getReference() / 2));
             this.playerCom.respawn();
@@ -481,7 +490,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
                 //Draw player COM
                 playerCom.draw(c);
             }
-            //Draw the back button TODO change this for an ingame pause menu
+            //Draw the back button
             btnPause.draw(c);
             //Draw the joysticks
             if (playerOne.getPlayerLifes() > 0) {
@@ -492,6 +501,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
                     joystickTwo.draw(c);
                 }
             }
+            //c.drawLine(this.screenWidth / 2, this.mapLoad.gethReference() + this.mapLoad.getReference(), this.screenWidth / 2, this.screenHeight - this.mapLoad.gethReference() - this.mapLoad.getReference(), paintMidLine);
         } else {
             pauseMenu.draw(c);
         }
@@ -539,6 +549,10 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
                     if (playerTwoArea && playerTwo.getPlayerLifes() > 0 && !playerTwo.isOnAttack()) {
                         joystickTwo.activateJoystick(event);
                     }
+                    //Control unwanted swipes onto the pause button
+                    if (isClick(btnPause, event)) {
+                        btnPause.pointerId = event.getPointerId(event.getActionIndex());
+                    }
                 }
                 break;
             case MotionEvent.ACTION_UP:                     // Last finger up
@@ -559,7 +573,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
                             playerTwo.setVelocity(0, 0);
                         }
                     }
-                    if (isClick(btnPause, event)) {
+                    if (isClick(btnPause, event) && event.getPointerId(event.getActionIndex()) == btnPause.pointerId) {
                         onPause = true;
                     }
                 } else {
