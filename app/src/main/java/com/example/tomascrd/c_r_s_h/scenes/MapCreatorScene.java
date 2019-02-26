@@ -3,12 +3,12 @@ package com.example.tomascrd.c_r_s_h.scenes;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.LinearGradient;
-import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.widget.Toast;
 
 import com.example.tomascrd.c_r_s_h.R;
 import com.example.tomascrd.c_r_s_h.components.ButtonComponent;
@@ -54,18 +54,26 @@ public class MapCreatorScene extends SceneCrsh {
      * Id for the new map
      */
     private int newId;
+    /**
+     * The current map name
+     */
+    public String currentMapName;
+    /**
+     * Constant id for MapCreatorScene
+     */
+    public static final int MAPCREATOR_ID = 6;
+
 
     /**
      * Starts a new Map Creator
      *
      * @param context        the scene's context
-     * @param id             the scene's id
      * @param screenWidth    the screen width
      * @param screenHeight   the screen height
      * @param engineCallback callback to the GameEngine
      */
-    public MapCreatorScene(Context context, int id, int screenWidth, int screenHeight, GameEngine engineCallback) {
-        super(context, id, screenWidth, screenHeight);
+    public MapCreatorScene(Context context, int screenWidth, int screenHeight, GameEngine engineCallback) {
+        super(context, MAPCREATOR_ID, screenWidth, screenHeight);
         this.engineCallback = engineCallback;
         this.utils = new Utils(context);
 
@@ -136,52 +144,9 @@ public class MapCreatorScene extends SceneCrsh {
                     }
                     iterateTiles(event);
                 } else {
-                    if (saveMenu.isConfirming()) {
-                        if (isClick(saveMenu.getBtnConfirmYes(), event)) {
-                            creatorMap.mapID = newId;
-                            creatorMap.saveMap();
-                            saveMenu.setConfirming(false);
-                            saveMenu.setConfirmChanges(false);
-                        } else if (isClick(saveMenu.getBtnConfirmNo(), event)) {
-                            saveMenu.setConfirming(false);
-                        }
-                        if (saveMenu.quitAfterConfirm) {
-                            saveMenu.quitAfterConfirm = false;
-                            return 0;
-                        }
-                        if (saveMenu.loadAfterConfirm) {
-                            saveMenu.loadAfterConfirm = false;
-                            creatorMap.loadMap(newId);
-                            creatorMap.loadTileArray();
-                        }
-                    } else {
-                        if (isClick(saveMenu.getBtnSaveMap(), event)) {
-                            creatorMap.mapID = newId;
-                            boolean didIt = creatorMap.saveMap();
-                            Log.i("Saved map", didIt + "");
-                            saveMenu.setConfirmChanges(false);
-                        }
-                        if (isClick(saveMenu.getBtnLoadMap(), event)) {
-                            if (saveMenu.isConfirmChanges()) {
-                                saveMenu.setConfirming(true);
-                                saveMenu.loadAfterConfirm = true;
-                            } else {
-                                boolean didIt = creatorMap.loadMap(newId);
-                                Log.i("Loading map", didIt + "");
-                                creatorMap.loadTileArray();
-                            }
-                        }
-                        if (isClick(saveMenu.getBtnUnpause(), event)) {
-                            onPause = false;
-                        }
-                        if (isClick(saveMenu.getBtnExitToMenu(), event)) {
-                            if (saveMenu.isConfirmChanges()) {
-                                saveMenu.setConfirming(true);
-                                saveMenu.quitAfterConfirm = true;
-                            } else {
-                                return 0;
-                            }
-                        }
+                    int saveResult = onSaveMenu(event);
+                    if (saveResult != -1) {
+                        return saveResult;
                     }
                 }
                 break;
@@ -195,6 +160,96 @@ public class MapCreatorScene extends SceneCrsh {
         }
         return this.id;
     }
+
+    /**
+     * Controls the actions of the SaveMenu
+     *
+     * @param event the event launching from the saveMenu
+     * @return a new scene id to change to, or -1 if no scene change was requested
+     */
+    public int onSaveMenu(MotionEvent event) {
+        if (saveMenu.isConfirming()) {
+            if (isClick(saveMenu.getBtnConfirmYes(), event)) {
+                saveAMap();
+            } else if (isClick(saveMenu.getBtnConfirmNo(), event)) {
+                saveMenu.setConfirming(false);
+            }
+            if (saveMenu.isQuitAfterConfirm()) {
+                saveMenu.setQuitAfterConfirm(false);
+                return 0;
+            }
+            if (saveMenu.isLoadAfterConfirm()) {
+                saveMenu.setLoadAfterConfirm(false);
+                loadAMap();
+            }
+        } else if (saveMenu.isOnKeyboard()) {
+            saveMenu.keyboard.onClickEvent(event);
+            if (isClick(saveMenu.getBtnKeyConfirmYes(), event)) {
+                currentMapName = saveMenu.keyboard.getUserInput();
+                Toast.makeText(this.context, context.getString(R.string.toastChangedNameTo) + currentMapName, Toast.LENGTH_SHORT).show();
+                saveMenu.setOnKeyboard(false);
+            } else if (isClick(saveMenu.getBtnConfirmNo(), event)) {
+                saveMenu.setOnKeyboard(false);
+            }
+        } else {
+            if (isClick(saveMenu.getBtnSaveMap(), event)) {
+                saveAMap();
+            }
+            if (isClick(saveMenu.getBtnLoadMap(), event)) {
+                if (saveMenu.isConfirmChanges()) {
+                    saveMenu.setConfirming(true);
+                    saveMenu.setLoadAfterConfirm(true);
+                } else {
+                    loadAMap();
+                }
+            }
+            if (isClick(saveMenu.getBtnUnpause(), event)) {
+                onPause = false;
+            }
+            if (isClick(saveMenu.getBtnExitToMenu(), event)) {
+                if (saveMenu.isConfirmChanges()) {
+                    saveMenu.setConfirming(true);
+                    saveMenu.setQuitAfterConfirm(true);
+                } else {
+                    return 0;
+                }
+            }
+            if (isClick(saveMenu.getBtnNameMap(), event)) {
+                saveMenu.setOnKeyboard(true);
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * Saves a map and prompts the user with a toast informing of the result
+     */
+    public void saveAMap() {
+        creatorMap.mapID = newId;
+        boolean didIt = creatorMap.saveMap();
+        if (didIt) {
+            Toast.makeText(this.context, context.getString(R.string.toastMapSaved), Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this.context, context.getString(R.string.toastMapNotSaved), Toast.LENGTH_SHORT).show();
+
+        }
+        saveMenu.setConfirming(false);
+        saveMenu.setConfirmChanges(false);
+    }
+
+    /**
+     * Safely loads a map and prompts the user with a toast informing of the result
+     */
+    public void loadAMap() {
+        boolean didIt = creatorMap.loadMap(newId);
+        if (didIt) {
+            Toast.makeText(this.context, context.getString(R.string.toastMapLoaded), Toast.LENGTH_SHORT).show();
+            creatorMap.loadTileArray();
+        } else {
+            Toast.makeText(this.context, context.getString(R.string.toastMapNotLoaded), Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
     /**
      * Determines the row and column of the touched tile

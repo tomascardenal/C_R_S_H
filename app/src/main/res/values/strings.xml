@@ -62,4 +62,13 @@
     <string name="btnSpeedFast">Rápida</string>
     <string name="btnSpeedOhno">¡Oh, no!</string>
     <string name="optSpeed">Velocidad del temporizador</string>
+    <string name="toastMapLoaded">Mapa cargado</string>
+    <string name="toastMapNotLoaded">El mapa no se pudo cargar</string>
+    <string name="toastMapSaved">Mapa guardado correctamente</string>
+    <string name="toastMapNotSaved">El mapa no se pudo guardar correctamente</string>
+    <string name="titleInsertName">Indica el nombre del mapa</string>
+    <string name="toastChangedNameTo">"Cambiado nombre del mapa a: "</string>
+    <string name="btnBackspace" translatable="false"></string>
+    <string name="btnConfirmNameYes" translatable="false"></string>
+    <string name="btnConfirmNameNo" translatable="false"></string>
 </resources>

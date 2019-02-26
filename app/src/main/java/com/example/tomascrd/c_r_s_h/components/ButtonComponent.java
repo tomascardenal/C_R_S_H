@@ -160,10 +160,12 @@ public class ButtonComponent extends DrawableComponent {
      * @param shadowAlpha  the alpha value for the shadow
      */
     public void setClickEffectParameters(int borderColor, int shadowColor, int onClickAlpha, int shadowAlpha) {
-        this.pClickBorder.setColor(borderColor);
-        this.pClickShadow.setColor(shadowColor);
-        this.onClickAlpha = onClickAlpha;
-        this.pClickShadow.setAlpha(shadowAlpha);
+        if (this.pClickBorder != null && this.clickEffect) {
+            this.pClickBorder.setColor(borderColor);
+            this.pClickShadow.setColor(shadowColor);
+            this.onClickAlpha = onClickAlpha;
+            this.pClickShadow.setAlpha(shadowAlpha);
+        }
     }
 
     /**
@@ -184,7 +186,20 @@ public class ButtonComponent extends DrawableComponent {
             c.drawRect(btnRect, pButton);
             c.drawText(getText(), btnRect.centerX(), btnRect.centerY() + height / 6, pText);
         }
+    }
 
+    /**
+     * Sets the painter to draw the button or only it's border
+     *
+     * @param value
+     */
+    public void drawOnlyBorder(boolean value) {
+        if (value) {
+            pButton.setStyle(Paint.Style.STROKE);
+            pButton.setStrokeWidth(pClickBorder.getStrokeWidth());
+        } else {
+            pButton.setStyle(Paint.Style.FILL);
+        }
     }
 
     /**
@@ -248,5 +263,14 @@ public class ButtonComponent extends DrawableComponent {
      */
     public void setColor(int color) {
         this.pButton.setColor(color);
+    }
+
+    /**
+     * Gets the rect of this button
+     *
+     * @return the rect of this button
+     */
+    public Rect getBtnRect() {
+        return this.btnRect;
     }
 }

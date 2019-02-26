@@ -52,19 +52,22 @@ public class GameSettingsScene extends SceneCrsh {
      * Button for choosing the speed of the game
      */
     private ButtonComponent btnSpeedOHNO;
+    /**
+     * Constant id for GameSettingsScene
+     */
+    private static final int GAMESETTINGS_ID = 7;
 
 
     /**
      * Starts an options menu
      *
      * @param context        the application context
-     * @param id             this scene's id (0 is recommended by default for the main menu)
      * @param screenWidth    this screen's width
      * @param screenHeight   this screen's height
      * @param engineCallback callback to access gameEngine data
      */
-    public GameSettingsScene(Context context, int id, int screenWidth, int screenHeight, GameEngine engineCallback) {
-        super(context, id, screenWidth, screenHeight);
+    public GameSettingsScene(Context context, int screenWidth, int screenHeight, GameEngine engineCallback) {
+        super(context, GAMESETTINGS_ID, screenWidth, screenHeight);
         this.engineCallback = engineCallback;
 
         //Title text

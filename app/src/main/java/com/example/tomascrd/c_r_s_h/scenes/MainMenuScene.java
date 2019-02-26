@@ -60,19 +60,22 @@ public class MainMenuScene extends SceneCrsh {
      * Array for better button management
      */
     private ButtonComponent[] buttonArray;
+    /**
+     * Constant ID for MainMenuScene
+     */
+    public static final int MAINMENU_ID = 0;
 
 
     /**
      * Starts a main menu
      *
-     * @param context      the application context
-     * @param id           this scene's id (0 is recommended by default for the main menu)
-     * @param screenWidth  this screen's width
-     * @param screenHeight this screen's height
+     * @param context        the application context
+     * @param screenWidth    this screen's width
+     * @param screenHeight   this screen's height
      * @param engineCallback callback to access gameEngine data
      */
-    public MainMenuScene(Context context, int id, int screenWidth, int screenHeight, GameEngine engineCallback) {
-        super(context, id, screenWidth, screenHeight);
+    public MainMenuScene(Context context, int screenWidth, int screenHeight, GameEngine engineCallback) {
+        super(context, MAINMENU_ID, screenWidth, screenHeight);
         this.engineCallback = engineCallback;
         this.context = context;
 

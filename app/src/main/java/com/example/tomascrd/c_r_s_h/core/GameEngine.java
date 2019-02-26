@@ -2,10 +2,6 @@ package com.example.tomascrd.c_r_s_h.core;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.LinearGradient;
-import android.graphics.Paint;
-import android.graphics.Shader;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Build;
@@ -28,7 +24,6 @@ import com.example.tomascrd.c_r_s_h.components.SceneCrsh;
 import com.example.tomascrd.c_r_s_h.scenes.TutorialScene;
 
 import java.io.IOException;
-import java.util.Calendar;
 
 /**
  * Main engine of this game, concentrates and controls the activities of different scenes. Contains the main game thread
@@ -142,56 +137,56 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
                         if (loadSavedScene && savedScene != null && savedScene instanceof MainMenuScene) {
                             currentScene = savedScene;
                         } else {
-                            currentScene = new MainMenuScene(context, newScene, screenWidth, screenHeight, this);
+                            currentScene = new MainMenuScene(context, screenWidth, screenHeight, this);
                         }
                         break;
                     case 1: //NewGameScene
                         if (loadSavedScene && savedScene != null && savedScene instanceof NewGameScene) {
                             currentScene = savedScene;
                         } else {
-                            currentScene = new NewGameScene(context, newScene, screenWidth, screenHeight, this);
+                            currentScene = new NewGameScene(context, screenWidth, screenHeight, this);
                         }
                         break;
                     case 2: //OptionsScene
                         if (loadSavedScene && savedScene != null && savedScene instanceof OptionsScene) {
                             currentScene = savedScene;
                         } else {
-                            currentScene = new OptionsScene(context, newScene, screenWidth, screenHeight, this);
+                            currentScene = new OptionsScene(context, screenWidth, screenHeight, this);
                         }
                         break;
                     case 3: //CreditScene
                         if (loadSavedScene && savedScene != null && savedScene instanceof CreditScene) {
                             currentScene = savedScene;
                         } else {
-                            currentScene = new CreditScene(context, newScene, screenWidth, screenHeight, this);
+                            currentScene = new CreditScene(context, screenWidth, screenHeight, this);
                         }
                         break;
                     case 4: //RecordsScene
                         if (loadSavedScene && savedScene != null && savedScene instanceof RecordsScene) {
                             currentScene = savedScene;
                         } else {
-                            currentScene = new RecordsScene(context, newScene, screenWidth, screenHeight, this);
+                            currentScene = new RecordsScene(context, screenWidth, screenHeight, this);
                         }
                         break;
                     case 5: //TutorialScene
                         if (loadSavedScene && savedScene != null && savedScene instanceof TutorialScene) {
                             currentScene = savedScene;
                         } else {
-                            currentScene = new TutorialScene(context, newScene, screenWidth, screenHeight, this);
+                            currentScene = new TutorialScene(context, screenWidth, screenHeight, this);
                         }
                         break;
                     case 6: //MapCreatorScene
                         if (loadSavedScene && savedScene != null && savedScene instanceof MapCreatorScene) {
                             currentScene = savedScene;
                         } else {
-                            currentScene = new MapCreatorScene(context, newScene, screenWidth, screenHeight, this);
+                            currentScene = new MapCreatorScene(context, screenWidth, screenHeight, this);
                         }
                         break;
                     case 7://GameSettingsScene
                         if (loadSavedScene && savedScene != null && savedScene instanceof GameSettingsScene) {
                             currentScene = savedScene;
                         } else {
-                            currentScene = new GameSettingsScene(context, newScene, screenWidth, screenHeight, this);
+                            currentScene = new GameSettingsScene(context, screenWidth, screenHeight, this);
                         }
                         break;
                     case 97: //MainGameScene GAMEMODE.MODE_NRML_COM
@@ -288,7 +283,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
         optionsManager.loadOptions();
         //Reload the mainMenuScene if the current scene is not on memory anymore
         if (currentScene == null) {
-            currentScene = new MainMenuScene(context, 0, screenWidth, screenHeight, this);
+            currentScene = new MainMenuScene(context, screenWidth, screenHeight, this);
         }
         //Audio managing
         updateAudioObjects();
@@ -296,7 +291,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
         updateMusicPlayer();
         //
         if (mainGameScene == null) {
-            mainGameScene = new MainGameScene(context, 99, screenWidth, screenHeight, this, MainGameScene.GAMEMODE.MODE_NRML_2P, currentMapID);
+            mainGameScene = new MainGameScene(context, screenWidth, screenHeight, this, MainGameScene.GAMEMODE.MODE_NRML_2P, currentMapID);
         }
         //Starting the thread
         thread.setWorking(true);
@@ -364,19 +359,6 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
-    /**
-     * Updates the Game Scene to the currentMapId
-     *
-     * @param nullifyMap whether the GameScene should be totally reloaded or not
-     */
-    public void updateGameScene(boolean nullifyMap) {
-        if (mainGameScene == null) {
-            mainGameScene = new MainGameScene(context, 99, screenWidth, screenHeight, this, MainGameScene.GAMEMODE.MODE_NRML_2P, currentMapID);
-        }
-        if (nullifyMap) {
-
-        }
-    }
 
     /**
      * Gets the timer speed

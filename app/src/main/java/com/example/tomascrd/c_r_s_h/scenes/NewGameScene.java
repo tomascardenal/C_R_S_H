@@ -46,18 +46,21 @@ public class NewGameScene extends SceneCrsh {
      * Button for game settings
      */
     private ButtonComponent btnGameSettings;
+    /**
+     * Constant id for NewGameScene
+     */
+    public static final int NEWGAME_ID = 1;
 
     /**
      * Starts a new game menu
      *
-     * @param context      the application context
-     * @param id           this scene's id (0 is recommended by default for the main menu)
-     * @param screenWidth  this screen's width
-     * @param screenHeight this screen's height
+     * @param context        the application context
+     * @param screenWidth    this screen's width
+     * @param screenHeight   this screen's height
      * @param engineCallback callback to access gameEngine data
      */
-    public NewGameScene(Context context, int id, int screenWidth, int screenHeight, GameEngine engineCallback) {
-        super(context, id, screenWidth, screenHeight);
+    public NewGameScene(Context context, int screenWidth, int screenHeight, GameEngine engineCallback) {
+        super(context, NEWGAME_ID, screenWidth, screenHeight);
         this.engineCallback = engineCallback;
         //Title text
         pTitleText = new Paint();
@@ -110,7 +113,7 @@ public class NewGameScene extends SceneCrsh {
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 6,
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 16,
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 7, Color.GRAY, 100, true, 7);
-        btnGameSettings.setClickEffectParameters(Color.GRAY,Color.DKGRAY, 190,50);
+        btnGameSettings.setClickEffectParameters(Color.GRAY, Color.DKGRAY, 190, 50);
 
         btnNormalMode.setHeldDown(true);
         btnPvP.setHeldDown(false);
@@ -156,7 +159,7 @@ public class NewGameScene extends SceneCrsh {
         switch (action) {
             case MotionEvent.ACTION_DOWN:           // First finger
             case MotionEvent.ACTION_POINTER_DOWN:  // Second finger and so on
-                if(isClick(btnGameSettings,event)){
+                if (isClick(btnGameSettings, event)) {
                     btnGameSettings.setHeldDown(true);
                 }
                 break;

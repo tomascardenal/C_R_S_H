@@ -233,6 +233,11 @@ public class PlayerCrsh extends DrawableComponent {
         this.takehitCounter = 0;
         this.playerCollision.resetPosition(this.spawnPoint.x, this.spawnPoint.y);
         this.playerCollision.radius = startRadius;
+        if (this.playerId == 1) {
+            gameCallback.lifeOne.resetLife();
+        } else {
+            gameCallback.lifeTwo.resetLife();
+        }
         setJoystickMultiplier();
         setMapPosition();
     }
@@ -262,11 +267,7 @@ public class PlayerCrsh extends DrawableComponent {
             takingHit = true;
         } else if (playerLifes == 0 && playerCollision.radius <= 0) {
             respawn();
-            if(this.playerId==1){
-                gameCallback.lifeOne.resetLife();
-            }else{
-                gameCallback.lifeTwo.resetLife();
-            }
+
         }
         playerCollision.draw(c);
     }

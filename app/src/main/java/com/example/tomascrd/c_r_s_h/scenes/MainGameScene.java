@@ -50,6 +50,23 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
     }
 
     /**
+     * Constant id for MainGameScene on Normal/COM mode
+     */
+    public static final int NRML_COM_ID = 97;
+    /**
+     * Constant id for MainGameScene on CRSH/COM mode
+     */
+    public static final int CRSH_COM_ID = 98;
+    /**
+     * Constant id for MainGameScene on Normal/2players mode
+     */
+    public static final int NRML_2P_ID = 99;
+    /**
+     * Constant id for MainGameScene on CRSH/2players mode
+     */
+    public static final int CRSH_2P_ID = 100;
+
+    /**
      * Map to load on the main game scene
      */
     private MapComponent mapLoad;
@@ -166,18 +183,18 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
      * Starts a new main game
      *
      * @param context        the application context
-     * @param id             this scene's id (0 is recommended by default for the main menu)
      * @param screenWidth    this screen's width
      * @param screenHeight   this screen's height
      * @param engineCallback callback to this game's engine
      * @param mapLoadID      id of the map to be loaded
      */
-    public MainGameScene(Context context, int id, int screenWidth, int screenHeight, GameEngine engineCallback, GAMEMODE gameMode, int mapLoadID) {
+    public MainGameScene(Context context, int screenWidth, int screenHeight, GameEngine engineCallback, GAMEMODE gameMode, int mapLoadID) {
         //Initialize variables
-        super(context, id, screenWidth, screenHeight);
+        super(context, -1, screenWidth, screenHeight);
         this.engineCallback = engineCallback;
         this.onPause = false;
         this.gameMode = gameMode;
+        this.setId();
         this.setMapLoadID(mapLoadID);
 
         //Initialize map
@@ -268,6 +285,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
      */
     public void setGameMode(GAMEMODE gameMode) {
         this.gameMode = gameMode;
+        this.setId();
         reloadMap();
         updateSensors();
     }
@@ -328,7 +346,8 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         PointF playerOneCenter = new PointF(mapLoad.tileArray[2][2].getCollisionRect().exactCenterX(), mapLoad.tileArray[2][2].getCollisionRect().exactCenterY());
         this.playerOne = new PlayerCrsh(this, mapLoad, "TestP1", 1, false, new CircleComponent(playerOneCenter, mapLoad.getReference() / 2));
         this.playerOne.respawn();
-        //Player Two
+
+        //Player Two or COM
         PointF playerTwoCenter = new PointF(mapLoad.tileArray[mapLoad.tileArray.length - 3][mapLoad.tileArray[mapLoad.tileArray.length - 3].length - 3].getCollisionRect().exactCenterX(), mapLoad.tileArray[mapLoad.tileArray.length - 3][mapLoad.tileArray[mapLoad.tileArray.length - 3].length - 3].getCollisionRect().exactCenterY());
         if (this.gameMode == GAMEMODE.MODE_CRSH_COM || this.gameMode == GAMEMODE.MODE_NRML_COM) {
             this.playerCom = new PlayerComCrsh(this, mapLoad, true, new CircleComponent(playerTwoCenter, mapLoad.getReference() / 2));
@@ -553,17 +572,9 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
                         onPause = true;
                     }
                 } else {
-                    if (isClick(pauseMenu.getBtnUnpause(), event)) {
-                        onPause = false;
-                    }
-                    if (isClick(pauseMenu.getBtnOptions(), event)) {
-                        engineCallback.loadSavedScene = true;
-                        engineCallback.savedScene = this;
-                        return 2;
-                    }
-                    if (isClick(pauseMenu.getBtnEndGame(), event)) {
-                        engineCallback.loadSavedScene = false;
-                        return 1;
+                    int pauseResult = onPauseMenu(event);
+                    if (pauseResult != -1) {
+                        return pauseResult;
                     }
                 }
                 break;
@@ -627,27 +638,9 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
                         }
                     }
                 } else {
-                    if (pauseMenu.isConfirming()) {
-                        if (isClick(pauseMenu.getBtnConfirmYes(), event)) {
-                            pauseMenu.setConfirming(false);
-                            engineCallback.loadSavedScene = false;
-                            this.reloadMap();
-                            return 1;
-                        } else if (isClick(pauseMenu.getBtnConfirmNo(), event)) {
-                            pauseMenu.setConfirming(false);
-                        }
-                    } else {
-                        if (isClick(pauseMenu.getBtnUnpause(), event)) {
-                            onPause = false;
-                        }
-                        if (isClick(pauseMenu.getBtnOptions(), event)) {
-                            engineCallback.loadSavedScene = true;
-                            engineCallback.savedScene = this;
-                            return 2;
-                        }
-                        if (isClick(pauseMenu.getBtnEndGame(), event)) {
-                            pauseMenu.setConfirming(true);
-                        }
+                    int pauseResult = onPauseMenu(event);
+                    if (pauseResult != -1) {
+                        return pauseResult;
                     }
                 }
                 if (isClick(btnPause, event)) {
@@ -671,6 +664,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         }
         return this.id;
     }
+
 
     /**
      * Controls the events on the touchscreen for GAMEMODE.MODE_CRSH_COM
@@ -705,17 +699,9 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
                         onPause = true;
                     }
                 } else {
-                    if (isClick(pauseMenu.getBtnUnpause(), event)) {
-                        onPause = false;
-                    }
-                    if (isClick(pauseMenu.getBtnOptions(), event)) {
-                        engineCallback.loadSavedScene = true;
-                        engineCallback.savedScene = this;
-                        return 2;
-                    }
-                    if (isClick(pauseMenu.getBtnEndGame(), event)) {
-                        engineCallback.loadSavedScene = false;
-                        return 1;
+                    int pauseResult = onPauseMenu(event);
+                    if (pauseResult != -1) {
+                        return pauseResult;
                     }
                 }
                 break;
@@ -763,27 +749,9 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
                         }
                     }
                 } else {
-                    if (pauseMenu.isConfirming()) {
-                        if (isClick(pauseMenu.getBtnConfirmYes(), event)) {
-                            pauseMenu.setConfirming(false);
-                            engineCallback.loadSavedScene = false;
-                            this.reloadMap();
-                            return 1;
-                        } else if (isClick(pauseMenu.getBtnConfirmNo(), event)) {
-                            pauseMenu.setConfirming(false);
-                        }
-                    } else {
-                        if (isClick(pauseMenu.getBtnUnpause(), event)) {
-                            onPause = false;
-                        }
-                        if (isClick(pauseMenu.getBtnOptions(), event)) {
-                            engineCallback.loadSavedScene = true;
-                            engineCallback.savedScene = this;
-                            return 2;
-                        }
-                        if (isClick(pauseMenu.getBtnEndGame(), event)) {
-                            pauseMenu.setConfirming(true);
-                        }
+                    int pauseResult = onPauseMenu(event);
+                    if (pauseResult != -1) {
+                        return pauseResult;
                     }
                 }
                 if (isClick(btnPause, event)) {
@@ -803,6 +771,38 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
                 Log.i("Other", "Undefined action: " + action);
         }
         return this.id;
+    }
+
+    /**
+     * Controls the actions of the PauseMenu
+     *
+     * @param event the event launching from the pauseMenu
+     * @return a new scene id to change to, or -1 if no scene change was requested
+     */
+    public int onPauseMenu(MotionEvent event) {
+        if (pauseMenu.isConfirming()) {
+            if (isClick(pauseMenu.getBtnConfirmYes(), event)) {
+                pauseMenu.setConfirming(false);
+                engineCallback.loadSavedScene = false;
+                this.reloadMap();
+                return 1;
+            } else if (isClick(pauseMenu.getBtnConfirmNo(), event)) {
+                pauseMenu.setConfirming(false);
+            }
+        } else {
+            if (isClick(pauseMenu.getBtnUnpause(), event)) {
+                onPause = false;
+            }
+            if (isClick(pauseMenu.getBtnOptions(), event)) {
+                engineCallback.loadSavedScene = true;
+                engineCallback.savedScene = this;
+                return 2;
+            }
+            if (isClick(pauseMenu.getBtnEndGame(), event)) {
+                pauseMenu.setConfirming(true);
+            }
+        }
+        return -1;
     }
 
     /**
@@ -996,6 +996,27 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
                     playerTwo.setVelocity(yAccel * GameConstants.ACCELEROMETER_MULTIPLIER, xAccel * GameConstants.ACCELEROMETER_MULTIPLIER);
                 }
             }
+        }
+    }
+
+
+    /**
+     * Sets this id depending on the map mode
+     */
+    public void setId() {
+        switch (this.gameMode) {
+            case MODE_NRML_COM:
+                this.id = 97;
+                break;
+            case MODE_CRSH_COM:
+                this.id = 98;
+                break;
+            case MODE_NRML_2P:
+                this.id = 99;
+                break;
+            case MODE_CRSH_2P:
+                this.id = 100;
+                break;
         }
     }
 

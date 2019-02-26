@@ -31,4 +31,10 @@
     <string name="btnSpeedFast">Fast</string>
     <string name="btnSpeedOhno">Oh, no!</string>
     <string name="optSpeed">Timer speed</string>
+    <string name="toastMapLoaded">Map loaded</string>
+    <string name="toastMapNotLoaded">We were unable to load the map</string>
+    <string name="toastMapSaved">Map sucessfully saved</string>
+    <string name="toastMapNotSaved">We were unable to succesfully save the map</string>
+    <string name="titleInsertName">Input the name of the map</string>
+    <string name="toastChangedNameTo">"Map name changed to: "</string>
 </resources>

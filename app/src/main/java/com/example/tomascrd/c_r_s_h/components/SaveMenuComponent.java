@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Shader;
 import android.graphics.Typeface;
+import android.util.Log;
 
 import com.example.tomascrd.c_r_s_h.R;
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
@@ -49,6 +50,14 @@ public class SaveMenuComponent extends DrawableComponent {
      */
     private ButtonComponent btnConfirmNo;
     /**
+     * Button for confirming on keyboard
+     */
+    private ButtonComponent btnKeyConfirmYes;
+    /**
+     * Button for canceling on keyboard
+     */
+    private ButtonComponent btnKeyConfirmNo;
+    /**
      * Indicates whether changes were made to the map and should be confirmed
      */
     private boolean confirmChanges;
@@ -59,11 +68,15 @@ public class SaveMenuComponent extends DrawableComponent {
     /**
      * Indicates whether it should quit the Map Creator after confirming
      */
-    public boolean quitAfterConfirm;
+    private boolean quitAfterConfirm;
     /**
      * Indicates whether a new map should be loaded after confirming
      */
-    public boolean loadAfterConfirm;
+    private boolean loadAfterConfirm;
+    /**
+     * Determines whether this Save menu is on a keyboard view
+     */
+    private boolean onKeyboard;
     /**
      * The current state of the game to be saved if necessary
      */
@@ -84,6 +97,10 @@ public class SaveMenuComponent extends DrawableComponent {
      * Painter for info
      */
     private Paint infoPaint;
+    /**
+     * Keyboard component
+     */
+    public KeyboardComponent keyboard;
 
     /**
      * Initializes a new PauseMenu
@@ -105,7 +122,8 @@ public class SaveMenuComponent extends DrawableComponent {
         this.height = height;
         this.setConfirmChanges(false);
         this.isConfirming = false;
-        this.quitAfterConfirm = false;
+        this.setQuitAfterConfirm(false);
+        this.onKeyboard = false;
 
         //Border rectangle
         borderRect = new Rect(
@@ -121,14 +139,14 @@ public class SaveMenuComponent extends DrawableComponent {
         //Border paint
         this.borderPaint = new Paint();
         this.borderPaint.setStyle(Paint.Style.STROKE);
-        this.borderPaint.setStrokeWidth(gameSceneState.tileSizeReference);
+        this.borderPaint.setStrokeWidth(gameSceneState.tileSizeReference * 1.2f);
 
         //Text painter
         pText = new Paint();
         pText.setTypeface(Typeface.createFromAsset(this.context.getAssets(), GameConstants.FONT_HOMESPUN));
         pText.setColor(Color.BLACK);
         pText.setTextAlign(Paint.Align.CENTER);
-        pText.setTextSize(gameSceneState.tileSizeReference * 1.5f);
+        pText.setTextSize(gameSceneState.tileSizeReference);
 
         infoPaint = new Paint();
         infoPaint.setTypeface(Typeface.createFromAsset(this.context.getAssets(), GameConstants.FONT_HOMESPUN));
@@ -139,46 +157,81 @@ public class SaveMenuComponent extends DrawableComponent {
         //Buttons
         Typeface fontawesome = Typeface.createFromAsset(this.context.getAssets(), GameConstants.FONT_AWESOME);
 
-        this.btnUnpause = new ButtonComponent(context, fontawesome,
-                context.getString(R.string.btnUnpause),
-                (int) (borderRect.exactCenterX() - gameSceneState.tileSizeReference * 2), (int) borderRect.exactCenterY() + gameSceneState.tileSizeReference * 3,
-                (int) (borderRect.exactCenterX() + gameSceneState.tileSizeReference * 2), (int) (borderRect.exactCenterY() + gameSceneState.tileSizeReference * 5),
-                Color.TRANSPARENT, 0,
-                false, -1);
+        this.btnUnpause = new ButtonComponent(context, fontawesome, context.getString(R.string.btnUnpause),
+                (int) (borderRect.exactCenterX() - gameSceneState.tileSizeReference * 2),
+                (int) borderRect.exactCenterY() + gameSceneState.tileSizeReference * 3,
+                (int) (borderRect.exactCenterX() + gameSceneState.tileSizeReference * 2),
+                (int) (borderRect.exactCenterY() + gameSceneState.tileSizeReference * 5),
+                Color.TRANSPARENT, 0, false, -1);
 
-        this.btnOptions = new ButtonComponent(context, fontawesome,
-                context.getString(R.string.btnOptionsOnPause),
-                btnUnpause.btnRect.left - btnUnpause.btnRect.width(), btnUnpause.btnRect.top, btnUnpause.btnRect.left, btnUnpause.btnRect.bottom, Color.TRANSPARENT, 0,
-                false, -1);
+        this.btnOptions = new ButtonComponent(context, fontawesome, context.getString(R.string.btnOptionsOnPause),
+                btnUnpause.btnRect.left - btnUnpause.btnRect.width(),
+                btnUnpause.btnRect.top,
+                btnUnpause.btnRect.left,
+                btnUnpause.btnRect.bottom,
+                Color.TRANSPARENT, 0, false, -1);
 
-        this.btnExitToMenu = new ButtonComponent(context, fontawesome,
-                context.getString(R.string.btnEndGame),
-                btnUnpause.btnRect.right, btnUnpause.btnRect.top, btnUnpause.btnRect.right + btnUnpause.btnRect.width(), btnUnpause.btnRect.bottom, Color.TRANSPARENT, 0,
-                false, -1);
+        this.btnExitToMenu = new ButtonComponent(context, fontawesome, context.getString(R.string.btnEndGame),
+                btnUnpause.btnRect.right,
+                btnUnpause.btnRect.top,
+                btnUnpause.btnRect.right + btnUnpause.btnRect.width(),
+                btnUnpause.btnRect.bottom,
+                Color.TRANSPARENT, 0, false, -1);
 
-        this.btnSaveMap = new ButtonComponent(context, fontawesome,
-                context.getString(R.string.btnSaveMap),
-                btnOptions.btnRect.left, btnOptions.btnRect.top - btnOptions.btnRect.height() * 2, btnOptions.btnRect.left + btnOptions.btnRect.width(), btnOptions.btnRect.top - btnOptions.btnRect.height(), Color.TRANSPARENT, 0,
-                false, -1);
+        this.btnSaveMap = new ButtonComponent(context, fontawesome, context.getString(R.string.btnSaveMap),
+                btnOptions.btnRect.left,
+                btnOptions.btnRect.top - btnOptions.btnRect.height() * 2,
+                btnOptions.btnRect.left + btnOptions.btnRect.width(),
+                btnOptions.btnRect.top - btnOptions.btnRect.height(),
+                Color.TRANSPARENT, 0, false, -1);
 
         this.btnNameMap = new ButtonComponent(context, fontawesome, context.getString(R.string.btnEditName),
-                btnUnpause.btnRect.right, btnUnpause.btnRect.top - btnUnpause.btnRect.height() * 2, btnUnpause.btnRect.left, btnUnpause.btnRect.bottom - btnUnpause.btnRect.height() * 2 ,
-                false, -1);
+                btnUnpause.btnRect.left,
+                btnUnpause.btnRect.top - btnUnpause.btnRect.height() * 2,
+                btnUnpause.btnRect.right,
+                btnUnpause.btnRect.bottom - btnUnpause.btnRect.height() * 2,
+                Color.TRANSPARENT, 0, false, -1);
 
-        this.btnLoadMap = new ButtonComponent(context, fontawesome,
-                context.getString(R.string.btnLoadMap),
-                btnExitToMenu.btnRect.left, btnExitToMenu.btnRect.top - btnExitToMenu.btnRect.height() * 2, btnExitToMenu.btnRect.left + btnExitToMenu.btnRect.width(), btnExitToMenu.btnRect.top - btnExitToMenu.btnRect.height(), Color.TRANSPARENT, 0,
-                false, -1);
+        this.btnLoadMap = new ButtonComponent(context, fontawesome, context.getString(R.string.btnLoadMap),
+                btnExitToMenu.btnRect.left,
+                btnExitToMenu.btnRect.top - btnExitToMenu.btnRect.height() * 2,
+                btnExitToMenu.btnRect.left + btnExitToMenu.btnRect.width(),
+                btnExitToMenu.btnRect.top - btnExitToMenu.btnRect.height(),
+                Color.TRANSPARENT, 0, false, -1);
 
-        this.btnConfirmYes = new ButtonComponent(context, fontawesome,
-                context.getString(R.string.btnConfirmYes),
-                btnOptions.btnRect.left, btnOptions.btnRect.top - btnOptions.btnRect.height() * 2, btnOptions.btnRect.left + btnOptions.btnRect.width(), btnOptions.btnRect.top - btnOptions.btnRect.height(), Color.TRANSPARENT, 0,
-                false, -1);
+        this.btnConfirmYes = new ButtonComponent(context, fontawesome, context.getString(R.string.btnConfirmYes),
+                btnOptions.btnRect.left,
+                btnOptions.btnRect.top - btnOptions.btnRect.height() * 2,
+                btnOptions.btnRect.left + btnOptions.btnRect.width(),
+                btnOptions.btnRect.top - btnOptions.btnRect.height(),
+                Color.TRANSPARENT, 0, false, -1);
 
-        this.btnConfirmNo = new ButtonComponent(context, fontawesome,
-                context.getString(R.string.btnConfirmNo),
-                btnExitToMenu.btnRect.left, btnExitToMenu.btnRect.top - btnExitToMenu.btnRect.height() * 2, btnExitToMenu.btnRect.left + btnExitToMenu.btnRect.width(), btnExitToMenu.btnRect.top - btnExitToMenu.btnRect.height(), Color.TRANSPARENT, 0,
-                false, -1);
+        this.btnConfirmNo = new ButtonComponent(context, fontawesome, context.getString(R.string.btnConfirmNo),
+                btnExitToMenu.btnRect.left,
+                btnExitToMenu.btnRect.top - btnExitToMenu.btnRect.height() * 2,
+                btnExitToMenu.btnRect.left + btnExitToMenu.btnRect.width(),
+                btnExitToMenu.btnRect.top - btnExitToMenu.btnRect.height(),
+                Color.TRANSPARENT, 0, false, -1);
+
+        //KEYBOARD BUILDING
+        int offset = (int) this.borderPaint.getStrokeWidth() / 2;
+        Rect r = new Rect(this.borderRect.left + offset, this.borderRect.top + offset,
+                this.borderRect.right - offset, this.borderRect.bottom - offset);
+        keyboard = new KeyboardComponent(context, r, (int) this.borderPaint.getStrokeWidth() / 4);
+
+        this.btnKeyConfirmYes = new ButtonComponent(context, fontawesome, context.getString(R.string.btnConfirmNameYes),
+                r.left,
+                r.centerY() - btnConfirmYes.btnRect.height() * 2 - (int) this.borderPaint.getStrokeWidth() / 4,
+                r.left + btnConfirmYes.btnRect.width(),
+                r.centerY() - btnConfirmYes.btnRect.height() - (int) this.borderPaint.getStrokeWidth() / 4,
+                Color.TRANSPARENT, 0, false, -1);
+
+        this.btnKeyConfirmNo = new ButtonComponent(context, fontawesome, context.getString(R.string.btnConfirmNameNo),
+                r.right - btnConfirmNo.btnRect.width(),
+                r.centerY() - btnConfirmYes.btnRect.height() * 2 - (int) this.borderPaint.getStrokeWidth() / 4,
+                r.right,
+                r.centerY() - btnConfirmYes.btnRect.height() - (int) this.borderPaint.getStrokeWidth() / 4,
+                Color.TRANSPARENT, 0, false, -1);
 
     }
 
@@ -197,21 +250,29 @@ public class SaveMenuComponent extends DrawableComponent {
         String pauseText;
         if (isConfirming) {
             pauseText = context.getString(R.string.confirmTitle);
+        }
+        if (onKeyboard) {
+            pauseText = context.getString(R.string.titleInsertName);
         } else {
             pauseText = context.getString(R.string.savemenuTitle);
         }
-        c.drawText(pauseText, borderRect.exactCenterX(), this.borderRect.height() / GameConstants.GAMESCREEN_ROWS * 6, pText);
+        c.drawText(pauseText, borderRect.exactCenterX(), this.borderRect.height() / GameConstants.GAMESCREEN_ROWS * 5, pText);
 
         //Button
         if (isConfirming) {
             btnConfirmYes.draw(c);
             btnConfirmNo.draw(c);
-        } else {
-            c.drawText(context.getString(R.string.infoSave),borderRect.exactCenterX(),this.borderRect.height() /GameConstants.GAMESCREEN_ROWS * 9,infoPaint);
+        }
+        if (onKeyboard) {
+            btnKeyConfirmYes.draw(c);
+            btnKeyConfirmNo.draw(c);
+            keyboard.draw(c);
+        } else if (!isConfirming && !onKeyboard) {
+            c.drawText(context.getString(R.string.infoSave), borderRect.exactCenterX(), this.borderRect.height() / GameConstants.GAMESCREEN_ROWS * 9, infoPaint);
             btnSaveMap.draw(c);
             btnNameMap.draw(c);
             btnLoadMap.draw(c);
-            c.drawText(context.getString(R.string.infoPause),borderRect.exactCenterX(),this.borderRect.height() /GameConstants.GAMESCREEN_ROWS * 14,infoPaint);
+            c.drawText(context.getString(R.string.infoPause), borderRect.exactCenterX(), this.borderRect.height() / GameConstants.GAMESCREEN_ROWS * 14, infoPaint);
             btnOptions.draw(c);
             btnUnpause.draw(c);
             btnExitToMenu.draw(c);
@@ -282,6 +343,33 @@ public class SaveMenuComponent extends DrawableComponent {
     }
 
     /**
+     * Returns btnNameMap, for click events
+     *
+     * @return the btnNameMap button
+     */
+    public ButtonComponent getBtnNameMap() {
+        return btnNameMap;
+    }
+
+    /**
+     * Returns btnKeyConfirmYes, for click events
+     *
+     * @return the btnKeyConfirmYes button
+     */
+    public ButtonComponent getBtnKeyConfirmYes() {
+        return btnKeyConfirmYes;
+    }
+
+    /**
+     * Returns btnKeyConfirmNo, for click events
+     *
+     * @return the btnKeyConfirmNo button
+     */
+    public ButtonComponent getBtnKeyConfirmNo() {
+        return btnKeyConfirmNo;
+    }
+
+    /**
      * Determines if the current saveMenu is ready to confirm changes
      *
      * @return the value of the field
@@ -315,5 +403,59 @@ public class SaveMenuComponent extends DrawableComponent {
      */
     public void setConfirming(boolean confirming) {
         isConfirming = confirming;
+    }
+
+    /**
+     * Tells if this save menu should quit after confirming changes
+     *
+     * @return the value of the boolean
+     */
+    public boolean isQuitAfterConfirm() {
+        return quitAfterConfirm;
+    }
+
+    /**
+     * Sets this save menu for quitting after confirming or not
+     *
+     * @param quitAfterConfirm the action value
+     */
+    public void setQuitAfterConfirm(boolean quitAfterConfirm) {
+        this.quitAfterConfirm = quitAfterConfirm;
+    }
+
+    /**
+     * Tells if this save menu should load a map after confirming
+     *
+     * @return the value of the boolean
+     */
+    public boolean isLoadAfterConfirm() {
+        return loadAfterConfirm;
+    }
+
+    /**
+     * Sets this save menu for loading a map after confirming or not
+     *
+     * @param loadAfterConfirm the action value
+     */
+    public void setLoadAfterConfirm(boolean loadAfterConfirm) {
+        this.loadAfterConfirm = loadAfterConfirm;
+    }
+
+    /**
+     * Tells if this save menu should be showing a keyboard
+     *
+     * @return the value of the boolean
+     */
+    public boolean isOnKeyboard() {
+        return onKeyboard;
+    }
+
+    /**
+     * Sets this save menu for showing a keyboard or not
+     *
+     * @param onKeyboard the action value
+     */
+    public void setOnKeyboard(boolean onKeyboard) {
+        this.onKeyboard = onKeyboard;
     }
 }

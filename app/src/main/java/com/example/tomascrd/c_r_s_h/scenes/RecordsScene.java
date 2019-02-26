@@ -22,16 +22,20 @@ import com.example.tomascrd.c_r_s_h.core.GameEngine;
 public class RecordsScene extends SceneCrsh {
 
     /**
+     * Constant id for RecordsScene
+     */
+    public static final int RECORDS_ID = 4;
+
+    /**
      * Starts a records screen
      *
      * @param context      the application context
-     * @param id           this scene's id (0 is recommended by default for the main menu)
      * @param screenWidth  this screen's width
      * @param screenHeight this screen's height
      * @param engineCallback callback to access gameEngine data
      */
-    public RecordsScene(Context context, int id, int screenWidth, int screenHeight, GameEngine engineCallback) {
-        super(context, id, screenWidth, screenHeight);
+    public RecordsScene(Context context, int screenWidth, int screenHeight, GameEngine engineCallback) {
+        super(context, RECORDS_ID, screenWidth, screenHeight);
         this.engineCallback = engineCallback;
         //Title text
         pTitleText = new Paint();

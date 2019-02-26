@@ -93,18 +93,21 @@ public class CreditScene extends SceneCrsh {
      * The link icon string
      */
     private String linkIcon;
+    /**
+     * Constant id for CreditScene
+     */
+    public static final int CREDITS_ID = 3;
 
     /**
      * Starts a credits scene
      *
      * @param context        the application context
-     * @param id             this scene's id (0 is recommended by default for the main menu)
      * @param screenWidth    this screen's width
      * @param screenHeight   this screen's height
      * @param engineCallback callback to access gameEngine data
      */
-    public CreditScene(Context context, int id, int screenWidth, int screenHeight, GameEngine engineCallback) {
-        super(context, id, screenWidth, screenHeight);
+    public CreditScene(Context context, int screenWidth, int screenHeight, GameEngine engineCallback) {
+        super(context, CREDITS_ID, screenWidth, screenHeight);
         this.engineCallback = engineCallback;
 
         //Alpha effect variables

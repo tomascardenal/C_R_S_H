@@ -41,26 +41,21 @@ public class OptionsScene extends SceneCrsh {
      */
     private TextButtonComponent btnEffects;
     /**
-     * Keep joystick velocity toggle button for player one
+     * Constant id for OptionsScene
      */
-    private TextButtonComponent btnKeepJoystickVelocityP1;
-    /**
-     * Keep joystick velocity toggle button for player two
-     */
-    private TextButtonComponent btnKeepJoystickVelocityP2;
+    public static final int OPTIONS_ID = 2;
 
 
     /**
      * Starts an options menu
      *
      * @param context        the application context
-     * @param id             this scene's id (0 is recommended by default for the main menu)
      * @param screenWidth    this screen's width
      * @param screenHeight   this screen's height
      * @param engineCallback callback to access gameEngine data
      */
-    public OptionsScene(Context context, int id, int screenWidth, int screenHeight, GameEngine engineCallback) {
-        super(context, id, screenWidth, screenHeight);
+    public OptionsScene(Context context, int screenWidth, int screenHeight, GameEngine engineCallback) {
+        super(context, OPTIONS_ID, screenWidth, screenHeight);
         this.engineCallback = engineCallback;
 
         //Title text
@@ -162,7 +157,7 @@ public class OptionsScene extends SceneCrsh {
             case MotionEvent.ACTION_POINTER_UP:  // Any other finger up
                 if (isClick(backBtn, event)) {
                     if (engineCallback.loadSavedScene) {
-                        return 99;
+                        return engineCallback.savedScene.getId();
                     } else {
                         return 0;
                     }

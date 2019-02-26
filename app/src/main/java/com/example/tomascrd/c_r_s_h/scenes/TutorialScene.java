@@ -22,16 +22,20 @@ import com.example.tomascrd.c_r_s_h.core.GameEngine;
 public class TutorialScene extends SceneCrsh {
 
     /**
+     * Constant id for TutorialScene
+     */
+    public static final int TUTORIAL_ID = 5;
+
+    /**
      * Starts a tutorial screen
      *
      * @param context      the application context
-     * @param id           this scene's id (0 is recommended by default for the main menu)
      * @param screenWidth  this screen's width
      * @param screenHeight this screen's height
      * @param engineCallback callback to access gameEngine data
      */
-    public TutorialScene(Context context, int id, int screenWidth, int screenHeight, GameEngine engineCallback) {
-        super(context, id, screenWidth, screenHeight);
+    public TutorialScene(Context context, int screenWidth, int screenHeight, GameEngine engineCallback) {
+        super(context, TUTORIAL_ID, screenWidth, screenHeight);
         this.engineCallback = engineCallback;
         //Title text
         pTitleText = new Paint();
