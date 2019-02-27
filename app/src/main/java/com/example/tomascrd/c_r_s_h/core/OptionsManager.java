@@ -2,8 +2,8 @@ package com.example.tomascrd.c_r_s_h.core;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
-import com.example.tomascrd.c_r_s_h.components.TileComponent;
 import com.example.tomascrd.c_r_s_h.components.VisualTimerComponent;
 
 import java.io.DataInputStream;
@@ -45,9 +45,9 @@ public class OptionsManager {
      */
     private VisualTimerComponent.TIMER_SPEED timerSpeed;
     /**
-     * Table containing the map names
+     * Table containing the map references
      */
-    private ArrayList<MapReference> mapNames;
+    private ArrayList<MapReference> mapReferences;
     /**
      * SharedPreferences to store the options
      */
@@ -75,6 +75,7 @@ public class OptionsManager {
     public OptionsManager(Context context) {
         this.context = context;
         preferences = context.getSharedPreferences(GameConstants.PREFERENCES_NAME, Context.MODE_PRIVATE);
+        this.mapReferences = new ArrayList<MapReference>();
         loadOptions();
         loadMapList();
     }
@@ -224,8 +225,8 @@ public class OptionsManager {
         DataOutputStream output = null;
         try (FileOutputStream fos = context.openFileOutput(GameConstants.MAPLIST_FILE_NAME, Context.MODE_PRIVATE)) {
             output = new DataOutputStream(fos);
-            for (int i = 0; i < mapNames.size(); i++) {
-                MapReference currentRef = mapNames.get(i);
+            for (int i = 0; i < mapReferences.size(); i++) {
+                MapReference currentRef = mapReferences.get(i);
                 output.writeInt(currentRef.mapId);
                 output.writeUTF(currentRef.mapName);
             }
@@ -233,7 +234,7 @@ public class OptionsManager {
             return false;
         }
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt(GameConstants.PREFERENCES_MAPCOUNT, mapNames.size());
+        editor.putInt(GameConstants.PREFERENCES_MAPCOUNT, mapReferences.size());
         editor.commit();
         return true;
     }
@@ -245,7 +246,6 @@ public class OptionsManager {
      */
     public boolean loadMapList() {
         int mapCount = preferences.getInt(GameConstants.PREFERENCES_MAPCOUNT, 0);
-        this.mapNames = new ArrayList<MapReference>();
         try (FileInputStream fis = context.openFileInput(GameConstants.MAPLIST_FILE_NAME)) {
             DataInputStream input = new DataInputStream(fis);
             MapReference currentMap;
@@ -254,11 +254,51 @@ public class OptionsManager {
                         input.readInt(),
                         input.readUTF()
                 );
-                mapNames.add(currentMap);
+                mapReferences.add(currentMap);
             }
             return true;
         } catch (IOException e) {
+            Log.i("crshdebug", e.getMessage() + " " + e.getStackTrace());
             return false;
         }
+    }
+
+    /**
+     * Adds a map reference to the list
+     *
+     * @param reference The map reference to add
+     * @return an int with the map list size
+     */
+    public int addMap(MapReference reference) {
+        mapReferences.add(reference);
+        return mapReferences.size();
+    }
+
+    /**
+     * Gets the id of a map by it's name
+     *
+     * @param name The name of the map
+     * @return the map id
+     */
+    public int getMapId(String name) {
+        for (MapReference ref : mapReferences) {
+            if (ref.mapName.equals(name)) {
+                return ref.mapId;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * Gets a list of the map names
+     *
+     * @return a list of the map names
+     */
+    public ArrayList<String> getMapNames() {
+        ArrayList<String> mapNames = new ArrayList<>();
+        for (MapReference ref : mapReferences) {
+            mapNames.add(ref.mapName);
+        }
+        return mapNames;
     }
 }

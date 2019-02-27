@@ -318,6 +318,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
             thread.join();
             mediaPlayer.pause();
             optionsManager.saveOptions();
+            optionsManager.saveMapList();
         } catch (InterruptedException e) {
             Log.i("SurfaceDestroyed Error", e.getLocalizedMessage());
         }

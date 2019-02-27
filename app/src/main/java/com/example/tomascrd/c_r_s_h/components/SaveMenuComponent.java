@@ -12,6 +12,9 @@ import android.util.Log;
 
 import com.example.tomascrd.c_r_s_h.R;
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
+import com.example.tomascrd.c_r_s_h.core.GameEngine;
+
+import java.util.ArrayList;
 
 /**
  * Represents a Save Menu
@@ -58,6 +61,22 @@ public class SaveMenuComponent extends DrawableComponent {
      */
     private ButtonComponent btnKeyConfirmNo;
     /**
+     * Button for next map in the list
+     */
+    private ButtonComponent btnNextMap;
+    /**
+     * Button for previous map in the list
+     */
+    private ButtonComponent btnPreviousMap;
+    /**
+     * Button for the final map of the list
+     */
+    private ButtonComponent btnEndMap;
+    /**
+     * Button for the starting map of the list
+     */
+    private ButtonComponent btnStartMap;
+    /**
      * Indicates whether changes were made to the map and should be confirmed
      */
     private boolean confirmChanges;
@@ -86,6 +105,10 @@ public class SaveMenuComponent extends DrawableComponent {
      */
     private SceneCrsh gameSceneState;
     /**
+     * Callback to game engine
+     */
+    private GameEngine engineCallback;
+    /**
      * Rectangle for this border
      */
     private Rect borderRect;
@@ -105,6 +128,10 @@ public class SaveMenuComponent extends DrawableComponent {
      * Keyboard component
      */
     public KeyboardComponent keyboard;
+    /**
+     * List of map names
+     */
+    private ArrayList<String> mapNames;
 
     /**
      * Initializes a new PauseMenu
@@ -116,7 +143,7 @@ public class SaveMenuComponent extends DrawableComponent {
      * @param height         the pauseMenu's height
      * @param gameSceneState the current GameScene state
      */
-    public SaveMenuComponent(Context context, float xRight, float yTop, float width, float height, SceneCrsh gameSceneState) {
+    public SaveMenuComponent(Context context, float xRight, float yTop, float width, float height, GameEngine engineCallback, SceneCrsh gameSceneState) {
         //Initializing variables
         this.context = context;
         this.gameSceneState = gameSceneState;
@@ -128,7 +155,7 @@ public class SaveMenuComponent extends DrawableComponent {
         this.isConfirming = false;
         this.quitAfterConfirm = false;
         this.onKeyboard = false;
-        this.onLoadMap = false;
+        this.setOnLoadMap(false);
 
         //Border rectangle
         borderRect = new Rect(
@@ -238,8 +265,41 @@ public class SaveMenuComponent extends DrawableComponent {
                 r.centerY() - btnConfirmYes.btnRect.height() - (int) this.borderPaint.getStrokeWidth() / 4,
                 Color.TRANSPARENT, 0, false, -1);
 
-        //TODO Loading map options
+        this.btnStartMap = new ButtonComponent(context, fontawesome, context.getString(R.string.btnListStart),
+                r.left + (int) this.borderPaint.getStrokeWidth(),
+                r.centerY(),
+                r.left + (int) this.borderPaint.getStrokeWidth() + btnConfirmYes.btnRect.width() / 2,
+                r.centerY() + btnConfirmYes.btnRect.height(),
+                Color.TRANSPARENT, 0, false, -1);
 
+        this.btnEndMap = new ButtonComponent(context, fontawesome, context.getString(R.string.btnListEnd),
+                r.right - btnConfirmNo.btnRect.width() / 2 - (int) this.borderPaint.getStrokeWidth(),
+                r.centerY(),
+                r.right - (int) this.borderPaint.getStrokeWidth(),
+                r.centerY() + btnConfirmYes.btnRect.height(),
+                Color.TRANSPARENT, 0, false, -1);
+
+        this.btnPreviousMap = new ButtonComponent(context, fontawesome, context.getString(R.string.btnListPrevious),
+                r.left + btnStartMap.btnRect.width() * 2,
+                r.centerY(),
+                r.left + btnStartMap.btnRect.width() * 3,
+                r.centerY() + btnConfirmYes.btnRect.height(),
+                Color.TRANSPARENT, 0, false, -1);
+
+        this.btnNextMap = new ButtonComponent(context, fontawesome, context.getString(R.string.btnListNext),
+                r.right - btnEndMap.btnRect.width() * 2,
+                r.centerY(),
+                r.right - btnEndMap.btnRect.width() * 3,
+                r.centerY() + btnConfirmYes.btnRect.height(),
+                Color.TRANSPARENT, 0, false, -1);
+
+        //TODO Loading map options
+        if (engineCallback.optionsManager.loadMapList()) {
+            Log.i("crshdebug", "maps were loaded");
+        } else {
+            Log.i("crshdebug", "maps were NOT loaded");
+        }
+        mapNames = engineCallback.optionsManager.getMapNames();
     }
 
     /**
@@ -272,8 +332,18 @@ public class SaveMenuComponent extends DrawableComponent {
             btnKeyConfirmYes.draw(c);
             btnKeyConfirmNo.draw(c);
             keyboard.draw(c);
-        } else if (onLoadMap) {
+        } else if (isOnLoadMap()) {
+            btnKeyConfirmYes.draw(c);
+            btnKeyConfirmNo.draw(c);
+            btnEndMap.draw(c);
+            btnStartMap.draw(c);
+            btnNextMap.draw(c);
+            btnPreviousMap.draw(c);
+            if (mapNames.size() > 0) {
 
+            } else {
+                c.drawText(context.getString(R.string.infoNoMaps), gameSceneState.screenWidth / 2, (btnNextMap.btnRect.top + (btnNextMap.btnRect.height()/3)*2), pText);
+            }
         } else if (!isConfirming && !onKeyboard) {
             c.drawText(context.getString(R.string.infoSave), borderRect.exactCenterX(), this.borderRect.height() / GameConstants.GAMESCREEN_ROWS * 9, infoPaint);
             btnSaveMap.draw(c);
@@ -466,5 +536,23 @@ public class SaveMenuComponent extends DrawableComponent {
      */
     public void setOnKeyboard(boolean onKeyboard) {
         this.onKeyboard = onKeyboard;
+    }
+
+    /**
+     * Gets the value indicating if the save menu is loading a map
+     *
+     * @return if the save menu is loading a map
+     */
+    public boolean isOnLoadMap() {
+        return onLoadMap;
+    }
+
+    /**
+     * Sets the value for the save menu to prompt a user for the map list to load
+     *
+     * @param onLoadMap the new value of the variable
+     */
+    public void setOnLoadMap(boolean onLoadMap) {
+        this.onLoadMap = onLoadMap;
     }
 }

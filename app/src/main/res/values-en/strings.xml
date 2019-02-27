@@ -37,4 +37,5 @@
     <string name="toastMapNotSaved">We were unable to succesfully save the map</string>
     <string name="titleInsertName">Input the name of the map</string>
     <string name="toastChangedNameTo">"Map name changed to: "</string>
+    <string name="infoNoMaps">There aren\'t any maps to load</string>
 </resources>

@@ -85,11 +85,11 @@ public class MapCreatorScene extends SceneCrsh {
 
         //Pause button
         btnPause = new ButtonComponent(context,
-                Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_AWESOME), context.getString(R.string.btnPause),
+                Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_AWESOME), context.getString(R.string.btnEditorTools),
                 screenWidth - screenWidth / 16, 0, screenWidth, screenWidth / 16, Color.TRANSPARENT, 0, false, 0);
 
         //Pause menu
-        this.saveMenu = new SaveMenuComponent(this.context, this.creatorMap.xLeft, this.creatorMap.yTop, this.creatorMap.mapAreaWidth, this.creatorMap.mapAreaHeight, this);
+        this.saveMenu = new SaveMenuComponent(this.context, this.creatorMap.xLeft, this.creatorMap.yTop, this.creatorMap.mapAreaWidth, this.creatorMap.mapAreaHeight, this.engineCallback, this);
     }
 
     /**
@@ -185,6 +185,13 @@ public class MapCreatorScene extends SceneCrsh {
                 saveMenu.setLoadAfterConfirm(false);
                 loadAMap();
             }
+        } else if (saveMenu.isOnLoadMap()) {
+            if (isClick(saveMenu.getBtnKeyConfirmNo(), event)) {
+
+            }
+            if (isClick(saveMenu.getBtnConfirmYes(), event)) {
+                saveMenu.setOnLoadMap(false);
+            }
         } else if (saveMenu.isOnKeyboard()) {
             saveMenu.keyboard.onClickEvent(event);
             if (isClick(saveMenu.getBtnKeyConfirmYes(), event)) {
@@ -244,6 +251,7 @@ public class MapCreatorScene extends SceneCrsh {
      * Safely loads a map and prompts the user with a toast informing of the result
      */
     public void loadAMap() {
+        saveMenu.setOnLoadMap(true);
         boolean didIt = creatorMap.loadMap(newId);
         if (didIt) {
             Toast.makeText(this.context, context.getString(R.string.toastMapLoaded), Toast.LENGTH_SHORT).show();

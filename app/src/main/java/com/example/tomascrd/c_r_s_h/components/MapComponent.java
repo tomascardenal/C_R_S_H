@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
 import com.example.tomascrd.c_r_s_h.core.AssetLoader;
@@ -71,7 +72,6 @@ public class MapComponent extends DrawableComponent {
     private AssetLoader loader;
 
 
-
     /**
      * Starts a map on this ID and with the indicated reference
      *
@@ -106,7 +106,7 @@ public class MapComponent extends DrawableComponent {
         this.yPos = hReference;
         this.xLeft = 3 * reference;
         this.yTop = reference + hReference;
-        if(!loader.loadedTiles){
+        if (!loader.loadedTiles) {
             loader.loadTiles();
         }
         loader.scaleTileBitmaps(this.reference, this.reference);
@@ -115,11 +115,15 @@ public class MapComponent extends DrawableComponent {
             if (!loadMap(666)) {
                 createTestMap();
                 saveMap();
+            } else {
+                Log.i("crshdebug", "Map 666 loaded");
             }
         } else if (mapID == 0) {
             if (!loadMap(0)) {
                 loadEmptyMap();
                 saveMap();
+            } else {
+                Log.i("crshdebug", "Map 0 loaded");
             }
         }
     }

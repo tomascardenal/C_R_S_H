@@ -119,7 +119,6 @@ public class PlayerCrsh extends DrawableComponent {
      * Indicator for the player one
      */
     private CircleComponent playerOneIndicator[];
-
     /**
      * Indicator for the player two
      */

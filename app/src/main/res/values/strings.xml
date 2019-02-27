@@ -32,7 +32,8 @@
     <string name="pauseTitle">Juego en pausa</string>
     <string name="btnUnpause" translatable="false"></string>
     <string name="btnPause" translatable="false"></string>
-    <string name="btnOptionsOnPause" translatable="false"></string>
+    <string name="btnOptionsOnPause" translatable="false"></string>
+    <string name="btnEditorTools" translatable="false"></string>
     <string name="btnEndGame" translatable="false"></string>
     <string name="btnCrshMode">Modo C_R_S_H</string>
     <string name="btnNormalMode">Modo N_R_M_L</string>
@@ -71,4 +72,9 @@
     <string name="btnBackspace" translatable="false"></string>
     <string name="btnConfirmNameYes" translatable="false"></string>
     <string name="btnConfirmNameNo" translatable="false"></string>
+    <string name="btnListNext" translatable="false"></string>
+    <string name="btnListEnd" translatable="false"></string>
+    <string name="btnListPrevious" translatable="false"></string>
+    <string name="btnListStart" translatable="false"></string>
+    <string name="infoNoMaps">No hay mapas para cargar</string>
 </resources>
