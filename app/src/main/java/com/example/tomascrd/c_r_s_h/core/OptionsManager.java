@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.example.tomascrd.c_r_s_h.components.VisualTimerComponent;
+import com.example.tomascrd.c_r_s_h.structs.MapReference;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -57,16 +58,6 @@ public class OptionsManager {
      */
     private Context context;
 
-    public class MapReference {
-        public int mapId;
-        public String mapName;
-
-        public MapReference(int mapId, String mapName) {
-            this.mapId = mapId;
-            this.mapName = mapName;
-        }
-    }
-
     /**
      * Default constructor, initalizes a new OptionsManager with the given Context
      *
@@ -78,7 +69,9 @@ public class OptionsManager {
         preferences = context.getSharedPreferences(GameConstants.PREFERENCES_NAME, Context.MODE_PRIVATE);
         this.mapReferences = new ArrayList<MapReference>();
         loadOptions();
-        loadMapList();
+        if (!loadMapList()) {
+            mapReferences.add(new MapReference(666, "Normal"));
+        }
     }
 
     /**
@@ -301,5 +294,20 @@ public class OptionsManager {
             mapNames.add(ref.mapName);
         }
         return mapNames;
+    }
+
+    /**
+     * Gets a the map name for the corresponding map id
+     *
+     * @param id the id of the map to get the name of
+     * @return the name of the map if it exists
+     */
+    public String getMapNameByID(int id) {
+        for (MapReference ref : mapReferences) {
+            if (ref.mapId == id) {
+                return ref.mapName;
+            }
+        }
+        return null;
     }
 }

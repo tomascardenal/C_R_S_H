@@ -21,9 +21,9 @@ import java.util.ArrayList;
  */
 public class SaveMenuComponent extends DrawableComponent {
     /**
-     * Button for options
+     * Button for newMaps
      */
-    private ButtonComponent btnOptions;
+    private ButtonComponent btnNewMap;
     /**
      * Button for unpausing
      */
@@ -85,6 +85,10 @@ public class SaveMenuComponent extends DrawableComponent {
      */
     private boolean isConfirming;
     /**
+     * Indicates whether there should be a new empty map created after confirming
+     */
+    private boolean newAfterConfirm;
+    /**
      * Indicates whether it should quit the Map Creator after confirming
      */
     private boolean quitAfterConfirm;
@@ -131,7 +135,19 @@ public class SaveMenuComponent extends DrawableComponent {
     /**
      * List of map names
      */
-    private ArrayList<String> mapNames;
+    public ArrayList<String> mapNames;
+    /**
+     * Map id of the current map
+     */
+    public int currentMapID;
+    /**
+     * Map name of the current map
+     */
+    public String currentMapName;
+    /**
+     * Map index showing on load
+     */
+    public int currentLoadIndex;
 
     /**
      * Initializes a new PauseMenu
@@ -153,9 +169,11 @@ public class SaveMenuComponent extends DrawableComponent {
         this.height = height;
         this.confirmChanges = false;
         this.isConfirming = false;
+        this.newAfterConfirm = false;
         this.quitAfterConfirm = false;
         this.onKeyboard = false;
         this.setOnLoadMap(false);
+        this.currentLoadIndex = 0;
 
         //Border rectangle
         borderRect = new Rect(
@@ -196,7 +214,7 @@ public class SaveMenuComponent extends DrawableComponent {
                 (int) (borderRect.exactCenterY() + gameSceneState.tileSizeReference * 5),
                 Color.TRANSPARENT, 0, false, -1);
 
-        this.btnOptions = new ButtonComponent(context, fontawesome, context.getString(R.string.btnOptionsOnPause),
+        this.btnNewMap = new ButtonComponent(context, fontawesome, context.getString(R.string.btnNewMap),
                 btnUnpause.btnRect.left - btnUnpause.btnRect.width(),
                 btnUnpause.btnRect.top,
                 btnUnpause.btnRect.left,
@@ -211,10 +229,10 @@ public class SaveMenuComponent extends DrawableComponent {
                 Color.TRANSPARENT, 0, false, -1);
 
         this.btnSaveMap = new ButtonComponent(context, fontawesome, context.getString(R.string.btnSaveMap),
-                btnOptions.btnRect.left,
-                btnOptions.btnRect.top - btnOptions.btnRect.height() * 2,
-                btnOptions.btnRect.left + btnOptions.btnRect.width(),
-                btnOptions.btnRect.top - btnOptions.btnRect.height(),
+                btnNewMap.btnRect.left,
+                btnNewMap.btnRect.top - btnNewMap.btnRect.height() * 2,
+                btnNewMap.btnRect.left + btnNewMap.btnRect.width(),
+                btnNewMap.btnRect.top - btnNewMap.btnRect.height(),
                 Color.TRANSPARENT, 0, false, -1);
 
         this.btnNameMap = new ButtonComponent(context, fontawesome, context.getString(R.string.btnEditName),
@@ -232,10 +250,10 @@ public class SaveMenuComponent extends DrawableComponent {
                 Color.TRANSPARENT, 0, false, -1);
 
         this.btnConfirmYes = new ButtonComponent(context, fontawesome, context.getString(R.string.btnConfirmYes),
-                btnOptions.btnRect.left,
-                btnOptions.btnRect.top - btnOptions.btnRect.height() * 2,
-                btnOptions.btnRect.left + btnOptions.btnRect.width(),
-                btnOptions.btnRect.top - btnOptions.btnRect.height(),
+                btnNewMap.btnRect.left,
+                btnNewMap.btnRect.top - btnNewMap.btnRect.height() * 2,
+                btnNewMap.btnRect.left + btnNewMap.btnRect.width(),
+                btnNewMap.btnRect.top - btnNewMap.btnRect.height(),
                 Color.TRANSPARENT, 0, false, -1);
 
         this.btnConfirmNo = new ButtonComponent(context, fontawesome, context.getString(R.string.btnConfirmNo),
@@ -280,16 +298,16 @@ public class SaveMenuComponent extends DrawableComponent {
                 Color.TRANSPARENT, 0, false, -1);
 
         this.btnPreviousMap = new ButtonComponent(context, fontawesome, context.getString(R.string.btnListPrevious),
-                r.left + btnStartMap.btnRect.width() * 2,
+                r.left + getBtnStartMap().btnRect.width() * 2,
                 r.centerY(),
-                r.left + btnStartMap.btnRect.width() * 3,
+                r.left + getBtnStartMap().btnRect.width() * 3,
                 r.centerY() + btnConfirmYes.btnRect.height(),
                 Color.TRANSPARENT, 0, false, -1);
 
         this.btnNextMap = new ButtonComponent(context, fontawesome, context.getString(R.string.btnListNext),
-                r.right - btnEndMap.btnRect.width() * 2,
+                r.right - getBtnEndMap().btnRect.width() * 2,
                 r.centerY(),
-                r.right - btnEndMap.btnRect.width() * 3,
+                r.right - getBtnEndMap().btnRect.width() * 3,
                 r.centerY() + btnConfirmYes.btnRect.height(),
                 Color.TRANSPARENT, 0, false, -1);
 
@@ -300,6 +318,8 @@ public class SaveMenuComponent extends DrawableComponent {
             Log.i("crshdebug", "maps were NOT loaded");
         }
         mapNames = engineCallback.optionsManager.getMapNames();
+        currentMapID = mapNames.size();
+        currentMapName = "Mapa sin nombre";
     }
 
     /**
@@ -318,6 +338,8 @@ public class SaveMenuComponent extends DrawableComponent {
             pauseText = context.getString(R.string.confirmTitle);
         } else if (onKeyboard) {
             pauseText = context.getString(R.string.titleInsertName);
+        } else if (isOnLoadMap()) {
+            pauseText = context.getString(R.string.titleSelectMap);
         } else {
             pauseText = context.getString(R.string.savemenuTitle);
         }
@@ -335,25 +357,30 @@ public class SaveMenuComponent extends DrawableComponent {
         } else if (isOnLoadMap()) {
             btnKeyConfirmYes.draw(c);
             btnKeyConfirmNo.draw(c);
-            btnEndMap.draw(c);
-            btnStartMap.draw(c);
-            btnNextMap.draw(c);
-            btnPreviousMap.draw(c);
+            if (currentLoadIndex < mapNames.size() - 1) {
+                getBtnEndMap().draw(c);
+                getBtnNextMap().draw(c);
+            }
+            if (currentLoadIndex > 0) {
+                getBtnStartMap().draw(c);
+                getBtnPreviousMap().draw(c);
+            }
             float f = pText.getTextSize();
             pText.setTextSize(f / 1.5f);
             if (mapNames.size() > 0) {
-
+                c.drawText(mapNames.get(currentLoadIndex), gameSceneState.screenWidth / 2, getBtnEndMap().btnRect.top + (getBtnNextMap().btnRect.height() / 3) * 2, pText);
             } else {
-                c.drawText(context.getString(R.string.infoNoMaps), gameSceneState.screenWidth / 2, (btnNextMap.btnRect.top + (btnNextMap.btnRect.height() / 3) * 2), pText);
+                c.drawText(context.getString(R.string.infoNoMaps), gameSceneState.screenWidth / 2, (getBtnNextMap().btnRect.top + (getBtnNextMap().btnRect.height() / 3) * 2), pText);
             }
             pText.setTextSize(f);
-        } else if (!isConfirming && !onKeyboard) {
+        } else if (!isConfirming && !onKeyboard && !isOnLoadMap()) {
+            c.drawText(currentMapName, borderRect.exactCenterX(), this.borderRect.height() / GameConstants.GAMESCREEN_ROWS * 6, infoPaint);
             c.drawText(context.getString(R.string.infoSave), borderRect.exactCenterX(), this.borderRect.height() / GameConstants.GAMESCREEN_ROWS * 8, infoPaint);
             btnSaveMap.draw(c);
             btnNameMap.draw(c);
             btnLoadMap.draw(c);
-            c.drawText(context.getString(R.string.infoPause), borderRect.exactCenterX(), this.borderRect.height() / GameConstants.GAMESCREEN_ROWS * 13, infoPaint);
-            btnOptions.draw(c);
+            c.drawText(context.getString(R.string.infoSave2), borderRect.exactCenterX(), this.borderRect.height() / GameConstants.GAMESCREEN_ROWS * 13, infoPaint);
+            btnNewMap.draw(c);
             btnUnpause.draw(c);
             btnExitToMenu.draw(c);
         }
@@ -362,12 +389,12 @@ public class SaveMenuComponent extends DrawableComponent {
     }
 
     /**
-     * Returns btnOptions, for click events
+     * Returns btnNewMap, for click events
      *
      * @return the options button
      */
-    public ButtonComponent getBtnOptions() {
-        return btnOptions;
+    public ButtonComponent getBtnNewMap() {
+        return btnNewMap;
     }
 
     /**
@@ -506,6 +533,24 @@ public class SaveMenuComponent extends DrawableComponent {
     }
 
     /**
+     * Tells if this save menu should prompt a new map after confirming changes
+     *
+     * @return the value of the boolean
+     */
+    public boolean isNewAfterConfirm() {
+        return newAfterConfirm;
+    }
+
+    /**
+     * Sets this save menu for a new map after confirming or not
+     *
+     * @param newAfterConfirm the action value
+     */
+    public void setNewAfterConfirm(boolean newAfterConfirm) {
+        this.newAfterConfirm = newAfterConfirm;
+    }
+
+    /**
      * Tells if this save menu should load a map after confirming
      *
      * @return the value of the boolean
@@ -557,5 +602,41 @@ public class SaveMenuComponent extends DrawableComponent {
      */
     public void setOnLoadMap(boolean onLoadMap) {
         this.onLoadMap = onLoadMap;
+    }
+
+    /**
+     * Gets the nextMap button
+     *
+     * @return the nextMap button
+     */
+    public ButtonComponent getBtnNextMap() {
+        return btnNextMap;
+    }
+
+    /**
+     * Gets the previousMap button
+     *
+     * @return the nextMap button
+     */
+    public ButtonComponent getBtnPreviousMap() {
+        return btnPreviousMap;
+    }
+
+    /**
+     * Gets the endMap button
+     *
+     * @return the nextMap button
+     */
+    public ButtonComponent getBtnEndMap() {
+        return btnEndMap;
+    }
+
+    /**
+     * Gets the startMap button
+     *
+     * @return the nextMap button
+     */
+    public ButtonComponent getBtnStartMap() {
+        return btnStartMap;
     }
 }

@@ -57,6 +57,7 @@
     <string name="dialogCancel">Cancelar</string>
     <string name="btnEditName" translatable="false"></string>
     <string name="infoSave">Guardar/Nombrar/Cargar</string>
+    <string name="infoSave2">"Nuevo/Continuar/Salir"</string>
     <string name="infoPause">Opciones/Continuar/Salir</string>
     <string name="btnSpeedSlow">Lenta</string>
     <string name="btnSpeedMid">Media</string>
@@ -76,5 +77,8 @@
     <string name="btnListEnd" translatable="false"></string>
     <string name="btnListPrevious" translatable="false"></string>
     <string name="btnListStart" translatable="false"></string>
+    <string name="btnNewMap" translatable="false"></string>
     <string name="infoNoMaps">No hay mapas para cargar</string>
+    <string name="titleSelectMap">Selecciona un mapa</string>
+    <string name="unnamedMap">Mapa sin nombre</string>
 </resources>

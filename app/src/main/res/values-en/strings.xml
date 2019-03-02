@@ -25,6 +25,7 @@
     <string name="confirmQuit">Quit game?</string>
     <string name="dialogCancel">Cancel</string>
     <string name="infoSave">"Save/Name/Load"</string>
+    <string name="infoSave2">"New/Continue/Quit"</string>
     <string name="infoPause">Options/Continue/Quit</string>
     <string name="btnSpeedSlow">Slow</string>
     <string name="btnSpeedMid">Mid</string>
@@ -38,4 +39,6 @@
     <string name="titleInsertName">Input the name of the map</string>
     <string name="toastChangedNameTo">"Map name changed to: "</string>
     <string name="infoNoMaps">There aren\'t any maps to load</string>
+    <string name="titleSelectMap">Select a map</string>
+    <string name="unnamedMap">Unnamed map</string>
 </resources>

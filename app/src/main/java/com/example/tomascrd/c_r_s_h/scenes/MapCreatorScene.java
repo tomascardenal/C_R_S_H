@@ -17,7 +17,9 @@ import com.example.tomascrd.c_r_s_h.components.SceneCrsh;
 import com.example.tomascrd.c_r_s_h.components.TileComponent;
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
 import com.example.tomascrd.c_r_s_h.core.GameEngine;
+import com.example.tomascrd.c_r_s_h.core.OptionsManager;
 import com.example.tomascrd.c_r_s_h.core.Utils;
+import com.example.tomascrd.c_r_s_h.structs.MapReference;
 
 /**
  * A scene representing a map creator
@@ -77,10 +79,9 @@ public class MapCreatorScene extends SceneCrsh {
         this.engineCallback = engineCallback;
         this.utils = new Utils(context);
 
-        newId = 1337;
+        newId = engineCallback.optionsManager.getMapNames().size();
         //Initialize map
-        this.creatorMap = new MapComponent(0, context, screenWidth, screenHeight, engineCallback.loader);
-        this.creatorMap.loadTileArray();
+        getNewEmptyMap();
         this.tileSizeReference = this.creatorMap.getReference();
 
         //Pause button
@@ -90,6 +91,11 @@ public class MapCreatorScene extends SceneCrsh {
 
         //Pause menu
         this.saveMenu = new SaveMenuComponent(this.context, this.creatorMap.xLeft, this.creatorMap.yTop, this.creatorMap.mapAreaWidth, this.creatorMap.mapAreaHeight, this.engineCallback, this);
+    }
+
+    private void getNewEmptyMap() {
+        this.creatorMap = new MapComponent(0, context, screenWidth, screenHeight, engineCallback.loader);
+        this.creatorMap.loadTileArray();
     }
 
     /**
@@ -174,28 +180,64 @@ public class MapCreatorScene extends SceneCrsh {
         if (saveMenu.isConfirming()) {
             if (isClick(saveMenu.getBtnConfirmYes(), event)) {
                 saveAMap();
+                if (saveMenu.isQuitAfterConfirm()) {
+                    saveMenu.setQuitAfterConfirm(false);
+                    return 0;
+                }
+                if (saveMenu.isLoadAfterConfirm()) {
+                    saveMenu.setLoadAfterConfirm(false);
+                    saveMenu.setOnLoadMap(true);
+                }
+                if (saveMenu.isNewAfterConfirm()) {
+                    getNewEmptyMap();
+                }
             } else if (isClick(saveMenu.getBtnConfirmNo(), event)) {
                 saveMenu.setConfirming(false);
-            }
-            if (saveMenu.isQuitAfterConfirm()) {
-                saveMenu.setQuitAfterConfirm(false);
-                return 0;
-            }
-            if (saveMenu.isLoadAfterConfirm()) {
-                saveMenu.setLoadAfterConfirm(false);
-                loadAMap();
+                if (saveMenu.isQuitAfterConfirm()) {
+                    saveMenu.setQuitAfterConfirm(false);
+                    return 0;
+                }
+                if (saveMenu.isLoadAfterConfirm()) {
+                    saveMenu.setLoadAfterConfirm(false);
+                    saveMenu.setOnLoadMap(true);
+                }
+                if (saveMenu.isNewAfterConfirm()) {
+                    getNewEmptyMap();
+                }
             }
         } else if (saveMenu.isOnLoadMap()) {
             if (isClick(saveMenu.getBtnKeyConfirmNo(), event)) {
                 saveMenu.setOnLoadMap(false);
             }
             if (isClick(saveMenu.getBtnKeyConfirmYes(), event)) {
+                loadAMap();
                 saveMenu.setOnLoadMap(false);
+            }
+            if (isClick(saveMenu.getBtnStartMap(), event)) {
+                if (saveMenu.currentLoadIndex > 0) {
+                    saveMenu.currentLoadIndex = 0;
+                }
+            }
+            if (isClick(saveMenu.getBtnEndMap(), event)) {
+                if (saveMenu.currentLoadIndex < saveMenu.mapNames.size() - 1) {
+                    saveMenu.currentLoadIndex = saveMenu.mapNames.size() - 1;
+                }
+            }
+            if (isClick(saveMenu.getBtnPreviousMap(), event)) {
+                if (saveMenu.currentLoadIndex > 0) {
+                    saveMenu.currentLoadIndex--;
+                }
+            }
+            if (isClick(saveMenu.getBtnNextMap(), event)) {
+                if (saveMenu.currentLoadIndex < saveMenu.mapNames.size() - 1) {
+                    saveMenu.currentLoadIndex++;
+                }
             }
         } else if (saveMenu.isOnKeyboard()) {
             saveMenu.keyboard.onClickEvent(event);
             if (isClick(saveMenu.getBtnKeyConfirmYes(), event)) {
                 currentMapName = saveMenu.keyboard.getUserInput();
+                saveMenu.currentMapName = saveMenu.keyboard.getUserInput();
                 Toast.makeText(this.context, context.getString(R.string.toastChangedNameTo) + currentMapName, Toast.LENGTH_SHORT).show();
                 saveMenu.setOnKeyboard(false);
             } else if (isClick(saveMenu.getBtnKeyConfirmNo(), event)) {
@@ -210,7 +252,7 @@ public class MapCreatorScene extends SceneCrsh {
                     saveMenu.setConfirming(true);
                     saveMenu.setLoadAfterConfirm(true);
                 } else {
-                    loadAMap();
+                    saveMenu.setOnLoadMap(true);
                 }
             }
             if (isClick(saveMenu.getBtnUnpause(), event)) {
@@ -227,6 +269,14 @@ public class MapCreatorScene extends SceneCrsh {
             if (isClick(saveMenu.getBtnNameMap(), event)) {
                 saveMenu.setOnKeyboard(true);
             }
+            if (isClick(saveMenu.getBtnNewMap(), event)) {
+                if (saveMenu.isConfirmChanges()) {
+                    saveMenu.setConfirming(true);
+                    saveMenu.setNewAfterConfirm(true);
+                } else {
+                    getNewEmptyMap();
+                }
+            }
         }
         return -1;
     }
@@ -236,6 +286,8 @@ public class MapCreatorScene extends SceneCrsh {
      */
     public void saveAMap() {
         creatorMap.mapID = newId;
+        saveMenu.currentMapID = newId;
+        engineCallback.optionsManager.addMap(new MapReference(newId, currentMapName));
         boolean didIt = creatorMap.saveMap();
         if (didIt) {
             Toast.makeText(this.context, context.getString(R.string.toastMapSaved), Toast.LENGTH_SHORT).show();
@@ -251,8 +303,10 @@ public class MapCreatorScene extends SceneCrsh {
      * Safely loads a map and prompts the user with a toast informing of the result
      */
     public void loadAMap() {
-        saveMenu.setOnLoadMap(true);
+        newId = engineCallback.optionsManager.getMapId(saveMenu.mapNames.get(saveMenu.currentLoadIndex));
         boolean didIt = creatorMap.loadMap(newId);
+        currentMapName = engineCallback.optionsManager.getMapNameByID(newId);
+        saveMenu.currentMapName = currentMapName;
         if (didIt) {
             Toast.makeText(this.context, context.getString(R.string.toastMapLoaded), Toast.LENGTH_SHORT).show();
             creatorMap.loadTileArray();

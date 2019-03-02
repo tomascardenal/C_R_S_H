@@ -119,12 +119,7 @@ public class MapComponent extends DrawableComponent {
                 Log.i("crshdebug", "Map 666 loaded");
             }
         } else if (mapID == 0) {
-            if (!loadMap(0)) {
-                loadEmptyMap();
-                saveMap();
-            } else {
-                Log.i("crshdebug", "Map 0 loaded");
-            }
+            loadEmptyMap();
         }
     }
 
