@@ -205,6 +205,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
      * @param mapLoadID      id of the map to be loaded
      */
     public MainGameScene(Context context, int screenWidth, int screenHeight, GameEngine engineCallback, GAMEMODE gameMode, int mapLoadID) {
+        //TODO Set player indicators (with maybe a player sprite)
         //Initialize variables
         super(context, -1, screenWidth, screenHeight);
         this.engineCallback = engineCallback;

@@ -72,11 +72,11 @@ public class MapCreatorScene extends SceneCrsh {
      * @param engineCallback callback to the GameEngine
      */
     public MapCreatorScene(Context context, int screenWidth, int screenHeight, GameEngine engineCallback) {
+        //TODO complete map loader
         super(context, MAPCREATOR_ID, screenWidth, screenHeight);
         this.engineCallback = engineCallback;
         this.utils = new Utils(context);
 
-        //TODO this is only a test id, ask for id from user
         newId = 1337;
         //Initialize map
         this.creatorMap = new MapComponent(0, context, screenWidth, screenHeight, engineCallback.loader);

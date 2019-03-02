@@ -34,6 +34,7 @@ public class RecordsScene extends SceneCrsh {
      * @param engineCallback callback to access gameEngine data
      */
     public RecordsScene(Context context, int screenWidth, int screenHeight, GameEngine engineCallback) {
+        //TODO records screen
         super(context, RECORDS_ID, screenWidth, screenHeight);
         this.engineCallback = engineCallback;
         //Title text

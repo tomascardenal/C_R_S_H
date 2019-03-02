@@ -3,13 +3,27 @@ package com.example.tomascrd.c_r_s_h.scenes;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
+import android.graphics.PointF;
+import android.graphics.Rect;
+import android.graphics.Shader;
 import android.graphics.Typeface;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.MotionEvent;
 
 import com.example.tomascrd.c_r_s_h.R;
+import com.example.tomascrd.c_r_s_h.components.ButtonComponent;
+import com.example.tomascrd.c_r_s_h.components.CircleComponent;
+import com.example.tomascrd.c_r_s_h.components.JoystickComponent;
+import com.example.tomascrd.c_r_s_h.components.LifeComponent;
+import com.example.tomascrd.c_r_s_h.components.MapComponent;
+import com.example.tomascrd.c_r_s_h.components.PauseMenuComponent;
+import com.example.tomascrd.c_r_s_h.components.PlayerComCrsh;
+import com.example.tomascrd.c_r_s_h.components.PlayerCrsh;
 import com.example.tomascrd.c_r_s_h.components.SceneCrsh;
+import com.example.tomascrd.c_r_s_h.components.VisualTimerComponent;
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
 import com.example.tomascrd.c_r_s_h.core.GameEngine;
 
@@ -20,10 +34,31 @@ import com.example.tomascrd.c_r_s_h.core.GameEngine;
  */
 public class TutorialScene extends SceneCrsh {
 
+
     /**
      * Constant id for TutorialScene
      */
     public static final int TUTORIAL_ID = 5;
+    /**
+     * Determines if there's an animation
+     */
+    private boolean animating;
+    /**
+     * Map to load during the tutorial
+     */
+    public MapComponent mapLoad;
+    /**
+     * Player one on tutorial
+     */
+    public PlayerCrsh playerTutorialOne;
+    /**
+     * Player two on tutorial
+     */
+    public PlayerCrsh playerTutorialTwo;
+    /**
+     * Joystick
+     */
+    public JoystickComponent joystick;
 
     /**
      * Starts a tutorial screen
@@ -34,6 +69,7 @@ public class TutorialScene extends SceneCrsh {
      * @param engineCallback callback to access gameEngine data
      */
     public TutorialScene(Context context, int screenWidth, int screenHeight, GameEngine engineCallback) {
+        //TODO tutorial screen
         super(context, TUTORIAL_ID, screenWidth, screenHeight);
         this.engineCallback = engineCallback;
         //Title text
@@ -42,6 +78,11 @@ public class TutorialScene extends SceneCrsh {
         pTitleText.setColor(Color.BLACK);
         pTitleText.setTextAlign(Paint.Align.CENTER);
         pTitleText.setTextSize((float) ((screenHeight / GameConstants.MENUSCREEN_COLUMNS) * 2));
+
+        //TODO Set player indicators (with maybe a player sprite)
+        //Initialize variables
+        this.engineCallback = engineCallback;
+
     }
 
     /**

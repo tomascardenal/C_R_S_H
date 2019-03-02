@@ -38,6 +38,7 @@ public class PauseMenuComponent extends DrawableComponent {
      * Button for unconfirming an action
      */
     private ButtonComponent btnConfirmNo;
+
     /**
      * The current state of the game to be saved if necessary
      */
@@ -62,6 +63,18 @@ public class PauseMenuComponent extends DrawableComponent {
      * Indicates whether the user is being shown the confirm menu
      */
     private boolean isConfirming;
+    /**
+     * Indicates whether the user is on an endScreen
+     */
+    private boolean onEndScreen;
+    /**
+     * Indicates whether the user is on a keyboard prompt
+     */
+    private boolean onKeyboard;
+    /**
+     * Keyboard for records input
+     */
+    private KeyboardComponent keyboard;
 
     /**
      * Initializes a new PauseMenu
@@ -74,6 +87,7 @@ public class PauseMenuComponent extends DrawableComponent {
      * @param gameSceneState the current GameScene state
      */
     public PauseMenuComponent(Context context, float xRight, float yTop, float width, float height, SceneCrsh gameSceneState) {
+        //TODO endScreen + Records prompt
         //Initializing variables
         this.context = context;
         this.gameSceneState = gameSceneState;
@@ -142,6 +156,12 @@ public class PauseMenuComponent extends DrawableComponent {
                 context.getString(R.string.btnConfirmNo),
                 btnUnpause.btnRect.right, btnUnpause.btnRect.bottom - btnUnpause.btnRect.height(), btnUnpause.btnRect.right + btnUnpause.btnRect.width(), btnUnpause.btnRect.bottom, Color.TRANSPARENT, 0,
                 false, -1);
+
+        //KEYBOARD BUILDING
+        int offset = (int) this.borderPaint.getStrokeWidth() / 4;
+        Rect r = new Rect(this.borderRect.left + offset, this.borderRect.top + offset,
+                this.borderRect.right - offset, this.borderRect.bottom - offset);
+        keyboard = new KeyboardComponent(context, r, (int) this.borderPaint.getStrokeWidth() / 4);
 
     }
 
