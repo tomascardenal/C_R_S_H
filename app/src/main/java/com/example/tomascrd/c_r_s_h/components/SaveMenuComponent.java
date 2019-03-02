@@ -339,17 +339,20 @@ public class SaveMenuComponent extends DrawableComponent {
             btnStartMap.draw(c);
             btnNextMap.draw(c);
             btnPreviousMap.draw(c);
+            float f = pText.getTextSize();
+            pText.setTextSize(f / 1.5f);
             if (mapNames.size() > 0) {
 
             } else {
-                c.drawText(context.getString(R.string.infoNoMaps), gameSceneState.screenWidth / 2, (btnNextMap.btnRect.top + (btnNextMap.btnRect.height()/3)*2), pText);
+                c.drawText(context.getString(R.string.infoNoMaps), gameSceneState.screenWidth / 2, (btnNextMap.btnRect.top + (btnNextMap.btnRect.height() / 3) * 2), pText);
             }
+            pText.setTextSize(f);
         } else if (!isConfirming && !onKeyboard) {
-            c.drawText(context.getString(R.string.infoSave), borderRect.exactCenterX(), this.borderRect.height() / GameConstants.GAMESCREEN_ROWS * 9, infoPaint);
+            c.drawText(context.getString(R.string.infoSave), borderRect.exactCenterX(), this.borderRect.height() / GameConstants.GAMESCREEN_ROWS * 8, infoPaint);
             btnSaveMap.draw(c);
             btnNameMap.draw(c);
             btnLoadMap.draw(c);
-            c.drawText(context.getString(R.string.infoPause), borderRect.exactCenterX(), this.borderRect.height() / GameConstants.GAMESCREEN_ROWS * 14, infoPaint);
+            c.drawText(context.getString(R.string.infoPause), borderRect.exactCenterX(), this.borderRect.height() / GameConstants.GAMESCREEN_ROWS * 13, infoPaint);
             btnOptions.draw(c);
             btnUnpause.draw(c);
             btnExitToMenu.draw(c);

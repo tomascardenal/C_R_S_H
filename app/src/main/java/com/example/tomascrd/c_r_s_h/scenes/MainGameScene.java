@@ -1,12 +1,14 @@
 package com.example.tomascrd.c_r_s_h.scenes;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Rect;
+import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -32,7 +34,7 @@ import com.example.tomascrd.c_r_s_h.components.SceneCrsh;
 import com.example.tomascrd.c_r_s_h.components.VisualTimerComponent;
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
 import com.example.tomascrd.c_r_s_h.core.GameEngine;
-import com.example.tomascrd.c_r_s_h.core.OptionsManager;
+import com.example.tomascrd.c_r_s_h.core.Utils;
 
 /**
  * Represents the main game
@@ -82,11 +84,11 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
      */
     public LifeComponent lifeTwo;
     /**
-     * Player 1
+     * Player 1 or side player
      */
     private PlayerCrsh playerOne;
     /**
-     * Player 2
+     * Player 2 or side player
      */
     private PlayerCrsh playerTwo;
     /**
@@ -169,9 +171,29 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
      */
     private Paint paintModeTwo;
     /**
-     * Paint for mid line
+     * Paint for score text
      */
-    private Paint paintMidLine;
+    private Paint paintScores;
+    /**
+     * Bitmap for indicator one (left side)
+     */
+    private Bitmap indicatorImageOne;
+    /**
+     * Bitmap for indicator two (right side)
+     */
+    private Bitmap indicatorImageTwo;
+    /**
+     * Counter for looping on indicator attack
+     */
+    private int indicatorLoop = 0;
+    /**
+     * Stores the previous COM score
+     */
+    private int previousCOMScore;
+    /**
+     * Score for the com isn't displayed, this is a string representing the changes in it's score with random chars
+     */
+    private String comScoreMimic;
 
     /**
      * Starts a new main game
@@ -190,6 +212,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         this.gameMode = gameMode;
         this.setId();
         this.setMapLoadID(mapLoadID);
+        this.previousCOMScore = -1;
 
         //Initialize map
         this.mapLoad = new MapComponent(this.getMapLoadID(), context, screenWidth, screenHeight, engineCallback.loader);
@@ -197,9 +220,9 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         this.tileSizeReference = mapLoad.getReference();
 
         //Initialize players
-        PointF playerOneCenter = new PointF(mapLoad.tileArray[mapLoad.tileArray.length - 3][mapLoad.tileArray[mapLoad.tileArray.length - 3].length - 3].getCollisionRect().exactCenterX(), mapLoad.tileArray[mapLoad.tileArray.length - 3][mapLoad.tileArray[mapLoad.tileArray.length - 3].length - 3].getCollisionRect().exactCenterY());
+        PointF playerOneCenter = new PointF(mapLoad.tileArray[2][2].getCollisionRect().exactCenterX(), mapLoad.tileArray[2][2].getCollisionRect().exactCenterY());
         this.playerOne = new PlayerCrsh(this, mapLoad, "TestP1", 1, true, new CircleComponent(playerOneCenter, mapLoad.getReference() / 2));
-        PointF playerTwoCenter = new PointF(mapLoad.tileArray[2][2].getCollisionRect().exactCenterX(), mapLoad.tileArray[2][2].getCollisionRect().exactCenterY());
+        PointF playerTwoCenter = new PointF(mapLoad.tileArray[mapLoad.tileArray.length - 3][mapLoad.tileArray[mapLoad.tileArray.length - 3].length - 3].getCollisionRect().exactCenterX(), mapLoad.tileArray[mapLoad.tileArray.length - 3][mapLoad.tileArray[mapLoad.tileArray.length - 3].length - 3].getCollisionRect().exactCenterY());
         if (this.gameMode == GAMEMODE.MODE_CRSH_COM || this.gameMode == GAMEMODE.MODE_NRML_COM) {
             this.playerCom = new PlayerComCrsh(this, mapLoad, true, new CircleComponent(playerTwoCenter, mapLoad.getReference() / 2));
         } else {
@@ -219,52 +242,67 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         //Initialize vibrator
         this.vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
 
+
         //Timer
-        int left = this.mapLoad.tileArray[0][0].getCollisionRect().left;
-        int top = this.mapLoad.tileArray[0][0].getCollisionRect().top;
-        int right = this.mapLoad.tileArray[0][GameConstants.MAPAREA_COLUMNS - 1].getCollisionRect().right;
-        int bottom = this.mapLoad.tileArray[0][GameConstants.MAPAREA_COLUMNS - 1].getCollisionRect().bottom;
+        int left = this.mapLoad.tileArray[GameConstants.MAPAREA_ROWS - 1][0].getCollisionRect().left;
+        int top = this.mapLoad.tileArray[GameConstants.MAPAREA_ROWS - 1][0].getCollisionRect().top;
+        int right = this.mapLoad.tileArray[GameConstants.MAPAREA_ROWS - 1][GameConstants.MAPAREA_COLUMNS - 1].getCollisionRect().right;
+        int bottom = this.mapLoad.tileArray[GameConstants.MAPAREA_ROWS - 1][GameConstants.MAPAREA_COLUMNS - 1].getCollisionRect().bottom;
         this.timer = new VisualTimerComponent(this.context, this, new Rect(left, top, right, bottom), engineCallback.optionsManager.getTimerSpeed());
 
-        //Life Component one
+        //Life Component player one (Right side)
+        left = this.mapLoad.tileArray[0][0].getCollisionRect().left;
+        top = this.mapLoad.tileArray[0][0].getCollisionRect().top;
+        right = this.mapLoad.tileArray[0][12].getCollisionRect().right;
+        bottom = this.mapLoad.tileArray[0][12].getCollisionRect().bottom;
+        this.lifeOne = new LifeComponent(this.context, this, new Rect(left, top, right, bottom), playerOne.getPlayerLifes(), false, 1);
+
+        //Life Component player two (Left side)
+        left = this.mapLoad.tileArray[0][13].getCollisionRect().left;
+        top = this.mapLoad.tileArray[0][13].getCollisionRect().top;
+        right = this.mapLoad.tileArray[0][GameConstants.MAPAREA_COLUMNS - 1].getCollisionRect().right;
+        bottom = this.mapLoad.tileArray[0][GameConstants.MAPAREA_COLUMNS - 1].getCollisionRect().bottom;
+        if (this.gameMode == GAMEMODE.MODE_CRSH_COM || this.gameMode == GAMEMODE.MODE_NRML_COM) {
+            this.lifeTwo = new LifeComponent(this.context, this, new Rect(left, top, right, bottom), playerCom.getPlayerLifes(), true, 0);
+        } else {
+            this.lifeTwo = new LifeComponent(this.context, this, new Rect(left, top, right, bottom), playerTwo.getPlayerLifes(), true, 2);
+        }
+
+
+        //Scores
+        this.paintScores = new Paint();
+        this.paintScores.setTypeface(Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN));
+        this.paintScores.setTextSize(this.mapLoad.getReference() * 0.80f);
+        this.paintScores.setColor(Color.WHITE);
+
+        //Mode one rect
         left = this.mapLoad.tileArray[1][0].getCollisionRect().left;
         top = this.mapLoad.tileArray[1][0].getCollisionRect().top;
         right = this.mapLoad.tileArray[GameConstants.MAPAREA_ROWS - 2][0].getCollisionRect().right;
         bottom = this.mapLoad.tileArray[GameConstants.MAPAREA_ROWS - 2][0].getCollisionRect().bottom;
-        this.lifeOne = new LifeComponent(this.context, this, new Rect(left, top, right, bottom), playerOne.getPlayerLifes());
+        this.modeOne = new Rect(left, top, right, bottom);
+        this.paintModeOne = new Paint();
+        this.paintModeOne.setShader(new LinearGradient(this.modeOne.left + this.modeOne.width() / 2, this.modeOne.top, this.modeOne.right - this.modeOne.width() / 2, this.modeOne.bottom, Color.BLACK, Color.BLUE, Shader.TileMode.CLAMP));
 
-        //Life Component two
+        //Mode two rect
         left = this.mapLoad.tileArray[1][GameConstants.MAPAREA_COLUMNS - 1].getCollisionRect().left;
         top = this.mapLoad.tileArray[1][GameConstants.MAPAREA_COLUMNS - 1].getCollisionRect().top;
         right = this.mapLoad.tileArray[GameConstants.MAPAREA_ROWS - 2][GameConstants.MAPAREA_COLUMNS - 1].getCollisionRect().right;
         bottom = this.mapLoad.tileArray[GameConstants.MAPAREA_ROWS - 2][GameConstants.MAPAREA_COLUMNS - 1].getCollisionRect().bottom;
-        if (this.gameMode == GAMEMODE.MODE_CRSH_COM || this.gameMode == GAMEMODE.MODE_NRML_COM) {
-            this.lifeTwo = new LifeComponent(this.context, this, new Rect(left, top, right, bottom), playerCom.getPlayerLifes());
-        } else {
-            this.lifeTwo = new LifeComponent(this.context, this, new Rect(left, top, right, bottom), playerTwo.getPlayerLifes());
-        }
-
-        //Mode one rect
-        left = this.mapLoad.tileArray[GameConstants.MAPAREA_ROWS - 1][0].getCollisionRect().left;
-        top = this.mapLoad.tileArray[GameConstants.MAPAREA_ROWS - 1][0].getCollisionRect().top;
-        right = this.mapLoad.tileArray[GameConstants.MAPAREA_ROWS - 1][12].getCollisionRect().right;
-        bottom = this.mapLoad.tileArray[GameConstants.MAPAREA_ROWS - 1][12].getCollisionRect().bottom;
-        this.modeOne = new Rect(left, top, right, bottom);
-        this.paintModeOne = new Paint();
-
-        //Mode two rect
-        left = this.mapLoad.tileArray[GameConstants.MAPAREA_ROWS - 1][13].getCollisionRect().left;
-        top = this.mapLoad.tileArray[GameConstants.MAPAREA_ROWS - 1][13].getCollisionRect().top;
-        right = this.mapLoad.tileArray[GameConstants.MAPAREA_ROWS - 1][GameConstants.MAPAREA_COLUMNS - 1].getCollisionRect().right;
-        bottom = this.mapLoad.tileArray[GameConstants.MAPAREA_ROWS - 1][GameConstants.MAPAREA_COLUMNS - 1].getCollisionRect().bottom;
         this.modeTwo = new Rect(left, top, right, bottom);
         this.paintModeTwo = new Paint();
+        if (this.gameMode == GAMEMODE.MODE_CRSH_COM || this.gameMode == GAMEMODE.MODE_NRML_COM) {
+            this.paintModeTwo.setShader(new LinearGradient(this.modeTwo.left + this.modeTwo.width() / 2, this.modeTwo.top, this.modeTwo.right - this.modeTwo.width() / 2, this.modeTwo.bottom, Color.GRAY, Color.BLACK, Shader.TileMode.CLAMP));
+        } else {
+            this.paintModeTwo.setShader(new LinearGradient(this.modeTwo.left + this.modeTwo.width() / 2, this.modeTwo.top, this.modeTwo.right - this.modeTwo.width() / 2, this.modeTwo.bottom, Color.RED, Color.BLACK, Shader.TileMode.CLAMP));
 
-        //Mid line
-        this.paintMidLine = new Paint();
-        this.paintMidLine.setColor(Color.LTGRAY);
-        this.paintMidLine.setAlpha(80);
+        }
 
+
+        //Bitmaps for attack
+        if (!engineCallback.loader.areIndicatorsLoaded()) {
+            engineCallback.loader.loadIndicators(this.modeOne.width(), this.modeOne.height() / 2);
+        }
         setAttackIndicator();
 
         //Pause button
@@ -316,6 +354,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         this.joystickOne = null;
         this.joystickTwo = null;
         this.onPause = false;
+        this.previousCOMScore = -1;
 
         //Initialize map
         this.mapLoad = new MapComponent(this.getMapLoadID(), context, screenWidth, screenHeight, engineCallback.loader);
@@ -331,23 +370,22 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
 
         //Timer
         if (timer == null) {
-            int left = this.mapLoad.tileArray[0][0].getCollisionRect().left;
-            int top = this.mapLoad.tileArray[0][0].getCollisionRect().top;
-            int right = this.mapLoad.tileArray[GameConstants.MAPAREA_ROWS - 2][0].getCollisionRect().right;
-            int bottom = this.mapLoad.tileArray[GameConstants.MAPAREA_ROWS - 2][0].getCollisionRect().bottom;
+            int left = this.mapLoad.tileArray[GameConstants.MAPAREA_ROWS - 1][0].getCollisionRect().left;
+            int top = this.mapLoad.tileArray[GameConstants.MAPAREA_ROWS - 1][0].getCollisionRect().top;
+            int right = this.mapLoad.tileArray[GameConstants.MAPAREA_ROWS - 1][GameConstants.MAPAREA_COLUMNS - 1].getCollisionRect().right;
+            int bottom = this.mapLoad.tileArray[GameConstants.MAPAREA_ROWS - 1][GameConstants.MAPAREA_COLUMNS - 1].getCollisionRect().bottom;
             this.timer = new VisualTimerComponent(this.context, this, new Rect(left, top, right, bottom), engineCallback.getCurrentSpeed());
         } else {
             this.timer.resetTimer();
         }
 
         //Player One
-        PointF playerOneCenter = new PointF(mapLoad.tileArray[mapLoad.tileArray.length - 3][mapLoad.tileArray[mapLoad.tileArray.length - 3].length - 3].getCollisionRect().exactCenterX(), mapLoad.tileArray[mapLoad.tileArray.length - 3][mapLoad.tileArray[mapLoad.tileArray.length - 3].length - 3].getCollisionRect().exactCenterY());
+        PointF playerOneCenter = new PointF(mapLoad.tileArray[2][2].getCollisionRect().exactCenterX(), mapLoad.tileArray[2][2].getCollisionRect().exactCenterY());
         this.playerOne = new PlayerCrsh(this, mapLoad, "TestP1", 1, false, new CircleComponent(playerOneCenter, mapLoad.getReference() / 2));
         this.playerOne.respawn();
 
         //Player Two or COM
-        PointF playerTwoCenter = new PointF(mapLoad.tileArray[2][2].getCollisionRect().exactCenterX(), mapLoad.tileArray[2][2].getCollisionRect().exactCenterY());
-
+        PointF playerTwoCenter = new PointF(mapLoad.tileArray[mapLoad.tileArray.length - 3][mapLoad.tileArray[mapLoad.tileArray.length - 3].length - 3].getCollisionRect().exactCenterX(), mapLoad.tileArray[mapLoad.tileArray.length - 3][mapLoad.tileArray[mapLoad.tileArray.length - 3].length - 3].getCollisionRect().exactCenterY());
 
         if (this.gameMode == GAMEMODE.MODE_CRSH_COM || this.gameMode == GAMEMODE.MODE_NRML_COM) {
             this.playerCom = new PlayerComCrsh(this, mapLoad, true, new CircleComponent(playerTwoCenter, mapLoad.getReference() / 2));
@@ -356,7 +394,14 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
             this.playerTwo = new PlayerCrsh(this, mapLoad, "testP2", 2, true, new CircleComponent(playerTwoCenter, mapLoad.getReference() / 2));
             this.playerTwo.respawn();
         }
+
         //Gradients
+        if (this.gameMode == GAMEMODE.MODE_CRSH_COM || this.gameMode == GAMEMODE.MODE_NRML_COM) {
+            this.paintModeTwo.setShader(new LinearGradient(this.modeTwo.left + this.modeTwo.width() / 2, this.modeTwo.top, this.modeTwo.right - this.modeTwo.width() / 2, this.modeTwo.bottom, Color.GRAY, Color.BLACK, Shader.TileMode.CLAMP));
+        } else {
+            this.paintModeTwo.setShader(new LinearGradient(this.modeTwo.left + this.modeTwo.width() / 2, this.modeTwo.top, this.modeTwo.right - this.modeTwo.width() / 2, this.modeTwo.bottom, Color.RED, Color.BLACK, Shader.TileMode.CLAMP));
+
+        }
         setAttackIndicator();
     }
 
@@ -373,23 +418,30 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
      * Sets the rect indicating the attack and defense modes
      */
     public void setAttackIndicator() {
+
         if (gameMode == GAMEMODE.MODE_CRSH_2P || gameMode == GAMEMODE.MODE_NRML_2P) {
             if (playerOne.isOnAttack() && !playerTwo.isOnAttack()) {
-                paintModeOne.setColor(Color.RED);
-                paintModeTwo.setColor(Color.GRAY);
+                indicatorImageOne = engineCallback.loader.indicatorAttackBitmaps[indicatorLoop];
+                indicatorImageTwo = engineCallback.loader.indicatorDefenseBitmap;
             } else if (playerTwo.isOnAttack() && !playerOne.isOnAttack()) {
-                paintModeTwo.setColor(Color.RED);
-                paintModeOne.setColor(Color.GRAY);
+                indicatorImageOne = engineCallback.loader.indicatorDefenseBitmap;
+                indicatorImageTwo = engineCallback.loader.indicatorAttackBitmaps[indicatorLoop];
             }
         } else {
             if (playerOne.isOnAttack() && !playerCom.isOnAttack()) {
-                paintModeOne.setColor(Color.RED);
-                paintModeTwo.setColor(Color.GRAY);
+                indicatorImageOne = engineCallback.loader.indicatorAttackBitmaps[indicatorLoop];
+                indicatorImageTwo = engineCallback.loader.indicatorDefenseBitmap;
             } else if (playerCom.isOnAttack() && !playerOne.isOnAttack()) {
-                paintModeTwo.setColor(Color.RED);
-                paintModeOne.setColor(Color.GRAY);
+                indicatorImageOne = engineCallback.loader.indicatorDefenseBitmap;
+                indicatorImageTwo = engineCallback.loader.indicatorAttackBitmaps[indicatorLoop];
             }
         }
+        if (indicatorLoop < engineCallback.loader.indicatorAttackBitmaps.length - 1) {
+            indicatorLoop++;
+        } else {
+            indicatorLoop = 0;
+        }
+
     }
 
     /**
@@ -458,6 +510,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
                 }
             }
             timer.updateTimer();
+            setAttackIndicator();
         }
     }
 
@@ -480,13 +533,30 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
             lifeTwo.draw(c);
             //
             c.drawRect(modeOne, paintModeOne);
+            c.drawBitmap(indicatorImageOne, modeOne.left, modeOne.top, null);
             c.drawRect(modeTwo, paintModeTwo);
+            c.drawBitmap(indicatorImageTwo, modeTwo.left, modeTwo.top + modeTwo.height() / 2, null);
             //Draw player One
             playerOne.draw(c);
             if (this.gameMode == GAMEMODE.MODE_NRML_2P || this.gameMode == GAMEMODE.MODE_CRSH_2P) {
+                String pOneScore = String.format("%04d", playerOne.getPlayerScore());
+                String pTwoScore = String.format("%04d", playerTwo.getPlayerScore());
+                c.drawText(pOneScore, screenWidth / GameConstants.GAMESCREEN_COLUMNS / 2, screenHeight / GameConstants.GAMESCREEN_ROWS * 2.5f, paintScores);
+                c.drawText(pTwoScore, (screenWidth - screenWidth / GameConstants.GAMESCREEN_COLUMNS / 2) - paintScores.measureText(pTwoScore), screenHeight / GameConstants.GAMESCREEN_ROWS * 2.5f, paintScores);
                 //Draw player Two
                 playerTwo.draw(c);
             } else {
+                String pOneScore = String.format("%04d", playerOne.getPlayerScore());
+                if (previousCOMScore == -1) {
+                    previousCOMScore = playerCom.getPlayerScore();
+                    comScoreMimic = String.format("%c%c%c%c", Utils.getRandom(32, 50), Utils.getRandom(32, 50), Utils.getRandom(32, 50), Utils.getRandom(32, 50));
+                } else if (previousCOMScore != playerCom.getPlayerScore()) {
+                    previousCOMScore = playerCom.getPlayerScore();
+                    comScoreMimic = String.format("%c%c%c%c", Utils.getRandom(32, 50), Utils.getRandom(32, 50), Utils.getRandom(32, 50), Utils.getRandom(32, 50));
+                }
+
+                c.drawText(pOneScore, screenWidth / GameConstants.GAMESCREEN_COLUMNS / 2, screenHeight / GameConstants.GAMESCREEN_ROWS * 2.5f, paintScores);
+                c.drawText(comScoreMimic, (screenWidth - screenWidth / GameConstants.GAMESCREEN_COLUMNS / 2) - paintScores.measureText(comScoreMimic), screenHeight / GameConstants.GAMESCREEN_ROWS * 2.5f, paintScores);
                 //Draw player COM
                 playerCom.draw(c);
             }
@@ -501,7 +571,6 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
                     joystickTwo.draw(c);
                 }
             }
-            //c.drawLine(this.screenWidth / 2, this.mapLoad.gethReference() + this.mapLoad.getReference(), this.screenWidth / 2, this.screenHeight - this.mapLoad.gethReference() - this.mapLoad.getReference(), paintMidLine);
         } else {
             pauseMenu.draw(c);
         }
@@ -536,8 +605,8 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
      */
     public int touchManagerCRSHTwoPlayers(MotionEvent event) {
         int action = event.getActionMasked();
-        boolean playerOneArea = event.getX(event.getActionIndex()) > screenWidth / 2 + 100;
-        boolean playerTwoArea = event.getX(event.getActionIndex()) < screenWidth / 2 - 100;
+        boolean playerOneArea = event.getX(event.getActionIndex()) < screenWidth / 2 - 100;
+        boolean playerTwoArea = event.getX(event.getActionIndex()) > screenWidth / 2 + 100;
         switch (action) {
             case MotionEvent.ACTION_DOWN:           // First finger
             case MotionEvent.ACTION_POINTER_DOWN:  // Second finger and so on
@@ -587,10 +656,10 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
                 //Joystick moving
                 if (!onPause) {
                     if (playerOne.getPlayerLifes() > 0 && !playerOne.isOnAttack()) {
-                        joystickOne.onMoveEvent(event, screenWidth / 2 + 100, true);
+                        joystickOne.onMoveEvent(event, screenWidth / 2 - 100, true);
                     }
                     if (playerTwo.getPlayerLifes() > 0 && !playerTwo.isOnAttack()) {
-                        joystickTwo.onMoveEvent(event, screenWidth / 2 - 100, false);
+                        joystickTwo.onMoveEvent(event, screenWidth / 2 + 100, false);
                     }
                 }
                 break;
@@ -609,8 +678,8 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
     public int touchManagerNRMLTwoPlayers(MotionEvent event) {
 
         int action = event.getActionMasked();
-        boolean playerOneArea = event.getX(event.getActionIndex()) > screenWidth / 2 + 100;
-        boolean playerTwoArea = event.getX(event.getActionIndex()) < screenWidth / 2 - 100;
+        boolean playerOneArea = event.getX(event.getActionIndex()) < screenWidth / 2 - 100;
+        boolean playerTwoArea = event.getX(event.getActionIndex()) > screenWidth / 2 + 100;
         switch (action) {
             case MotionEvent.ACTION_DOWN:           // First finger
             case MotionEvent.ACTION_POINTER_DOWN:  // Second finger and so on
@@ -657,10 +726,10 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
                 //Joystick moving
                 if (!onPause) {
                     if (playerOne.getPlayerLifes() > 0) {
-                        joystickOne.onMoveEvent(event, screenWidth / 2 + 100, true);
+                        joystickOne.onMoveEvent(event, screenWidth / 2 - 100, false);
                     }
                     if (playerTwo.getPlayerLifes() > 0) {
-                        joystickTwo.onMoveEvent(event, screenWidth / 2 - 100, false);
+                        joystickTwo.onMoveEvent(event, screenWidth / 2 + 100, true);
                     }
                 }
                 break;

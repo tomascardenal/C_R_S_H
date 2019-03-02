@@ -5,8 +5,10 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.util.Log;
 
+import com.example.tomascrd.c_r_s_h.core.GameConstants;
 import com.example.tomascrd.c_r_s_h.scenes.MainGameScene;
 
 /**
@@ -45,6 +47,10 @@ public class LifeComponent extends DrawableComponent {
      */
     private Paint lostPaint;
     /**
+     * Paint for player text
+     */
+    private Paint playerPaint;
+    /**
      * Number of lives to divide this into
      */
     private int initialLifes;
@@ -64,6 +70,10 @@ public class LifeComponent extends DrawableComponent {
      * Counter for one life effect
      */
     private int oneLifeCounter;
+    /**
+     * Indicates whether this Life Component is on the right or the left side of the screen
+     */
+    private boolean rightSide;
 
     /**
      * Represents a visual element to show the life of the player
@@ -71,8 +81,10 @@ public class LifeComponent extends DrawableComponent {
      * @param c            The current context
      * @param gameCallback Callback to this main game
      * @param area         The area to draw this component into
+     * @param lives        The number of lifes of this life component
+     * @param rightSide    Whether this Life Component is on the right or the left side of the screen
      */
-    public LifeComponent(Context c, MainGameScene gameCallback, Rect area, int lives) {
+    public LifeComponent(Context c, MainGameScene gameCallback, Rect area, int lives, boolean rightSide, int player) {
         this.context = c;
         this.gameCallback = gameCallback;
         this.area = area;
@@ -80,10 +92,16 @@ public class LifeComponent extends DrawableComponent {
         this.lifesLeft = lives;
         this.losingLife = false;
 
+        this.rightSide = rightSide;
+
         this.leftPaint = new Paint();
 
         this.lostPaint = new Paint();
         this.lostPaint.setColor(Color.BLACK);
+
+        this.playerPaint = new Paint();
+        this.playerPaint.setColor(Color.WHITE);
+        this.playerPaint.setTypeface(Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN));
 
         this.borderPaint = new Paint();
         this.borderPaint.setStyle(Paint.Style.STROKE);
@@ -115,7 +133,11 @@ public class LifeComponent extends DrawableComponent {
      */
     public void resetLife() {
         this.leftRect = new Rect(area.left, area.top, area.right, area.bottom);
-        this.lostRect = new Rect(area.left, area.top, area.right, area.top);
+        if (rightSide) {
+            this.lostRect = new Rect(area.left, area.top, area.left, area.bottom);
+        } else {
+            this.lostRect = new Rect(area.right, area.top, area.right, area.bottom);
+        }
         this.leftPaint.setColor(Color.BLUE);
         this.lostPaint.setColor(Color.BLACK);
         this.lifesLeft = this.initialLifes;
@@ -143,31 +165,57 @@ public class LifeComponent extends DrawableComponent {
      */
     private void losingCycle() {
         lostPaint.setColor(Color.BLACK);
-        if (lifesLeft == 3) {
-            if (leftRect.bottom - leftRect.top > area.height() / 3 * 2) {
-                leftRect.inset(0, 3);
-                leftRect.offset(0, 3);
-                lostRect.inset(0, -3);
-                lostRect.offset(0, 3);
+        if (rightSide) {
+            if (lifesLeft == 3) {
+                if (leftRect.width() > area.width() / 3 * 2) {
+                    rightInset();
+                }
+            } else if (lifesLeft == 2) {
+                if (leftRect.width() > area.width() / 3) {
+                    rightInset();
+                    leftPaint.setColor(Color.YELLOW);
+                }
+            } else if (lifesLeft == 1) {
+                if (leftRect.width() > 0) {
+                    rightInset();
+                }
             }
-        } else if (lifesLeft == 2) {
-            if (leftRect.bottom - leftRect.top > area.height() / 3) {
-                leftRect.inset(0, 3);
-                leftRect.offset(0, 3);
-                lostRect.inset(0, -3);
-                lostRect.offset(0, 3);
-                leftPaint.setColor(Color.YELLOW);
+        } else {
+            if (lifesLeft == 3) {
+                if (leftRect.width() > area.width() / 3 * 2) {
+                    leftInset();
+                }
+            } else if (lifesLeft == 2) {
+                if (leftRect.width() > area.width() / 3) {
+                    leftInset();
+                    leftPaint.setColor(Color.YELLOW);
+                }
+            } else if (lifesLeft == 1) {
+                if (leftRect.width() > 0) {
+                    leftInset();
+                }
             }
-        } else if (lifesLeft == 1) {
-            if (leftRect.bottom - leftRect.top > 0) {
-                leftRect.inset(0, 3);
-                leftRect.offset(0, 3);
-                lostRect.inset(0, -3);
-                lostRect.offset(0, 3);
-            }
-            oneLifeCounter++;
-            if (oneLifeCounter % 3 == 0)
-                lostPaint.setColor(lostPaint.getColor() == Color.BLACK ? Color.RED : Color.BLACK);
         }
+        if (lifesLeft == 1) {
+            oneLifeCounter++;
+            if (oneLifeCounter % 15 == 0) {
+                lostPaint.setColor(lostPaint.getColor() == Color.BLACK ? Color.RED : Color.BLACK);
+            }
+        }
+    }
+
+
+    private void rightInset() {
+        leftRect.inset(3, 0);
+        leftRect.offset(3, 0);
+        lostRect.inset(-3, 0);
+        lostRect.offset(3, 0);
+    }
+
+    private void leftInset() {
+        leftRect.inset(3, 0);
+        leftRect.offset(-3, 0);
+        lostRect.inset(-3, 0);
+        lostRect.offset(-3, 0);
     }
 }

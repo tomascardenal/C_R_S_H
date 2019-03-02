@@ -187,9 +187,9 @@ public class MapCreatorScene extends SceneCrsh {
             }
         } else if (saveMenu.isOnLoadMap()) {
             if (isClick(saveMenu.getBtnKeyConfirmNo(), event)) {
-
+                saveMenu.setOnLoadMap(false);
             }
-            if (isClick(saveMenu.getBtnConfirmYes(), event)) {
+            if (isClick(saveMenu.getBtnKeyConfirmYes(), event)) {
                 saveMenu.setOnLoadMap(false);
             }
         } else if (saveMenu.isOnKeyboard()) {

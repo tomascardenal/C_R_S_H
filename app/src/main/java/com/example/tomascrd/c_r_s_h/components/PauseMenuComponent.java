@@ -170,7 +170,7 @@ public class PauseMenuComponent extends DrawableComponent {
             btnConfirmYes.draw(c);
             btnConfirmNo.draw(c);
         } else {
-            c.drawText(context.getString(R.string.infoPause),borderRect.exactCenterX(),this.borderRect.height() /GameConstants.GAMESCREEN_ROWS *10,infoPaint);
+            c.drawText(context.getString(R.string.infoPause), borderRect.exactCenterX(), this.borderRect.height() / GameConstants.GAMESCREEN_ROWS * 9, infoPaint);
             btnOptions.draw(c);
             btnUnpause.draw(c);
             btnEndGame.draw(c);

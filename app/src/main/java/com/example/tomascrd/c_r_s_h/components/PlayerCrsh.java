@@ -536,6 +536,7 @@ public class PlayerCrsh extends DrawableComponent {
                         currentTile.setPainter();
                         bounceBackSmall = true;
                         xVelocity = xVelocity / GameConstants.BOUNCEBACK_SMALL_DIVISOR;
+                        addPlayerScore(10);
                         reverseXVelocity();
                         break;
                     case TILE_BREAKTWO:
@@ -543,6 +544,7 @@ public class PlayerCrsh extends DrawableComponent {
                         currentTile.tileType = TileComponent.TILE_TYPE.TILE_BREAKONE;
                         currentTile.setPainter();
                         bounceBackBig = true;
+                        addPlayerScore(20);
                         xVelocity = xVelocity / GameConstants.BOUNCEBACK_BIG_DIVISOR;
                         reverseXVelocity();
                         break;
@@ -566,6 +568,7 @@ public class PlayerCrsh extends DrawableComponent {
                         currentTile.setPainter();
                         bounceBackSmall = true;
                         yVelocity = yVelocity / GameConstants.BOUNCEBACK_SMALL_DIVISOR;
+                        addPlayerScore(10);
                         reverseYVelocity();
                         break;
                     case TILE_BREAKTWO:
@@ -574,6 +577,7 @@ public class PlayerCrsh extends DrawableComponent {
                         currentTile.setPainter();
                         bounceBackBig = true;
                         yVelocity = yVelocity / GameConstants.BOUNCEBACK_BIG_DIVISOR;
+                        addPlayerScore(20);
                         reverseYVelocity();
                         break;
                 }
@@ -590,6 +594,13 @@ public class PlayerCrsh extends DrawableComponent {
         if (movedCircle.collision(opponentCircle)) {
             Log.i("CrshDebug", "Collision between players");
             if (this.isOnAttack()) {
+                if (playerLifes > 2) {
+                    addPlayerScore(50);
+                } else if (playerLifes > 1) {
+                    addPlayerScore(75);
+                } else {
+                    addPlayerScore(100);
+                }
                 gameCallback.hitOpponent(this.playerId);
             }
         }
@@ -685,4 +696,26 @@ public class PlayerCrsh extends DrawableComponent {
     public float getYPosition() {
         return this.playerCollision.yPos;
     }
+
+    /**
+     * Gets the value of the player's score
+     *
+     * @return the current player score
+     */
+    public int getPlayerScore() {
+        return playerScore;
+    }
+
+    /**
+     * Adds a value to the player's score checking the limit
+     *
+     * @param points the score to add
+     */
+    public void addPlayerScore(int points) {
+        this.playerScore += points;
+        if (this.playerScore > 9999) {
+            this.playerScore = 9999;
+        }
+    }
+
 }

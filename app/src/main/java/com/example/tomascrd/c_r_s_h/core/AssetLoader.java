@@ -67,14 +67,25 @@ public class AssetLoader {
      */
     public Bitmap tileGrassDownRight;
     /**
+     * Defense indicator
+     */
+    public Bitmap indicatorDefenseBitmap;
+    /**
+     * Attack indicators
+     */
+    public Bitmap[] indicatorAttackBitmaps;
+    /**
      * Indicates if the tiles were loaded
      */
     public boolean loadedTiles;
     /**
+     * Indicates if the attack/defense indicators were loaded
+     */
+    private boolean indicatorsLoaded;
+    /**
      * Indicates the previous loaded sky hour
      */
     public int previousHour;
-
 
 
     /**
@@ -85,14 +96,15 @@ public class AssetLoader {
     public AssetLoader(Context context) {
         this.context = context;
         this.loadedTiles = false;
+        this.indicatorsLoaded = false;
         this.previousHour = -1;
     }
 
     /**
      * Scales the bitmaps and prepares them to be drawn on screen
      *
-     * @param width  the width to scale
-     * @param height the height to scale
+     * @param width  the width to scale to
+     * @param height the height to scale to
      */
     public void scaleTileBitmaps(int width, int height) {
         this.tileBorder = Bitmap.createScaledBitmap(this.tileBorder, width, height, true);
@@ -111,6 +123,9 @@ public class AssetLoader {
     }
 
 
+    /**
+     * Loads the bitmaps for the tiles
+     */
     public void loadTiles() {
         this.tileBorder = BitmapFactory.decodeResource(context.getResources(), R.mipmap.tile_border);
         this.tilePath = BitmapFactory.decodeResource(context.getResources(), R.mipmap.tile_path);
@@ -126,5 +141,29 @@ public class AssetLoader {
         this.tileGrassDownLeft = BitmapFactory.decodeResource(context.getResources(), R.mipmap.tile_grass_downleft);
         this.tileGrassDownRight = BitmapFactory.decodeResource(context.getResources(), R.mipmap.tile_grass_downright);
         loadedTiles = true;
+    }
+
+    /**
+     * Loads and scales the bitmaps for the indicators
+     *
+     * @param width  the width to scale to
+     * @param height the height to scale to
+     */
+    public void loadIndicators(int width, int height) {
+        this.indicatorAttackBitmaps = new Bitmap[3];
+        this.indicatorDefenseBitmap = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(context.getResources(), R.mipmap.indicator_defense), width, height, true);
+        this.indicatorAttackBitmaps[0] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(context.getResources(), R.mipmap.indicator_attack1), width, height, true);
+        this.indicatorAttackBitmaps[1] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(context.getResources(), R.mipmap.indicator_attack2), width, height, true);
+        this.indicatorAttackBitmaps[2] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(context.getResources(), R.mipmap.indicator_attack3), width, height, true);
+        indicatorsLoaded = true;
+    }
+
+    /**
+     * Informs if the indicators were already loaded
+     *
+     * @return the value of the boolean
+     */
+    public boolean areIndicatorsLoaded() {
+        return indicatorsLoaded;
     }
 }
