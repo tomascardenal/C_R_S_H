@@ -82,4 +82,7 @@
     <string name="titleSelectMap">Selecciona un mapa</string>
     <string name="unnamedMap">Mapa sin nombre</string>
     <string name="toastNewMap">Creado nuevo mapa vacío</string>
+    <string name="playerOneI">Jugador 1</string>
+    <string name="playerTwoI">Jugador 2</string>
+    <string name="playerComI" translatable="false">COM</string>
 </resources>

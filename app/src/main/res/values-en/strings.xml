@@ -44,4 +44,6 @@
     <string name="titleSelectMap">Select a map</string>
     <string name="unnamedMap">Unnamed map</string>
     <string name="toastNewMap">New empty map created</string>
+    <string name="playerOneI">Player 1</string>
+    <string name="playerTwoI">Player 2</string>
 </resources>

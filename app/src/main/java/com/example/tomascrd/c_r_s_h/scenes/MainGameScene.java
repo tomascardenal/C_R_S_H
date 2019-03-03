@@ -251,7 +251,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         top = this.mapLoad.tileArray[0][0].getCollisionRect().top;
         right = this.mapLoad.tileArray[0][12].getCollisionRect().right;
         bottom = this.mapLoad.tileArray[0][12].getCollisionRect().bottom;
-        this.lifeOne = new LifeComponent(this.context, this, new Rect(left, top, right, bottom), playerOne.getPlayerLifes(), false);
+        this.lifeOne = new LifeComponent(this.context, this, new Rect(left, top, right, bottom), playerOne.getPlayerLifes(), false, 1);
 
         //Life Component player two (Left side)
         left = this.mapLoad.tileArray[0][13].getCollisionRect().left;
@@ -259,9 +259,9 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         right = this.mapLoad.tileArray[0][GameConstants.MAPAREA_COLUMNS - 1].getCollisionRect().right;
         bottom = this.mapLoad.tileArray[0][GameConstants.MAPAREA_COLUMNS - 1].getCollisionRect().bottom;
         if (this.gameMode == eGameMode.MODE_CRSH_COM || this.gameMode == eGameMode.MODE_NRML_COM) {
-            this.lifeTwo = new LifeComponent(this.context, this, new Rect(left, top, right, bottom), playerCom.getPlayerLifes(), true);
+            this.lifeTwo = new LifeComponent(this.context, this, new Rect(left, top, right, bottom), playerCom.getPlayerLifes(), true, 2);
         } else {
-            this.lifeTwo = new LifeComponent(this.context, this, new Rect(left, top, right, bottom), playerTwo.getPlayerLifes(), true);
+            this.lifeTwo = new LifeComponent(this.context, this, new Rect(left, top, right, bottom), playerTwo.getPlayerLifes(), true, 0);
         }
 
 
@@ -379,6 +379,8 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         PointF playerOneCenter = new PointF(mapLoad.tileArray[2][2].getCollisionRect().exactCenterX(), mapLoad.tileArray[2][2].getCollisionRect().exactCenterY());
         this.playerOne = new PlayerCrsh(this, mapLoad, "TestP1", 1, false, new CircleComponent(playerOneCenter, mapLoad.getReference() / 2));
         this.playerOne.respawn();
+        lifeOne.resetLife();
+        lifeOne.setPlayerID(1);
 
         //Player Two or COM
         PointF playerTwoCenter = new PointF(mapLoad.tileArray[mapLoad.tileArray.length - 3][mapLoad.tileArray[mapLoad.tileArray.length - 3].length - 3].getCollisionRect().exactCenterX(), mapLoad.tileArray[mapLoad.tileArray.length - 3][mapLoad.tileArray[mapLoad.tileArray.length - 3].length - 3].getCollisionRect().exactCenterY());
@@ -386,9 +388,13 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         if (this.gameMode == eGameMode.MODE_CRSH_COM || this.gameMode == eGameMode.MODE_NRML_COM) {
             this.playerCom = new PlayerComCrsh(this, mapLoad, true, new CircleComponent(playerTwoCenter, mapLoad.getReference() / 2));
             this.playerCom.respawn();
+            lifeTwo.resetLife();
+            lifeTwo.setPlayerID(0);
         } else {
             this.playerTwo = new PlayerCrsh(this, mapLoad, "testP2", 2, true, new CircleComponent(playerTwoCenter, mapLoad.getReference() / 2));
             this.playerTwo.respawn();
+            lifeTwo.resetLife();
+            lifeTwo.setPlayerID(2);
         }
 
         //Gradients
@@ -399,6 +405,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
 
         }
         setAttackIndicator();
+
     }
 
     /**

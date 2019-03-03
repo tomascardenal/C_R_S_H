@@ -114,8 +114,8 @@ public class NewGameScene extends SceneCrsh {
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 7, Color.GRAY, 100, true, 7);
         btnGameSettings.setClickEffectParameters(Color.GRAY, Color.DKGRAY, 190, 50);
 
-        btnNormalMode.setHeldDown(true);
-        btnVsCOM.setHeldDown(true);
+        togglePlayerModeButtons(true);
+        toggleModeButtons(false);
     }
 
     /**
