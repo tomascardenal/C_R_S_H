@@ -1,8 +1,10 @@
 package com.example.tomascrd.c_r_s_h.components;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PointF;
+import android.graphics.Rect;
 import android.util.Log;
 
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
@@ -118,6 +120,10 @@ public class PlayerCrsh extends DrawableComponent {
      */
     protected boolean againstBorderYNegative;
     /**
+     * Rect for scaling the bitmap
+     */
+    public Rect imageRect;
+    /**
      * Indicator for the player one
      */
     private CircleComponent playerOneIndicator[];
@@ -158,6 +164,11 @@ public class PlayerCrsh extends DrawableComponent {
         this.takingHit = false;
         this.takehitCounter = 0;
         this.playerScore = 0;
+        this.imageRect = new Rect(
+                (int) playerCollision.xPos - startRadius,
+                (int) playerCollision.yPos - startRadius,
+                (int) playerCollision.xPos + startRadius,
+                (int) playerCollision.yPos + startRadius);
 
         //Set the color of the player depending of it's ID
         switch (playerId) {
@@ -226,6 +237,10 @@ public class PlayerCrsh extends DrawableComponent {
 
         }
         playerCollision.draw(c);
+        if (playerLifes > 0) {
+            Bitmap bmpPlayer = gameCallback.getPlayerBMP(playerId, onAttack);
+            c.drawBitmap(bmpPlayer, playerCollision.xPos - playerCollision.radius, playerCollision.yPos - playerCollision.radius, null);
+        }
     }
 
     /**
@@ -236,8 +251,7 @@ public class PlayerCrsh extends DrawableComponent {
     public int getPlayerLifes() {
         return this.playerLifes;
     }
-
-
+    
     /**
      * Removes, if possible, a life from this player
      */

@@ -299,6 +299,9 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         if (!engineCallback.loader.areIndicatorsLoaded()) {
             engineCallback.loader.loadIndicators(this.modeOne.width(), this.modeOne.height() / 2);
         }
+        if (!engineCallback.loader.arePlayersLoaded()) {
+            engineCallback.loader.loadPlayerImages(playerOne.imageRect.width(), playerOne.imageRect.height());
+        }
         setAttackIndicator();
 
         //Pause button
@@ -405,7 +408,23 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
 
         }
         setAttackIndicator();
+    }
 
+    /**
+     * Gets the player bmp from the assets
+     *
+     * @param playerId the player id
+     * @param onAttack the attack mode
+     * @return the bmp corresponding to the id and attack mode
+     */
+    public Bitmap getPlayerBMP(int playerId, boolean onAttack) {
+        Bitmap bmpPlayer = null;
+        if (onAttack) {
+            bmpPlayer = engineCallback.loader.attackPlayerBitmap[playerId];
+        } else {
+            bmpPlayer = engineCallback.loader.defensePlayerBitmap[playerId];
+        }
+        return bmpPlayer;
     }
 
     /**

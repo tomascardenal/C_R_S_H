@@ -85,9 +85,21 @@ public class AssetLoader {
      */
     private boolean indicatorsLoaded;
     /**
+     * Indicates if the player images were loaded or not
+     */
+    private boolean playersLoaded;
+    /**
      * Indicates the previous loaded sky hour
      */
     public int previousHour;
+    /**
+     * Defense player bitmaps
+     */
+    public Bitmap[] defensePlayerBitmap;
+    /**
+     * Attack player bitmaps
+     */
+    public Bitmap[] attackPlayerBitmap;
 
 
     /**
@@ -99,6 +111,7 @@ public class AssetLoader {
         this.context = context;
         this.loadedTiles = false;
         this.indicatorsLoaded = false;
+        this.playersLoaded = false;
         this.previousHour = -1;
     }
 
@@ -161,11 +174,38 @@ public class AssetLoader {
     }
 
     /**
+     * Loads and scales the bitmaps for the players
+     *
+     * @param width  the width to scale to
+     * @param height the height to scale to
+     */
+    public void loadPlayerImages(int width, int height) {
+        this.attackPlayerBitmap = new Bitmap[3];
+        this.attackPlayerBitmap[0] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(context.getResources(), R.mipmap.pl_com_attack), width, height, true);
+        this.attackPlayerBitmap[1] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(context.getResources(), R.mipmap.pl_blue_attack), width, height, true);
+        this.attackPlayerBitmap[2] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(context.getResources(), R.mipmap.pl_red_attack), width, height, true);
+        this.defensePlayerBitmap = new Bitmap[3];
+        this.defensePlayerBitmap[0] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(context.getResources(), R.mipmap.pl_com_defense), width, height, true);
+        this.defensePlayerBitmap[1] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(context.getResources(), R.mipmap.pl_blue_defense), width, height, true);
+        this.defensePlayerBitmap[2] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(context.getResources(), R.mipmap.pl_red_defense), width, height, true);
+        playersLoaded = true;
+    }
+
+    /**
      * Informs if the indicators were already loaded
      *
      * @return the value of the boolean
      */
     public boolean areIndicatorsLoaded() {
         return indicatorsLoaded;
+    }
+
+    /**
+     * Informs if the player images were already loaded
+     *
+     * @return the value of the boolean
+     */
+    public boolean arePlayersLoaded() {
+        return playersLoaded;
     }
 }
