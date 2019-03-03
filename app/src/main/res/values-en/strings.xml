@@ -41,4 +41,5 @@
     <string name="infoNoMaps">There aren\'t any maps to load</string>
     <string name="titleSelectMap">Select a map</string>
     <string name="unnamedMap">Unnamed map</string>
+    <string name="toastNewMap">New empty map created</string>
 </resources>

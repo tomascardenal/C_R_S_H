@@ -81,4 +81,5 @@
     <string name="infoNoMaps">No hay mapas para cargar</string>
     <string name="titleSelectMap">Selecciona un mapa</string>
     <string name="unnamedMap">Mapa sin nombre</string>
+    <string name="toastNewMap">Creado nuevo mapa vacío</string>
 </resources>

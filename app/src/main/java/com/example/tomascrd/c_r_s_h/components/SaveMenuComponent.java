@@ -13,11 +13,14 @@ import android.util.Log;
 import com.example.tomascrd.c_r_s_h.R;
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
 import com.example.tomascrd.c_r_s_h.core.GameEngine;
+import com.example.tomascrd.c_r_s_h.scenes.MapCreatorScene;
 
 import java.util.ArrayList;
 
 /**
- * Represents a Save Menu
+ * Represents a Save Menu for the map editor
+ *
+ * @author Tomás Cardenal López
  */
 public class SaveMenuComponent extends DrawableComponent {
     /**
@@ -107,7 +110,7 @@ public class SaveMenuComponent extends DrawableComponent {
     /**
      * The current state of the game to be saved if necessary
      */
-    private SceneCrsh gameSceneState;
+    private MapCreatorScene creatorCallback;
     /**
      * Callback to game engine
      */
@@ -152,17 +155,17 @@ public class SaveMenuComponent extends DrawableComponent {
     /**
      * Initializes a new PauseMenu
      *
-     * @param context        the current application context
-     * @param xRight         the xRight coordinate
-     * @param yTop           the yTop coordinate
-     * @param width          the pauseMenu's width
-     * @param height         the pauseMenu's height
-     * @param gameSceneState the current GameScene state
+     * @param context         the current application context
+     * @param xRight          the xRight coordinate
+     * @param yTop            the yTop coordinate
+     * @param width           the pauseMenu's width
+     * @param height          the pauseMenu's height
+     * @param creatorCallback the current MapCreatorScene state
      */
-    public SaveMenuComponent(Context context, float xRight, float yTop, float width, float height, GameEngine engineCallback, SceneCrsh gameSceneState) {
+    public SaveMenuComponent(Context context, float xRight, float yTop, float width, float height, GameEngine engineCallback, MapCreatorScene creatorCallback) {
         //Initializing variables
         this.context = context;
-        this.gameSceneState = gameSceneState;
+        this.creatorCallback = creatorCallback;
         this.xPos = xRight;
         this.yPos = yTop;
         this.width = width;
@@ -174,13 +177,14 @@ public class SaveMenuComponent extends DrawableComponent {
         this.onKeyboard = false;
         this.setOnLoadMap(false);
         this.currentLoadIndex = 0;
+        this.engineCallback = engineCallback;
 
         //Border rectangle
         borderRect = new Rect(
-                (int) xPos + gameSceneState.tileSizeReference / 2,
-                (int) yPos + gameSceneState.tileSizeReference / 2,
-                (int) (xPos + width) - gameSceneState.tileSizeReference / 2,
-                (int) (yPos + height) - gameSceneState.tileSizeReference / 2);
+                (int) xPos + creatorCallback.tileSizeReference / 2,
+                (int) yPos + creatorCallback.tileSizeReference / 2,
+                (int) (xPos + width) - creatorCallback.tileSizeReference / 2,
+                (int) (yPos + height) - creatorCallback.tileSizeReference / 2);
 
         //Background paint
         this.backgroundPaint = new Paint();
@@ -189,29 +193,29 @@ public class SaveMenuComponent extends DrawableComponent {
         //Border paint
         this.borderPaint = new Paint();
         this.borderPaint.setStyle(Paint.Style.STROKE);
-        this.borderPaint.setStrokeWidth(gameSceneState.tileSizeReference * 1.2f);
+        this.borderPaint.setStrokeWidth(creatorCallback.tileSizeReference * 1.2f);
 
         //Text painter
         pText = new Paint();
         pText.setTypeface(Typeface.createFromAsset(this.context.getAssets(), GameConstants.FONT_HOMESPUN));
         pText.setColor(Color.BLACK);
         pText.setTextAlign(Paint.Align.CENTER);
-        pText.setTextSize(gameSceneState.tileSizeReference);
+        pText.setTextSize(creatorCallback.tileSizeReference);
 
         infoPaint = new Paint();
         infoPaint.setTypeface(Typeface.createFromAsset(this.context.getAssets(), GameConstants.FONT_HOMESPUN));
         infoPaint.setColor(Color.BLACK);
         infoPaint.setTextAlign(Paint.Align.CENTER);
-        infoPaint.setTextSize(gameSceneState.tileSizeReference * 0.75f);
+        infoPaint.setTextSize(creatorCallback.tileSizeReference * 0.75f);
 
         //Buttons
         Typeface fontawesome = Typeface.createFromAsset(this.context.getAssets(), GameConstants.FONT_AWESOME);
 
         this.btnUnpause = new ButtonComponent(context, fontawesome, context.getString(R.string.btnUnpause),
-                (int) (borderRect.exactCenterX() - gameSceneState.tileSizeReference * 2),
-                (int) borderRect.exactCenterY() + gameSceneState.tileSizeReference * 3,
-                (int) (borderRect.exactCenterX() + gameSceneState.tileSizeReference * 2),
-                (int) (borderRect.exactCenterY() + gameSceneState.tileSizeReference * 5),
+                (int) (borderRect.exactCenterX() - creatorCallback.tileSizeReference * 2),
+                (int) borderRect.exactCenterY() + creatorCallback.tileSizeReference * 3,
+                (int) (borderRect.exactCenterX() + creatorCallback.tileSizeReference * 2),
+                (int) (borderRect.exactCenterY() + creatorCallback.tileSizeReference * 5),
                 Color.TRANSPARENT, 0, false, -1);
 
         this.btnNewMap = new ButtonComponent(context, fontawesome, context.getString(R.string.btnNewMap),
@@ -305,13 +309,12 @@ public class SaveMenuComponent extends DrawableComponent {
                 Color.TRANSPARENT, 0, false, -1);
 
         this.btnNextMap = new ButtonComponent(context, fontawesome, context.getString(R.string.btnListNext),
-                r.right - getBtnEndMap().btnRect.width() * 2,
-                r.centerY(),
                 r.right - getBtnEndMap().btnRect.width() * 3,
+                r.centerY(),
+                r.right - getBtnEndMap().btnRect.width() * 2,
                 r.centerY() + btnConfirmYes.btnRect.height(),
                 Color.TRANSPARENT, 0, false, -1);
 
-        //TODO Loading map options
         if (engineCallback.optionsManager.loadMapList()) {
             Log.i("crshdebug", "maps were loaded");
         } else {
@@ -319,7 +322,7 @@ public class SaveMenuComponent extends DrawableComponent {
         }
         mapNames = engineCallback.optionsManager.getMapNames();
         currentMapID = mapNames.size();
-        currentMapName = "Mapa sin nombre";
+        currentMapName = creatorCallback.currentMapName;
     }
 
     /**
@@ -345,16 +348,16 @@ public class SaveMenuComponent extends DrawableComponent {
         }
         c.drawText(pauseText, borderRect.exactCenterX(), this.borderRect.height() / GameConstants.GAMESCREEN_ROWS * 5, pText);
 
-        //Button
-        if (isConfirming) {
+        //Buttons
+        if (isConfirming) { //When confirming
             btnConfirmYes.draw(c);
             btnConfirmNo.draw(c);
         }
-        if (onKeyboard) {
+        if (onKeyboard) { //When on keyboard
             btnKeyConfirmYes.draw(c);
             btnKeyConfirmNo.draw(c);
             keyboard.draw(c);
-        } else if (isOnLoadMap()) {
+        } else if (isOnLoadMap()) { //When loading a map
             btnKeyConfirmYes.draw(c);
             btnKeyConfirmNo.draw(c);
             if (currentLoadIndex < mapNames.size() - 1) {
@@ -368,12 +371,12 @@ public class SaveMenuComponent extends DrawableComponent {
             float f = pText.getTextSize();
             pText.setTextSize(f / 1.5f);
             if (mapNames.size() > 0) {
-                c.drawText(mapNames.get(currentLoadIndex), gameSceneState.screenWidth / 2, getBtnEndMap().btnRect.top + (getBtnNextMap().btnRect.height() / 3) * 2, pText);
+                c.drawText(("#" + engineCallback.optionsManager.getMapId(mapNames.get(currentLoadIndex)) + "-" + mapNames.get(currentLoadIndex)), creatorCallback.screenWidth / 2, getBtnEndMap().btnRect.top + (getBtnNextMap().btnRect.height() / 3) * 2, pText);
             } else {
-                c.drawText(context.getString(R.string.infoNoMaps), gameSceneState.screenWidth / 2, (getBtnNextMap().btnRect.top + (getBtnNextMap().btnRect.height() / 3) * 2), pText);
+                c.drawText(context.getString(R.string.infoNoMaps), creatorCallback.screenWidth / 2, (getBtnNextMap().btnRect.top + (getBtnNextMap().btnRect.height() / 3) * 2), pText);
             }
             pText.setTextSize(f);
-        } else if (!isConfirming && !onKeyboard && !isOnLoadMap()) {
+        } else if (!isConfirming && !onKeyboard && !isOnLoadMap()) { //Main save menu
             c.drawText(currentMapName, borderRect.exactCenterX(), this.borderRect.height() / GameConstants.GAMESCREEN_ROWS * 6, infoPaint);
             c.drawText(context.getString(R.string.infoSave), borderRect.exactCenterX(), this.borderRect.height() / GameConstants.GAMESCREEN_ROWS * 8, infoPaint);
             btnSaveMap.draw(c);

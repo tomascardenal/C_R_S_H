@@ -248,7 +248,15 @@ public class OptionsManager {
                         input.readInt(),
                         input.readUTF()
                 );
-                mapReferences.add(currentMap);
+                boolean add = true;
+                for (MapReference ref : mapReferences) {
+                    if (ref.mapId == currentMap.mapId) {
+                        add = false;
+                    }
+                }
+                if (add) {
+                    mapReferences.add(currentMap);
+                }
             }
             return true;
         } catch (IOException e) {
@@ -261,9 +269,14 @@ public class OptionsManager {
      * Adds a map reference to the list
      *
      * @param reference The map reference to add
-     * @return an int with the map list size
+     * @return an int with the map list size or -1 if the map already exists in the list
      */
     public int addMap(MapReference reference) {
+        for (MapReference ref : mapReferences) {
+            if (ref.mapId == reference.mapId) {
+                return -1;
+            }
+        }
         mapReferences.add(reference);
         return mapReferences.size();
     }
@@ -309,5 +322,21 @@ public class OptionsManager {
             }
         }
         return null;
+    }
+
+    /**
+     * Changes the name of the map reference in the list if the id already exists
+     *
+     * @param reference the map reference to alter
+     * @return true if the name was changed, false if it wasn't
+     */
+    public boolean changeNameIfExists(MapReference reference) {
+        for (int i = mapReferences.size() - 1; i >= 0; i--) {
+            if (mapReferences.get(i).mapId == reference.mapId && !mapReferences.get(i).mapName.equals(reference.mapName)) {
+                mapReferences.get(i).mapName = reference.mapName;
+                return true;
+            }
+        }
+        return false;
     }
 }

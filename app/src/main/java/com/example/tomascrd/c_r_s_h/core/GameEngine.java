@@ -253,6 +253,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         optionsManager.loadOptions();
+        optionsManager.loadMapList();
         //Audio managing
         updateAudioObjects();
         updateVolume();
@@ -275,12 +276,13 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
         //Reload the options
         if (optionsManager == null) {
             optionsManager = new OptionsManager(context);
+            optionsManager.loadOptions();
+            optionsManager.loadMapList();
         }
         //Reload the assets
         if (loader == null) {
             loader = new AssetLoader(context);
         }
-        optionsManager.loadOptions();
         //Reload the mainMenuScene if the current scene is not on memory anymore
         if (currentScene == null) {
             currentScene = new MainMenuScene(context, screenWidth, screenHeight, this);
