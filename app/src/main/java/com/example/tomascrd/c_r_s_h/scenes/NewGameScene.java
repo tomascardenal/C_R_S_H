@@ -78,14 +78,14 @@ public class NewGameScene extends SceneCrsh {
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 2,
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 8,
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 3, Color.YELLOW, 150, true, 99);
-        btnVsCOM.setClickEffectParameters(Color.YELLOW, Color.DKGRAY, 255, 50);
+        btnVsCOM.setClickEffectParameters(Color.BLACK, Color.DKGRAY, 255, 50);
 
         btnPvP = new ButtonComponent(context, homespun, context.getString(R.string.btnPvP),
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 10,
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 2,
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 16,
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 3, Color.GREEN, 150, true, 99);
-        btnPvP.setClickEffectParameters(Color.GREEN, Color.DKGRAY, 255, 50);
+        btnPvP.setClickEffectParameters(Color.BLACK, Color.DKGRAY, 255, 50);
 
         btnNormalMode = new ButtonComponent(context, homespun, context.getString(R.string.btnNormalMode),
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 2,
@@ -115,7 +115,7 @@ public class NewGameScene extends SceneCrsh {
         btnGameSettings.setClickEffectParameters(Color.GRAY, Color.DKGRAY, 190, 50);
 
         btnNormalMode.setHeldDown(true);
-        btnPvP.setHeldDown(false);
+        btnVsCOM.setHeldDown(true);
     }
 
     /**

@@ -35,6 +35,7 @@ import com.example.tomascrd.c_r_s_h.components.VisualTimerComponent;
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
 import com.example.tomascrd.c_r_s_h.core.GameEngine;
 import com.example.tomascrd.c_r_s_h.core.Utils;
+import com.example.tomascrd.c_r_s_h.structs.eSoundEffect;
 
 /**
  * Represents the main game
@@ -513,6 +514,15 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
             timer.updateTimer();
             setAttackIndicator();
         }
+    }
+
+    /**
+     * Calls the engine to play a sound effect
+     *
+     * @param soundEffect the eSoundEffect value corresponding to the effect to play
+     */
+    public void playSoundEffect(eSoundEffect soundEffect) {
+        engineCallback.playSoundEffect(soundEffect);
     }
 
     /**

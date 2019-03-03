@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
 import com.example.tomascrd.c_r_s_h.scenes.MainGameScene;
+import com.example.tomascrd.c_r_s_h.structs.eSoundEffect;
 
 /**
  * Represents a player in the game
@@ -448,6 +449,7 @@ public class PlayerCrsh extends DrawableComponent {
         int cycles = bounceBackSmall ? GameConstants.BOUNCEBACK_SMALL_CYCLES : GameConstants.BOUNCEBACK_BIG_CYCLES;
         //If it's the first cycle, vibrate
         if (bounceBackCycle == 0) {
+            //gameCallback.playSoundEffect(eSoundEffect.EFFECT_BUMP);
             gameCallback.doShortVibration();
             bounceBackCycle++;
             //If it's still cycling
@@ -516,7 +518,6 @@ public class PlayerCrsh extends DrawableComponent {
         //The circle moved in both components
         CircleComponent xMovedCircle = new CircleComponent(this.playerCollision.xPos + xVelocity, this.playerCollision.yPos, this.playerCollision.radius);
         CircleComponent yMovedCircle = new CircleComponent(this.playerCollision.xPos, this.playerCollision.yPos + yVelocity, this.playerCollision.radius);
-
         //Checking surrounding tiles
         for (int i = 0; i < surroundingTiles.length; i++) {
             currentTile = surroundingTiles[i];
@@ -638,9 +639,12 @@ public class PlayerCrsh extends DrawableComponent {
      * Makes this player take a hit and triggers the animation
      */
     public void takeHit() {
-        playerLifes--;
+        removeALife();
         if (playerLifes > 0) {
             takingHit = true;
+            gameCallback.playSoundEffect(eSoundEffect.EFFECT_HIT);
+        } else {
+            gameCallback.playSoundEffect(eSoundEffect.EFFECT_DEATH);
         }
     }
 

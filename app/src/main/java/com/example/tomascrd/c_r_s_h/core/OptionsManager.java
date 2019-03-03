@@ -69,9 +69,7 @@ public class OptionsManager {
         preferences = context.getSharedPreferences(GameConstants.PREFERENCES_NAME, Context.MODE_PRIVATE);
         this.mapReferences = new ArrayList<MapReference>();
         loadOptions();
-        if (!loadMapList()) {
-            mapReferences.add(new MapReference(666, "Normal"));
-        }
+        loadMapList();
     }
 
     /**

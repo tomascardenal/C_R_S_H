@@ -22,8 +22,10 @@ import com.example.tomascrd.c_r_s_h.scenes.OptionsScene;
 import com.example.tomascrd.c_r_s_h.scenes.RecordsScene;
 import com.example.tomascrd.c_r_s_h.components.SceneCrsh;
 import com.example.tomascrd.c_r_s_h.scenes.TutorialScene;
+import com.example.tomascrd.c_r_s_h.structs.eSoundEffect;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Main engine of this game, concentrates and controls the activities of different scenes. Contains the main game thread
@@ -99,6 +101,10 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
      * Speed for game timer
      */
     private VisualTimerComponent.TIMER_SPEED currentSpeed;
+    /**
+     * Collection of sound effects
+     */
+    private MediaPlayer[] effectsPool;
 
 
     /**
@@ -341,6 +347,22 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
                 Log.e("mediaPlayer error", "" + e.getLocalizedMessage());
             }
         }
+
+        if (effectsPool == null) {
+            effectsPool = new MediaPlayer[4];
+            effectsPool[0] = MediaPlayer.create(context, R.raw.effect_death);
+            effectsPool[1] = MediaPlayer.create(context, R.raw.effect_timer_end);
+            effectsPool[2] = MediaPlayer.create(context, R.raw.effect_hit);
+            effectsPool[3] = MediaPlayer.create(context, R.raw.effect_bump);
+            try {
+                for (int i = 0; i < effectsPool.length; i++) {
+                    effectsPool[i].prepare();
+                    effectsPool[i].setLooping(false);
+                }
+            } catch (IllegalStateException | IOException e) {
+                Log.e("mediaPlayer error", "" + e.getLocalizedMessage());
+            }
+        }
     }
 
     /**
@@ -362,6 +384,43 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
+    /**
+     * Plays a sound effect
+     *
+     * @param soundEffect the eSoundEffect value corresponding to the effect to play
+     */
+    public void playSoundEffect(eSoundEffect soundEffect) {
+        switch (soundEffect) {
+            case EFFECT_DEATH:
+                if (effectsPool[0].isPlaying()) {
+                    effectsPool[0].pause();
+                    effectsPool[0].seekTo(0);
+                }
+                effectsPool[0].start();
+                break;
+            case EFFECT_TIMER_END:
+                if (effectsPool[1].isPlaying()) {
+                    effectsPool[1].pause();
+                    effectsPool[1].seekTo(0);
+                }
+                effectsPool[1].start();
+                break;
+            case EFFECT_HIT:
+                if (effectsPool[2].isPlaying()) {
+                    effectsPool[2].pause();
+                    effectsPool[2].seekTo(0);
+                }
+                effectsPool[2].start();
+                break;
+            case EFFECT_BUMP:
+                if (effectsPool[3].isPlaying()) {
+                    effectsPool[3].pause();
+                    effectsPool[3].seekTo(0);
+                }
+                effectsPool[3].start();
+                break;
+        }
+    }
 
     /**
      * Gets the timer speed

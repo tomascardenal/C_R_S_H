@@ -9,6 +9,7 @@ import android.graphics.Rect;
 import android.graphics.Shader;
 
 import com.example.tomascrd.c_r_s_h.scenes.MainGameScene;
+import com.example.tomascrd.c_r_s_h.structs.eSoundEffect;
 
 
 /**
@@ -156,6 +157,7 @@ public class VisualTimerComponent extends DrawableComponent {
             } else {
                 resetTimer();
                 gameCallback.togglePlayerModes();
+                gameCallback.playSoundEffect(eSoundEffect.EFFECT_TIMER_END);
             }
         }
     }
