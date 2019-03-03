@@ -3,6 +3,7 @@ package com.example.tomascrd.c_r_s_h.components;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.util.Log;
@@ -237,7 +238,7 @@ public class PlayerCrsh extends DrawableComponent {
 
         }
         playerCollision.draw(c);
-        if (playerLifes > 0) {
+        if (playerLifes > 0 && !takingHit) {
             Bitmap bmpPlayer = gameCallback.getPlayerBMP(playerId, onAttack);
             c.drawBitmap(bmpPlayer, playerCollision.xPos - playerCollision.radius, playerCollision.yPos - playerCollision.radius, null);
         }
