@@ -268,8 +268,6 @@ public class CreditScene extends SceneCrsh {
             case MotionEvent.ACTION_MOVE: // Any finger moves
 
                 break;
-            default:
-                Log.i("Other", "Undefined action: " + action);
         }
         return this.id;
     }

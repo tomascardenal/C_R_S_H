@@ -6,7 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
-import com.example.tomascrd.c_r_s_h.R;
+import com.example.tomascrd.c_r_s_h.structs.TileTypes;
 
 /**
  * Represents a tile in the game
@@ -16,23 +16,9 @@ import com.example.tomascrd.c_r_s_h.R;
 public class TileComponent extends DrawableComponent {
 
     /**
-     * Enumerates the various types of tile
-     */
-    public enum TILE_TYPE {
-        TILE_BORDER,    //0, border tile
-        TILE_PATH,      //1, path tile
-        TILE_BREAKONE,  //2, one hit breakable tile
-        TILE_BREAKTWO,  //3, two hit breakable tile
-    }
-
-    /**
-     * Painter for the rects
-     */
-    public Paint rectPaint;
-    /**
      * This tile's type
      */
-    protected TILE_TYPE tileType;
+    protected TileTypes.eTileType tileType;
     /**
      * This tile's collision rectangle
      */
@@ -55,7 +41,7 @@ public class TileComponent extends DrawableComponent {
      * @param collisionRect The tile's collisionRect
      * @param tileType      The tile's type
      */
-    public TileComponent(Context context, int drawable, Rect collisionRect, TILE_TYPE tileType) {
+    public TileComponent(Context context, int drawable, Rect collisionRect, TileTypes.eTileType tileType) {
         this.context = context;
         this.tileType = tileType;
         this.collisionRect = collisionRect;
@@ -65,8 +51,6 @@ public class TileComponent extends DrawableComponent {
         this.yBottom = collisionRect.bottom;
         this.height = collisionRect.height();
         this.width = collisionRect.width();
-        this.rectPaint = new Paint();
-        setPainter();
     }
 
     /**
@@ -80,76 +64,8 @@ public class TileComponent extends DrawableComponent {
      * @param yBottom  The Rect's bottom right y coordinate
      * @param tileType The tile's type
      */
-    public TileComponent(Context context, int drawable, int xPos, int yPos, int xBottom, int yBottom, TILE_TYPE tileType) {
+    public TileComponent(Context context, int drawable, int xPos, int yPos, int xBottom, int yBottom, TileTypes.eTileType tileType) {
         this(context, drawable, new Rect(xPos, yPos, xBottom, yBottom), tileType);
-    }
-
-    /**
-     * Converts integers to TILE_TYPE
-     *
-     * @param tileType the TILE_TYPE to convert
-     * @return the corresponding integer
-     * @see TILE_TYPE
-     */
-    public static int tileTypeToInt(TILE_TYPE tileType) {
-        switch (tileType) {
-            case TILE_BORDER:
-                return 0;
-            case TILE_PATH:
-                return 1;
-            case TILE_BREAKONE:
-                return 2;
-            case TILE_BREAKTWO:
-                return 3;
-            default:
-                return -1;
-        }
-    }
-
-    /**
-     * Converts TILE_TYPEs to integer
-     *
-     * @param tileType the integer to convert
-     * @return the corresponding TILE_TYPE
-     * @see TILE_TYPE
-     */
-    public static TILE_TYPE intToTileType(int tileType) {
-        switch (tileType) {
-            case 0:
-                return TILE_TYPE.TILE_BORDER;
-            case 1:
-                return TILE_TYPE.TILE_PATH;
-            case 2:
-                return TILE_TYPE.TILE_BREAKONE;
-            case 3:
-                return TILE_TYPE.TILE_BREAKTWO;
-            default:
-                return null;
-        }
-    }
-
-    @Override
-    public void draw(Canvas c) {
-
-    }
-
-    /**
-     * Sets the painter color (for test maps only)
-     */
-    public void setPainter() {
-        switch (this.tileType) {
-            case TILE_BORDER:
-                rectPaint.setColor(Color.BLACK);
-                break;
-            case TILE_PATH:
-                rectPaint.setColor(Color.YELLOW);
-                break;
-            case TILE_BREAKONE:
-                rectPaint.setColor(Color.LTGRAY);
-                break;
-            case TILE_BREAKTWO:
-                rectPaint.setColor(Color.GRAY);
-        }
     }
 
     /**
@@ -160,7 +76,6 @@ public class TileComponent extends DrawableComponent {
     public Rect getCollisionRect() {
         return this.collisionRect;
     }
-
 
     /**
      * Indicates if there's a collision between a rect on the given parameters
@@ -180,7 +95,7 @@ public class TileComponent extends DrawableComponent {
      *
      * @return this type
      */
-    public TILE_TYPE getTileType() {
+    public TileTypes.eTileType getTileType() {
         return tileType;
     }
 
@@ -189,9 +104,8 @@ public class TileComponent extends DrawableComponent {
      *
      * @param tileType the new type
      */
-    public void setTileType(TILE_TYPE tileType) {
+    public void setTileType(TileTypes.eTileType tileType) {
         this.tileType = tileType;
     }
-
 
 }

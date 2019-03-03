@@ -10,6 +10,7 @@ import android.graphics.Shader;
 
 import com.example.tomascrd.c_r_s_h.scenes.MainGameScene;
 import com.example.tomascrd.c_r_s_h.structs.eSoundEffect;
+import com.example.tomascrd.c_r_s_h.structs.eTimerSpeed;
 
 
 /**
@@ -19,17 +20,6 @@ import com.example.tomascrd.c_r_s_h.structs.eSoundEffect;
  * @author Tomás Cardenal López
  */
 public class VisualTimerComponent extends DrawableComponent {
-
-    /**
-     * Describes the possible timer speeds to set
-     */
-    public enum TIMER_SPEED {
-        TIMER_SLOW,
-        TIMER_MID,
-        TIMER_FAST,
-        TIMER_OHNO
-    }
-
     /**
      * The area to draw this timer to
      */
@@ -75,7 +65,7 @@ public class VisualTimerComponent extends DrawableComponent {
      * @param area         The area to draw this timer to
      * @param speed        The initial speed of this timer
      */
-    public VisualTimerComponent(Context c, MainGameScene gameCallback, Rect area, TIMER_SPEED speed) {
+    public VisualTimerComponent(Context c, MainGameScene gameCallback, Rect area, eTimerSpeed speed) {
         this.context = c;
         this.gameCallback = gameCallback;
         this.area = area;
@@ -105,12 +95,12 @@ public class VisualTimerComponent extends DrawableComponent {
     }
 
     /**
-     * Transforms a TIMER_SPEED into an int
+     * Transforms a eTimerSpeed into an int
      *
-     * @param timerSpeed the TIMER_SPEED to parse
-     * @return the int corresponding to the TIMER_SPEED
+     * @param timerSpeed the eTimerSpeed to parse
+     * @return the int corresponding to the eTimerSpeed
      */
-    public static int timerSpeedToInt(TIMER_SPEED timerSpeed) {
+    public static int timerSpeedToInt(eTimerSpeed timerSpeed) {
         switch (timerSpeed) {
             case TIMER_SLOW:
                 return 0;
@@ -125,21 +115,21 @@ public class VisualTimerComponent extends DrawableComponent {
     }
 
     /**
-     * Transforms an int into a TIMER_SPEED
+     * Transforms an int into a eTimerSpeed
      *
      * @param timerSpeed the int to parse
-     * @return the TIMER_SPEED corresponding to the int
+     * @return the eTimerSpeed corresponding to the int
      */
-    public static TIMER_SPEED intToTimerSpeed(int timerSpeed) {
+    public static eTimerSpeed intToTimerSpeed(int timerSpeed) {
         switch (timerSpeed) {
             case 0:
-                return TIMER_SPEED.TIMER_SLOW;
+                return eTimerSpeed.TIMER_SLOW;
             case 1:
-                return TIMER_SPEED.TIMER_MID;
+                return eTimerSpeed.TIMER_MID;
             case 2:
-                return TIMER_SPEED.TIMER_FAST;
+                return eTimerSpeed.TIMER_FAST;
             case 3:
-                return TIMER_SPEED.TIMER_OHNO;
+                return eTimerSpeed.TIMER_OHNO;
         }
         return null;
     }
@@ -188,7 +178,7 @@ public class VisualTimerComponent extends DrawableComponent {
      *
      * @speed the new speed
      */
-    public void setTimerSpeed(TIMER_SPEED speed) {
+    public void setTimerSpeed(eTimerSpeed speed) {
         switch (speed) {
             case TIMER_SLOW:
                 this.speed = 1;

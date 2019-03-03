@@ -38,7 +38,6 @@ public class PauseMenuComponent extends DrawableComponent {
      * Button for unconfirming an action
      */
     private ButtonComponent btnConfirmNo;
-
     /**
      * The current state of the game to be saved if necessary
      */
@@ -96,7 +95,6 @@ public class PauseMenuComponent extends DrawableComponent {
         this.width = width;
         this.height = height;
         this.setConfirming(false);
-
 
         //Border rectangle
         borderRect = new Rect(

@@ -33,54 +33,6 @@ public class PlayerComCrsh extends PlayerCrsh {
     }
 
     /**
-     * Initializes a COM player to it's parameters, indicating the coordinates and radius of the CircleComponent
-     *
-     * @param gameCallback Callback to the scene calling this player
-     * @param mapCallback  Callback to this MapComponent for accessing the tiles
-     * @param onAttack     The player's mode
-     * @param xPos         The CircleComponent's yPos
-     * @param yPos         The CircleComponent's yPos
-     * @param radius       The CircleComponent's radius
-     * @see CircleComponent
-     */
-    public PlayerComCrsh(MainGameScene gameCallback, MapComponent mapCallback, boolean onAttack, float xPos, float yPos, int radius) {
-        super(gameCallback, mapCallback, "COM", 0, onAttack, xPos, yPos, radius);
-        this.currentCycles = 0;
-    }
-
-    /**
-     * Initializes a player to it's parameters, with a given CircleComponent and the indicated lives (within the accepted limits)
-     *
-     * @param gameCallback    Callback to the scene calling this player
-     * @param mapCallback     Callback to this MapComponent for accessing the tiles
-     * @param onAttack        The player's mode
-     * @param playerCollision The player's collision circle
-     * @param lives           The player's lives
-     * @see CircleComponent
-     */
-    public PlayerComCrsh(MainGameScene gameCallback, MapComponent mapCallback, boolean onAttack, CircleComponent playerCollision, int lives) {
-        super(gameCallback, mapCallback, "COM", 0, onAttack, playerCollision, lives);
-        this.currentCycles = 0;
-    }
-
-    /**
-     * Initializes a player to it's parameters, indicating the coordinates, radius of the CircleComponent and the indicated lives (within the accepted limits)
-     *
-     * @param gameCallback Callback to the scene calling this player
-     * @param mapCallback  Callback to this MapComponent for accessing the tiles
-     * @param onAttack     The player's mode
-     * @param xPos         The CircleComponent's yPos
-     * @param yPos         The CircleComponent's yPos
-     * @param radius       The CircleComponent's radius
-     * @param lives        The player's lives
-     * @see CircleComponent
-     */
-    public PlayerComCrsh(MainGameScene gameCallback, MapComponent mapCallback, boolean onAttack, float xPos, float yPos, int radius, int lives) {
-        super(gameCallback, mapCallback, "COM", 0, onAttack, xPos, yPos, radius, lives);
-        this.currentCycles = 0;
-    }
-
-    /**
      * Determines this COM player movements, and then calls the move function on PlayerCrsh to execute the actual movement
      */
     @Override

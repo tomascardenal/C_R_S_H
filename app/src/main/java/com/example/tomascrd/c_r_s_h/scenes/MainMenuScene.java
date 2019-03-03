@@ -165,7 +165,6 @@ public class MainMenuScene extends SceneCrsh {
         super.draw(c);
         //Parallax background
         for (int i = 0; i < parallaxBackgrounds.length; i++) {
-            Log.i("setsky", "drawing parallax number" + i);
             c.drawBitmap(parallaxBackgrounds[i].image, parallaxBackgrounds[i].position.x, parallaxBackgrounds[i].position.y, null);
             c.drawBitmap(parallaxBackgrounds[i].image, parallaxBackgrounds[i].position.x - parallaxBackgrounds[i].image.getWidth(), parallaxBackgrounds[i].position.y, null);
         }
@@ -218,8 +217,6 @@ public class MainMenuScene extends SceneCrsh {
                     }
                 }
                 break;
-            default:
-                Log.i("Other", "Undefined action: " + action);
         }
         return this.id;
     }

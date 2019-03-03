@@ -18,6 +18,7 @@ import com.example.tomascrd.c_r_s_h.components.TileComponent;
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
 import com.example.tomascrd.c_r_s_h.core.GameEngine;
 import com.example.tomascrd.c_r_s_h.structs.MapReference;
+import com.example.tomascrd.c_r_s_h.structs.TileTypes;
 
 /**
  * A scene representing a map creator
@@ -168,10 +169,84 @@ public class MapCreatorScene extends SceneCrsh {
                     onSaveMenu(event);
                 }
                 break;
-            default:
-                Log.i("Other", "Undefined action: " + action);
         }
         return this.id;
+    }
+
+    /**
+     * Controls the actions for after confirming a save
+     *
+     * @return -1 if no scene change was made, the scene id if a change was made
+     */
+    public int afterConfirmActions() {
+        if (saveMenu.isQuitAfterConfirm()) { //Quitting after confirming
+            saveMenu.setQuitAfterConfirm(false);
+            return 0;
+        }
+        if (saveMenu.isLoadAfterConfirm()) { //Loading after confirming
+            saveMenu.setLoadAfterConfirm(false);
+            saveMenu.setOnLoadMap(true);
+            return -1;
+        }
+        if (saveMenu.isNewAfterConfirm()) { //New map after confirming
+            saveMenu.setNewAfterConfirm(false);
+            getNewEmptyMap(false);
+            return -1;
+        }
+        return -1;
+    }
+
+    /**
+     * Controls the actions for the load map screen
+     *
+     * @param event The motion event launching this loadMap screen
+     */
+    public void loadMapActions(MotionEvent event) {
+        if (isClick(saveMenu.getBtnKeyConfirmNo(), event)) {
+            saveMenu.setOnLoadMap(false);
+        }
+        if (isClick(saveMenu.getBtnKeyConfirmYes(), event)) {
+            loadAMap();
+            saveMenu.setOnLoadMap(false);
+        }
+        if (isClick(saveMenu.getBtnStartMap(), event)) {
+            if (saveMenu.currentLoadIndex > 0) {
+                saveMenu.currentLoadIndex = 0;
+            }
+        }
+        if (isClick(saveMenu.getBtnEndMap(), event)) {
+            if (saveMenu.currentLoadIndex < saveMenu.mapNames.size() - 1) {
+                saveMenu.currentLoadIndex = saveMenu.mapNames.size() - 1;
+            }
+        }
+        if (isClick(saveMenu.getBtnPreviousMap(), event)) {
+            if (saveMenu.currentLoadIndex > 0) {
+                saveMenu.currentLoadIndex--;
+            }
+        }
+        if (isClick(saveMenu.getBtnNextMap(), event)) {
+            if (saveMenu.currentLoadIndex < saveMenu.mapNames.size() - 1) {
+                saveMenu.currentLoadIndex++;
+            }
+        }
+    }
+
+    /**
+     * Controls the actions on the keyboard
+     *
+     * @param event The motion event launching this loadMap screen
+     */
+    public void onKeyboardActions(MotionEvent event) {
+        saveMenu.keyboard.onClickEvent(event);
+        if (isClick(saveMenu.getBtnKeyConfirmYes(), event)) {
+            currentMapName = saveMenu.keyboard.getUserInput();
+            saveMenu.currentMapName = saveMenu.keyboard.getUserInput();
+            engineCallback.optionsManager.changeNameIfExists(new MapReference(newId, currentMapName));
+            Toast.makeText(this.context, context.getString(R.string.toastChangedNameTo) + currentMapName, Toast.LENGTH_SHORT).show();
+            saveMenu.setOnKeyboard(false);
+        } else if (isClick(saveMenu.getBtnKeyConfirmNo(), event)) {
+            saveMenu.setOnKeyboard(false);
+        }
     }
 
     /**
@@ -183,72 +258,21 @@ public class MapCreatorScene extends SceneCrsh {
     public int onSaveMenu(MotionEvent event) {
         if (saveMenu.isConfirming()) {
             if (isClick(saveMenu.getBtnConfirmYes(), event)) {//If confirming and clicked yes
+                saveMenu.setConfirming(false);
                 saveAMap();//Save the map
-                if (saveMenu.isQuitAfterConfirm()) { //Quitting after confirming
-                    saveMenu.setQuitAfterConfirm(false);
+                if (afterConfirmActions() == 0) {
                     return 0;
-                }
-                if (saveMenu.isLoadAfterConfirm()) { //Loading after confirming
-                    saveMenu.setLoadAfterConfirm(false);
-                    saveMenu.setOnLoadMap(true);
-                }
-                if (saveMenu.isNewAfterConfirm()) { //New map after confirming
-                    getNewEmptyMap(false);
-
                 }
             } else if (isClick(saveMenu.getBtnConfirmNo(), event)) { //If confirming and clicked no
                 saveMenu.setConfirming(false);
-                if (saveMenu.isQuitAfterConfirm()) {
-                    saveMenu.setQuitAfterConfirm(false);
+                if (afterConfirmActions() == 0) {
                     return 0;
-                }
-                if (saveMenu.isLoadAfterConfirm()) {
-                    saveMenu.setLoadAfterConfirm(false);
-                    saveMenu.setOnLoadMap(true);
-                }
-                if (saveMenu.isNewAfterConfirm()) {
-                    getNewEmptyMap(false);
                 }
             }
         } else if (saveMenu.isOnLoadMap()) {
-            if (isClick(saveMenu.getBtnKeyConfirmNo(), event)) {
-                saveMenu.setOnLoadMap(false);
-            }
-            if (isClick(saveMenu.getBtnKeyConfirmYes(), event)) {
-                loadAMap();
-                saveMenu.setOnLoadMap(false);
-            }
-            if (isClick(saveMenu.getBtnStartMap(), event)) {
-                if (saveMenu.currentLoadIndex > 0) {
-                    saveMenu.currentLoadIndex = 0;
-                }
-            }
-            if (isClick(saveMenu.getBtnEndMap(), event)) {
-                if (saveMenu.currentLoadIndex < saveMenu.mapNames.size() - 1) {
-                    saveMenu.currentLoadIndex = saveMenu.mapNames.size() - 1;
-                }
-            }
-            if (isClick(saveMenu.getBtnPreviousMap(), event)) {
-                if (saveMenu.currentLoadIndex > 0) {
-                    saveMenu.currentLoadIndex--;
-                }
-            }
-            if (isClick(saveMenu.getBtnNextMap(), event)) {
-                if (saveMenu.currentLoadIndex < saveMenu.mapNames.size() - 1) {
-                    saveMenu.currentLoadIndex++;
-                }
-            }
+            loadMapActions(event);
         } else if (saveMenu.isOnKeyboard()) {
-            saveMenu.keyboard.onClickEvent(event);
-            if (isClick(saveMenu.getBtnKeyConfirmYes(), event)) {
-                currentMapName = saveMenu.keyboard.getUserInput();
-                saveMenu.currentMapName = saveMenu.keyboard.getUserInput();
-                engineCallback.optionsManager.changeNameIfExists(new MapReference(newId, currentMapName));
-                Toast.makeText(this.context, context.getString(R.string.toastChangedNameTo) + currentMapName, Toast.LENGTH_SHORT).show();
-                saveMenu.setOnKeyboard(false);
-            } else if (isClick(saveMenu.getBtnKeyConfirmNo(), event)) {
-                saveMenu.setOnKeyboard(false);
-            }
+            onKeyboardActions(event);
         } else {
             if (isClick(saveMenu.getBtnSaveMap(), event)) {
                 saveAMap();
@@ -358,13 +382,13 @@ public class MapCreatorScene extends SceneCrsh {
         if (touchPoint.x < creatorMap.tileArray[0].length - 1 && touchPoint.y < creatorMap.tileArray.length - 1
                 && touchPoint.x > 0 && touchPoint.y > 0) {
             TileComponent editTile = creatorMap.tileArray[touchPoint.y][touchPoint.x];
-            int currentType = TileComponent.tileTypeToInt(editTile.getTileType());
-            if (currentType < GameConstants.TILE_TYPES.length - 1) {
+            int currentType = TileTypes.tileTypeToInt(editTile.getTileType());
+            if (currentType < GameConstants.E_TILE_TYPES.length - 1) {
                 currentType++;
             } else {
                 currentType = 0;
             }
-            editTile.setTileType(TileComponent.intToTileType(currentType));
+            editTile.setTileType(TileTypes.intToTileType(currentType));
             creatorMap.tileArray[touchPoint.y][touchPoint.x] = editTile;
             creatorMap.updateDataArray(editTile.getTileType(), touchPoint.y, touchPoint.x);
             saveMenu.setConfirmChanges(true);

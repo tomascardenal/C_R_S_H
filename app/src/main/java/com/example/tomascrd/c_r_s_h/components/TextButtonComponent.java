@@ -7,24 +7,18 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 
+import com.example.tomascrd.c_r_s_h.structs.eTextAlignment;
+
 /**
  * A ButtonComponent with text attached to it's side, defined as "sideText", mainly used with FontAwesome icons
  *
  * @author Tomás Cardenal López
  */
 public class TextButtonComponent extends ButtonComponent {
-
-    /**
-     * The possible text alignments
-     */
-    public enum TEXT_ALIGN {
-        ALIGN_RIGHT, ALIGN_LEFT
-    }
-
     /**
      * This button's sideText alignment
      */
-    protected TEXT_ALIGN textAlign;
+    protected eTextAlignment textAlign;
     /**
      * This buttons sideText
      */
@@ -68,8 +62,8 @@ public class TextButtonComponent extends ButtonComponent {
      * @param xPadding    the TextButton's total width
      * @param borderRectX the TextButton's borderRectX
      */
-    public TextButtonComponent(Context context, Typeface font, String text, int xLeft, int yTop, int xRight, int yBottom, int background, int alpha, String sideText, Typeface sideFont, TEXT_ALIGN textAlign, int xPadding, int borderRectX) {
-        super(context, font, text, xLeft, yTop, xRight, yBottom, background, alpha,false,-1);
+    public TextButtonComponent(Context context, Typeface font, String text, int xLeft, int yTop, int xRight, int yBottom, int background, int alpha, String sideText, Typeface sideFont, eTextAlignment textAlign, int xPadding, int borderRectX) {
+        super(context, font, text, xLeft, yTop, xRight, yBottom, background, alpha, false, -1);
         this.setSideText(sideText);
         this.sideFont = sideFont;
         this.textAlign = textAlign;
@@ -90,26 +84,6 @@ public class TextButtonComponent extends ButtonComponent {
     }
 
     /**
-     * Creates a TextButton with the given parameters and gray background color with max alpha
-     *
-     * @param context     the context
-     * @param font        the font to use on this button
-     * @param text        the text within the button
-     * @param xLeft       the TextButton's ButtonComponent left x position
-     * @param yTop        the TextButton's ButtonComponent top y position
-     * @param xRight      the TextButton's ButtonComponent right x position
-     * @param yBottom     the TextButton's ButtonCompoonent bottom y position
-     * @param sideText    the TextButton's sideText
-     * @param sideFont    the sideText font
-     * @param textAlign   the TextButton's sideText alignment
-     * @param xPadding    the TextButton's x padding
-     * @param borderRectX the TextButton's border right coordinate
-     */
-    public TextButtonComponent(Context context, Typeface font, String text, int xLeft, int yTop, int xRight, int yBottom, String sideText, Typeface sideFont, TEXT_ALIGN textAlign, int xPadding, int borderRectX) {
-        this(context, font, text, xLeft, yTop, xRight, yBottom, Color.GRAY, 255, sideText, sideFont, textAlign, xPadding, borderRectX);
-    }
-
-    /**
      * Calls the ButtonComponent draw function and then draws the text
      *
      * @param c the canvas to draw
@@ -121,7 +95,7 @@ public class TextButtonComponent extends ButtonComponent {
         //Draw the text aligned as indicated
         int textX, textY;
         Rect borderRect;
-        if (textAlign == TEXT_ALIGN.ALIGN_LEFT) {
+        if (textAlign == eTextAlignment.ALIGN_LEFT) {
             textX = (int) borderRectX;
             textY = (int) (btnRect.exactCenterY() + height / 6);
             borderRect = new Rect(borderRectX - xPadding, btnRect.top, btnRect.right + xPadding, btnRect.bottom);

@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import com.example.tomascrd.c_r_s_h.R;
@@ -123,7 +122,6 @@ public class KeyboardComponent extends DrawableComponent {
      */
     @Override
     public void draw(Canvas c) {
-
         c.drawRect(textRect, textRectBorderPaint);
         if (userInput != null && !userInput.equals("")) {
             c.drawText(userInput, textRect.centerX(), textRect.centerY() + pText.getTextSize() / 2, pText);

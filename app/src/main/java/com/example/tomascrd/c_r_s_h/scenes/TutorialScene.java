@@ -3,27 +3,16 @@ package com.example.tomascrd.c_r_s_h.scenes;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.LinearGradient;
 import android.graphics.Paint;
-import android.graphics.PointF;
-import android.graphics.Rect;
-import android.graphics.Shader;
 import android.graphics.Typeface;
-import android.os.Vibrator;
 import android.util.Log;
 import android.view.MotionEvent;
 
 import com.example.tomascrd.c_r_s_h.R;
-import com.example.tomascrd.c_r_s_h.components.ButtonComponent;
-import com.example.tomascrd.c_r_s_h.components.CircleComponent;
 import com.example.tomascrd.c_r_s_h.components.JoystickComponent;
-import com.example.tomascrd.c_r_s_h.components.LifeComponent;
 import com.example.tomascrd.c_r_s_h.components.MapComponent;
-import com.example.tomascrd.c_r_s_h.components.PauseMenuComponent;
-import com.example.tomascrd.c_r_s_h.components.PlayerComCrsh;
 import com.example.tomascrd.c_r_s_h.components.PlayerCrsh;
 import com.example.tomascrd.c_r_s_h.components.SceneCrsh;
-import com.example.tomascrd.c_r_s_h.components.VisualTimerComponent;
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
 import com.example.tomascrd.c_r_s_h.core.GameEngine;
 
@@ -63,9 +52,9 @@ public class TutorialScene extends SceneCrsh {
     /**
      * Starts a tutorial screen
      *
-     * @param context      the application context
-     * @param screenWidth  this screen's width
-     * @param screenHeight this screen's height
+     * @param context        the application context
+     * @param screenWidth    this screen's width
+     * @param screenHeight   this screen's height
      * @param engineCallback callback to access gameEngine data
      */
     public TutorialScene(Context context, int screenWidth, int screenHeight, GameEngine engineCallback) {
@@ -130,8 +119,6 @@ public class TutorialScene extends SceneCrsh {
             case MotionEvent.ACTION_MOVE: // Any finger moves
 
                 break;
-            default:
-                Log.i("Other", "Undefined action: " + action);
         }
         return this.id;
     }

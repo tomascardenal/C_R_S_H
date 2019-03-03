@@ -192,8 +192,6 @@ public class NewGameScene extends SceneCrsh {
                     btnGameSettings.setHeldDown(true);
                 }
                 break;
-            default:
-                Log.i("Other", "Undefined action: " + action);
         }
         return this.id;
     }

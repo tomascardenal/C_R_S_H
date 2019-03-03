@@ -1,6 +1,6 @@
 package com.example.tomascrd.c_r_s_h.core;
 
-import com.example.tomascrd.c_r_s_h.components.TileComponent;
+import com.example.tomascrd.c_r_s_h.structs.TileTypes;
 
 /**
  * Constants of common use in the whole game
@@ -36,6 +36,10 @@ public final class GameConstants {
      * Minimum COM velocity
      */
     public final static int COM_MIN_VELOCITY = 5;
+    /**
+     * Max lives of a player
+     */
+    public final static int MAX_PLAYER_LIVES = 4;
     /**
      * Accelerometer min read value
      */
@@ -147,7 +151,7 @@ public final class GameConstants {
     /**
      * Array containing the values of the tile_types
      */
-    public final static TileComponent.TILE_TYPE[] TILE_TYPES = TileComponent.TILE_TYPE.values();
+    public final static TileTypes.eTileType[] E_TILE_TYPES = TileTypes.eTileType.values();
     /**
      * Font awesome path
      */

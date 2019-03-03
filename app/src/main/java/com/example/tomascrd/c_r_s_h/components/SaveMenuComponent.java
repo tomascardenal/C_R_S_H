@@ -316,9 +316,9 @@ public class SaveMenuComponent extends DrawableComponent {
                 Color.TRANSPARENT, 0, false, -1);
 
         if (engineCallback.optionsManager.loadMapList()) {
-            Log.i("crshdebug", "maps were loaded");
+            Log.i("CrshDebug", "maps were loaded");
         } else {
-            Log.i("crshdebug", "maps were NOT loaded");
+            Log.i("CrshDebug", "maps were NOT loaded");
         }
         mapNames = engineCallback.optionsManager.getMapNames();
         currentMapID = mapNames.size();

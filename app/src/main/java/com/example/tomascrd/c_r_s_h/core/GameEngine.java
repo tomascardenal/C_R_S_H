@@ -11,7 +11,6 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import com.example.tomascrd.c_r_s_h.R;
-import com.example.tomascrd.c_r_s_h.components.VisualTimerComponent;
 import com.example.tomascrd.c_r_s_h.scenes.CreditScene;
 import com.example.tomascrd.c_r_s_h.scenes.GameSettingsScene;
 import com.example.tomascrd.c_r_s_h.scenes.MainGameScene;
@@ -22,10 +21,11 @@ import com.example.tomascrd.c_r_s_h.scenes.OptionsScene;
 import com.example.tomascrd.c_r_s_h.scenes.RecordsScene;
 import com.example.tomascrd.c_r_s_h.components.SceneCrsh;
 import com.example.tomascrd.c_r_s_h.scenes.TutorialScene;
+import com.example.tomascrd.c_r_s_h.structs.eGameMode;
 import com.example.tomascrd.c_r_s_h.structs.eSoundEffect;
+import com.example.tomascrd.c_r_s_h.structs.eTimerSpeed;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * Main engine of this game, concentrates and controls the activities of different scenes. Contains the main game thread
@@ -100,7 +100,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
     /**
      * Speed for game timer
      */
-    private VisualTimerComponent.TIMER_SPEED currentSpeed;
+    private eTimerSpeed currentSpeed;
     /**
      * Collection of sound effects
      */
@@ -195,11 +195,11 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
                             currentScene = new GameSettingsScene(context, screenWidth, screenHeight, this);
                         }
                         break;
-                    case 97: //MainGameScene GAMEMODE.MODE_NRML_COM
-                        if (loadSavedScene && savedScene != null && savedScene instanceof MainGameScene && ((MainGameScene) savedScene).gameMode == MainGameScene.GAMEMODE.MODE_NRML_COM) {
+                    case 97: //MainGameScene eGameMode.MODE_NRML_COM
+                        if (loadSavedScene && savedScene != null && savedScene instanceof MainGameScene && ((MainGameScene) savedScene).gameMode == eGameMode.MODE_NRML_COM) {
                             currentScene = savedScene;
                         } else {
-                            mainGameScene.setGameMode(MainGameScene.GAMEMODE.MODE_NRML_COM);
+                            mainGameScene.setGameMode(eGameMode.MODE_NRML_COM);
                             mainGameScene.setMapLoadID(currentMapID);
                             mainGameScene.reloadMap();
                             currentScene = mainGameScene;
@@ -208,11 +208,11 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
                             loader.loadTiles();
                         }
                         break;
-                    case 98: //MainGameScene GAMEMODE.MODE_CRSH_COM
-                        if (loadSavedScene && savedScene != null && savedScene instanceof MainGameScene && ((MainGameScene) savedScene).gameMode == MainGameScene.GAMEMODE.MODE_CRSH_COM) {
+                    case 98: //MainGameScene eGameMode.MODE_CRSH_COM
+                        if (loadSavedScene && savedScene != null && savedScene instanceof MainGameScene && ((MainGameScene) savedScene).gameMode == eGameMode.MODE_CRSH_COM) {
                             currentScene = savedScene;
                         } else {
-                            mainGameScene.setGameMode(MainGameScene.GAMEMODE.MODE_CRSH_COM);
+                            mainGameScene.setGameMode(eGameMode.MODE_CRSH_COM);
                             mainGameScene.setMapLoadID(currentMapID);
                             mainGameScene.reloadMap();
                             currentScene = mainGameScene;
@@ -221,21 +221,21 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
                             loader.loadTiles();
                         }
                         break;
-                    case 99: //MainGameScene GAMEMODE.MODE_NRML_2P
-                        if (loadSavedScene && savedScene != null && savedScene instanceof MainGameScene && ((MainGameScene) savedScene).gameMode == MainGameScene.GAMEMODE.MODE_NRML_2P) {
+                    case 99: //MainGameScene eGameMode.MODE_NRML_2P
+                        if (loadSavedScene && savedScene != null && savedScene instanceof MainGameScene && ((MainGameScene) savedScene).gameMode == eGameMode.MODE_NRML_2P) {
                             currentScene = savedScene;
                         } else {
-                            mainGameScene.setGameMode(MainGameScene.GAMEMODE.MODE_NRML_2P);
+                            mainGameScene.setGameMode(eGameMode.MODE_NRML_2P);
                             mainGameScene.setMapLoadID(currentMapID);
                             mainGameScene.reloadMap();
                             currentScene = mainGameScene;
                         }
                         break;
-                    case 100: //MainGameScene, GAMEMODE.MODE_CRSH_2P
-                        if (loadSavedScene && savedScene != null && savedScene instanceof MainGameScene && ((MainGameScene) savedScene).gameMode == MainGameScene.GAMEMODE.MODE_CRSH_2P) {
+                    case 100: //MainGameScene, eGameMode.MODE_CRSH_2P
+                        if (loadSavedScene && savedScene != null && savedScene instanceof MainGameScene && ((MainGameScene) savedScene).gameMode == eGameMode.MODE_CRSH_2P) {
                             currentScene = savedScene;
                         } else {
-                            mainGameScene.setGameMode(MainGameScene.GAMEMODE.MODE_CRSH_2P);
+                            mainGameScene.setGameMode(eGameMode.MODE_CRSH_2P);
                             mainGameScene.setMapLoadID(currentMapID);
                             mainGameScene.reloadMap();
                             currentScene = mainGameScene;
@@ -299,7 +299,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
         updateMusicPlayer();
         //
         if (mainGameScene == null) {
-            mainGameScene = new MainGameScene(context, screenWidth, screenHeight, this, MainGameScene.GAMEMODE.MODE_NRML_2P, currentMapID);
+            mainGameScene = new MainGameScene(context, screenWidth, screenHeight, this, eGameMode.MODE_NRML_COM, currentMapID);
         }
         //Starting the thread
         thread.setWorking(true);
@@ -325,10 +325,14 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
         try {
             thread.join();
             mediaPlayer.pause();
+            for (MediaPlayer mp : effectsPool) {
+                mp.pause();
+                mp.seekTo(0);
+            }
             optionsManager.saveOptions();
             optionsManager.saveMapList();
         } catch (InterruptedException e) {
-            Log.i("SurfaceDestroyed Error", e.getLocalizedMessage());
+            Log.i("CrshDebug", "SurfaceDestroyed Error " + e.getLocalizedMessage());
         }
     }
 
@@ -344,7 +348,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
             try {
                 mediaPlayer.prepare();
             } catch (IllegalStateException | IOException e) {
-                Log.e("mediaPlayer error", "" + e.getLocalizedMessage());
+                Log.e("CrshDebug", "mediaPlayer error" + e.getLocalizedMessage());
             }
         }
 
@@ -360,7 +364,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
                     effectsPool[i].setLooping(false);
                 }
             } catch (IllegalStateException | IOException e) {
-                Log.e("mediaPlayer error", "" + e.getLocalizedMessage());
+                Log.e("CrshDebug", "effectsPool error" + e.getLocalizedMessage());
             }
         }
     }
@@ -390,35 +394,37 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
      * @param soundEffect the eSoundEffect value corresponding to the effect to play
      */
     public void playSoundEffect(eSoundEffect soundEffect) {
-        switch (soundEffect) {
-            case EFFECT_DEATH:
-                if (effectsPool[0].isPlaying()) {
-                    effectsPool[0].pause();
-                    effectsPool[0].seekTo(0);
-                }
-                effectsPool[0].start();
-                break;
-            case EFFECT_TIMER_END:
-                if (effectsPool[1].isPlaying()) {
-                    effectsPool[1].pause();
-                    effectsPool[1].seekTo(0);
-                }
-                effectsPool[1].start();
-                break;
-            case EFFECT_HIT:
-                if (effectsPool[2].isPlaying()) {
-                    effectsPool[2].pause();
-                    effectsPool[2].seekTo(0);
-                }
-                effectsPool[2].start();
-                break;
-            case EFFECT_BUMP:
-                if (effectsPool[3].isPlaying()) {
-                    effectsPool[3].pause();
-                    effectsPool[3].seekTo(0);
-                }
-                effectsPool[3].start();
-                break;
+        if (optionsManager.isPlaySoundEffects()) {
+            switch (soundEffect) {
+                case EFFECT_DEATH:
+                    if (effectsPool[0].isPlaying()) {
+                        effectsPool[0].pause();
+                        effectsPool[0].seekTo(0);
+                    }
+                    effectsPool[0].start();
+                    break;
+                case EFFECT_TIMER_END:
+                    if (effectsPool[1].isPlaying()) {
+                        effectsPool[1].pause();
+                        effectsPool[1].seekTo(0);
+                    }
+                    effectsPool[1].start();
+                    break;
+                case EFFECT_HIT:
+                    if (effectsPool[2].isPlaying()) {
+                        effectsPool[2].pause();
+                        effectsPool[2].seekTo(0);
+                    }
+                    effectsPool[2].start();
+                    break;
+                case EFFECT_BUMP:
+                    if (effectsPool[3].isPlaying()) {
+                        effectsPool[3].pause();
+                        effectsPool[3].seekTo(0);
+                    }
+                    effectsPool[3].start();
+                    break;
+            }
         }
     }
 
@@ -427,14 +433,14 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
      *
      * @return the new timer speed
      */
-    public VisualTimerComponent.TIMER_SPEED getCurrentSpeed() {
+    public eTimerSpeed getCurrentSpeed() {
         if (this.currentSpeed == null) {
             currentSpeed = optionsManager.getTimerSpeed();
         }
         return currentSpeed;
     }
 
-    public void setCurrentSpeed(VisualTimerComponent.TIMER_SPEED currentSpeed) {
+    public void setCurrentSpeed(eTimerSpeed currentSpeed) {
         this.currentSpeed = currentSpeed;
         this.optionsManager.setTimerSpeed(currentSpeed);
         if (this.mainGameScene != null) {
@@ -474,10 +480,8 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
                     if (!canvasLocked) {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             c = surfaceHolder.lockHardwareCanvas();
-                            Log.i("CanvasLocked", "Hardware canvas");
                         } else {
                             c = surfaceHolder.lockCanvas();
-                            Log.i("CanvasLocked", "canvas");
                         }
                         canvasLocked = true;
                     }

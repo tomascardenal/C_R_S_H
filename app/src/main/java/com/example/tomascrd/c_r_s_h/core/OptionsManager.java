@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.example.tomascrd.c_r_s_h.components.VisualTimerComponent;
 import com.example.tomascrd.c_r_s_h.structs.MapReference;
+import com.example.tomascrd.c_r_s_h.structs.eTimerSpeed;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -44,7 +45,7 @@ public class OptionsManager {
     /**
      * Timer Speed for game settings
      */
-    private VisualTimerComponent.TIMER_SPEED timerSpeed;
+    private eTimerSpeed timerSpeed;
     /**
      * Table containing the map references
      */
@@ -189,20 +190,20 @@ public class OptionsManager {
     }
 
     /**
-     * Returns the current TIMER_SPEED
+     * Returns the current eTimerSpeed
      *
-     * @return the TIMER_SPEED
+     * @return the eTimerSpeed
      */
-    public VisualTimerComponent.TIMER_SPEED getTimerSpeed() {
+    public eTimerSpeed getTimerSpeed() {
         return timerSpeed;
     }
 
     /**
-     * Sets the current TIMER_SPEED
+     * Sets the current eTimerSpeed
      *
-     * @param timerSpeed the TIMER_SPEED to set
+     * @param timerSpeed the eTimerSpeed to set
      */
-    public void setTimerSpeed(VisualTimerComponent.TIMER_SPEED timerSpeed) {
+    public void setTimerSpeed(eTimerSpeed timerSpeed) {
         this.timerSpeed = timerSpeed;
     }
 
@@ -258,7 +259,7 @@ public class OptionsManager {
             }
             return true;
         } catch (IOException e) {
-            Log.i("crshdebug", e.getMessage() + " " + e.getStackTrace());
+            Log.i("CrshDebug", e.getMessage() + " " + e.getStackTrace());
             return false;
         }
     }

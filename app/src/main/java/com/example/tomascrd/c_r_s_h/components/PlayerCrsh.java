@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
 import com.example.tomascrd.c_r_s_h.scenes.MainGameScene;
+import com.example.tomascrd.c_r_s_h.structs.TileTypes;
 import com.example.tomascrd.c_r_s_h.structs.eSoundEffect;
 
 /**
@@ -148,7 +149,7 @@ public class PlayerCrsh extends DrawableComponent {
         this.playerCollision = playerCollision;
         this.spawnPoint = new PointF(playerCollision.xPos, playerCollision.yPos);
         this.startRadius = this.playerCollision.radius;
-        this.playerLifes = 4;
+        this.playerLifes = GameConstants.MAX_PLAYER_LIVES;
         this.xVelocity = 0;
         this.yVelocity = 0;
         this.bounceBackCycle = 0;
@@ -175,63 +176,10 @@ public class PlayerCrsh extends DrawableComponent {
     }
 
     /**
-     * Initializes a player to it's parameters, indicating the coordinates and radius of the CircleComponent
-     *
-     * @param gameCallback Callback to the scene calling this player
-     * @param mapCallback  Callback to this MapComponent for accessing the tiles
-     * @param playerName   The player's name
-     * @param playerId     The player's id
-     * @param onAttack     The player's mode
-     * @param yPos         The CircleComponent's yPos
-     * @param xPos         The CircleComponent's yPos
-     * @param radius       The CircleComponent's radius
-     * @see CircleComponent
-     */
-    public PlayerCrsh(MainGameScene gameCallback, MapComponent mapCallback, String playerName, int playerId, boolean onAttack, float xPos, float yPos, int radius) {
-        this(gameCallback, mapCallback, playerName, playerId, onAttack, new CircleComponent(xPos, yPos, radius));
-    }
-
-    /**
-     * Initializes a player to it's parameters, with a given CircleComponent and the indicated lives (within the accepted limits)
-     *
-     * @param gameCallback    Callback to the scene calling this player
-     * @param mapCallback     Callback to this MapComponent for accessing the tiles
-     * @param playerName      The player's name
-     * @param playerId        The player's id
-     * @param onAttack        The player's mode
-     * @param playerCollision The player's collision circle
-     * @param lives           The player's lives
-     * @see CircleComponent
-     */
-    public PlayerCrsh(MainGameScene gameCallback, MapComponent mapCallback, String playerName, int playerId, boolean onAttack, CircleComponent playerCollision, int lives) {
-        this(gameCallback, mapCallback, playerName, playerId, onAttack, playerCollision);
-        this.setPlayerLifes(lives);
-    }
-
-    /**
-     * Initializes a player to it's parameters, indicating the coordinates, radius of the CircleComponent and the indicated lives (within the accepted limits)
-     *
-     * @param gameCallback Callback to the scene calling this player
-     * @param mapCallback  Callback to this MapComponent for accessing the tiles
-     * @param playerName   The player's name
-     * @param playerId     The player's id
-     * @param onAttack     The player's mode
-     * @param yPos         The CircleComponent's yPos
-     * @param xPos         The CircleComponent's yPos
-     * @param radius       The CircleComponent's radius
-     * @param lives        The player's lives
-     * @see CircleComponent
-     */
-    public PlayerCrsh(MainGameScene gameCallback, MapComponent mapCallback, String playerName, int playerId, boolean onAttack, float xPos, float yPos, int radius, int lives) {
-        this(gameCallback, mapCallback, playerName, playerId, onAttack, xPos, yPos, radius);
-        this.setPlayerLifes(lives);
-    }
-
-    /**
      * Respawns the player on the starting position
      */
     public void respawn() {
-        this.playerLifes = 4;
+        this.playerLifes = GameConstants.MAX_PLAYER_LIVES;
         this.xVelocity = 0;
         this.yVelocity = 0;
         this.bounceBackCycle = 0;
@@ -289,20 +237,6 @@ public class PlayerCrsh extends DrawableComponent {
         return this.playerLifes;
     }
 
-    /**
-     * Sets the number of lifes, always staying between 3 and 9
-     *
-     * @param playerLifes the player lifes to set
-     */
-    public void setPlayerLifes(int playerLifes) {
-        if (playerLifes < 3) {
-            this.playerLifes = 3;
-        } else if (playerLifes > 9) {
-            this.playerLifes = 9;
-        } else {
-            this.playerLifes = playerLifes;
-        }
-    }
 
     /**
      * Removes, if possible, a life from this player
@@ -317,7 +251,7 @@ public class PlayerCrsh extends DrawableComponent {
      * Adds, if possible, a life to this player
      */
     public void addALife() {
-        if (this.playerLifes < 9) {
+        if (this.playerLifes < GameConstants.MAX_PLAYER_LIVES) {
             this.playerLifes++;
         }
     }
@@ -449,7 +383,7 @@ public class PlayerCrsh extends DrawableComponent {
         int cycles = bounceBackSmall ? GameConstants.BOUNCEBACK_SMALL_CYCLES : GameConstants.BOUNCEBACK_BIG_CYCLES;
         //If it's the first cycle, vibrate
         if (bounceBackCycle == 0) {
-            //gameCallback.playSoundEffect(eSoundEffect.EFFECT_BUMP);
+            gameCallback.playSoundEffect(eSoundEffect.EFFECT_BUMP);
             gameCallback.doShortVibration();
             bounceBackCycle++;
             //If it's still cycling
@@ -535,8 +469,7 @@ public class PlayerCrsh extends DrawableComponent {
                         break;
                     case TILE_BREAKONE:
                         Log.i("CrshDebug", "Collision breakone on X for p" + playerId);
-                        currentTile.tileType = TileComponent.TILE_TYPE.TILE_PATH;
-                        currentTile.setPainter();
+                        currentTile.tileType = TileTypes.eTileType.TILE_PATH;
                         bounceBackSmall = true;
                         xVelocity = xVelocity / GameConstants.BOUNCEBACK_SMALL_DIVISOR;
                         addPlayerScore(10);
@@ -544,8 +477,7 @@ public class PlayerCrsh extends DrawableComponent {
                         break;
                     case TILE_BREAKTWO:
                         Log.i("CrshDebug", "Collision breaktwo on X for p" + playerId);
-                        currentTile.tileType = TileComponent.TILE_TYPE.TILE_BREAKONE;
-                        currentTile.setPainter();
+                        currentTile.tileType = TileTypes.eTileType.TILE_BREAKONE;
                         bounceBackBig = true;
                         addPlayerScore(20);
                         xVelocity = xVelocity / GameConstants.BOUNCEBACK_BIG_DIVISOR;
@@ -567,8 +499,8 @@ public class PlayerCrsh extends DrawableComponent {
                         break;
                     case TILE_BREAKONE:
                         Log.i("CrshDebug", "Collision breakone on Y for p" + playerId);
-                        currentTile.tileType = TileComponent.TILE_TYPE.TILE_PATH;
-                        currentTile.setPainter();
+                        currentTile.tileType = TileTypes.eTileType.TILE_PATH;
+
                         bounceBackSmall = true;
                         yVelocity = yVelocity / GameConstants.BOUNCEBACK_SMALL_DIVISOR;
                         addPlayerScore(10);
@@ -576,8 +508,8 @@ public class PlayerCrsh extends DrawableComponent {
                         break;
                     case TILE_BREAKTWO:
                         Log.i("CrshDebug", "Collision breaktwo on Y for p" + playerId);
-                        currentTile.tileType = TileComponent.TILE_TYPE.TILE_BREAKONE;
-                        currentTile.setPainter();
+                        currentTile.tileType = TileTypes.eTileType.TILE_BREAKONE;
+
                         bounceBackBig = true;
                         yVelocity = yVelocity / GameConstants.BOUNCEBACK_BIG_DIVISOR;
                         addPlayerScore(20);

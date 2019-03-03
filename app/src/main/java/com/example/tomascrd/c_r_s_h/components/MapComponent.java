@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
 import com.example.tomascrd.c_r_s_h.core.AssetLoader;
+import com.example.tomascrd.c_r_s_h.structs.TileTypes;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -41,7 +42,7 @@ public class MapComponent extends DrawableComponent {
     /**
      * Array of tile types
      */
-    private TileComponent.TILE_TYPE[][] dataArray;
+    private TileTypes.eTileType[][] dataArray;
     /**
      * Tile size reference
      */
@@ -116,7 +117,7 @@ public class MapComponent extends DrawableComponent {
                 createTestMap();
                 saveMap();
             } else {
-                Log.i("crshdebug", "Map 666 loaded");
+                Log.i("CrshDebug", "Map 666 loaded");
             }
         } else if (mapID == 0) {
             loadEmptyMap();
@@ -143,13 +144,11 @@ public class MapComponent extends DrawableComponent {
             for (int i = 1; i < GameConstants.GAMESCREEN_ROWS - 1; i++) {
                 for (int j = 3; j < GameConstants.GAMESCREEN_COLUMNS - 3; j++) {
                     currentTile = tileArray[i - 1][j - 3];
-                    //c.drawRect(currentTile.collisionRect, currentTile.rectPaint);
                     switch (currentTile.tileType) {
                         case TILE_BORDER:
                             c.drawBitmap(loader.tileBorder, currentTile.xPos, currentTile.yPos, null);
                             break;
                         case TILE_PATH:
-                            //c.drawBitmap(loader.tilePath, currentTile.xPos, currentTile.yPos, null);
                             if (i == 2) {//If on the first row of grass
                                 if (j == 4) {//If on upper left corner
                                     c.drawBitmap(loader.tileGrassUpLeft, currentTile.xPos, currentTile.yPos, null);
@@ -232,7 +231,7 @@ public class MapComponent extends DrawableComponent {
      * @param i        the first index
      * @param j        the second index
      */
-    public void updateDataArray(TileComponent.TILE_TYPE tileType, int i, int j) {
+    public void updateDataArray(TileTypes.eTileType tileType, int i, int j) {
         if (i < 0 || i > dataArray.length - 1 || j < 0 || j > dataArray[i].length - 1) {
             throw new IllegalArgumentException("Out of dataArray bounds");
         }
@@ -244,17 +243,17 @@ public class MapComponent extends DrawableComponent {
      */
     private void createTestMap() {
         this.mapID = 666;
-        TileComponent.TILE_TYPE[][] testArray = new TileComponent.TILE_TYPE[GameConstants.MAPAREA_ROWS][GameConstants.MAPAREA_COLUMNS];
+        TileTypes.eTileType[][] testArray = new TileTypes.eTileType[GameConstants.MAPAREA_ROWS][GameConstants.MAPAREA_COLUMNS];
         for (int i = 0; i < testArray.length; i++) {
             for (int j = 0; j < testArray[i].length; j++) {
                 if (i == 0 || i == testArray.length - 1 || j == 0 || j == testArray[i].length - 1) {
-                    testArray[i][j] = TileComponent.intToTileType(0);
+                    testArray[i][j] = TileTypes.intToTileType(0);
                 } else if (i % 3 != 0) {
-                    testArray[i][j] = TileComponent.intToTileType(1);
+                    testArray[i][j] = TileTypes.intToTileType(1);
                 } else if (j % 3 == 2) {
-                    testArray[i][j] = TileComponent.intToTileType(2);
+                    testArray[i][j] = TileTypes.intToTileType(2);
                 } else {
-                    testArray[i][j] = TileComponent.intToTileType(1);
+                    testArray[i][j] = TileTypes.intToTileType(1);
                 }
             }
         }
@@ -265,13 +264,13 @@ public class MapComponent extends DrawableComponent {
      * Creates and stores in dataArray an array for an empty map, with only borders
      */
     private void loadEmptyMap() {
-        TileComponent.TILE_TYPE[][] emptyArray = new TileComponent.TILE_TYPE[GameConstants.MAPAREA_ROWS][GameConstants.MAPAREA_COLUMNS];
+        TileTypes.eTileType[][] emptyArray = new TileTypes.eTileType[GameConstants.MAPAREA_ROWS][GameConstants.MAPAREA_COLUMNS];
         for (int i = 0; i < emptyArray.length; i++) {
             for (int j = 0; j < emptyArray[i].length; j++) {
                 if (i == 0 || i == emptyArray.length - 1 || j == 0 || j == emptyArray[i].length - 1) {
-                    emptyArray[i][j] = TileComponent.intToTileType(0);
+                    emptyArray[i][j] = TileTypes.intToTileType(0);
                 } else {
-                    emptyArray[i][j] = TileComponent.intToTileType(1);
+                    emptyArray[i][j] = TileTypes.intToTileType(1);
                 }
             }
         }
@@ -287,13 +286,13 @@ public class MapComponent extends DrawableComponent {
     public boolean loadMap(int mapID) {
         //Initialize dataArray
         this.mapID = mapID;
-        this.dataArray = new TileComponent.TILE_TYPE[GameConstants.MAPAREA_ROWS][GameConstants.MAPAREA_COLUMNS];
+        this.dataArray = new TileTypes.eTileType[GameConstants.MAPAREA_ROWS][GameConstants.MAPAREA_COLUMNS];
         //Open the input stream
         try (FileInputStream fis = context.openFileInput(mapID + GameConstants.MAPFILE_NAME)) {
             DataInputStream input = new DataInputStream(fis);
             for (int i = 0; i < dataArray.length; i++) {
                 for (int j = 0; j < dataArray[i].length; j++) {
-                    dataArray[i][j] = TileComponent.intToTileType(input.readInt());
+                    dataArray[i][j] = TileTypes.intToTileType(input.readInt());
                 }
             }
         } catch (IOException e) {
@@ -315,7 +314,7 @@ public class MapComponent extends DrawableComponent {
                 DataOutputStream output = new DataOutputStream(fos);
                 for (int i = 0; i < dataArray.length; i++) {
                     for (int j = 0; j < dataArray[i].length; j++) {
-                        output.writeInt(TileComponent.tileTypeToInt(dataArray[i][j]));
+                        output.writeInt(TileTypes.tileTypeToInt(dataArray[i][j]));
                     }
                 }
             } catch (IOException e) {

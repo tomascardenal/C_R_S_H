@@ -35,7 +35,9 @@ import com.example.tomascrd.c_r_s_h.components.VisualTimerComponent;
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
 import com.example.tomascrd.c_r_s_h.core.GameEngine;
 import com.example.tomascrd.c_r_s_h.core.Utils;
+import com.example.tomascrd.c_r_s_h.structs.eGameMode;
 import com.example.tomascrd.c_r_s_h.structs.eSoundEffect;
+import com.example.tomascrd.c_r_s_h.structs.eTimerSpeed;
 
 /**
  * Represents the main game
@@ -43,14 +45,6 @@ import com.example.tomascrd.c_r_s_h.structs.eSoundEffect;
  * @author Tomás Cardenal López
  */
 public class MainGameScene extends SceneCrsh implements SensorEventListener {
-
-
-    /**
-     * Enumerates the possible types of game mode
-     */
-    public enum GAMEMODE {
-        MODE_NRML_2P, MODE_CRSH_2P, MODE_NRML_COM, MODE_CRSH_COM
-    }
 
     /**
      * Constant id for MainGameScene on Normal/COM mode
@@ -150,7 +144,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
     /**
      * This instance's game mode
      */
-    public GAMEMODE gameMode;
+    public eGameMode gameMode;
     /**
      * The current loaded map's ID number
      */
@@ -205,7 +199,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
      * @param engineCallback callback to this game's engine
      * @param mapLoadID      id of the map to be loaded
      */
-    public MainGameScene(Context context, int screenWidth, int screenHeight, GameEngine engineCallback, GAMEMODE gameMode, int mapLoadID) {
+    public MainGameScene(Context context, int screenWidth, int screenHeight, GameEngine engineCallback, eGameMode gameMode, int mapLoadID) {
         //TODO Set player indicators (with maybe a player sprite)
         //Initialize variables
         super(context, -1, screenWidth, screenHeight);
@@ -225,7 +219,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         PointF playerOneCenter = new PointF(mapLoad.tileArray[2][2].getCollisionRect().exactCenterX(), mapLoad.tileArray[2][2].getCollisionRect().exactCenterY());
         this.playerOne = new PlayerCrsh(this, mapLoad, "TestP1", 1, true, new CircleComponent(playerOneCenter, mapLoad.getReference() / 2));
         PointF playerTwoCenter = new PointF(mapLoad.tileArray[mapLoad.tileArray.length - 3][mapLoad.tileArray[mapLoad.tileArray.length - 3].length - 3].getCollisionRect().exactCenterX(), mapLoad.tileArray[mapLoad.tileArray.length - 3][mapLoad.tileArray[mapLoad.tileArray.length - 3].length - 3].getCollisionRect().exactCenterY());
-        if (this.gameMode == GAMEMODE.MODE_CRSH_COM || this.gameMode == GAMEMODE.MODE_NRML_COM) {
+        if (this.gameMode == eGameMode.MODE_CRSH_COM || this.gameMode == eGameMode.MODE_NRML_COM) {
             this.playerCom = new PlayerComCrsh(this, mapLoad, true, new CircleComponent(playerTwoCenter, mapLoad.getReference() / 2));
         } else {
             this.playerTwo = new PlayerCrsh(this, mapLoad, "testP2", 2, false, new CircleComponent(playerTwoCenter, mapLoad.getReference() / 2));
@@ -234,7 +228,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         //Initialize joysticks
         int joystickRadius = (int) Math.floor(mapLoad.getReference() * 1.5);
         this.joystickOne = new JoystickComponent(context, joystickRadius, Color.GRAY, Color.CYAN);
-        if (this.gameMode == GAMEMODE.MODE_CRSH_2P || this.gameMode == GAMEMODE.MODE_NRML_2P) {
+        if (this.gameMode == eGameMode.MODE_CRSH_2P || this.gameMode == eGameMode.MODE_NRML_2P) {
             this.joystickTwo = new JoystickComponent(context, joystickRadius, Color.GRAY, Color.MAGENTA);
         }
 
@@ -257,17 +251,17 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         top = this.mapLoad.tileArray[0][0].getCollisionRect().top;
         right = this.mapLoad.tileArray[0][12].getCollisionRect().right;
         bottom = this.mapLoad.tileArray[0][12].getCollisionRect().bottom;
-        this.lifeOne = new LifeComponent(this.context, this, new Rect(left, top, right, bottom), playerOne.getPlayerLifes(), false, 1);
+        this.lifeOne = new LifeComponent(this.context, this, new Rect(left, top, right, bottom), playerOne.getPlayerLifes(), false);
 
         //Life Component player two (Left side)
         left = this.mapLoad.tileArray[0][13].getCollisionRect().left;
         top = this.mapLoad.tileArray[0][13].getCollisionRect().top;
         right = this.mapLoad.tileArray[0][GameConstants.MAPAREA_COLUMNS - 1].getCollisionRect().right;
         bottom = this.mapLoad.tileArray[0][GameConstants.MAPAREA_COLUMNS - 1].getCollisionRect().bottom;
-        if (this.gameMode == GAMEMODE.MODE_CRSH_COM || this.gameMode == GAMEMODE.MODE_NRML_COM) {
-            this.lifeTwo = new LifeComponent(this.context, this, new Rect(left, top, right, bottom), playerCom.getPlayerLifes(), true, 0);
+        if (this.gameMode == eGameMode.MODE_CRSH_COM || this.gameMode == eGameMode.MODE_NRML_COM) {
+            this.lifeTwo = new LifeComponent(this.context, this, new Rect(left, top, right, bottom), playerCom.getPlayerLifes(), true);
         } else {
-            this.lifeTwo = new LifeComponent(this.context, this, new Rect(left, top, right, bottom), playerTwo.getPlayerLifes(), true, 2);
+            this.lifeTwo = new LifeComponent(this.context, this, new Rect(left, top, right, bottom), playerTwo.getPlayerLifes(), true);
         }
 
 
@@ -293,7 +287,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         bottom = this.mapLoad.tileArray[GameConstants.MAPAREA_ROWS - 2][GameConstants.MAPAREA_COLUMNS - 1].getCollisionRect().bottom;
         this.modeTwo = new Rect(left, top, right, bottom);
         this.paintModeTwo = new Paint();
-        if (this.gameMode == GAMEMODE.MODE_CRSH_COM || this.gameMode == GAMEMODE.MODE_NRML_COM) {
+        if (this.gameMode == eGameMode.MODE_CRSH_COM || this.gameMode == eGameMode.MODE_NRML_COM) {
             this.paintModeTwo.setShader(new LinearGradient(this.modeTwo.left + this.modeTwo.width() / 2, this.modeTwo.top, this.modeTwo.right - this.modeTwo.width() / 2, this.modeTwo.bottom, Color.GRAY, Color.BLACK, Shader.TileMode.CLAMP));
         } else {
             this.paintModeTwo.setShader(new LinearGradient(this.modeTwo.left + this.modeTwo.width() / 2, this.modeTwo.top, this.modeTwo.right - this.modeTwo.width() / 2, this.modeTwo.bottom, Color.RED, Color.BLACK, Shader.TileMode.CLAMP));
@@ -321,7 +315,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
      *
      * @param gameMode the new game mode
      */
-    public void setGameMode(GAMEMODE gameMode) {
+    public void setGameMode(eGameMode gameMode) {
         this.gameMode = gameMode;
         this.setId();
         reloadMap();
@@ -332,11 +326,11 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
      * Updates the sensors
      */
     private void updateSensors() {
-        if ((gameMode == GAMEMODE.MODE_CRSH_2P || gameMode == GAMEMODE.MODE_CRSH_COM) && (sensor == null || sensorManager == null)) {
+        if ((gameMode == eGameMode.MODE_CRSH_2P || gameMode == eGameMode.MODE_CRSH_COM) && (sensor == null || sensorManager == null)) {
             sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
             sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
             sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_GAME);
-        } else if ((gameMode == GAMEMODE.MODE_NRML_2P || gameMode == GAMEMODE.MODE_NRML_COM && (sensor != null || sensorManager != null))) {
+        } else if ((gameMode == eGameMode.MODE_NRML_2P || gameMode == eGameMode.MODE_NRML_COM && (sensor != null || sensorManager != null))) {
             if (sensorManager != null && sensor != null) {
                 sensorManager.unregisterListener(this, sensor);
             }
@@ -366,7 +360,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         //Joysticks
         int joystickRadius = (int) Math.floor(mapLoad.getReference() * 1.5);
         this.joystickOne = new JoystickComponent(context, joystickRadius, Color.GRAY, Color.CYAN);
-        if (this.gameMode == GAMEMODE.MODE_CRSH_2P || this.gameMode == GAMEMODE.MODE_NRML_2P) {
+        if (this.gameMode == eGameMode.MODE_CRSH_2P || this.gameMode == eGameMode.MODE_NRML_2P) {
             this.joystickTwo = new JoystickComponent(context, joystickRadius, Color.GRAY, Color.MAGENTA);
         }
 
@@ -389,7 +383,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         //Player Two or COM
         PointF playerTwoCenter = new PointF(mapLoad.tileArray[mapLoad.tileArray.length - 3][mapLoad.tileArray[mapLoad.tileArray.length - 3].length - 3].getCollisionRect().exactCenterX(), mapLoad.tileArray[mapLoad.tileArray.length - 3][mapLoad.tileArray[mapLoad.tileArray.length - 3].length - 3].getCollisionRect().exactCenterY());
 
-        if (this.gameMode == GAMEMODE.MODE_CRSH_COM || this.gameMode == GAMEMODE.MODE_NRML_COM) {
+        if (this.gameMode == eGameMode.MODE_CRSH_COM || this.gameMode == eGameMode.MODE_NRML_COM) {
             this.playerCom = new PlayerComCrsh(this, mapLoad, true, new CircleComponent(playerTwoCenter, mapLoad.getReference() / 2));
             this.playerCom.respawn();
         } else {
@@ -398,7 +392,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         }
 
         //Gradients
-        if (this.gameMode == GAMEMODE.MODE_CRSH_COM || this.gameMode == GAMEMODE.MODE_NRML_COM) {
+        if (this.gameMode == eGameMode.MODE_CRSH_COM || this.gameMode == eGameMode.MODE_NRML_COM) {
             this.paintModeTwo.setShader(new LinearGradient(this.modeTwo.left + this.modeTwo.width() / 2, this.modeTwo.top, this.modeTwo.right - this.modeTwo.width() / 2, this.modeTwo.bottom, Color.GRAY, Color.BLACK, Shader.TileMode.CLAMP));
         } else {
             this.paintModeTwo.setShader(new LinearGradient(this.modeTwo.left + this.modeTwo.width() / 2, this.modeTwo.top, this.modeTwo.right - this.modeTwo.width() / 2, this.modeTwo.bottom, Color.RED, Color.BLACK, Shader.TileMode.CLAMP));
@@ -412,16 +406,15 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
      *
      * @param timerSpeed the new speed
      */
-    public void setTimerSpeed(VisualTimerComponent.TIMER_SPEED timerSpeed) {
+    public void setTimerSpeed(eTimerSpeed timerSpeed) {
         this.timer.setTimerSpeed(timerSpeed);
     }
 
     /**
-     * Sets the rect indicating the attack and defense modes
+     * Sets the attack indicator to the corresponding animation
      */
     public void setAttackIndicator() {
-
-        if (gameMode == GAMEMODE.MODE_CRSH_2P || gameMode == GAMEMODE.MODE_NRML_2P) {
+        if (gameMode == eGameMode.MODE_CRSH_2P || gameMode == eGameMode.MODE_NRML_2P) {
             if (playerOne.isOnAttack() && !playerTwo.isOnAttack()) {
                 indicatorImageOne = engineCallback.loader.indicatorAttackBitmaps[indicatorLoop];
                 indicatorImageTwo = engineCallback.loader.indicatorDefenseBitmap;
@@ -443,7 +436,6 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         } else {
             indicatorLoop = 0;
         }
-
     }
 
     /**
@@ -489,7 +481,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
                         joystickReference.y * playerOne.getJoystickMultiplier());
 
             }
-            if (gameMode == GAMEMODE.MODE_CRSH_2P || gameMode == GAMEMODE.MODE_NRML_2P) {
+            if (gameMode == eGameMode.MODE_CRSH_2P || gameMode == eGameMode.MODE_NRML_2P) {
                 if (joystickTwo.isActive() && !playerTwo.onBounceBack()) {
                     PointF joystickReference = joystickTwo.getDisplacement();
                     playerTwo.setVelocity(
@@ -502,11 +494,11 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
             if (playerOne.getPlayerLifes() > 0) {
                 playerOne.move();
             }
-            if (gameMode == GAMEMODE.MODE_CRSH_2P || gameMode == GAMEMODE.MODE_NRML_2P) {
+            if (gameMode == eGameMode.MODE_CRSH_2P || gameMode == eGameMode.MODE_NRML_2P) {
                 if (playerTwo.getPlayerLifes() > 0) {
                     playerTwo.move();
                 }
-            } else if (gameMode == GAMEMODE.MODE_CRSH_COM || gameMode == GAMEMODE.MODE_NRML_COM) {
+            } else if (gameMode == eGameMode.MODE_CRSH_COM || gameMode == eGameMode.MODE_NRML_COM) {
                 if (playerCom.getPlayerLifes() > 0) {
                     playerCom.move();
                 }
@@ -549,7 +541,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
             c.drawBitmap(indicatorImageTwo, modeTwo.left, modeTwo.top + modeTwo.height() / 2, null);
             //Draw player One
             playerOne.draw(c);
-            if (this.gameMode == GAMEMODE.MODE_NRML_2P || this.gameMode == GAMEMODE.MODE_CRSH_2P) {
+            if (this.gameMode == eGameMode.MODE_NRML_2P || this.gameMode == eGameMode.MODE_CRSH_2P) {
                 String pOneScore = String.format("%04d", playerOne.getPlayerScore());
                 String pTwoScore = String.format("%04d", playerTwo.getPlayerScore());
                 c.drawText(pOneScore, screenWidth / GameConstants.GAMESCREEN_COLUMNS / 2, screenHeight / GameConstants.GAMESCREEN_ROWS * 2.5f, paintScores);
@@ -577,7 +569,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
             if (playerOne.getPlayerLifes() > 0) {
                 joystickOne.draw(c);
             }
-            if (this.gameMode == GAMEMODE.MODE_NRML_2P || this.gameMode == GAMEMODE.MODE_CRSH_2P) {
+            if (this.gameMode == eGameMode.MODE_NRML_2P || this.gameMode == eGameMode.MODE_CRSH_2P) {
                 if (playerTwo.getPlayerLifes() > 0) {
                     joystickTwo.draw(c);
                 }
@@ -585,7 +577,6 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         } else {
             pauseMenu.draw(c);
         }
-
     }
 
     /**
@@ -609,7 +600,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
     }
 
     /**
-     * Controls the events on the touchscreen for GAMEMODE.MODE_CRSH_2P
+     * Controls the events on the touchscreen for eGameMode.MODE_CRSH_2P
      *
      * @param event the touch event
      * @return a new sceneId if it changed, or this id if it didn't change
@@ -674,14 +665,12 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
                     }
                 }
                 break;
-            default:
-                Log.i("Other", "Undefined action: " + action);
         }
         return this.id;
     }
 
     /**
-     * Controls the events on the touchscreen for GAMEMODE.MODE_NRML_2P
+     * Controls the events on the touchscreen for eGameMode.MODE_NRML_2P
      *
      * @param event the touch event
      * @return a new sceneId if it changed, or this id if it didn't change
@@ -744,15 +733,13 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
                     }
                 }
                 break;
-            default:
-                Log.i("Other", "Undefined action: " + action);
         }
         return this.id;
     }
 
 
     /**
-     * Controls the events on the touchscreen for GAMEMODE.MODE_CRSH_COM
+     * Controls the events on the touchscreen for eGameMode.MODE_CRSH_COM
      *
      * @param event the touch event
      * @return a new sceneId if it changed, or this id if it didn't change
@@ -798,14 +785,12 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
                     }
                 }
                 break;
-            default:
-                Log.i("Other", "Undefined action: " + action);
         }
         return this.id;
     }
 
     /**
-     * Controls the events on the touchscreen for GAMEMODE.MODE_NRML_COM
+     * Controls the events on the touchscreen for eGameMode.MODE_NRML_COM
      *
      * @param event the touch event
      * @return a new sceneId if it changed, or this id if it didn't change
@@ -852,8 +837,6 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
                     }
                 }
                 break;
-            default:
-                Log.i("Other", "Undefined action: " + action);
         }
         return this.id;
     }
@@ -947,14 +930,14 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
      * @return the opponent's collision CircleComponent, null if there's no playerCom initialized and the playerID doesn't correspond to playerOne, playerTwo or playerCom
      */
     public CircleComponent getOpponentCollisionComponent(int playerID) {
-        if (gameMode == GAMEMODE.MODE_CRSH_2P || gameMode == GAMEMODE.MODE_NRML_2P) {
+        if (gameMode == eGameMode.MODE_CRSH_2P || gameMode == eGameMode.MODE_NRML_2P) {
             if (playerID == 1) {
                 return playerTwo.playerCollision;
             } else if (playerID == 2) {
                 return playerOne.playerCollision;
             }
         }
-        if (gameMode == GAMEMODE.MODE_CRSH_COM || gameMode == GAMEMODE.MODE_NRML_COM) {
+        if (gameMode == eGameMode.MODE_CRSH_COM || gameMode == eGameMode.MODE_NRML_COM) {
             if (playerID == 1) {
                 return playerCom.playerCollision;
             } else if (playerID == 0) {
@@ -971,7 +954,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
      */
     public void hitOpponent(int playerID) {
         boolean tookHit = false;
-        if (gameMode == GAMEMODE.MODE_CRSH_2P || gameMode == GAMEMODE.MODE_NRML_2P) {
+        if (gameMode == eGameMode.MODE_CRSH_2P || gameMode == eGameMode.MODE_NRML_2P) {
             if (playerID == 1 && !playerOne.isTakingHit() && !playerTwo.isTakingHit()) {
                 playerTwo.takeHit();
                 lifeTwo.loseALife();
@@ -985,7 +968,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
                 playerOne.togglePlayerMode();
                 playerTwo.togglePlayerMode();
                 timer.resetTimer();
-                if (gameMode == GAMEMODE.MODE_CRSH_2P) {
+                if (gameMode == eGameMode.MODE_CRSH_2P) {
                     if (playerOne.isOnAttack()) {
                         deactivateJoystick(1);
                     } else if (playerTwo.isOnAttack()) {
@@ -993,7 +976,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
                     }
                 }
             }
-        } else if (gameMode == GAMEMODE.MODE_CRSH_COM || gameMode == GAMEMODE.MODE_NRML_COM) {
+        } else if (gameMode == eGameMode.MODE_CRSH_COM || gameMode == eGameMode.MODE_NRML_COM) {
             if (playerID == 1 && !playerCom.isTakingHit() && !playerOne.isTakingHit()) {
                 playerCom.takeHit();
                 lifeTwo.loseALife();
@@ -1007,7 +990,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
                 timer.resetTimer();
                 playerOne.togglePlayerMode();
                 playerCom.togglePlayerMode();
-                if (gameMode == GAMEMODE.MODE_CRSH_COM) {
+                if (gameMode == eGameMode.MODE_CRSH_COM) {
                     if (playerOne.isOnAttack()) {
                         deactivateJoystick(1);
                     }
@@ -1016,11 +999,14 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         }
     }
 
+    /**
+     * Toggles the player modes
+     */
     public void togglePlayerModes() {
-        if (gameMode == GAMEMODE.MODE_NRML_2P || gameMode == GAMEMODE.MODE_CRSH_2P) {
+        if (gameMode == eGameMode.MODE_NRML_2P || gameMode == eGameMode.MODE_CRSH_2P) {
             playerOne.togglePlayerMode();
             playerTwo.togglePlayerMode();
-        } else if (gameMode == GAMEMODE.MODE_NRML_COM || gameMode == GAMEMODE.MODE_CRSH_COM) {
+        } else if (gameMode == eGameMode.MODE_NRML_COM || gameMode == eGameMode.MODE_CRSH_COM) {
             playerOne.togglePlayerMode();
             playerCom.togglePlayerMode();
         }
@@ -1051,9 +1037,8 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
      */
     @Override
     public void onSensorChanged(SensorEvent event) {
-        Log.i("SensorChanged ", "gameMode is " + gameMode);
-        if ((gameMode == GAMEMODE.MODE_CRSH_COM && playerOne.isOnAttack()) ||
-                gameMode == GAMEMODE.MODE_CRSH_2P) {
+        if ((gameMode == eGameMode.MODE_CRSH_COM && playerOne.isOnAttack()) ||
+                gameMode == eGameMode.MODE_CRSH_2P) {
             if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
                 float xAccel = event.values[0];
                 float yAccel = event.values[1];
@@ -1077,7 +1062,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
                 }
                 if (playerOne.isOnAttack() && !playerOne.onBounceBack()) {
                     playerOne.setVelocity(yAccel * GameConstants.ACCELEROMETER_MULTIPLIER, xAccel * GameConstants.ACCELEROMETER_MULTIPLIER);
-                } else if (playerTwo != null && gameMode == GAMEMODE.MODE_CRSH_2P && playerTwo.isOnAttack() && !playerTwo.onBounceBack()) {
+                } else if (playerTwo != null && gameMode == eGameMode.MODE_CRSH_2P && playerTwo.isOnAttack() && !playerTwo.onBounceBack()) {
                     playerTwo.setVelocity(yAccel * GameConstants.ACCELEROMETER_MULTIPLIER, xAccel * GameConstants.ACCELEROMETER_MULTIPLIER);
                 }
             }

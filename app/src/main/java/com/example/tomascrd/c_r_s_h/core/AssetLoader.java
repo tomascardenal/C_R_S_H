@@ -8,6 +8,8 @@ import com.example.tomascrd.c_r_s_h.R;
 
 /**
  * Loads data from assets
+ *
+ * @author Tomás Cardenal López
  */
 public class AssetLoader {
     /**

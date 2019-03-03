@@ -84,7 +84,8 @@ public class LifeComponent extends DrawableComponent {
      * @param lives        The number of lifes of this life component
      * @param rightSide    Whether this Life Component is on the right or the left side of the screen
      */
-    public LifeComponent(Context c, MainGameScene gameCallback, Rect area, int lives, boolean rightSide, int player) {
+    public LifeComponent(Context c, MainGameScene gameCallback, Rect area, int lives, boolean rightSide) {
+        //Initialize variables
         this.context = c;
         this.gameCallback = gameCallback;
         this.area = area;
@@ -119,7 +120,7 @@ public class LifeComponent extends DrawableComponent {
     }
 
     /**
-     * Makes this player lose a life on this lifecomponent
+     * Makes this player lose a life on this life component
      */
     public void loseALife() {
         lifesLeft--;
@@ -129,7 +130,7 @@ public class LifeComponent extends DrawableComponent {
     }
 
     /**
-     * Resets the lifecomponent
+     * Resets the life component
      */
     public void resetLife() {
         this.leftRect = new Rect(area.left, area.top, area.right, area.bottom);
@@ -146,7 +147,7 @@ public class LifeComponent extends DrawableComponent {
     }
 
     /**
-     * Draws the lifecomponent on screen
+     * Draws the life component on screen
      *
      * @param c the canvas to draw
      */
@@ -165,35 +166,18 @@ public class LifeComponent extends DrawableComponent {
      */
     private void losingCycle() {
         lostPaint.setColor(Color.BLACK);
-        if (rightSide) {
-            if (lifesLeft == 3) {
-                if (leftRect.width() > area.width() / 3 * 2) {
-                    rightInset();
-                }
-            } else if (lifesLeft == 2) {
-                if (leftRect.width() > area.width() / 3) {
-                    rightInset();
-                    leftPaint.setColor(Color.YELLOW);
-                }
-            } else if (lifesLeft == 1) {
-                if (leftRect.width() > 0) {
-                    rightInset();
-                }
+        if (lifesLeft == 3) {
+            if (leftRect.width() > area.width() / 3 * 2) {
+                doRectInset();
             }
-        } else {
-            if (lifesLeft == 3) {
-                if (leftRect.width() > area.width() / 3 * 2) {
-                    leftInset();
-                }
-            } else if (lifesLeft == 2) {
-                if (leftRect.width() > area.width() / 3) {
-                    leftInset();
-                    leftPaint.setColor(Color.YELLOW);
-                }
-            } else if (lifesLeft == 1) {
-                if (leftRect.width() > 0) {
-                    leftInset();
-                }
+        } else if (lifesLeft == 2) {
+            if (leftRect.width() > area.width() / 3) {
+                doRectInset();
+                leftPaint.setColor(Color.YELLOW);
+            }
+        } else if (lifesLeft == 1) {
+            if (leftRect.width() > 0) {
+                doRectInset();
             }
         }
         if (lifesLeft == 1) {
@@ -205,17 +189,20 @@ public class LifeComponent extends DrawableComponent {
     }
 
 
-    private void rightInset() {
-        leftRect.inset(3, 0);
-        leftRect.offset(3, 0);
-        lostRect.inset(-3, 0);
-        lostRect.offset(3, 0);
-    }
-
-    private void leftInset() {
-        leftRect.inset(3, 0);
-        leftRect.offset(-3, 0);
-        lostRect.inset(-3, 0);
-        lostRect.offset(-3, 0);
+    /**
+     * Inset rects to the right or left depending on the rightSide variable
+     */
+    private void doRectInset() {
+        if (rightSide) {
+            leftRect.inset(3, 0);
+            leftRect.offset(3, 0);
+            lostRect.inset(-3, 0);
+            lostRect.offset(3, 0);
+        } else {
+            leftRect.inset(3, 0);
+            leftRect.offset(-3, 0);
+            lostRect.inset(-3, 0);
+            lostRect.offset(-3, 0);
+        }
     }
 }

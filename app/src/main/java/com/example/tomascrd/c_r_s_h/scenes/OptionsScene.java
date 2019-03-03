@@ -13,6 +13,7 @@ import com.example.tomascrd.c_r_s_h.components.SceneCrsh;
 import com.example.tomascrd.c_r_s_h.components.TextButtonComponent;
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
 import com.example.tomascrd.c_r_s_h.core.GameEngine;
+import com.example.tomascrd.c_r_s_h.structs.eTextAlignment;
 
 /**
  * Represents the options menu
@@ -79,7 +80,7 @@ public class OptionsScene extends SceneCrsh {
                 Color.TRANSPARENT, 0,
                 getContext().getString(R.string.optMusic),
                 Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN),
-                TextButtonComponent.TEXT_ALIGN.ALIGN_LEFT,
+                eTextAlignment.ALIGN_LEFT,
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS / 3,
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS);
 
@@ -92,7 +93,7 @@ public class OptionsScene extends SceneCrsh {
                 Color.TRANSPARENT, 0,
                 getContext().getString(R.string.optVibrate),
                 Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN),
-                TextButtonComponent.TEXT_ALIGN.ALIGN_LEFT,
+                eTextAlignment.ALIGN_LEFT,
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS / 3,
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 7);
 
@@ -105,7 +106,7 @@ public class OptionsScene extends SceneCrsh {
                 Color.TRANSPARENT, 0,
                 getContext().getString(R.string.optSoundEffects),
                 Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN),
-                TextButtonComponent.TEXT_ALIGN.ALIGN_LEFT,
+                eTextAlignment.ALIGN_LEFT,
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS / 3,
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 13);
     }
@@ -171,8 +172,6 @@ public class OptionsScene extends SceneCrsh {
             case MotionEvent.ACTION_MOVE: // Any finger moves
 
                 break;
-            default:
-                Log.i("Other", "Undefined action: " + action);
         }
         return this.id;
     }
