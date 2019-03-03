@@ -15,6 +15,7 @@ import com.example.tomascrd.c_r_s_h.scenes.CreditScene;
 import com.example.tomascrd.c_r_s_h.scenes.GameSettingsScene;
 import com.example.tomascrd.c_r_s_h.scenes.MainGameScene;
 import com.example.tomascrd.c_r_s_h.scenes.MainMenuScene;
+import com.example.tomascrd.c_r_s_h.scenes.MapChooserScene;
 import com.example.tomascrd.c_r_s_h.scenes.MapCreatorScene;
 import com.example.tomascrd.c_r_s_h.scenes.NewGameScene;
 import com.example.tomascrd.c_r_s_h.scenes.OptionsScene;
@@ -96,7 +97,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
     /**
      * Current map Id to be loaded
      */
-    public int currentMapID;
+    private int currentMapID;
     /**
      * Speed for game timer
      */
@@ -118,7 +119,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
         this.surfaceHolder = getHolder();
         this.surfaceHolder.addCallback(this);
         this.context = context;
-        this.currentMapID = 666;
+        this.setCurrentMapID(-10);
         optionsManager = new OptionsManager(context);
         loader = new AssetLoader(context);
         thread = new GameThread();
@@ -195,12 +196,19 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
                             currentScene = new GameSettingsScene(context, screenWidth, screenHeight, this);
                         }
                         break;
+                    case 8://MapChooserScene
+                        if (loadSavedScene && savedScene != null && savedScene instanceof MapChooserScene) {
+                            currentScene = savedScene;
+                        } else {
+                            currentScene = new MapChooserScene(context, screenWidth, screenHeight, this);
+                        }
+                        break;
                     case 97: //MainGameScene eGameMode.MODE_NRML_COM
                         if (loadSavedScene && savedScene != null && savedScene instanceof MainGameScene && ((MainGameScene) savedScene).gameMode == eGameMode.MODE_NRML_COM) {
                             currentScene = savedScene;
                         } else {
                             mainGameScene.setGameMode(eGameMode.MODE_NRML_COM);
-                            mainGameScene.setMapLoadID(currentMapID);
+                            mainGameScene.setMapLoadID(getCurrentMapID());
                             mainGameScene.reloadMap();
                             currentScene = mainGameScene;
                         }
@@ -213,7 +221,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
                             currentScene = savedScene;
                         } else {
                             mainGameScene.setGameMode(eGameMode.MODE_CRSH_COM);
-                            mainGameScene.setMapLoadID(currentMapID);
+                            mainGameScene.setMapLoadID(getCurrentMapID());
                             mainGameScene.reloadMap();
                             currentScene = mainGameScene;
                         }
@@ -226,7 +234,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
                             currentScene = savedScene;
                         } else {
                             mainGameScene.setGameMode(eGameMode.MODE_NRML_2P);
-                            mainGameScene.setMapLoadID(currentMapID);
+                            mainGameScene.setMapLoadID(getCurrentMapID());
                             mainGameScene.reloadMap();
                             currentScene = mainGameScene;
                         }
@@ -236,7 +244,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
                             currentScene = savedScene;
                         } else {
                             mainGameScene.setGameMode(eGameMode.MODE_CRSH_2P);
-                            mainGameScene.setMapLoadID(currentMapID);
+                            mainGameScene.setMapLoadID(getCurrentMapID());
                             mainGameScene.reloadMap();
                             currentScene = mainGameScene;
                         }
@@ -299,7 +307,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
         updateMusicPlayer();
         //
         if (mainGameScene == null) {
-            mainGameScene = new MainGameScene(context, screenWidth, screenHeight, this, eGameMode.MODE_NRML_COM, currentMapID);
+            mainGameScene = new MainGameScene(context, screenWidth, screenHeight, this, eGameMode.MODE_NRML_COM, getCurrentMapID());
         }
         //Starting the thread
         thread.setWorking(true);
@@ -445,6 +453,28 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
         this.optionsManager.setTimerSpeed(currentSpeed);
         if (this.mainGameScene != null) {
             this.mainGameScene.setTimerSpeed(currentSpeed);
+        }
+    }
+
+    /**
+     * Gets the current map ID
+     *
+     * @return the current map ID
+     */
+    public int getCurrentMapID() {
+        return currentMapID;
+    }
+
+    /**
+     * Sets the current map ID to be played
+     *
+     * @param currentMapID the new map ID
+     */
+    public void setCurrentMapID(int currentMapID) {
+        this.currentMapID = currentMapID;
+        if (mainGameScene != null) {
+            mainGameScene.setMapLoadID(currentMapID);
+            mainGameScene.reloadMap();
         }
     }
 

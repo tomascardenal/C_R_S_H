@@ -113,14 +113,13 @@ public class MapComponent extends DrawableComponent {
         loader.scaleTileBitmaps(this.reference, this.reference);
         //Load map - test map for the moment
         if (mapID == 666) {
-            if (!loadMap(666)) {
-                createTestMap();
-                saveMap();
-            } else {
-                Log.i("CrshDebug", "Map 666 loaded");
-            }
-        } else if (mapID == 0) {
+            createTestMap();
+        } else if (mapID == -20) {
             loadEmptyMap();
+        } else if (mapID == -10) {
+            createDefaultMap();
+        } else {
+            loadMap(mapID);
         }
     }
 
@@ -258,6 +257,30 @@ public class MapComponent extends DrawableComponent {
             }
         }
         dataArray = testArray;
+    }
+
+    /**
+     * Creates and stores an in dataArray a Default Map
+     */
+    private void createDefaultMap() {
+        this.mapID = -10;
+        TileTypes.eTileType[][] defaultArray = new TileTypes.eTileType[GameConstants.MAPAREA_ROWS][GameConstants.MAPAREA_COLUMNS];
+        for (int i = 0; i < defaultArray.length; i++) {
+            for (int j = 0; j < defaultArray[i].length; j++) {
+                if (i == 0 || i == defaultArray.length - 1 || j == 0 || j == defaultArray[i].length - 1) {
+                    defaultArray[i][j] = TileTypes.intToTileType(0);
+                } else if (((j >= 5 && j < 7) || (j >= 19 && j < 21)) && ((i >= 5 && i < 7) || (i >= 9 && i < 11))) {
+                    defaultArray[i][j] = TileTypes.intToTileType(0);
+                } else if ((i >= 3 && i < 7 || i >= 9 && i < 13) && (j >= 3 && j < 7 || j >= 19 && j < 23)) {
+                    defaultArray[i][j] = TileTypes.intToTileType(2);
+                } else if ((j >= 9 && j < 17) && (i == 3 || i == 12)) {
+                    defaultArray[i][j] = TileTypes.intToTileType(3);
+                } else {
+                    defaultArray[i][j] = TileTypes.intToTileType(1);
+                }
+            }
+            dataArray = defaultArray;
+        }
     }
 
     /**

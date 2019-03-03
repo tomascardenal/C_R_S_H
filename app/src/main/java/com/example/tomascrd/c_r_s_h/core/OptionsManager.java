@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.example.tomascrd.c_r_s_h.R;
 import com.example.tomascrd.c_r_s_h.components.VisualTimerComponent;
 import com.example.tomascrd.c_r_s_h.structs.MapReference;
 import com.example.tomascrd.c_r_s_h.structs.eTimerSpeed;
@@ -315,12 +316,19 @@ public class OptionsManager {
      * @return the name of the map if it exists
      */
     public String getMapNameByID(int id) {
+        if (id == -10) {
+            return context.getString(R.string.defaultMapName);
+        }
         for (MapReference ref : mapReferences) {
             if (ref.mapId == id) {
                 return ref.mapName;
             }
         }
         return null;
+    }
+
+    public ArrayList<MapReference> getMapReferences() {
+        return mapReferences;
     }
 
     /**

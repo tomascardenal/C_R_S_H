@@ -85,4 +85,8 @@
     <string name="playerOneI">Jugador 1</string>
     <string name="playerTwoI">Jugador 2</string>
     <string name="playerComI" translatable="false">COM</string>
+    <string name="btnChooseMap" translatable="false"></string>
+    <string name="titleMapChooser">Escoge un mapa</string>
+    <string name="defaultMapName">Estándar</string>
+    <string name="toastLoadedGameMap">Se ha cargado el mapa %s para jugar</string>
 </resources>

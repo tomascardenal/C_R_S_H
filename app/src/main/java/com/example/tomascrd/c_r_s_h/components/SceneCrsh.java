@@ -109,7 +109,7 @@ public class SceneCrsh {
         float[] positions = {0, screenWidth / 2, screenWidth};
         gradientSunrise = new LinearGradient(0, 0, screenWidth, screenHeight, gradientColors, positions, Shader.TileMode.CLAMP);
 
-        int[] gradientColors2 = {Color.rgb(17, 30, 108), Color.DKGRAY, Color.CYAN};
+        int[] gradientColors2 = {Color.rgb(17, 30, 108), Color.LTGRAY, Color.CYAN};
         float[] positions2 = {0, screenWidth / 2, screenWidth};
         gradientNight = new LinearGradient(0, 0, screenWidth, screenHeight, gradientColors2, positions2, Shader.TileMode.CLAMP);
 

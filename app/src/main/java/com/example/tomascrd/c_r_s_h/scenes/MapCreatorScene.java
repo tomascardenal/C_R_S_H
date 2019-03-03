@@ -91,7 +91,7 @@ public class MapCreatorScene extends SceneCrsh {
     }
 
     private void getNewEmptyMap(boolean onStart) {
-        this.creatorMap = new MapComponent(0, context, screenWidth, screenHeight, engineCallback.loader);
+        this.creatorMap = new MapComponent(-20, context, screenWidth, screenHeight, engineCallback.loader);
         this.creatorMap.loadTileArray();
         this.currentMapName = context.getString(R.string.unnamedMap);
         this.newId = engineCallback.optionsManager.getMapNames().size();
@@ -379,8 +379,10 @@ public class MapCreatorScene extends SceneCrsh {
      */
     private void iterateTiles(MotionEvent event) {
         Point touchPoint = determineTouchTile(event);
+        int spawnTwoY = creatorMap.tileArray.length - 3;
+        int spawnTwoX = creatorMap.tileArray[creatorMap.tileArray.length - 3].length - 3;
         if (touchPoint.x < creatorMap.tileArray[0].length - 1 && touchPoint.y < creatorMap.tileArray.length - 1
-                && touchPoint.x > 0 && touchPoint.y > 0) {
+                && touchPoint.x > 0 && touchPoint.y > 0 && !(touchPoint.x == 2 && touchPoint.y == 2) && !(touchPoint.x == spawnTwoX && touchPoint.y == spawnTwoY)) {
             TileComponent editTile = creatorMap.tileArray[touchPoint.y][touchPoint.x];
             int currentType = TileTypes.tileTypeToInt(editTile.getTileType());
             if (currentType < GameConstants.E_TILE_TYPES.length - 1) {

@@ -5,7 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import com.example.tomascrd.c_r_s_h.R;
@@ -46,6 +45,10 @@ public class NewGameScene extends SceneCrsh {
      */
     private ButtonComponent btnGameSettings;
     /**
+     * Button for map chooser
+     */
+    private ButtonComponent btnChooseMap;
+    /**
      * Constant id for NewGameScene
      */
     public static final int NEWGAME_ID = 1;
@@ -61,6 +64,7 @@ public class NewGameScene extends SceneCrsh {
     public NewGameScene(Context context, int screenWidth, int screenHeight, GameEngine engineCallback) {
         super(context, NEWGAME_ID, screenWidth, screenHeight);
         this.engineCallback = engineCallback;
+
         //Title text
         pTitleText = new Paint();
         pTitleText.setTypeface(Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN));
@@ -114,8 +118,17 @@ public class NewGameScene extends SceneCrsh {
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 7, Color.GRAY, 100, true, 7);
         btnGameSettings.setClickEffectParameters(Color.GRAY, Color.DKGRAY, 190, 50);
 
+        btnChooseMap = new ButtonComponent(context, Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_AWESOME), context.getString(R.string.btnChooseMap),
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 2,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 6,
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 4,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 7, Color.GRAY, 100, true, 8);
+        btnChooseMap.setClickEffectParameters(Color.GRAY, Color.DKGRAY, 190, 50);
+
         togglePlayerModeButtons(true);
         toggleModeButtons(false);
+
+
     }
 
     /**
@@ -145,6 +158,7 @@ public class NewGameScene extends SceneCrsh {
         btnCRSHmode.draw(c);
         btnStartGame.draw(c);
         btnGameSettings.draw(c);
+        btnChooseMap.draw(c);
     }
 
     /**
@@ -160,6 +174,9 @@ public class NewGameScene extends SceneCrsh {
             case MotionEvent.ACTION_POINTER_DOWN:  // Second finger and so on
                 if (isClick(btnGameSettings, event)) {
                     btnGameSettings.setHeldDown(true);
+                }
+                if (isClick(btnChooseMap, event)) {
+                    btnChooseMap.setHeldDown(true);
                 }
                 break;
 
@@ -184,6 +201,9 @@ public class NewGameScene extends SceneCrsh {
                 if (isClick(btnStartGame, event)) {
                     return btnStartGame.getSceneId();
                 }
+                if (isClick(btnChooseMap, event)) {
+                    return btnChooseMap.getSceneId();
+                }
             case MotionEvent.ACTION_MOVE: // Any finger moves
                 if (!isClickByAny(btnGameSettings, event) && btnGameSettings.isHeldDown()) {
                     btnGameSettings.setHeldDown(false);
@@ -191,6 +211,13 @@ public class NewGameScene extends SceneCrsh {
                 if (isClickByAny(btnGameSettings, event) && !btnGameSettings.isHeldDown()) {
                     btnGameSettings.setHeldDown(true);
                 }
+                if (!isClickByAny(btnChooseMap, event) && btnChooseMap.isHeldDown()) {
+                    btnChooseMap.setHeldDown(false);
+                }
+                if (isClickByAny(btnChooseMap, event) && !btnChooseMap.isHeldDown()) {
+                    btnChooseMap.setHeldDown(true);
+                }
+
                 break;
         }
         return this.id;
