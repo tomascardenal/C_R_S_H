@@ -251,7 +251,7 @@ public class PlayerCrsh extends DrawableComponent {
     public int getPlayerLifes() {
         return this.playerLifes;
     }
-    
+
     /**
      * Removes, if possible, a life from this player
      */

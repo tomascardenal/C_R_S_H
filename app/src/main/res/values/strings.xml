@@ -28,7 +28,7 @@
     <string name="creditsMusic">Música:\nLow Costa Perreo de YVNG N31L</string>
     <string name="creditsFonts">Fuentes:\nFontAwesome, de FontAwesome\nHomeSpun, de AEnigma fonts\nKarma Future, de Typodermic Fonts\n</string>
     <string name="creditsSoundEffects">Efectos de sonido:\nTomás Cardenal López</string>
-    <string name="creditsGraphics">"Graphics:\nTiles de hierba por Alba Pereira\nOtros tiles por OpenGameArt\nSci-Fi Gateway por Joseph Crown</string>
+    <string name="creditsGraphics">"Gráficos:\nTiles de hierba por Alba Pereira\nOtros tiles por OpenGameArt\nSci-Fi Gateway por Joseph Crown\nJugadores e icono por Tomás Cardenal López</string>
     <string name="pauseTitle">Juego en pausa</string>
     <string name="btnUnpause" translatable="false"></string>
     <string name="btnPause" translatable="false"></string>
