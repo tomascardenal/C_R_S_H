@@ -66,7 +66,6 @@ public class OptionsManager {
      * @param context The context for this OptionsManager
      */
     public OptionsManager(Context context) {
-        //TODO add sound effects
         this.context = context;
         preferences = context.getSharedPreferences(GameConstants.PREFERENCES_NAME, Context.MODE_PRIVATE);
         this.mapReferences = new ArrayList<MapReference>();
@@ -207,8 +206,6 @@ public class OptionsManager {
     public void setTimerSpeed(eTimerSpeed timerSpeed) {
         this.timerSpeed = timerSpeed;
     }
-
-    //TODO data consistency on maps and saving map names
 
     /**
      * Saves the list of maps as a pair of id's and names

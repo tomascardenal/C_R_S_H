@@ -28,13 +28,13 @@ public class RecordsScene extends SceneCrsh {
     /**
      * Starts a records screen
      *
-     * @param context      the application context
-     * @param screenWidth  this screen's width
-     * @param screenHeight this screen's height
+     * @param context        the application context
+     * @param screenWidth    this screen's width
+     * @param screenHeight   this screen's height
      * @param engineCallback callback to access gameEngine data
      */
     public RecordsScene(Context context, int screenWidth, int screenHeight, GameEngine engineCallback) {
-        //TODO records screen
+        //TODO add records
         super(context, RECORDS_ID, screenWidth, screenHeight);
         this.engineCallback = engineCallback;
         //Title text

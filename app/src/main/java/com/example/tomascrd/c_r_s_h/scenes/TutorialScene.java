@@ -58,7 +58,6 @@ public class TutorialScene extends SceneCrsh {
      * @param engineCallback callback to access gameEngine data
      */
     public TutorialScene(Context context, int screenWidth, int screenHeight, GameEngine engineCallback) {
-        //TODO tutorial screen
         super(context, TUTORIAL_ID, screenWidth, screenHeight);
         this.engineCallback = engineCallback;
         //Title text
@@ -67,8 +66,6 @@ public class TutorialScene extends SceneCrsh {
         pTitleText.setColor(Color.BLACK);
         pTitleText.setTextAlign(Paint.Align.CENTER);
         pTitleText.setTextSize((float) ((screenHeight / GameConstants.MENUSCREEN_COLUMNS) * 2));
-
-        //TODO Set player indicators (with maybe a player sprite)
         //Initialize variables
         this.engineCallback = engineCallback;
 

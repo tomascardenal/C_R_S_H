@@ -145,7 +145,6 @@ public class PlayerCrsh extends DrawableComponent {
      * @see CircleComponent
      */
     public PlayerCrsh(MainGameScene gameCallback, MapComponent mapCallback, String playerName, int playerId, boolean onAttack, CircleComponent playerCollision) {
-        //TODO Set player images
         //TODO add powerups
         //Initialize variables
         this.gameCallback = gameCallback;
