@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 
 import com.example.tomascrd.c_r_s_h.R;
+import com.example.tomascrd.c_r_s_h.components.ButtonComponent;
 import com.example.tomascrd.c_r_s_h.components.SceneCrsh;
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
 import com.example.tomascrd.c_r_s_h.core.GameEngine;
@@ -60,9 +61,21 @@ public class RecordsScene extends SceneCrsh {
      */
     private Paint pRecordsText;
     /**
-     * List of record references
+     * Button that empties the records
      */
-    private ArrayList<RecordReference> recordReferences;
+    private ButtonComponent btnEmptyRecords;
+    /**
+     * Button for confirming
+     */
+    private ButtonComponent btnConfirmYes;
+    /**
+     * Button for unconfirming
+     */
+    private ButtonComponent btnConfirmNo;
+    /**
+     * Controls whether the scene is showing the records or confirming their deletion
+     */
+    private boolean onConfirmDelete;
     /**
      * Strings for the records
      */
@@ -77,7 +90,6 @@ public class RecordsScene extends SceneCrsh {
      * @param engineCallback callback to access gameEngine data
      */
     public RecordsScene(Context context, int screenWidth, int screenHeight, GameEngine engineCallback) {
-        //TODO add records
         super(context, RECORDS_ID, screenWidth, screenHeight);
         this.engineCallback = engineCallback;
         //Title text
@@ -93,10 +105,33 @@ public class RecordsScene extends SceneCrsh {
         this.maxAlphaCounter = 0;
         this.incrementAlpha = true;
         this.nextRecords = false;
-        this.recordReferences = engineCallback.optionsManager.getRecordReferences();
+
         generateRecordStrings();
 
-        //Credits text
+
+        Typeface fontawesome = Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_AWESOME);
+        this.btnEmptyRecords = new ButtonComponent(context,
+                fontawesome, context.getString(R.string.btnEmptyRecords),
+                0, 0, screenWidth / 16, screenWidth / 16, Color.TRANSPARENT, 0, false, -1);
+
+        this.btnConfirmYes = new ButtonComponent(context, fontawesome, context.getString(R.string.btnConfirmYes),
+                (int) (screenWidth / 2 - btnEmptyRecords.width * 4),
+                (int) screenHeight / 2,
+                (int) (screenWidth / 2 - btnEmptyRecords.width * 3),
+                (int) (screenHeight / 2 + btnEmptyRecords.height),
+                Color.TRANSPARENT, 0,
+                false, -1);
+
+        this.btnConfirmNo = new ButtonComponent(context, fontawesome,
+                context.getString(R.string.btnConfirmNo),
+                (int) (screenWidth / 2 + btnEmptyRecords.width * 3),
+                (int) screenHeight / 2,
+                (int) (screenWidth / 2 + btnEmptyRecords.width * 4),
+                (int) (screenHeight / 2 + btnEmptyRecords.height),
+                Color.TRANSPARENT, 0,
+                false, -1);
+
+        //Records text
         pRecordsText = new Paint();
         pRecordsText.setTypeface(Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN));
         pRecordsText.setColor(Color.BLACK);
@@ -106,11 +141,17 @@ public class RecordsScene extends SceneCrsh {
     }
 
     private void generateRecordStrings() {
-        if (recordReferences.size() > 0) {
+        if (recordStrings != null) {
+            recordStrings.clear();
+            recordStrings = null;
+        }
+        if (engineCallback.optionsManager.getRecordReferences().size() > 0) {
             recordStrings = new ArrayList<>();
-            for (RecordReference ref : recordReferences) {
-                recordStrings.add(String.format("#%02d %15s > %04d pts", recordReferences.indexOf(ref), ref.playerName, ref.highScore));
+            for (RecordReference ref : engineCallback.optionsManager.getRecordReferences()) {
+                recordStrings.add(String.format("#%02d %15s > %04d pts", engineCallback.optionsManager.getRecordReferences().indexOf(ref) + 1, ref.playerName, ref.highScore));
             }
+        } else {
+            recordStrings = new ArrayList<>();
         }
     }
 
@@ -161,42 +202,56 @@ public class RecordsScene extends SceneCrsh {
         //General background
         super.draw(c);
         //Title text
-        c.drawText(context.getString(R.string.btnRecords), screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9, screenHeight / GameConstants.MENUSCREEN_ROWS, pTitleText);
-        //Buttons
-        backBtn.draw(c);
-        //Records
-        if (recordReferences.size() == 0) {
-            Log.i("CrshDebug", "drawin norecords");
-            c.drawText(context.getString(R.string.infoNoRecords), screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9, screenHeight / GameConstants.MENUSCREEN_ROWS * 3, pRecordsText);
-        } else if (recordStrings.size() < 6) {
-            Log.i("CrshDebug", "drawin size <6");
-            int row = 2;
-            for (String line : recordStrings) {
-                float x = screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9;
-                float y = screenHeight / GameConstants.MENUSCREEN_ROWS * row;
-                c.drawText(line, x, y, pRecordsText);
-                row++;
-            }
+        String title;
+        if (onConfirmDelete) {
+            title = context.getString(R.string.titleRecordsDelete);
+            btnConfirmNo.draw(c);
+            btnConfirmYes.draw(c);
         } else {
-            Log.i("CrshDebug", "drawin size big");
-            pRecordsText.setAlpha(textAlpha);
-            int row = 2;
-            if (recordPageOne) {
-                for (int i = 0; i < 5; i++) {
+            title = context.getString(R.string.btnRecords);
+            backBtn.draw(c);
+            btnEmptyRecords.draw(c);
+        }
+        c.drawText(title, screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9, screenHeight / GameConstants.MENUSCREEN_ROWS, pTitleText);
+
+        //Records
+        if (onConfirmDelete) {
+
+        } else {
+            if (engineCallback.optionsManager.getRecordReferences().size() == 0) {
+                Log.i("CrshDebug", "drawin norecords");
+                c.drawText(context.getString(R.string.infoNoRecords), screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9, screenHeight / GameConstants.MENUSCREEN_ROWS * 3, pRecordsText);
+            } else if (recordStrings.size() < 6) {
+                Log.i("CrshDebug", "drawin size <6");
+                int row = 2;
+                for (String line : recordStrings) {
                     float x = screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9;
                     float y = screenHeight / GameConstants.MENUSCREEN_ROWS * row;
-                    c.drawText(recordStrings.get(i), x, y, pRecordsText);
+                    c.drawText(line, x, y, pRecordsText);
                     row++;
                 }
             } else {
-                for (int i = 5; i < recordStrings.size(); i++) {
-                    float x = screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9;
-                    float y = screenHeight / GameConstants.MENUSCREEN_ROWS * row;
-                    c.drawText(recordStrings.get(i), x, y, pRecordsText);
-                    row++;
+                Log.i("CrshDebug", "drawin size big");
+                pRecordsText.setAlpha(textAlpha);
+                int row = 2;
+                if (recordPageOne) {
+                    for (int i = 0; i < 5; i++) {
+                        float x = screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9;
+                        float y = screenHeight / GameConstants.MENUSCREEN_ROWS * row;
+                        c.drawText(recordStrings.get(i), x, y, pRecordsText);
+                        row++;
+                    }
+                } else {
+                    for (int i = 5; i < recordStrings.size(); i++) {
+                        float x = screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9;
+                        float y = screenHeight / GameConstants.MENUSCREEN_ROWS * row;
+                        c.drawText(recordStrings.get(i), x, y, pRecordsText);
+                        row++;
+                    }
                 }
             }
         }
+
     }
 
     /**
@@ -214,8 +269,22 @@ public class RecordsScene extends SceneCrsh {
 
             case MotionEvent.ACTION_UP:                     // Last finger up
             case MotionEvent.ACTION_POINTER_UP:  // Any other finger up
-                if (isClick(backBtn, event)) {
-                    return 0;
+                if (onConfirmDelete) {
+                    if (isClick(btnConfirmNo, event)) {
+                        onConfirmDelete = false;
+                    }
+                    if (isClick(btnConfirmYes, event)) {
+                        engineCallback.optionsManager.emptyRecords();
+                        generateRecordStrings();
+                        onConfirmDelete = false;
+                    }
+                } else {
+                    if (isClick(backBtn, event)) {
+                        return 0;
+                    }
+                    if (isClick(btnEmptyRecords, event)) {
+                        onConfirmDelete = true;
+                    }
                 }
             case MotionEvent.ACTION_MOVE: // Any finger moves
                 break;

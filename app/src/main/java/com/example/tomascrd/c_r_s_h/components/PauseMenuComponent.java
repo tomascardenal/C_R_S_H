@@ -257,7 +257,7 @@ public class PauseMenuComponent extends DrawableComponent {
         if (!onKeyboard) {
             c.drawText(pauseText, borderRect.exactCenterX(), this.borderRect.height() / GameConstants.GAMESCREEN_ROWS * 6, pText);
         } else {
-            c.drawText(pauseText, borderRect.exactCenterX(), this.borderRect.height() / GameConstants.GAMESCREEN_ROWS * 3, pText);
+            c.drawText(pauseText, borderRect.exactCenterX(), this.borderRect.height() / GameConstants.GAMESCREEN_ROWS * 4, pText);
         }
 
         //Button
@@ -266,7 +266,7 @@ public class PauseMenuComponent extends DrawableComponent {
             btnConfirmNo.draw(c);
         } else if (onEndScreen) {
             if (onKeyboard) {
-                c.drawText(recordString, gameSceneState.screenWidth / 2, btnKeyConfirmYes.btnRect.top, infoPaint);
+                c.drawText(recordString, gameSceneState.screenWidth / 2, btnKeyConfirmYes.btnRect.top + infoPaint.getTextSize(), infoPaint);
                 btnKeyConfirmYes.draw(c);
                 keyboard.draw(c);
             } else {

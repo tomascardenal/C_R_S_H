@@ -287,7 +287,7 @@ public class OptionsManager {
                 );
                 boolean add = true;
                 for (RecordReference ref : recordReferences) {
-                    if (ref.highScore == currentRecord.highScore && ref.playerName == currentRecord.playerName) {
+                    if (ref.highScore == currentRecord.highScore && ref.playerName.equals(currentRecord.playerName)) {
                         add = false;
                     }
                 }
@@ -326,6 +326,17 @@ public class OptionsManager {
     }
 
     /**
+     * Empties the records
+     */
+    public void emptyRecords() {
+        recordReferences.clear();
+        context.deleteFile(GameConstants.MAPLIST_FILE_NAME);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt(GameConstants.PREFERENCES_RECORDCOUNT, recordReferences.size());
+        editor.commit();
+    }
+
+    /**
      * Adds a map reference to the list
      *
      * @param reference The map reference to add
@@ -348,22 +359,30 @@ public class OptionsManager {
      */
     public void addRecord(RecordReference reference) {
         int ranking = -1;
-        if (recordReferences.size() > 1) {
-            for (int i = recordReferences.size() - 1; i >= 0; i--) {
-                if (recordReferences.get(i).highScore < reference.highScore) {
-                    ranking = i;
-                }
+        boolean add = true;
+        for (RecordReference ref : recordReferences) {
+            if (ref.highScore == reference.highScore && ref.playerName.equals(reference.playerName)) {
+                add = false;
             }
         }
-        if (ranking != -1) {
-            recordReferences.add(ranking, reference);
-        } else if (recordReferences.size() == 0) {
-            recordReferences.add(reference);
-        } else if (recordReferences.size() <= 10) {
-            if (ranking == -1) {
-                recordReferences.add(recordReferences.size(), reference);
-            } else {
+        if (add) {
+            if (recordReferences.size() > 1) {
+                for (int i = recordReferences.size() - 1; i >= 0; i--) {
+                    if (recordReferences.get(i).highScore < reference.highScore) {
+                        ranking = i;
+                    }
+                }
+            }
+            if (ranking != -1) {
                 recordReferences.add(ranking, reference);
+            } else if (recordReferences.size() == 0) {
+                recordReferences.add(reference);
+            } else if (recordReferences.size() <= 10) {
+                if (ranking == -1) {
+                    recordReferences.add(recordReferences.size(), reference);
+                } else {
+                    recordReferences.add(ranking, reference);
+                }
             }
         }
         Collections.sort(recordReferences);
