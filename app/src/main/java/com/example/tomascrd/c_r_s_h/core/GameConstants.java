@@ -29,6 +29,10 @@ public final class GameConstants {
      */
     public final static int COM_MIN_CYCLES = 30;
     /**
+     * Cycles during which a powerUp can be active
+     */
+    public final static int POWERUP_CYCLES = 180;
+    /**
      * Maximum COM velocity
      */
     public final static int COM_MAX_VELOCITY = 10;

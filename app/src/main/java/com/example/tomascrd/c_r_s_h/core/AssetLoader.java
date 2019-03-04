@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.example.tomascrd.c_r_s_h.R;
+import com.example.tomascrd.c_r_s_h.structs.PowerUps;
 
 /**
  * Loads data from assets
@@ -77,9 +78,17 @@ public class AssetLoader {
      */
     public Bitmap[] indicatorAttackBitmaps;
     /**
+     * Bitmaps for the powerups
+     */
+    private Bitmap[] powerUpBitmaps;
+    /**
+     * Indicates if the powerups were loaded
+     */
+    private boolean loadedPowerUps;
+    /**
      * Indicates if the tiles were loaded
      */
-    public boolean loadedTiles;
+    private boolean loadedTiles;
     /**
      * Indicates if the attack/defense indicators were loaded
      */
@@ -192,6 +201,49 @@ public class AssetLoader {
     }
 
     /**
+     * Loads and scales the powerup bitmaps with the given parameters
+     *
+     * @param width  the width of the bitmaps
+     * @param height the height of the bitmaps
+     */
+    public void loadPowerUps(int width, int height) {
+        this.powerUpBitmaps = new Bitmap[5];
+        this.powerUpBitmaps[0] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(context.getResources(), R.mipmap.pwer_timer_speed_up), width, height, true);
+        this.powerUpBitmaps[1] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(context.getResources(), R.mipmap.pwer_no_bounceback), width, height, true);
+        this.powerUpBitmaps[2] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(context.getResources(), R.mipmap.pwer_invincible), width, height, true);
+        this.powerUpBitmaps[3] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(context.getResources(), R.mipmap.pwer_slow_opponent), width, height, true);
+        this.powerUpBitmaps[4] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(context.getResources(), R.mipmap.pwer_slow_myself), width, height, true);
+        loadedPowerUps = true;
+    }
+
+    /**
+     * Gets a bitmap for a powerup corresponding to a value of the powerup enumerate
+     *
+     * @param powerUp a powerup from the enumerate
+     * @return a bitmap corresponding with the parameter
+     * @throws NullPointerException if the bitmaps aren't loaded yet
+     * @see PowerUps.ePowerUp
+     */
+    public Bitmap getPowerUpBitmap(PowerUps.ePowerUp powerUp) {
+        if (!loadedPowerUps) {
+            throw new NullPointerException("You need to load the images first and give a width and height, call loadPowerUps(int,int)");
+        }
+        switch (powerUp) {
+            case POWERUP_TIMER_STOP:
+                return this.powerUpBitmaps[0];
+            case POWERUP_NO_BOUNCEBACK:
+                return this.powerUpBitmaps[1];
+            case POWERUP_INVINCIBLE:
+                return this.powerUpBitmaps[2];
+            case POWERUP_SLOW_OPPONENT:
+                return this.powerUpBitmaps[3];
+            case POWERUP_SLOW_MYSELF:
+                return this.powerUpBitmaps[4];
+        }
+        return null;
+    }
+
+    /**
      * Informs if the indicators were already loaded
      *
      * @return the value of the boolean
@@ -207,5 +259,23 @@ public class AssetLoader {
      */
     public boolean arePlayersLoaded() {
         return playersLoaded;
+    }
+
+    /**
+     * Informs if the powerup images were already loaded
+     *
+     * @return the value of the boolean
+     */
+    public boolean arePowerUpsLoaded() {
+        return loadedPowerUps;
+    }
+
+    /**
+     * Informs if the tile images were already loaded
+     *
+     * @return the value of the boolean
+     */
+    public boolean areTilesLoaded() {
+        return loadedTiles;
     }
 }

@@ -36,7 +36,7 @@ public class CreditScene extends SceneCrsh {
     /**
      * Reference to credit strings on strings.xml files
      */
-    private static int[] creditReference = {R.string.creditsFonts, R.string.creditsMusic, R.string.creditsSoundEffects, R.string.creditsGraphics};
+    private static int[] creditReference = {R.string.creditsFonts, R.string.creditsMusic, R.string.creditsSoundEffects, R.string.creditsGraphics, R.string.creditsGraphics2, R.string.creditsThankYou};
     /**
      * Index of the current credit string to show
      */

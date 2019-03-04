@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
 
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
 import com.example.tomascrd.c_r_s_h.core.AssetLoader;
@@ -107,7 +106,7 @@ public class MapComponent extends DrawableComponent {
         this.yPos = hReference;
         this.xLeft = 3 * reference;
         this.yTop = reference + hReference;
-        if (!loader.loadedTiles) {
+        if (!loader.areTilesLoaded()) {
             loader.loadTiles();
         }
         loader.scaleTileBitmaps(this.reference, this.reference);

@@ -3,13 +3,13 @@ package com.example.tomascrd.c_r_s_h.components;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.util.Log;
 
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
 import com.example.tomascrd.c_r_s_h.scenes.MainGameScene;
+import com.example.tomascrd.c_r_s_h.structs.PowerUps;
 import com.example.tomascrd.c_r_s_h.structs.TileTypes;
 import com.example.tomascrd.c_r_s_h.structs.eSoundEffect;
 
@@ -83,11 +83,11 @@ public class PlayerCrsh extends DrawableComponent {
     /**
      * Determines if this player bounced back with a small bounce
      */
-    protected boolean bounceBackSmall;
+    private boolean bounceBackSmall;
     /**
      * Determines if this player bounced back with a big bounce
      */
-    protected boolean bounceBackBig;
+    private boolean bounceBackBig;
     /**
      * The current bounceBackSmall cycle, if on bounceBackSmall
      */
@@ -125,6 +125,46 @@ public class PlayerCrsh extends DrawableComponent {
      */
     public Rect imageRect;
     /**
+     * Index for the next powerup
+     */
+    private int powerUpIndex;
+    /**
+     * Current powerup Cycle
+     */
+    private int currentPowerUpCycle;
+    /**
+     * Current powerup loaded
+     */
+    private PowerUps.ePowerUp currentPowerUp;
+    /**
+     * Different stages of power up, determined by points
+     */
+    private static final int[] POWER_UP_AT = {500, 1000, 2000, 3500, 5000, 7000, 9000};
+    /**
+     * Indicates if the timer stop power up is on
+     */
+    private boolean powerTimerStop;
+    /**
+     * Indicates if the no bounceback power up is on
+     */
+    private boolean powerNoBounceback;
+    /**
+     * Indicates if the invincible power up is on
+     */
+    private boolean powerInvincible;
+    /**
+     * Indicates if the slow opponent power up is on
+     */
+    private boolean powerSlowOpponent;
+    /**
+     * Indicates if the opponent is slowing you down with a powerup
+     */
+    private boolean slowedByOpponent;
+    /**
+     * Indicates if the slow myself power up is on
+     */
+    private boolean powerSlowMyself;
+    /**
      * Indicator for the player one
      */
     private CircleComponent playerOneIndicator[];
@@ -145,7 +185,6 @@ public class PlayerCrsh extends DrawableComponent {
      * @see CircleComponent
      */
     public PlayerCrsh(MainGameScene gameCallback, MapComponent mapCallback, String playerName, int playerId, boolean onAttack, CircleComponent playerCollision) {
-        //TODO add powerups
         //Initialize variables
         this.gameCallback = gameCallback;
         this.mapCallback = mapCallback;
@@ -159,9 +198,18 @@ public class PlayerCrsh extends DrawableComponent {
         this.xVelocity = 0;
         this.yVelocity = 0;
         this.bounceBackCycle = 0;
-        this.bounceBackBig = false;
-        this.bounceBackSmall = false;
+        this.setBounceBackBig(false);
+        this.setBounceBackSmall(false);
         this.takingHit = false;
+        this.powerInvincible = false;
+        this.powerNoBounceback = false;
+        this.powerTimerStop = false;
+        this.powerSlowOpponent = false;
+        this.powerSlowMyself = false;
+        this.setSlowedByOpponent(false);
+        this.powerUpIndex = 0;
+        this.currentPowerUp = null;
+        this.currentPowerUpCycle = 0;
         this.takehitCounter = 0;
         this.playerScore = 0;
         this.imageRect = new Rect(
@@ -193,9 +241,11 @@ public class PlayerCrsh extends DrawableComponent {
         this.playerLifes = GameConstants.MAX_PLAYER_LIVES;
         this.xVelocity = 0;
         this.yVelocity = 0;
+        this.playerScore = 0;
         this.bounceBackCycle = 0;
-        this.bounceBackBig = false;
-        this.bounceBackSmall = false;
+        this.powerUpIndex = 0;
+        this.setBounceBackBig(false);
+        this.setBounceBackSmall(false);
         this.takingHit = false;
         this.takehitCounter = 0;
         this.playerCollision.resetPosition(this.spawnPoint.x, this.spawnPoint.y);
@@ -205,6 +255,7 @@ public class PlayerCrsh extends DrawableComponent {
         } else {
             gameCallback.lifeTwo.resetLife();
         }
+        deactivatePowerUps();
         setJoystickMultiplier();
         setMapPosition();
     }
@@ -217,7 +268,9 @@ public class PlayerCrsh extends DrawableComponent {
     @Override
     public void draw(Canvas c) {
         if (playerLifes > 0) {
-            if (takingHit && takehitCounter < GameConstants.TAKEHIT_CYCLES) {
+            if (powerInvincible) {
+                playerCollision.setDrawingAlpha(100);
+            } else if (takingHit && takehitCounter < GameConstants.TAKEHIT_CYCLES) {
                 takehitCounter++;
                 if (takehitCounter % 2 == 0) {
                     playerCollision.setDrawingAlpha(40);
@@ -234,10 +287,9 @@ public class PlayerCrsh extends DrawableComponent {
             takingHit = true;
         } else if (playerLifes == 0 && playerCollision.radius <= 0) {
             respawn();
-
         }
         playerCollision.draw(c);
-        if (playerLifes > 0 && !takingHit) {
+        if (playerLifes > 0 && !takingHit && !powerInvincible) {
             Bitmap bmpPlayer = gameCallback.getPlayerBMP(playerId, onAttack);
             c.drawBitmap(bmpPlayer, playerCollision.xPos - playerCollision.radius, playerCollision.yPos - playerCollision.radius, null);
         }
@@ -312,6 +364,65 @@ public class PlayerCrsh extends DrawableComponent {
     }
 
     /**
+     * Routine for the powerUps
+     */
+    public void powerUpRoutine() {
+        if (getCurrentPowerUp() == null) {
+            if (playerScore >= POWER_UP_AT[powerUpIndex]) {
+                currentPowerUp = PowerUps.getRandomPowerUp(powerUpIndex);
+                powerUpIndex++;
+                activatePowerUp(getCurrentPowerUp());
+            }
+        } else if (currentPowerUpCycle < GameConstants.POWERUP_CYCLES) {
+            currentPowerUpCycle++;
+        } else if (currentPowerUpCycle >= GameConstants.POWERUP_CYCLES) {
+            deactivatePowerUps();
+        }
+    }
+
+    /**
+     * Deactivates all powerups
+     */
+    public void deactivatePowerUps() {
+        powerTimerStop = false;
+        powerSlowMyself = false;
+        powerSlowOpponent = false;
+        powerInvincible = false;
+        powerNoBounceback = false;
+        currentPowerUp = null;
+        currentPowerUpCycle = 0;
+    }
+
+    /**
+     * Activates the booleans and parameters for the given powerUp
+     *
+     * @param powerUp the given powerUp
+     */
+    public void activatePowerUp(PowerUps.ePowerUp powerUp) {
+        if (powerUp == null) {
+            deactivatePowerUps();
+        } else {
+            switch (powerUp) {
+                case POWERUP_TIMER_STOP:
+                    powerTimerStop = true;
+                    break;
+                case POWERUP_NO_BOUNCEBACK:
+                    powerNoBounceback = true;
+                    break;
+                case POWERUP_INVINCIBLE:
+                    powerInvincible = true;
+                    break;
+                case POWERUP_SLOW_OPPONENT:
+                    powerSlowOpponent = true;
+                    break;
+                case POWERUP_SLOW_MYSELF:
+                    powerSlowMyself = true;
+                    break;
+            }
+        }
+    }
+
+    /**
      * Reverses this player's xVelocity
      */
     public void reverseXVelocity() {
@@ -379,11 +490,20 @@ public class PlayerCrsh extends DrawableComponent {
         //Checking collisions
         checkTileCollisions();
         checkPlayerCollision();
+        powerUpRoutine();
         //If velocity is not 0 on both edges and there's no bounceback at all
-        if ((xVelocity != 0 || yVelocity != 0) && (!bounceBackSmall) && (!bounceBackBig)) {
-            playerCollision.move(xVelocity, yVelocity);
+        if ((xVelocity != 0 || yVelocity != 0) && (!isBounceBackSmall()) && (!isBounceBackBig())) {
+            float realX, realY;
+            if (slowedByOpponent || powerSlowMyself) {
+                realX = xVelocity / 3 * 2;
+                realY = yVelocity / 3 * 2;
+            } else {
+                realX = xVelocity;
+                realY = yVelocity;
+            }
+            playerCollision.move(realX, realY);
             //If there's bounceback
-        } else if (bounceBackSmall || bounceBackBig) {
+        } else if (isBounceBackSmall() || isBounceBackBig()) {
             bounceBackRoutine();
         }
         setMapPosition();
@@ -394,7 +514,7 @@ public class PlayerCrsh extends DrawableComponent {
      */
     private void bounceBackRoutine() {
         //Cycles for the bounceback
-        int cycles = bounceBackSmall ? GameConstants.BOUNCEBACK_SMALL_CYCLES : GameConstants.BOUNCEBACK_BIG_CYCLES;
+        int cycles = isBounceBackSmall() ? GameConstants.BOUNCEBACK_SMALL_CYCLES : GameConstants.BOUNCEBACK_BIG_CYCLES;
         //If it's the first cycle, vibrate
         if (bounceBackCycle == 0) {
             gameCallback.playSoundEffect(eSoundEffect.EFFECT_BUMP);
@@ -443,8 +563,8 @@ public class PlayerCrsh extends DrawableComponent {
             }
             if (stopX && stopY) {
                 bounceBackCycle = 0;
-                bounceBackBig = false;
-                bounceBackSmall = false;
+                setBounceBackBig(false);
+                setBounceBackSmall(false);
                 this.xVelocity = 0;
                 this.yVelocity = 0;
             }
@@ -463,8 +583,8 @@ public class PlayerCrsh extends DrawableComponent {
         againstBorderXNegative = false;
         againstBorderYPositive = false;
         againstBorderYNegative = false;
-        boolean fivePoints = false;
-        boolean tenPoints = false;
+        boolean twentyFivePoints = false;
+        boolean fiftyPoints = false;
         //The circle moved in both components
         CircleComponent xMovedCircle = new CircleComponent(this.playerCollision.xPos + xVelocity, this.playerCollision.yPos, this.playerCollision.radius);
         CircleComponent yMovedCircle = new CircleComponent(this.playerCollision.xPos, this.playerCollision.yPos + yVelocity, this.playerCollision.radius);
@@ -486,16 +606,16 @@ public class PlayerCrsh extends DrawableComponent {
                     case TILE_BREAKONE:
                         Log.i("CrshDebug", "Collision breakone on X for p" + playerId);
                         currentTile.tileType = TileTypes.eTileType.TILE_PATH;
-                        bounceBackSmall = true;
+                        setBounceBackSmall(true);
                         xVelocity = xVelocity / GameConstants.BOUNCEBACK_SMALL_DIVISOR;
-                        fivePoints = true;
+                        twentyFivePoints = true;
                         reverseXVelocity();
                         break;
                     case TILE_BREAKTWO:
                         Log.i("CrshDebug", "Collision breaktwo on X for p" + playerId);
                         currentTile.tileType = TileTypes.eTileType.TILE_BREAKONE;
-                        bounceBackBig = true;
-                        tenPoints = true;
+                        setBounceBackBig(true);
+                        fiftyPoints = true;
                         xVelocity = xVelocity / GameConstants.BOUNCEBACK_BIG_DIVISOR;
                         reverseXVelocity();
                         break;
@@ -516,27 +636,27 @@ public class PlayerCrsh extends DrawableComponent {
                     case TILE_BREAKONE:
                         Log.i("CrshDebug", "Collision breakone on Y for p" + playerId);
                         currentTile.tileType = TileTypes.eTileType.TILE_PATH;
-                        bounceBackSmall = true;
+                        setBounceBackSmall(true);
                         yVelocity = yVelocity / GameConstants.BOUNCEBACK_SMALL_DIVISOR;
-                        fivePoints = true;
+                        twentyFivePoints = true;
                         reverseYVelocity();
                         break;
                     case TILE_BREAKTWO:
                         Log.i("CrshDebug", "Collision breaktwo on Y for p" + playerId);
                         currentTile.tileType = TileTypes.eTileType.TILE_BREAKONE;
-                        bounceBackBig = true;
+                        setBounceBackBig(true);
                         yVelocity = yVelocity / GameConstants.BOUNCEBACK_BIG_DIVISOR;
-                        tenPoints = true;
+                        fiftyPoints = true;
                         reverseYVelocity();
                         break;
                 }
             }
         }
-        if (fivePoints) {
-            addPlayerScore(5);
+        if (twentyFivePoints) {
+            addPlayerScore(25);
         }
-        if (tenPoints) {
-            addPlayerScore(10);
+        if (fiftyPoints) {
+            addPlayerScore(50);
         }
     }
 
@@ -550,11 +670,11 @@ public class PlayerCrsh extends DrawableComponent {
             Log.i("CrshDebug", "Collision between players");
             if (this.isOnAttack()) {
                 if (playerLifes > 2) {
-                    addPlayerScore(15);
-                } else if (playerLifes > 1) {
-                    addPlayerScore(25);
-                } else {
                     addPlayerScore(50);
+                } else if (playerLifes > 1) {
+                    addPlayerScore(100);
+                } else {
+                    addPlayerScore(200);
                 }
                 gameCallback.hitOpponent(this.playerId);
             }
@@ -568,7 +688,7 @@ public class PlayerCrsh extends DrawableComponent {
      * @return whether the player is bounding back
      */
     public boolean onBounceBack() {
-        return bounceBackSmall || bounceBackBig;
+        return isBounceBackSmall() || isBounceBackBig();
     }
 
     /**
@@ -591,12 +711,14 @@ public class PlayerCrsh extends DrawableComponent {
      * Makes this player take a hit and triggers the animation
      */
     public void takeHit() {
-        removeALife();
-        if (playerLifes > 0) {
-            takingHit = true;
-            gameCallback.playSoundEffect(eSoundEffect.EFFECT_HIT);
-        } else {
-            gameCallback.playSoundEffect(eSoundEffect.EFFECT_DEATH);
+        if (!powerInvincible) {
+            removeALife();
+            if (playerLifes > 0) {
+                takingHit = true;
+                gameCallback.playSoundEffect(eSoundEffect.EFFECT_HIT);
+            } else {
+                gameCallback.playSoundEffect(eSoundEffect.EFFECT_DEATH);
+            }
         }
     }
 
@@ -676,4 +798,74 @@ public class PlayerCrsh extends DrawableComponent {
         }
     }
 
+    /**
+     * Checks if the player is on a small bounceback
+     *
+     * @return the current bounceback value
+     */
+    public boolean isBounceBackSmall() {
+        return bounceBackSmall;
+    }
+
+    /**
+     * Sets the player for a small bounceback, checking for powerUps
+     *
+     * @return the new bounceback value
+     */
+    public void setBounceBackSmall(boolean bounceBackSmall) {
+        if (powerNoBounceback) {
+            this.bounceBackSmall = false;
+        } else {
+            this.bounceBackSmall = bounceBackSmall;
+        }
+    }
+
+    /**
+     * Checks if the player is on a big bounceback
+     *
+     * @return the current bounceback value
+     */
+    public boolean isBounceBackBig() {
+        return bounceBackBig;
+    }
+
+    /**
+     * Sets the player for a big bounceback, checking for powerUps
+     *
+     * @return the new bounceback value
+     */
+    public void setBounceBackBig(boolean bounceBackBig) {
+        if (powerNoBounceback) {
+            this.bounceBackBig = false;
+        } else {
+            this.bounceBackBig = bounceBackBig;
+        }
+    }
+
+    /**
+     * Gets the value of the current power up
+     *
+     * @return the current power up, null if no powerup is on
+     */
+    public PowerUps.ePowerUp getCurrentPowerUp() {
+        return currentPowerUp;
+    }
+
+    /**
+     * Gets the slowedbyopponent value to see if the opponent is slowing this player down
+     *
+     * @return the value of the boolean
+     */
+    public boolean isSlowedByOpponent() {
+        return slowedByOpponent;
+    }
+
+    /**
+     * Sets a new value for the opponent slowing this player down
+     *
+     * @param slowedByOpponent the new value of the boolean
+     */
+    public void setSlowedByOpponent(boolean slowedByOpponent) {
+        this.slowedByOpponent = slowedByOpponent;
+    }
 }

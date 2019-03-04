@@ -12,8 +12,10 @@
     <string name="optSoundEffects">Sound FX</string>
     <string name="creditsMusic">"Music: \nLow Costa Perreo by YVNG N31L"</string>
     <string name="creditsFonts">"Fonts:\nFontAwesome, by FontAwesome\nHomeSpun, by Aenigma Fonts\nKarma Future, by Typodermic Fonts\n"</string>
-    <string name="creditsSoundEffects">"Sound FX:\nTomás Cardenal López"</string>
+    <string name="creditsSoundEffects">"Sound FX:\nTomás Cardenal\nwith the help of:\nAlba Pereira"</string>
     <string name="creditsGraphics">"Graphics:\nGrass Tiles by Alba Pereira\nBox and metal tiles by OpenGameArt\nSci-Fi Gateway by Joseph Crown\nPlayers and icon by Tomás Cardenal López</string>
+    <string name="creditsGraphics2">"Graphics:\nPowerup Icons by Lorc</string>
+    <string name="creditsThankYou">"Special thanks to:\nAlba, Callejo, Julio and everyone who collaborated\nin any way to the creation and testing\nof this game"</string>
     <string name="pauseTitle">Game paused</string>
     <string name="btnCrshMode">C_R_S_H mode</string>
     <string name="btnNormalMode">N_R_M_L mode</string>

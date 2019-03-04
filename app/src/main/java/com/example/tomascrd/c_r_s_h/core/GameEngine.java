@@ -212,7 +212,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
                             mainGameScene.reloadMap();
                             currentScene = mainGameScene;
                         }
-                        if (!loader.loadedTiles) {
+                        if (!loader.areTilesLoaded()) {
                             loader.loadTiles();
                         }
                         break;
@@ -225,7 +225,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
                             mainGameScene.reloadMap();
                             currentScene = mainGameScene;
                         }
-                        if (!loader.loadedTiles) {
+                        if (!loader.areTilesLoaded()) {
                             loader.loadTiles();
                         }
                         break;
@@ -248,7 +248,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
                             mainGameScene.reloadMap();
                             currentScene = mainGameScene;
                         }
-                        if (!loader.loadedTiles) {
+                        if (!loader.areTilesLoaded()) {
                             loader.loadTiles();
                         }
                         break;
