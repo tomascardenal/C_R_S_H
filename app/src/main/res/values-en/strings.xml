@@ -51,4 +51,10 @@
     <string name="titleMapChooser">Choose a map</string>
     <string name="defaultMapName">Standard</string>
     <string name="toastLoadedGameMap">The map %s has been loaded to be played</string>
+    <string name="titleEndGame">It\'s over!</string>
+    <string name="endGameWinner">Player %d won!</string>
+    <string name="endGameLoseToCOM">Did you just lose to a computer? You should take a Turing test!</string>
+    <string name="titleKeyboardRecords">New record! Player %d with %d points.</string>
+    <string name="recordsName">Type up your name</string>
+    <string name="infoNoRecords">There aren\'t any records yet</string>
 </resources>

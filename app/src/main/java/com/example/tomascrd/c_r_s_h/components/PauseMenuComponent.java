@@ -39,6 +39,18 @@ public class PauseMenuComponent extends DrawableComponent {
      */
     private ButtonComponent btnConfirmNo;
     /**
+     * Button for playing again
+     */
+    private ButtonComponent btnPlayAgainYes;
+    /**
+     * Button for going back to home
+     */
+    private ButtonComponent btnPlayAgainNo;
+    /**
+     * Button for confirming on records keyboard
+     */
+    private ButtonComponent btnKeyConfirmYes;
+    /**
      * The current state of the game to be saved if necessary
      */
     private SceneCrsh gameSceneState;
@@ -73,7 +85,15 @@ public class PauseMenuComponent extends DrawableComponent {
     /**
      * Keyboard for records input
      */
-    private KeyboardComponent keyboard;
+    public KeyboardComponent keyboard;
+    /**
+     * The id of the winner
+     */
+    public int winnerID;
+    /**
+     * The string for the records prompt
+     */
+    private String recordString;
 
     /**
      * Initializes a new PauseMenu
@@ -94,7 +114,9 @@ public class PauseMenuComponent extends DrawableComponent {
         this.yPos = yTop;
         this.width = width;
         this.height = height;
-        this.setConfirming(false);
+        this.onEndScreen = false;
+        this.onKeyboard = false;
+        this.isConfirming = false;
 
         //Border rectangle
         borderRect = new Rect(
@@ -155,12 +177,56 @@ public class PauseMenuComponent extends DrawableComponent {
                 btnUnpause.btnRect.right, btnUnpause.btnRect.bottom - btnUnpause.btnRect.height(), btnUnpause.btnRect.right + btnUnpause.btnRect.width(), btnUnpause.btnRect.bottom, Color.TRANSPARENT, 0,
                 false, -1);
 
+        this.btnPlayAgainYes = new ButtonComponent(context, fontawesome,
+                context.getString(R.string.btnPlayAgain),
+                btnUnpause.btnRect.left - btnUnpause.btnRect.width(), btnUnpause.btnRect.top, btnUnpause.btnRect.left, btnUnpause.btnRect.bottom, Color.TRANSPARENT, 0,
+                false, -1);
+
+        this.btnPlayAgainNo = new ButtonComponent(context, fontawesome,
+                context.getString(R.string.btnNotPlayAgain),
+                btnUnpause.btnRect.right, btnUnpause.btnRect.bottom - btnUnpause.btnRect.height(), btnUnpause.btnRect.right + btnUnpause.btnRect.width(), btnUnpause.btnRect.bottom, Color.TRANSPARENT, 0,
+                false, -1);
+
         //KEYBOARD BUILDING
         int offset = (int) this.borderPaint.getStrokeWidth() / 4;
         Rect r = new Rect(this.borderRect.left + offset, this.borderRect.top + offset,
                 this.borderRect.right - offset, this.borderRect.bottom - offset);
         keyboard = new KeyboardComponent(context, r, (int) this.borderPaint.getStrokeWidth() / 4);
 
+        this.btnKeyConfirmYes = new ButtonComponent(context, fontawesome, context.getString(R.string.btnConfirmNameYes),
+                r.left,
+                r.centerY() - btnConfirmYes.btnRect.height() * 2 - (int) this.borderPaint.getStrokeWidth() / 4,
+                r.left + btnConfirmYes.btnRect.width(),
+                r.centerY() - btnConfirmYes.btnRect.height() - (int) this.borderPaint.getStrokeWidth() / 4,
+                Color.TRANSPARENT, 0, false, -1);
+    }
+
+    private void resetShader() {
+        if (!onEndScreen || winnerID == -1 || winnerID == 0) {
+            this.backgroundPaint.setShader(
+                    new LinearGradient(
+                            xPos + (borderRect.height() / 2),
+                            yPos + (borderRect.height() / 2),
+                            width - (borderRect.height() / 2),
+                            height - (borderRect.height() / 2),
+                            Color.GRAY, Color.DKGRAY, Shader.TileMode.CLAMP));
+        } else if (winnerID == 1 && onEndScreen) {
+            this.backgroundPaint.setShader(
+                    new LinearGradient(
+                            xPos + (borderRect.height() / 2),
+                            yPos + (borderRect.height() / 2),
+                            width - (borderRect.height() / 2),
+                            height - (borderRect.height() / 2),
+                            Color.CYAN, Color.DKGRAY, Shader.TileMode.CLAMP));
+        } else if (winnerID == 2 && onEndScreen) {
+            this.backgroundPaint.setShader(
+                    new LinearGradient(
+                            xPos + (borderRect.height() / 2),
+                            yPos + (borderRect.height() / 2),
+                            width - (borderRect.height() / 2),
+                            height - (borderRect.height() / 2),
+                            Color.MAGENTA, Color.DKGRAY, Shader.TileMode.CLAMP));
+        }
     }
 
     /**
@@ -171,6 +237,7 @@ public class PauseMenuComponent extends DrawableComponent {
     @Override
     public void draw(Canvas c) {
         //Draw background and border
+        resetShader();
         c.drawRect(borderRect, backgroundPaint);
         c.drawRect(borderRect, borderPaint);
 
@@ -178,15 +245,41 @@ public class PauseMenuComponent extends DrawableComponent {
         String pauseText;
         if (isConfirming) {
             pauseText = context.getString(R.string.confirmQuit);
+        } else if (onEndScreen) {
+            if (onKeyboard) {
+                pauseText = context.getString(R.string.recordsName);
+            } else {
+                pauseText = context.getString(R.string.titleEndGame);
+            }
         } else {
             pauseText = context.getString(R.string.pauseTitle);
         }
-        c.drawText(pauseText, borderRect.exactCenterX(), this.borderRect.height() / GameConstants.GAMESCREEN_ROWS * 6, pText);
+        if (!onKeyboard) {
+            c.drawText(pauseText, borderRect.exactCenterX(), this.borderRect.height() / GameConstants.GAMESCREEN_ROWS * 6, pText);
+        } else {
+            c.drawText(pauseText, borderRect.exactCenterX(), this.borderRect.height() / GameConstants.GAMESCREEN_ROWS * 3, pText);
+        }
 
         //Button
         if (isConfirming()) {
             btnConfirmYes.draw(c);
             btnConfirmNo.draw(c);
+        } else if (onEndScreen) {
+            if (onKeyboard) {
+                c.drawText(recordString, gameSceneState.screenWidth / 2, btnKeyConfirmYes.btnRect.top, infoPaint);
+                btnKeyConfirmYes.draw(c);
+                keyboard.draw(c);
+            } else {
+                String winnerText;
+                if (winnerID > 0 && winnerID < 3) {
+                    winnerText = String.format(context.getString(R.string.endGameWinner), winnerID);
+                } else {
+                    winnerText = context.getString(R.string.endGameLoseToCOM);
+                }
+                c.drawText(winnerText, borderRect.exactCenterX(), this.borderRect.height() / GameConstants.GAMESCREEN_ROWS * 9, infoPaint);
+                btnPlayAgainYes.draw(c);
+                btnPlayAgainNo.draw(c);
+            }
         } else {
             c.drawText(context.getString(R.string.infoPause), borderRect.exactCenterX(), this.borderRect.height() / GameConstants.GAMESCREEN_ROWS * 9, infoPaint);
             btnOptions.draw(c);
@@ -242,6 +335,33 @@ public class PauseMenuComponent extends DrawableComponent {
     }
 
     /**
+     * Returns btnPlayAgainYes, for click events
+     *
+     * @return the confirmNo button
+     */
+    public ButtonComponent getBtnPlayAgainYes() {
+        return btnPlayAgainYes;
+    }
+
+    /**
+     * Returns btnPlayAgainNo, for click events
+     *
+     * @return the confirmNo button
+     */
+    public ButtonComponent getBtnPlayAgainNo() {
+        return btnPlayAgainNo;
+    }
+
+    /**
+     * Returns btnKeyConfirmYes, for click events
+     *
+     * @return the keyConfirmYes button
+     */
+    public ButtonComponent getBtnKeyConfirmYes() {
+        return btnKeyConfirmYes;
+    }
+
+    /**
      * Indicates whether the user is being shown the confirm menu
      *
      * @return the current value
@@ -257,5 +377,46 @@ public class PauseMenuComponent extends DrawableComponent {
      */
     public void setConfirming(boolean confirming) {
         isConfirming = confirming;
+    }
+
+    /**
+     * Gets the value indicating if the menu is on an endscreen
+     *
+     * @return the current value
+     */
+    public boolean isOnEndScreen() {
+        return onEndScreen;
+    }
+
+    /**
+     * Sets this pause menu to be on the end screen
+     *
+     * @param onEndScreen the new value
+     * @param winnerID    the winner's ID, set to -1 when endScreen is false
+     */
+    public void setOnEndScreen(boolean onEndScreen, int winnerID) {
+        this.onEndScreen = onEndScreen;
+        this.winnerID = winnerID;
+    }
+
+    /**
+     * Gets the value indicating if the menu is on a keyboard
+     *
+     * @return the current value
+     */
+    public boolean isOnKeyboard() {
+        return onKeyboard;
+    }
+
+    /**
+     * Sets this pause menu to be on a keyboard
+     *
+     * @param onKeyboard the new value
+     */
+    public void setOnKeyboard(boolean onKeyboard, int winner, int score) {
+        if (onKeyboard) {
+            recordString = String.format(context.getString(R.string.titleKeyboardRecords), winner, score);
+        }
+        this.onKeyboard = onKeyboard;
     }
 }

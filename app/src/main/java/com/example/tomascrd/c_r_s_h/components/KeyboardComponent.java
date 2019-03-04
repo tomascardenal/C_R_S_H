@@ -53,7 +53,7 @@ public class KeyboardComponent extends DrawableComponent {
     /**
      * Maximum char count;
      */
-    private static final int MAX_CHAR = 25;
+    private static final int MAX_CHAR = 15;
 
     /**
      * Represents a keyboard on the screen

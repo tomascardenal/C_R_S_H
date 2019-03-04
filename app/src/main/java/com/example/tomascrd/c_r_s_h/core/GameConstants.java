@@ -153,6 +153,10 @@ public final class GameConstants {
      */
     public final static String PREFERENCES_MAPCOUNT = "mapCount";
     /**
+     * Reference for the number of saved maps
+     */
+    public final static String PREFERENCES_RECORDCOUNT = "recordCount";
+    /**
      * Array containing the values of the tile_types
      */
     public final static TileTypes.eTileType[] E_TILE_TYPES = TileTypes.eTileType.values();

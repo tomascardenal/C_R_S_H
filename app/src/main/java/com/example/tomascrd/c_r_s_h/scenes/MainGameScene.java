@@ -19,6 +19,7 @@ import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.widget.Toast;
 
 import com.example.tomascrd.c_r_s_h.R;
 import com.example.tomascrd.c_r_s_h.components.ButtonComponent;
@@ -35,7 +36,9 @@ import com.example.tomascrd.c_r_s_h.components.VisualTimerComponent;
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
 import com.example.tomascrd.c_r_s_h.core.GameEngine;
 import com.example.tomascrd.c_r_s_h.core.Utils;
+import com.example.tomascrd.c_r_s_h.structs.MapReference;
 import com.example.tomascrd.c_r_s_h.structs.PowerUps;
+import com.example.tomascrd.c_r_s_h.structs.RecordReference;
 import com.example.tomascrd.c_r_s_h.structs.eGameMode;
 import com.example.tomascrd.c_r_s_h.structs.eSoundEffect;
 import com.example.tomascrd.c_r_s_h.structs.eTimerSpeed;
@@ -194,6 +197,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
      * Score for the com isn't displayed, this is a string representing the changes in it's score with random chars
      */
     private String comScoreMimic;
+    private int winner;
 
     /**
      * Starts a new main game
@@ -552,20 +556,23 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         PowerUps.ePowerUp p1Power, p2Power;
         p1Power = playerOne.getCurrentPowerUp();
         if (gameMode == eGameMode.MODE_CRSH_2P || gameMode == eGameMode.MODE_NRML_2P) {
+            playerTwo.setSlowedByOpponent(false);
             p2Power = playerTwo.getCurrentPowerUp();
             if (p1Power != null && p1Power == PowerUps.ePowerUp.POWERUP_SLOW_OPPONENT) {
                 playerTwo.setSlowedByOpponent(true);
-            } else if (p1Power == PowerUps.ePowerUp.POWERUP_TIMER_STOP) {
+            } else if (p2Power == PowerUps.ePowerUp.POWERUP_TIMER_STOP) {
                 powerTimerStopped = true;
             }
         } else {
             p2Power = playerCom.getCurrentPowerUp();
+            playerCom.setSlowedByOpponent(false);
             if (p1Power != null && p1Power == PowerUps.ePowerUp.POWERUP_SLOW_OPPONENT) {
                 playerCom.setSlowedByOpponent(true);
-            } else if (p1Power == PowerUps.ePowerUp.POWERUP_TIMER_STOP) {
+            } else if (p2Power == PowerUps.ePowerUp.POWERUP_TIMER_STOP) {
                 powerTimerStopped = true;
             }
         }
+        playerOne.setSlowedByOpponent(false);
         if (p2Power != null && p2Power == PowerUps.ePowerUp.POWERUP_SLOW_OPPONENT) {
             playerOne.setSlowedByOpponent(true);
         } else if (p1Power == PowerUps.ePowerUp.POWERUP_TIMER_STOP) {
@@ -931,6 +938,22 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
             } else if (isClick(pauseMenu.getBtnConfirmNo(), event)) {
                 pauseMenu.setConfirming(false);
             }
+        } else if (pauseMenu.isOnEndScreen()) {
+            if (pauseMenu.isOnKeyboard()) {
+                onKeyboardActions(event);
+            } else {
+                if (isClick(pauseMenu.getBtnPlayAgainYes(), event)) {
+                    pauseMenu.setOnEndScreen(false, -1);
+                    reloadMap();
+                    this.onPause = false;
+                }
+                if (isClick(pauseMenu.getBtnPlayAgainNo(), event)) {
+                    pauseMenu.setOnEndScreen(false, -1);
+                    reloadMap();
+                    this.onPause = false;
+                    return backBtn.getSceneId();
+                }
+            }
         } else {
             if (isClick(pauseMenu.getBtnUnpause(), event)) {
                 onPause = false;
@@ -945,6 +968,19 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
             }
         }
         return -1;
+    }
+
+    public void onKeyboardActions(MotionEvent event) {
+        pauseMenu.keyboard.onClickEvent(event);
+        if (isClick(pauseMenu.getBtnKeyConfirmYes(), event)) {
+            String recordName = pauseMenu.keyboard.getUserInput();
+            if (winner == 1) {
+                engineCallback.optionsManager.addRecord(new RecordReference(playerOne.getPlayerScore(), recordName));
+            } else if (winner == 2) {
+                engineCallback.optionsManager.addRecord(new RecordReference(playerTwo.getPlayerScore(), recordName));
+            }
+            pauseMenu.setOnKeyboard(false, -1, -1);
+        }
     }
 
     /**
@@ -1071,6 +1107,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
                 }
             }
         }
+
     }
 
     /**
@@ -1224,5 +1261,31 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
      */
     public void setMapLoadID(int mapLoadID) {
         this.mapLoadID = mapLoadID;
+    }
+
+    public void setOnEndGame(boolean onEndGame, int deadPlayer) {
+        this.setOnPause(true);
+        if (!onEndGame) {
+            winner = -1;
+        }
+        if (deadPlayer == 1) {
+            if (gameMode == eGameMode.MODE_CRSH_COM || gameMode == eGameMode.MODE_NRML_COM) {
+                winner = 0;
+            } else {
+                winner = 2;
+            }
+        } else {
+            winner = 1;
+        }
+        if (winner == 1) {
+            if (engineCallback.optionsManager.isRecord(playerOne.getPlayerScore())) {
+                pauseMenu.setOnKeyboard(true, 1, playerOne.getPlayerScore());
+            }
+        } else if (winner == 2) {
+            if (engineCallback.optionsManager.isRecord(playerTwo.getPlayerScore())) {
+                pauseMenu.setOnKeyboard(true, 2, playerTwo.getPlayerScore());
+            }
+        }
+        this.pauseMenu.setOnEndScreen(true, winner);
     }
 }

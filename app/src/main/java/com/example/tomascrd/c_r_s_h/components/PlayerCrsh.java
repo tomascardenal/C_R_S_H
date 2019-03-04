@@ -241,7 +241,6 @@ public class PlayerCrsh extends DrawableComponent {
         this.playerLifes = GameConstants.MAX_PLAYER_LIVES;
         this.xVelocity = 0;
         this.yVelocity = 0;
-        this.playerScore = 0;
         this.bounceBackCycle = 0;
         this.powerUpIndex = 0;
         this.setBounceBackBig(false);
@@ -287,6 +286,7 @@ public class PlayerCrsh extends DrawableComponent {
             takingHit = true;
         } else if (playerLifes == 0 && playerCollision.radius <= 0) {
             respawn();
+            gameCallback.setOnEndGame(true, this.playerId);
         }
         playerCollision.draw(c);
         if (playerLifes > 0 && !takingHit && !powerInvincible) {

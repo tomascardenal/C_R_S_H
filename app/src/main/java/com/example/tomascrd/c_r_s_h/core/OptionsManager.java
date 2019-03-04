@@ -7,6 +7,7 @@ import android.util.Log;
 import com.example.tomascrd.c_r_s_h.R;
 import com.example.tomascrd.c_r_s_h.components.VisualTimerComponent;
 import com.example.tomascrd.c_r_s_h.structs.MapReference;
+import com.example.tomascrd.c_r_s_h.structs.RecordReference;
 import com.example.tomascrd.c_r_s_h.structs.eTimerSpeed;
 
 import java.io.DataInputStream;
@@ -15,6 +16,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Options manager for the game
@@ -48,9 +50,13 @@ public class OptionsManager {
      */
     private eTimerSpeed timerSpeed;
     /**
-     * Table containing the map references
+     * List containing the map references
      */
     private ArrayList<MapReference> mapReferences;
+    /**
+     * List containing the record references
+     */
+    private ArrayList<RecordReference> recordReferences;
     /**
      * SharedPreferences to store the options
      */
@@ -68,9 +74,11 @@ public class OptionsManager {
     public OptionsManager(Context context) {
         this.context = context;
         preferences = context.getSharedPreferences(GameConstants.PREFERENCES_NAME, Context.MODE_PRIVATE);
-        this.mapReferences = new ArrayList<MapReference>();
+        this.mapReferences = new ArrayList<>();
+        this.recordReferences = new ArrayList<>();
         loadOptions();
         loadMapList();
+        loadRecords();
     }
 
     /**
@@ -263,6 +271,61 @@ public class OptionsManager {
     }
 
     /**
+     * Loads the records into Memory
+     *
+     * @return true if the task was done correctly, false if not
+     */
+    public boolean loadRecords() {
+        int recordCount = preferences.getInt(GameConstants.PREFERENCES_RECORDCOUNT, 0);
+        try (FileInputStream fis = context.openFileInput(GameConstants.MAPLIST_FILE_NAME)) {
+            DataInputStream input = new DataInputStream(fis);
+            for (int i = 0; i < recordCount; i++) {
+                RecordReference currentRecord;
+                currentRecord = new RecordReference(
+                        input.readInt(),
+                        input.readUTF()
+                );
+                boolean add = true;
+                for (RecordReference ref : recordReferences) {
+                    if (ref.highScore == currentRecord.highScore && ref.playerName == currentRecord.playerName) {
+                        add = false;
+                    }
+                }
+                if (add) {
+                    recordReferences.add(currentRecord);
+                }
+            }
+            return true;
+        } catch (IOException e) {
+            Log.i("CrshDebug", e.getMessage() + " " + e.getStackTrace());
+            return false;
+        }
+    }
+
+    /**
+     * Saves the records
+     *
+     * @return true if the task was done correctly, false if not
+     */
+    public boolean saveRecords() {
+        DataOutputStream output = null;
+        try (FileOutputStream fos = context.openFileOutput(GameConstants.MAPLIST_FILE_NAME, Context.MODE_PRIVATE)) {
+            output = new DataOutputStream(fos);
+            for (int i = 0; i < recordReferences.size(); i++) {
+                RecordReference currentRef = recordReferences.get(i);
+                output.writeInt(currentRef.highScore);
+                output.writeUTF(currentRef.playerName);
+            }
+        } catch (IOException e) {
+            return false;
+        }
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt(GameConstants.PREFERENCES_RECORDCOUNT, recordReferences.size());
+        editor.commit();
+        return true;
+    }
+
+    /**
      * Adds a map reference to the list
      *
      * @param reference The map reference to add
@@ -276,6 +339,69 @@ public class OptionsManager {
         }
         mapReferences.add(reference);
         return mapReferences.size();
+    }
+
+    /**
+     * Adds a record reference to the list, if possible
+     *
+     * @param reference the reference to add
+     */
+    public void addRecord(RecordReference reference) {
+        int ranking = -1;
+        if (recordReferences.size() > 1) {
+            for (int i = recordReferences.size() - 1; i >= 0; i--) {
+                if (recordReferences.get(i).highScore < reference.highScore) {
+                    ranking = i;
+                }
+            }
+        }
+        if (ranking != -1) {
+            recordReferences.add(ranking, reference);
+        } else if (recordReferences.size() == 0) {
+            recordReferences.add(reference);
+        } else if (recordReferences.size() <= 10) {
+            if (ranking == -1) {
+                recordReferences.add(recordReferences.size(), reference);
+            } else {
+                recordReferences.add(ranking, reference);
+            }
+        }
+        Collections.sort(recordReferences);
+        if (recordReferences.size() > 10) {
+            Log.i("CrshDebug", "recordsSize" + recordReferences.size());
+            for (int i = recordReferences.size() - 1; i >= 10; i--) {
+                Log.i("CrshDebug", "removing record index" + i);
+                recordReferences.remove(i);
+            }
+            Log.i("CrshDebug", "recordsSize after" + recordReferences.size());
+        }
+    }
+
+    /**
+     * Checks if a score is a record
+     *
+     * @param score the score to check
+     * @return true if it's a record, false if not
+     */
+    public boolean isRecord(int score) {
+        if (recordReferences.size() < 10) {
+            return true;
+        }
+        for (RecordReference ref : recordReferences) {
+            if (ref.highScore < score) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Gets the list of record references
+     *
+     * @return the record references
+     */
+    public ArrayList<RecordReference> getRecordReferences() {
+        return recordReferences;
     }
 
     /**

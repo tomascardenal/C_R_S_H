@@ -268,6 +268,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
     public void surfaceCreated(SurfaceHolder holder) {
         optionsManager.loadOptions();
         optionsManager.loadMapList();
+        optionsManager.loadRecords();
         //Audio managing
         updateAudioObjects();
         updateVolume();
@@ -292,6 +293,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
             optionsManager = new OptionsManager(context);
             optionsManager.loadOptions();
             optionsManager.loadMapList();
+            optionsManager.loadRecords();
         }
         //Reload the assets
         if (loader == null) {
@@ -339,6 +341,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
             }
             optionsManager.saveOptions();
             optionsManager.saveMapList();
+            optionsManager.saveRecords();
         } catch (InterruptedException e) {
             Log.i("CrshDebug", "SurfaceDestroyed Error " + e.getLocalizedMessage());
         }

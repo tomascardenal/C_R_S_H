@@ -91,4 +91,12 @@
     <string name="titleMapChooser">Escoge un mapa</string>
     <string name="defaultMapName">Estándar</string>
     <string name="toastLoadedGameMap">Se ha cargado el mapa %s para jugar</string>
+    <string name="titleEndGame">¡Se acabó!</string>
+    <string name="endGameWinner">¡El jugador %d ha ganado!</string>
+    <string name="endGameLoseToCOM">¿Has perdido contra una máquina? ¡Te recomendamos el test de Turing!</string>
+    <string name="btnPlayAgain" translatable="false"></string>
+    <string name="btnNotPlayAgain" translatable="false"></string>
+    <string name="titleKeyboardRecords">¡Nuevo récord!, Jugador %d con %d puntos</string>
+    <string name="recordsName">Introduce tu nombre</string>
+    <string name="infoNoRecords">No hay records guardados todavía</string>
 </resources>
