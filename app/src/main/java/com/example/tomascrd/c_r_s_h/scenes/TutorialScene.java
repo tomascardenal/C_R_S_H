@@ -13,6 +13,7 @@ import com.example.tomascrd.c_r_s_h.R;
 import com.example.tomascrd.c_r_s_h.components.ButtonComponent;
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
 import com.example.tomascrd.c_r_s_h.core.GameEngine;
+import com.example.tomascrd.c_r_s_h.structs.PowerUps;
 import com.example.tomascrd.c_r_s_h.structs.eGameMode;
 
 /**
@@ -43,7 +44,7 @@ public class TutorialScene extends MainGameScene {
     /**
      * Max number of remaining cycles to tapToContinue state
      */
-    private static final int MAX_TAPTOCONTINUE = 180;
+    private static final int MAX_TAPTOCONTINUE = 40;
     /**
      * Constant id for TutorialScene
      */
@@ -104,6 +105,10 @@ public class TutorialScene extends MainGameScene {
      * String references for indicators stage of the tutorial
      */
     private static final int[] indicatorsStageTextRef = {R.string.tutorialIndicatorsOne, R.string.tutorialIndicatorsTwo, R.string.tutorialIndicatorsThree, R.string.tutorialIndicatorsFour};
+    /**
+     * String references for powerups stage of the tutorial
+     */
+    private static final int[] powerupsStageTextRef = {R.string.tutorialPowerUpsOne, R.string.tutorialPowerUpsTwo};
 
     /**
      * Starts a tutorial screen
@@ -232,6 +237,7 @@ public class TutorialScene extends MainGameScene {
                     drawStageJoystick(c);
                     break;
                 case STAGE_POWERUPS:
+                    drawStagePowerups(c);
                     break;
                 case STAGE_MORE:
                     break;
@@ -345,7 +351,9 @@ public class TutorialScene extends MainGameScene {
     private void drawStageJoystick(Canvas c) {
         //Buttons
         btnPause.draw(c);
-        mapLoad.draw(c);
+        if (!onInteractiveTest) {
+            mapLoad.draw(c);
+        }
         if (onInteractiveTest) {
             //Draw map
             mapLoad.draw(c);
@@ -379,6 +387,50 @@ public class TutorialScene extends MainGameScene {
                 row++;
             }
         }
+    }
+
+    /**
+     * Draws the screen during the powerups tutorial stage
+     *
+     * @param c the canvas to draw
+     */
+    private void drawStagePowerups(Canvas c) {
+        //Buttons
+        btnPause.draw(c);
+
+        String[] indicatorsLines = context.getString(powerupsStageTextRef[currentTextIndex]).split("\n");
+        int row = 2;
+        if (currentTextIndex == 1) {
+            row = 3;
+        }
+        for (String line : indicatorsLines) {
+            float x = screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9;
+            float y = pTutorialText.getTextSize() * 1.75f * row;
+            if (row >= 5 && row <= 7 || currentTextIndex == 1) {
+                x = screenWidth / GameConstants.MENUSCREEN_COLUMNS;
+                pTutorialText.setTextAlign(Paint.Align.LEFT);
+            }
+            c.drawText(line, x, y, pTutorialText);
+
+            if (currentTextIndex == 0) {
+                if (row == 5) {
+                    c.drawBitmap(engineCallback.loader.getPowerUpBitmap(PowerUps.ePowerUp.POWERUP_TIMER_STOP), screenWidth - tileSizeReference * 2, y - pTutorialText.getTextSize(), null);
+                } else if (row == 6) {
+                    c.drawBitmap(engineCallback.loader.getPowerUpBitmap(PowerUps.ePowerUp.POWERUP_NO_BOUNCEBACK), screenWidth - tileSizeReference * 2, y - pTutorialText.getTextSize(), null);
+                } else if (row == 7) {
+                    c.drawBitmap(engineCallback.loader.getPowerUpBitmap(PowerUps.ePowerUp.POWERUP_INVINCIBLE), screenWidth - tileSizeReference * 2, y - pTutorialText.getTextSize(), null);
+                }
+            } else if (currentTextIndex == 1) {
+                if (row == 3) {
+                    c.drawBitmap(engineCallback.loader.getPowerUpBitmap(PowerUps.ePowerUp.POWERUP_SLOW_OPPONENT), screenWidth - tileSizeReference * 2, y - pTutorialText.getTextSize(), null);
+                } else if (row == 5) {
+                    c.drawBitmap(engineCallback.loader.getPowerUpBitmap(PowerUps.ePowerUp.POWERUP_SLOW_MYSELF), screenWidth - tileSizeReference * 2, y - pTutorialText.getTextSize(), null);
+                }
+            }
+            row++;
+        }
+        pTutorialText.setTextAlign(Paint.Align.CENTER);
+
     }
 
     /**
@@ -591,7 +643,9 @@ public class TutorialScene extends MainGameScene {
                     }
                     if (isClick(btnNextStage, event)) {
                         //FIXME this is just a test
-                        this.currentStage = eTutorialStage.STAGE_WAITINGROOM;
+                        onInteractiveTest = false;
+                        resetTapToContinue();
+                        this.currentStage = eTutorialStage.STAGE_POWERUPS;
                     }
                 } else if (!onPause && tapToContinue) {
                     onInteractiveTest = true;
@@ -641,6 +695,15 @@ public class TutorialScene extends MainGameScene {
                 if (!onPause) {
                     if (isClick(btnPause, event)) {
                         onPause = true;
+                    }
+                    if (tapToContinue) {
+                        resetTapToContinue();
+                        if (currentTextIndex < powerupsStageTextRef.length - 1) {
+                            currentTextIndex++;
+                        } else {
+                            currentTextIndex = 0;
+                            currentStage = eTutorialStage.STAGE_WAITINGROOM;
+                        }
                     }
                 } else {
                     int pauseResult = onPauseMenu(event);

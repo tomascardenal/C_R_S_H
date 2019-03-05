@@ -69,6 +69,8 @@
     <string name="tutorialIndicatorsThree">"On the sides, attack indicators are found\nIf there's electricity, we will be angry and attacking\nOtherwise, we will be on defending mode\nModes will toggle when players collide or the timer ends"</string>
     <string name="tutorialIndicatorsFour">"On the lower edge, we have the timer\nWhen the colored bar ends, the player modes toggle\nWhen attacking, you can damage the opponent\nIf you're defending your opponent will hurt you!"</string>
     <string name="tutorialJoystick">"Now, lets test the joystick, and fight the machine!\n(don't worry, it doesn't suffer)\nJust click and drag as if you were\nplaying with an analog thumbstick\n¡Attack when you're angry and electricity is on!\n\nTo end the demo game, tap the arrow down and to the right"</string>
+    <string name="tutorialPowerUpsOne">"When scoring points, you'll gain powerups\nthese are shown under the attack indicators\n\nSTOP TIMER: this powerup stops the timer\nNO BOUNCE: this powerup stops you from bouncing back\nINVINCIBLE: While this power up is on, nothing can hurt you!"</string>
+    <string name="tutorialPowerUpsTwo">"SLOW OPPONENT: This powerup will make your opponent run slower\n\nSLOW... MYSELF?: Not all things in life are beautiful!"</string>
     <string name="titleDeleteMap">Delete this map?</string>
     <string name="toastMapDeleted">The map was sucessfully deleted</string>
     <string name="toastMapNotDeleted">The map couldn\'t be deleted</string>
