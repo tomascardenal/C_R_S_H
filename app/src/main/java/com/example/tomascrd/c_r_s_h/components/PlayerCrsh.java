@@ -11,6 +11,7 @@ import com.example.tomascrd.c_r_s_h.core.GameConstants;
 import com.example.tomascrd.c_r_s_h.scenes.MainGameScene;
 import com.example.tomascrd.c_r_s_h.structs.PowerUps;
 import com.example.tomascrd.c_r_s_h.structs.TileTypes;
+import com.example.tomascrd.c_r_s_h.structs.eGameMode;
 import com.example.tomascrd.c_r_s_h.structs.eSoundEffect;
 
 /**
@@ -367,16 +368,18 @@ public class PlayerCrsh extends DrawableComponent {
      * Routine for the powerUps
      */
     public void powerUpRoutine() {
-        if (getCurrentPowerUp() == null) {
-            if (playerScore >= POWER_UP_AT[powerUpIndex]) {
-                currentPowerUp = PowerUps.getRandomPowerUp(powerUpIndex);
-                powerUpIndex++;
-                activatePowerUp(getCurrentPowerUp());
+        if (gameCallback.gameMode != eGameMode.MODE_TUTORIAL) {
+            if (getCurrentPowerUp() == null) {
+                if (playerScore >= POWER_UP_AT[powerUpIndex]) {
+                    currentPowerUp = PowerUps.getRandomPowerUp(powerUpIndex);
+                    powerUpIndex++;
+                    activatePowerUp(getCurrentPowerUp());
+                }
+            } else if (currentPowerUpCycle < GameConstants.POWERUP_CYCLES) {
+                currentPowerUpCycle++;
+            } else if (currentPowerUpCycle >= GameConstants.POWERUP_CYCLES) {
+                deactivatePowerUps();
             }
-        } else if (currentPowerUpCycle < GameConstants.POWERUP_CYCLES) {
-            currentPowerUpCycle++;
-        } else if (currentPowerUpCycle >= GameConstants.POWERUP_CYCLES) {
-            deactivatePowerUps();
         }
     }
 

@@ -61,7 +61,12 @@
     <string name="btnStartTutorial">Start Tutorial</string>
     <string name="toastNoOptionsOnTutorial">Options aren\'t available during the tutorial</string>
     <string name="tutorialIntro">"C_R_S_H is a game in which two little balls\n(balls, with feelings) battle each other in a race to score points\nand just beat each other up\n\nIn this tutorial we will show you\nthe different parts of the game\nso that there's no chaos or confusion\n(we DO love chaos or confusion, though)"</string>
-    <string name="tutorialMapOne">"Este es el mapa, en el puede haber distintos tips de casillas\nLas casillas de hierba verde permiten caminar sin problema"</string>
-    <string name="tutorialMapTwo">"Sin embargo, otras casillas te pueden bloquear\nLas cajas marrones y ladrillos te harán rebotar\ny los ladrillos revelarán cajas\n\nLas casillas de metal, son completamente irrompibles"</string>
+    <string name="tutorialMapOne">"This is the map, on the map you have different types of tiles\n the green ones are path tiles, you can walk on them"</string>
+    <string name="tutorialMapTwo">"The other tiles can block you though\nBrown boxes and red bricks will make you bounce\nalso, red bricks will reveal boxes\n\nGray steel tiles are just unbreakable"</string>
     <string name="tutorialTapScreen">"(Tap the screen to continue)"</string>
+    <string name="tutorialIndicatorsOne">"On the edges, you'll find indicators with information"</string>
+    <string name="tutorialIndicatorsTwo">"On the upper edge, you've got life indicators\nOn the left, with a blue border,the player one indicator\nOn the right, player two, or COM's indicator\nIn this case, against a machine, it's gray\nif it was against a human, it'd be red\n\nThe color will be the one of the player on the map"</string>
+    <string name="tutorialIndicatorsThree">"On the sides, attack indicators are found\nIf there's electricity, we will be angry and attacking\nOtherwise, we will be on defending mode\nModes will toggle when players collide or the timer ends"</string>
+    <string name="tutorialIndicatorsFour">"On the lower edge, we have the timer\nWhen the colored bar ends, the player modes toggle\nWhen attacking, you can damage the opponent\nIf you're defending your opponent will hurt you!"</string>
+    <string name="tutorialJoystick">a</string>
 </resources>

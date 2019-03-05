@@ -231,7 +231,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         this.playerOne = new PlayerCrsh(this, mapLoad, "TestP1", 1, true, new CircleComponent(playerOneCenter, mapLoad.getReference() / 2));
         PointF playerTwoCenter = new PointF(mapLoad.tileArray[mapLoad.tileArray.length - 3][mapLoad.tileArray[mapLoad.tileArray.length - 3].length - 3].getCollisionRect().exactCenterX(), mapLoad.tileArray[mapLoad.tileArray.length - 3][mapLoad.tileArray[mapLoad.tileArray.length - 3].length - 3].getCollisionRect().exactCenterY());
         if (this.gameMode == eGameMode.MODE_CRSH_COM || this.gameMode == eGameMode.MODE_NRML_COM || this.gameMode == eGameMode.MODE_TUTORIAL) {
-            this.playerCom = new PlayerComCrsh(this, mapLoad, true, new CircleComponent(playerTwoCenter, mapLoad.getReference() / 2));
+            this.playerCom = new PlayerComCrsh(this, mapLoad, false, new CircleComponent(playerTwoCenter, mapLoad.getReference() / 2));
         } else {
             this.playerTwo = new PlayerCrsh(this, mapLoad, "testP2", 2, false, new CircleComponent(playerTwoCenter, mapLoad.getReference() / 2));
         }
@@ -270,9 +270,9 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         right = this.mapLoad.tileArray[0][GameConstants.MAPAREA_COLUMNS - 1].getCollisionRect().right;
         bottom = this.mapLoad.tileArray[0][GameConstants.MAPAREA_COLUMNS - 1].getCollisionRect().bottom;
         if (this.gameMode == eGameMode.MODE_CRSH_COM || this.gameMode == eGameMode.MODE_NRML_COM || this.gameMode == eGameMode.MODE_TUTORIAL) {
-            this.lifeTwo = new LifeComponent(this.context, this, new Rect(left, top, right, bottom), playerCom.getPlayerLifes(), true, 2);
+            this.lifeTwo = new LifeComponent(this.context, this, new Rect(left, top, right, bottom), playerCom.getPlayerLifes(), true, 0);
         } else {
-            this.lifeTwo = new LifeComponent(this.context, this, new Rect(left, top, right, bottom), playerTwo.getPlayerLifes(), true, 0);
+            this.lifeTwo = new LifeComponent(this.context, this, new Rect(left, top, right, bottom), playerTwo.getPlayerLifes(), true, 2);
         }
 
 
@@ -1059,7 +1059,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
                 return playerOne.playerCollision;
             }
         }
-        if (gameMode == eGameMode.MODE_CRSH_COM || gameMode == eGameMode.MODE_NRML_COM) {
+        if (gameMode == eGameMode.MODE_CRSH_COM || gameMode == eGameMode.MODE_NRML_COM || gameMode == eGameMode.MODE_TUTORIAL) {
             if (playerID == 1) {
                 return playerCom.playerCollision;
             } else if (playerID == 0) {
@@ -1098,7 +1098,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
                     }
                 }
             }
-        } else if (gameMode == eGameMode.MODE_CRSH_COM || gameMode == eGameMode.MODE_NRML_COM) {
+        } else if (gameMode == eGameMode.MODE_CRSH_COM || gameMode == eGameMode.MODE_NRML_COM || gameMode == eGameMode.MODE_TUTORIAL) {
             if (playerID == 1 && !playerCom.isTakingHit() && !playerOne.isTakingHit()) {
                 playerCom.takeHit();
                 lifeTwo.loseALife();
@@ -1129,7 +1129,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         if (gameMode == eGameMode.MODE_NRML_2P || gameMode == eGameMode.MODE_CRSH_2P) {
             playerOne.togglePlayerMode();
             playerTwo.togglePlayerMode();
-        } else if (gameMode == eGameMode.MODE_NRML_COM || gameMode == eGameMode.MODE_CRSH_COM) {
+        } else if (gameMode == eGameMode.MODE_NRML_COM || gameMode == eGameMode.MODE_CRSH_COM || gameMode == eGameMode.MODE_TUTORIAL) {
             playerOne.togglePlayerMode();
             playerCom.togglePlayerMode();
         }
@@ -1276,28 +1276,36 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
     }
 
     public void setOnEndGame(boolean onEndGame, int deadPlayer) {
-        this.setOnPause(true);
-        if (!onEndGame) {
-            winner = -1;
-        }
-        if (deadPlayer == 1) {
-            if (gameMode == eGameMode.MODE_CRSH_COM || gameMode == eGameMode.MODE_NRML_COM) {
-                winner = 0;
+        if (gameMode != eGameMode.MODE_TUTORIAL) {
+            this.setOnPause(true);
+            if (!onEndGame) {
+                winner = -1;
+            }
+            if (deadPlayer == 1) {
+                if (gameMode == eGameMode.MODE_CRSH_COM || gameMode == eGameMode.MODE_NRML_COM) {
+                    winner = 0;
+                } else {
+                    winner = 2;
+                }
             } else {
-                winner = 2;
+                winner = 1;
             }
+            if (winner == 1) {
+                if (engineCallback.optionsManager.isRecord(playerOne.getPlayerScore())) {
+                    pauseMenu.setOnKeyboard(true, 1, playerOne.getPlayerScore());
+                }
+            } else if (winner == 2) {
+                if (engineCallback.optionsManager.isRecord(playerTwo.getPlayerScore())) {
+                    pauseMenu.setOnKeyboard(true, 2, playerTwo.getPlayerScore());
+                }
+            }
+            this.pauseMenu.setOnEndScreen(true, winner);
         } else {
-            winner = 1;
-        }
-        if (winner == 1) {
-            if (engineCallback.optionsManager.isRecord(playerOne.getPlayerScore())) {
-                pauseMenu.setOnKeyboard(true, 1, playerOne.getPlayerScore());
-            }
-        } else if (winner == 2) {
-            if (engineCallback.optionsManager.isRecord(playerTwo.getPlayerScore())) {
-                pauseMenu.setOnKeyboard(true, 2, playerTwo.getPlayerScore());
+            if (deadPlayer == 1) {
+                playerOne.respawn();
+            } else {
+                playerCom.respawn();
             }
         }
-        this.pauseMenu.setOnEndScreen(true, winner);
     }
 }
