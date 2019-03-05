@@ -113,6 +113,11 @@
     <string name="tutorialIndicatorsFour">"En la parte inferior, está el temporizador\nCuando el tiempo se acaba, cambia el modo\nEn modo de ataque, puedes dañar al oponente\nDefendiendo... !tocar a tu oponente te hará daño!"</string>
     <string name="tutorialPowerUpsOne">"Al puntuar, ganaras powerups\nestos se muestran bajo el indicador de ataque\n\nPARAR TIEMPO: este powerup detiene el temporizador\nSIN REBOTE: con este powerup no rebotarás al chocar\nINVENCIBLE: ¡Mientras tengas este poder, nada te hará daño!"</string>
     <string name="tutorialPowerUpsTwo">"FRENAR OPONENTE: Hará que tu oponente corra más lento\n\nFRENAR... ¿A MI MISMO?: ¡No todo iba a ser ventajas!"</string>
+    <string name="tutorialMoreOne">"Además, dispondrás de la pantalla de lanzamiento de juego\ncon opciones para acceder a partidas de un jugador o dos\ny el modo N_R_M_L con joystick o...\n\nC_R_S_H en donde el atacante controla\nsu personaje moviendo el móvil"</string>
+    <string name="tutorialMoreTwo">"En el menú principal encontrarás todas las otras opciones:\n\nCREADOR DE MAPAS: para hacer tu propio mapa y luego seleccionarlo\npara tu partida en la opción Jugar\n\nOPCIONES: un simple menú de opciones"</string>
+    <string name="tutorialMoreThree">"CRÉDITOS: los créditos de este juego\n\nRÉCORDS: Un tablón de récords, guarda hasta 10 récords\n\nTUTORIAL: ehm... ¿hola?"</string>
+    <string name="tutorialMoreFour">"¡FELICIDADES! HAS FINALIZADO EL TUTORIAL\n\nAhora prueba a jugar, y no rompas tu móvil (más aún)"</string>
+    <string name="tutorialTapToEnd">(Pulsa la pantalla para finalizar el tutorial)</string>
     <string name="btnNextStage" translatable="false"></string>
     <string name="tutorialJoystick">"Ahora, vamos a probar el joystick, y pegarnos contra la máquina\n(no te preocupes, no sufre)\nSimplemente pulsa y arrastra como si fuera\nun mando de videoconsola analógico\n¡Ataca cuando estés enfadado y tengas el rayo encendido!\n\nPara acabar el test, pulsa la flecha abajo a la derecha"</string>
     <string name="titleDeleteMap">¿Borrar este mapa?</string>

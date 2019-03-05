@@ -58,9 +58,23 @@ public class MainActivity extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         if (gameEngine == null) {
             gameEngine = new GameEngine(this);
+        } else {
+            gameEngine.setGameWorking(true);
         }
         gameEngine.setKeepScreenOn(true);
         setContentView(gameEngine);
+    }
+
+    /**
+     * Controls the actions when this activity is paused
+     */
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (gameEngine != null) {
+            gameEngine.pauseAllMusic();
+            gameEngine.setGameWorking(false);
+        }
     }
 
     /**

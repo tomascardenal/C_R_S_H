@@ -17,7 +17,6 @@ import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
@@ -36,7 +35,6 @@ import com.example.tomascrd.c_r_s_h.components.VisualTimerComponent;
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
 import com.example.tomascrd.c_r_s_h.core.GameEngine;
 import com.example.tomascrd.c_r_s_h.core.Utils;
-import com.example.tomascrd.c_r_s_h.structs.MapReference;
 import com.example.tomascrd.c_r_s_h.structs.PowerUps;
 import com.example.tomascrd.c_r_s_h.structs.RecordReference;
 import com.example.tomascrd.c_r_s_h.structs.eGameMode;
@@ -493,20 +491,6 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
     }
 
     /**
-     * Triggers a 500ms vibration
-     */
-    public void doLongVibration() {
-        if (engineCallback.optionsManager.isDoVibrate()) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                this.vibrator.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
-            }
-            {
-                this.vibrator.vibrate(500);
-            }
-        }
-    }
-
-    /**
      * Updates the physics of the elements on the screen
      */
     @Override
@@ -708,6 +692,8 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
                     //Control unwanted swipes onto the pause button
                     if (isClick(btnPause, event)) {
                         btnPause.pointerId = event.getPointerId(event.getActionIndex());
+                    } else {
+                        btnPause.pointerId = -10;
                     }
                 }
                 break;
@@ -748,6 +734,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
                     if (playerTwo.getPlayerLifes() > 0 && !playerTwo.isOnAttack()) {
                         joystickTwo.onMoveEvent(event, screenWidth / 2 + 100, false);
                     }
+
                 }
                 break;
         }
@@ -761,7 +748,6 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
      * @return a new sceneId if it changed, or this id if it didn't change
      */
     public int touchManagerNRMLTwoPlayers(MotionEvent event) {
-
         int action = event.getActionMasked();
         boolean playerOneArea = event.getX(event.getActionIndex()) < screenWidth / 2 - 100;
         boolean playerTwoArea = event.getX(event.getActionIndex()) > screenWidth / 2 + 100;
@@ -775,6 +761,12 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
                     }
                     if (playerTwoArea && playerTwo.getPlayerLifes() > 0) {
                         joystickTwo.activateJoystick(event);
+                    }
+                    //Control unwanted swipes onto the pause button
+                    if (isClick(btnPause, event)) {
+                        btnPause.pointerId = event.getPointerId(event.getActionIndex());
+                    } else {
+                        btnPause.pointerId = -10;
                     }
                 }
                 break;
@@ -796,16 +788,15 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
                             playerTwo.setVelocity(0, 0);
                         }
                     }
+                    if (isClick(btnPause, event) && event.getPointerId(event.getActionIndex()) == btnPause.pointerId) {
+                        onPause = true;
+                    }
                 } else {
                     int pauseResult = onPauseMenu(event);
                     if (pauseResult != -1) {
                         return pauseResult;
                     }
                 }
-                if (isClick(btnPause, event)) {
-                    onPause = true;
-                }
-
                 break;
             case MotionEvent.ACTION_MOVE: // Any finger moves
                 //Joystick moving
@@ -839,6 +830,12 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
                     if (playerOne.getPlayerLifes() > 0 && !playerOne.isOnAttack()) {
                         joystickOne.activateJoystick(event);
                     }
+                    //Control unwanted swipes onto the pause button
+                    if (isClick(btnPause, event)) {
+                        btnPause.pointerId = event.getPointerId(event.getActionIndex());
+                    } else {
+                        btnPause.pointerId = -10;
+                    }
                 }
                 break;
             case MotionEvent.ACTION_UP:                     // Last finger up
@@ -852,7 +849,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
                             playerOne.setVelocity(0, 0);
                         }
                     }
-                    if (isClick(btnPause, event)) {
+                    if (isClick(btnPause, event) && event.getPointerId(event.getActionIndex()) == btnPause.pointerId) {
                         onPause = true;
                     }
                 } else {
@@ -890,6 +887,12 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
                     if (playerOne.getPlayerLifes() > 0) {
                         joystickOne.activateJoystick(event);
                     }
+                    //Control unwanted swipes onto the pause button
+                    if (isClick(btnPause, event)) {
+                        btnPause.pointerId = event.getPointerId(event.getActionIndex());
+                    } else {
+                        btnPause.pointerId = -10;
+                    }
                 }
                 break;
             case MotionEvent.ACTION_UP:                     // Last finger up
@@ -903,16 +906,15 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
                             playerOne.setVelocity(0, 0);
                         }
                     }
+                    if (isClick(btnPause, event) && event.getPointerId(event.getActionIndex()) == btnPause.pointerId) {
+                        onPause = true;
+                    }
                 } else {
                     int pauseResult = onPauseMenu(event);
                     if (pauseResult != -1) {
                         return pauseResult;
                     }
                 }
-                if (isClick(btnPause, event)) {
-                    onPause = true;
-                }
-
                 break;
             case MotionEvent.ACTION_MOVE: // Any finger moves
                 //Joystick moving
@@ -1067,6 +1069,24 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
             }
         }
         return null;
+    }
+
+    /**
+     * Tells whether the opponent is being hit by the sender
+     *
+     * @param playerID the id of the sender
+     * @return true if the opponent is taking hit
+     */
+    public boolean isOpponentOnHit(int playerID) {
+        if (playerID == 1) {
+            if (gameMode == eGameMode.MODE_CRSH_2P || gameMode == eGameMode.MODE_NRML_2P) {
+                return playerTwo.isTakingHit();
+            } else {
+                return playerCom.isTakingHit();
+            }
+        } else {
+            return playerOne.isTakingHit();
+        }
     }
 
     /**

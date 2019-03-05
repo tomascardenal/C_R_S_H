@@ -8,7 +8,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Shader;
 import android.graphics.Typeface;
-import android.util.Log;
 
 import com.example.tomascrd.c_r_s_h.R;
 import com.example.tomascrd.c_r_s_h.core.GameConstants;

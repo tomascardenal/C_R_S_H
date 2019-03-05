@@ -34,7 +34,7 @@ public class BackgroundComponent {
     /**
      * Moves this backgrounds' x position the indicated velocity
      *
-     * @param velocity
+     * @param velocity the velocity at which this background moves
      */
     public void moveX(int velocity) {
         position.x += velocity;

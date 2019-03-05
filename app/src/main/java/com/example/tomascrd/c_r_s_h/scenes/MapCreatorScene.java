@@ -372,6 +372,11 @@ public class MapCreatorScene extends SceneCrsh {
         return -1;
     }
 
+    /**
+     * Deletes a map from the collection
+     *
+     * @return true if done, false if not done
+     */
     public boolean deleteAMap() {
         boolean didIt = false;
         if (creatorMap.mapID != -20 && this.newId != -20) {

@@ -400,6 +400,18 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     /**
+     * Pauses all the music in the game
+     */
+    public void pauseAllMusic() {
+        if (mainGameScene != null && currentScene instanceof MainGameScene) {
+            mainGameScene.setOnPause(true);
+        }
+        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+            mediaPlayer.pause();
+        }
+    }
+
+    /**
      * Plays a sound effect
      *
      * @param soundEffect the eSoundEffect value corresponding to the effect to play
@@ -482,6 +494,25 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     /**
+     * Tells if the engine is working
+     *
+     * @return the value of the boolean
+     */
+    public boolean isGameWorking() {
+        return gameWorking;
+    }
+
+    /**
+     * Sets this game thread to work or not
+     *
+     * @param gameWorking the new value of the boolean
+     *
+     */
+    public void setGameWorking(boolean gameWorking) {
+        this.gameWorking = gameWorking;
+    }
+
+    /**
      * Main thread of the game
      *
      * @author Tomás Cardenal
@@ -502,7 +533,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
             long timeRef = System.nanoTime();
             long timeSleep = 0;
             //Thread loop
-            while (gameWorking) {
+            while (isGameWorking()) {
                 //Retake the volume reference if it changed
                 updateVolume();
                 Canvas c = null;
@@ -554,7 +585,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
          * @param work the new working state
          */
         protected void setWorking(boolean work) {
-            gameWorking = work;
+            setGameWorking(work);
         }
 
         /**

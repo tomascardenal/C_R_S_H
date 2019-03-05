@@ -84,7 +84,7 @@ public class TileComponent extends DrawableComponent {
      * @param y      top right y coordinate
      * @param width  the rect's width
      * @param height the rect's height
-     * @return
+     * @return true if there's collision
      */
     public boolean getCollision(int x, int y, int width, int height) {
         return this.collisionRect.intersects(x, y, x + width, y + height);

@@ -71,6 +71,11 @@
     <string name="tutorialJoystick">"Now, lets test the joystick, and fight the machine!\n(don't worry, it doesn't suffer)\nJust click and drag as if you were\nplaying with an analog thumbstick\n¡Attack when you're angry and electricity is on!\n\nTo end the demo game, tap the arrow down and to the right"</string>
     <string name="tutorialPowerUpsOne">"When scoring points, you'll gain powerups\nthese are shown under the attack indicators\n\nSTOP TIMER: this powerup stops the timer\nNO BOUNCE: this powerup stops you from bouncing back\nINVINCIBLE: While this power up is on, nothing can hurt you!"</string>
     <string name="tutorialPowerUpsTwo">"SLOW OPPONENT: This powerup will make your opponent run slower\n\nSLOW... MYSELF?: Not all things in life are beautiful!"</string>
+    <string name="tutorialMoreOne">"You'll also have access to our main menu!\nWith options to play alone or against someone\nand both the N_R_M_L joystick mode or...\n\nC_R_S_H in which the attacking player controls\nit's ball tilting the phone!"</string>
+    <string name="tutorialMoreTwo">"In the main menu you'll find these other options:\n\nMAP CREATOR: You can create your own map and then use it\nfor your game on the Play option\n\nOPTIONS: A plain ol'reliable options menu"</string>
+    <string name="tutorialMoreThree">"CREDITS: Just the credits\n\nRECORDS: A records table, up to ten records!\n\nTUTORIAL: uhh... ¿hello?"</string>
+    <string name="tutorialMoreFour">"CONGRATULATIONS, YOU JUST FINISHED THIS TUTORIAL!\n\nNow go play and don't crash your phone..."</string>
+    <string name="tutorialTapToEnd">(Tap the screen to end this tutorial)</string>
     <string name="titleDeleteMap">Delete this map?</string>
     <string name="toastMapDeleted">The map was sucessfully deleted</string>
     <string name="toastMapNotDeleted">The map couldn\'t be deleted</string>

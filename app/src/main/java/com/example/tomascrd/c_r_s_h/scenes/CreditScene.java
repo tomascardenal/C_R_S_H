@@ -10,7 +10,6 @@ import android.graphics.Rect;
 import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.net.Uri;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import com.example.tomascrd.c_r_s_h.R;

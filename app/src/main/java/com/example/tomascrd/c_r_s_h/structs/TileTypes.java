@@ -1,7 +1,5 @@
 package com.example.tomascrd.c_r_s_h.structs;
 
-import com.example.tomascrd.c_r_s_h.components.TileComponent;
-
 /**
  * Represents the different types of tile and provides tools to translate the eTileType enum
  *

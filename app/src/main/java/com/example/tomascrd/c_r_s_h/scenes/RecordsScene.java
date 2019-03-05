@@ -140,6 +140,9 @@ public class RecordsScene extends SceneCrsh {
         pRecordsText.setAlpha(255);
     }
 
+    /**
+     * Generates the strings containing the records
+     */
     private void generateRecordStrings() {
         if (recordStrings != null) {
             recordStrings.clear();

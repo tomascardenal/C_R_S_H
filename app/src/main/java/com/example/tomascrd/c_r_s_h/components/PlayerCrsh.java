@@ -165,14 +165,6 @@ public class PlayerCrsh extends DrawableComponent {
      * Indicates if the slow myself power up is on
      */
     private boolean powerSlowMyself;
-    /**
-     * Indicator for the player one
-     */
-    private CircleComponent playerOneIndicator[];
-    /**
-     * Indicator for the player two
-     */
-    private CircleComponent playerTwoIndicator[];
 
     /**
      * Initializes a player to it's parameters, with a given CircleComponent
@@ -672,12 +664,14 @@ public class PlayerCrsh extends DrawableComponent {
         if (movedCircle.collision(opponentCircle)) {
             Log.i("CrshDebug", "Collision between players");
             if (this.isOnAttack()) {
-                if (playerLifes > 2) {
-                    addPlayerScore(50);
-                } else if (playerLifes > 1) {
-                    addPlayerScore(100);
-                } else {
-                    addPlayerScore(200);
+                if (!gameCallback.isOpponentOnHit(playerId)) {
+                    if (playerLifes > 2) {
+                        addPlayerScore(5);
+                    } else if (playerLifes > 1) {
+                        addPlayerScore(10);
+                    } else {
+                        addPlayerScore(20);
+                    }
                 }
                 gameCallback.hitOpponent(this.playerId);
             }

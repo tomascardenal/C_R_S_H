@@ -22,7 +22,6 @@ import com.example.tomascrd.c_r_s_h.structs.eGameMode;
  * @author Tomás Cardenal López
  */
 public class TutorialScene extends MainGameScene {
-    //FIXME adjust tutorial strings to fit the screen accordingly to the stage
 
     /**
      * Enumerates the tutorial stages
@@ -38,21 +37,9 @@ public class TutorialScene extends MainGameScene {
     }
 
     /**
-     * Maximum number of stage index
-     */
-    private static final int MAX_STAGES = 7;
-    /**
      * Max number of remaining cycles to tapToContinue state
      */
-    private static final int MAX_TAPTOCONTINUE = 40;
-    /**
-     * Constant id for TutorialScene
-     */
-    public static final int TUTORIAL_ID = 5;
-    /**
-     * Current stage index
-     */
-    private int stageIndex;
+    private static final int MAX_TAPTOCONTINUE = 80;
     /**
      * Button to go to the next stage (only avaiable on some stages)
      */
@@ -109,6 +96,10 @@ public class TutorialScene extends MainGameScene {
      * String references for powerups stage of the tutorial
      */
     private static final int[] powerupsStageTextRef = {R.string.tutorialPowerUpsOne, R.string.tutorialPowerUpsTwo};
+    /**
+     * String references for more stage of the tutorial
+     */
+    private static final int[] moreStageTextRef = {R.string.tutorialMoreOne, R.string.tutorialMoreTwo, R.string.tutorialMoreThree, R.string.tutorialMoreFour};
 
     /**
      * Starts a tutorial screen
@@ -162,7 +153,6 @@ public class TutorialScene extends MainGameScene {
      */
     private void restartTutorialVariables() {
         this.onPause = false;
-        this.stageIndex = 0;
         this.currentTextIndex = 0;
         this.currentStage = eTutorialStage.STAGE_WAITINGROOM;
         this.onInteractiveTest = false;
@@ -240,6 +230,7 @@ public class TutorialScene extends MainGameScene {
                     drawStagePowerups(c);
                     break;
                 case STAGE_MORE:
+                    drawStageMore(c);
                     break;
             }
             if (tapToContinue && currentStage != eTutorialStage.STAGE_WAITINGROOM && !onInteractiveTest) {
@@ -247,6 +238,8 @@ public class TutorialScene extends MainGameScene {
                     pTutorialText.setColor(Color.WHITE);
                     c.drawText(context.getString(R.string.tutorialTapScreen), screenWidth / 2, screenHeight - pTutorialText.getTextSize(), pTutorialText);
                     pTutorialText.setColor(Color.BLACK);
+                } else if (currentStage == eTutorialStage.STAGE_MORE && currentTextIndex == 3) {
+                    c.drawText(context.getString(R.string.tutorialTapToEnd), screenWidth / 2, screenHeight - pTutorialText.getTextSize(), pTutorialText);
                 } else {
                     c.drawText(context.getString(R.string.tutorialTapScreen), screenWidth / 2, screenHeight - pTutorialText.getTextSize(), pTutorialText);
                 }
@@ -259,7 +252,7 @@ public class TutorialScene extends MainGameScene {
     /**
      * Draws the screen during the waiting room stage
      *
-     * @param c
+     * @param c the canvas to draw
      */
     private void drawStageWaitingRoom(Canvas c) {
         c.drawText(context.getString(R.string.btnTutorial), screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9, screenHeight / GameConstants.MENUSCREEN_ROWS, pTitleText);
@@ -430,7 +423,25 @@ public class TutorialScene extends MainGameScene {
             row++;
         }
         pTutorialText.setTextAlign(Paint.Align.CENTER);
+    }
 
+    /**
+     * Draws the screen during the tutorial "more" stage
+     *
+     * @param c the canvas to draw
+     */
+    private void drawStageMore(Canvas c) {
+        //Buttons
+        btnPause.draw(c);
+        String[] introLines = context.getString(moreStageTextRef[currentTextIndex]).split("\n");
+        int row = 1;
+        //Draw all the lines shifted by a row
+        for (String line : introLines) {
+            float x = screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9;
+            float y = pTutorialText.getTextSize() * 1.75f * row;
+            c.drawText(line, x, y, pTutorialText);
+            row++;
+        }
     }
 
     /**
@@ -628,6 +639,12 @@ public class TutorialScene extends MainGameScene {
                     if (playerOne.getPlayerLifes() > 0) {
                         joystickOne.activateJoystick(event);
                     }
+                    //Control unwanted swipes onto the pause button
+                    if (isClick(btnPause, event)) {
+                        btnPause.pointerId = event.getPointerId(event.getActionIndex());
+                    } else {
+                        btnPause.pointerId = -10;
+                    }
                 }
                 break;
             case MotionEvent.ACTION_UP:                     // Last finger up
@@ -642,14 +659,20 @@ public class TutorialScene extends MainGameScene {
                         }
                     }
                     if (isClick(btnNextStage, event)) {
-                        //FIXME this is just a test
                         onInteractiveTest = false;
                         resetTapToContinue();
                         this.currentStage = eTutorialStage.STAGE_POWERUPS;
                     }
+                    if (isClick(btnPause, event) && event.getPointerId(event.getActionIndex()) == btnPause.pointerId) {
+                        onPause = true;
+                    }
                 } else if (!onPause && tapToContinue) {
-                    onInteractiveTest = true;
-                    tapToContinue = false;
+                    if (isClick(btnPause, event)) {
+                        onPause = true;
+                    } else {
+                        onInteractiveTest = true;
+                        tapToContinue = false;
+                    }
                 } else if (onPause) {
                     int pauseResult = onPauseMenu(event);
                     if (pauseResult != -1) {
@@ -658,9 +681,6 @@ public class TutorialScene extends MainGameScene {
                         }
                         return pauseResult;
                     }
-                }
-                if (isClick(btnPause, event)) {
-                    onPause = true;
                 }
 
                 break;
@@ -702,7 +722,7 @@ public class TutorialScene extends MainGameScene {
                             currentTextIndex++;
                         } else {
                             currentTextIndex = 0;
-                            currentStage = eTutorialStage.STAGE_WAITINGROOM;
+                            currentStage = eTutorialStage.STAGE_MORE;
                         }
                     }
                 } else {
@@ -739,6 +759,15 @@ public class TutorialScene extends MainGameScene {
                 if (!onPause) {
                     if (isClick(btnPause, event)) {
                         onPause = true;
+                    }
+                    if (tapToContinue) {
+                        resetTapToContinue();
+                        if (currentTextIndex < moreStageTextRef.length - 1) {
+                            currentTextIndex++;
+                        } else {
+                            currentTextIndex = 0;
+                            currentStage = eTutorialStage.STAGE_WAITINGROOM;
+                        }
                     }
                 } else {
                     int pauseResult = onPauseMenu(event);
