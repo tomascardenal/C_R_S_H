@@ -277,7 +277,7 @@ public class OptionsManager {
      */
     public boolean loadRecords() {
         int recordCount = preferences.getInt(GameConstants.PREFERENCES_RECORDCOUNT, 0);
-        try (FileInputStream fis = context.openFileInput(GameConstants.MAPLIST_FILE_NAME)) {
+        try (FileInputStream fis = context.openFileInput(GameConstants.RECORDLIST_FILE_NAME)) {
             DataInputStream input = new DataInputStream(fis);
             for (int i = 0; i < recordCount; i++) {
                 RecordReference currentRecord;
@@ -309,7 +309,7 @@ public class OptionsManager {
      */
     public boolean saveRecords() {
         DataOutputStream output = null;
-        try (FileOutputStream fos = context.openFileOutput(GameConstants.MAPLIST_FILE_NAME, Context.MODE_PRIVATE)) {
+        try (FileOutputStream fos = context.openFileOutput(GameConstants.RECORDLIST_FILE_NAME, Context.MODE_PRIVATE)) {
             output = new DataOutputStream(fos);
             for (int i = 0; i < recordReferences.size(); i++) {
                 RecordReference currentRef = recordReferences.get(i);
@@ -330,7 +330,7 @@ public class OptionsManager {
      */
     public void emptyRecords() {
         recordReferences.clear();
-        context.deleteFile(GameConstants.MAPLIST_FILE_NAME);
+        context.deleteFile(GameConstants.RECORDLIST_FILE_NAME);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt(GameConstants.PREFERENCES_RECORDCOUNT, recordReferences.size());
         editor.commit();
@@ -349,6 +349,21 @@ public class OptionsManager {
             }
         }
         mapReferences.add(reference);
+        return mapReferences.size();
+    }
+
+    /**
+     * Removes a map reference from the list
+     *
+     * @param reference The map reference to remove
+     * @return an int with the map list size
+     */
+    public int removeMap(MapReference reference) {
+        for (int i = mapReferences.size() - 1; i >= 0; i--) {
+            if (mapReferences.get(i).mapId == reference.mapId) {
+                mapReferences.remove(i);
+            }
+        }
         return mapReferences.size();
     }
 

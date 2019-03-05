@@ -237,7 +237,13 @@ public class TutorialScene extends MainGameScene {
                     break;
             }
             if (tapToContinue && currentStage != eTutorialStage.STAGE_WAITINGROOM && !onInteractiveTest) {
-                c.drawText(context.getString(R.string.tutorialTapScreen), screenWidth / 2, screenHeight - pTutorialText.getTextSize(), pTutorialText);
+                if (currentStage == eTutorialStage.STAGE_INDICATORS) {
+                    pTutorialText.setColor(Color.WHITE);
+                    c.drawText(context.getString(R.string.tutorialTapScreen), screenWidth / 2, screenHeight - pTutorialText.getTextSize(), pTutorialText);
+                    pTutorialText.setColor(Color.BLACK);
+                } else {
+                    c.drawText(context.getString(R.string.tutorialTapScreen), screenWidth / 2, screenHeight - pTutorialText.getTextSize(), pTutorialText);
+                }
             }
         } else {
             pauseMenu.draw(c);

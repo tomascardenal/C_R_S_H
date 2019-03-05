@@ -3,6 +3,7 @@ package com.example.tomascrd.c_r_s_h.scenes;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.util.Log;
@@ -27,6 +28,14 @@ import com.example.tomascrd.c_r_s_h.structs.TileTypes;
  */
 public class MapCreatorScene extends SceneCrsh {
     /**
+     * Button for unconfirming an action
+     */
+    private ButtonComponent btnConfirmNo;
+    /**
+     * Button for confirming an action
+     */
+    private ButtonComponent btnConfirmYes;
+    /**
      * Callback to access the game engine
      */
     private GameEngine engineCallback;
@@ -39,6 +48,14 @@ public class MapCreatorScene extends SceneCrsh {
      */
     private boolean onPause;
     /**
+     * Indicates if the map was already saved or loaded
+     */
+    private boolean mapWasSavedOrLoaded;
+    /**
+     * Controls whether the scene is showing the creator or confirming the deletion of a map
+     */
+    private boolean onConfirmingDeletion;
+    /**
      * Pause menu
      */
     private SaveMenuComponent saveMenu;
@@ -46,6 +63,10 @@ public class MapCreatorScene extends SceneCrsh {
      * Pause button
      */
     private ButtonComponent btnPause;
+    /**
+     * Button for deleting the current map
+     */
+    private ButtonComponent btnDeleteMap;
     /**
      * Id for the new map
      */
@@ -72,8 +93,16 @@ public class MapCreatorScene extends SceneCrsh {
 
         //Initialize variables
         super(context, MAPCREATOR_ID, screenWidth, screenHeight);
+        this.mapWasSavedOrLoaded = false;
+        this.onConfirmingDeletion = false;
         this.engineCallback = engineCallback;
         newId = engineCallback.optionsManager.getMapNames().size();
+
+        pTitleText = new Paint();
+        pTitleText.setTypeface(Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN));
+        pTitleText.setColor(Color.BLACK);
+        pTitleText.setTextAlign(Paint.Align.CENTER);
+        pTitleText.setTextSize((float) ((screenHeight / GameConstants.MENUSCREEN_COLUMNS) * 2));
 
         //Initialize map
         getNewEmptyMap(true);
@@ -84,24 +113,33 @@ public class MapCreatorScene extends SceneCrsh {
                 Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_AWESOME), context.getString(R.string.btnEditorTools),
                 screenWidth - screenWidth / 16, 0, screenWidth, screenWidth / 16, Color.TRANSPARENT, 0, false, 0);
 
+        this.btnDeleteMap = new ButtonComponent(context,
+                Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_AWESOME), context.getString(R.string.btnEmptyRecords),
+                0, 0, screenWidth / 16, screenWidth / 16, Color.TRANSPARENT, 0, false, -1);
+
+        this.btnConfirmYes = new ButtonComponent(context, Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_AWESOME), context.getString(R.string.btnConfirmYes),
+                (int) (screenWidth / 2 - btnDeleteMap.width * 4),
+                (int) screenHeight / 2,
+                (int) (screenWidth / 2 - btnDeleteMap.width * 3),
+                (int) (screenHeight / 2 + btnDeleteMap.height),
+                Color.TRANSPARENT, 0,
+                false, -1);
+
+        this.btnConfirmNo = new ButtonComponent(context, Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_AWESOME),
+                context.getString(R.string.btnConfirmNo),
+                (int) (screenWidth / 2 + btnDeleteMap.width * 3),
+                (int) screenHeight / 2,
+                (int) (screenWidth / 2 + btnDeleteMap.width * 4),
+                (int) (screenHeight / 2 + btnDeleteMap.height),
+                Color.TRANSPARENT, 0,
+                false, -1);
+
         //Pause menu
         this.saveMenu = new SaveMenuComponent(this.context, this.creatorMap.xLeft, this.creatorMap.yTop, this.creatorMap.mapAreaWidth, this.creatorMap.mapAreaHeight, this.engineCallback, this);
         this.saveMenu.currentMapID = newId;
         this.saveMenu.currentMapName = currentMapName;
     }
 
-    private void getNewEmptyMap(boolean onStart) {
-        this.creatorMap = new MapComponent(-20, context, screenWidth, screenHeight, engineCallback.loader);
-        this.creatorMap.loadTileArray();
-        this.currentMapName = context.getString(R.string.unnamedMap);
-        this.newId = engineCallback.optionsManager.getMapNames().size();
-        this.creatorMap.mapID = this.newId;
-        if (!onStart) {
-            this.saveMenu.currentMapID = newId;
-            this.saveMenu.currentMapName = currentMapName;
-            Toast.makeText(this.context, context.getString(R.string.toastNewMap) + currentMapName, Toast.LENGTH_SHORT).show();
-        }
-    }
 
     /**
      * Updates the physics of the elements on the screen
@@ -121,10 +159,20 @@ public class MapCreatorScene extends SceneCrsh {
         //General background
         super.draw(c);
         if (!onPause) {
-            //Draw map
-            creatorMap.draw(c);
-            //Draw the pause button
-            btnPause.draw(c);
+            if (onConfirmingDeletion) {
+                c.drawText(context.getString(R.string.titleDeleteMap), screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9, screenHeight / GameConstants.MENUSCREEN_ROWS, pTitleText);
+                btnConfirmNo.draw(c);
+                btnConfirmYes.draw(c);
+            } else {
+                //Draw map
+                creatorMap.draw(c);
+                //Draw the pause button
+                btnPause.draw(c);
+                //Draw the delete map button
+                if (mapWasSavedOrLoaded) {
+                    btnDeleteMap.draw(c);
+                }
+            }
         } else {
             saveMenu.draw(c);
         }
@@ -151,10 +199,23 @@ public class MapCreatorScene extends SceneCrsh {
             case MotionEvent.ACTION_UP:                     // Last finger up
             case MotionEvent.ACTION_POINTER_UP:  // Any other finger up
                 if (!onPause) {
-                    if (isClick(btnPause, event)) {
-                        onPause = true;
+                    if (onConfirmingDeletion) {
+                        if (isClick(btnConfirmNo, event)) {
+                            onConfirmingDeletion = false;
+                        }
+                        if (isClick(btnConfirmYes, event)) {
+                            onConfirmingDeletion = false;
+                            deleteAMap();
+                        }
+                    } else {
+                        if (mapWasSavedOrLoaded && isClick(btnDeleteMap, event)) {
+                            onConfirmingDeletion = true;
+                        }
+                        if (isClick(btnPause, event)) {
+                            onPause = true;
+                        }
+                        iterateTiles(event);
                     }
-                    iterateTiles(event);
                 } else {
                     int saveResult = onSaveMenu(event);
                     if (saveResult != -1) {
@@ -311,12 +372,31 @@ public class MapCreatorScene extends SceneCrsh {
         return -1;
     }
 
+    public boolean deleteAMap() {
+        boolean didIt = false;
+        if (creatorMap.mapID != -20 && this.newId != -20) {
+            didIt = context.deleteFile(newId + GameConstants.MAPFILE_NAME);
+            if (didIt) {
+                engineCallback.optionsManager.removeMap(new MapReference(newId, currentMapName));
+                saveMenu.mapNames.clear();
+                saveMenu.mapNames = engineCallback.optionsManager.getMapNames();
+                getNewEmptyMap(false);
+                Toast.makeText(this.context, context.getString(R.string.toastMapDeleted), Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this.context, context.getString(R.string.toastMapNotDeleted), Toast.LENGTH_SHORT).show();
+            }
+        }
+        return didIt;
+    }
+
+
     /**
      * Saves a map and prompts the user with a toast informing of the result
      *
      * @return whether the map was saved or not
      */
     public boolean saveAMap() {
+        mapWasSavedOrLoaded = true;
         creatorMap.mapID = newId;
         saveMenu.currentMapID = newId;
         engineCallback.optionsManager.addMap(new MapReference(newId, currentMapName));
@@ -340,6 +420,7 @@ public class MapCreatorScene extends SceneCrsh {
      * @return whether the map was loaded or not
      */
     public boolean loadAMap() {
+        mapWasSavedOrLoaded = true;
         newId = engineCallback.optionsManager.getMapId(saveMenu.mapNames.get(saveMenu.currentLoadIndex));
         saveMenu.currentMapID = newId;
         boolean didIt = creatorMap.loadMap(newId);
@@ -352,6 +433,26 @@ public class MapCreatorScene extends SceneCrsh {
             Toast.makeText(this.context, context.getString(R.string.toastMapNotLoaded), Toast.LENGTH_SHORT).show();
         }
         return didIt;
+    }
+
+    /**
+     * Generates a new empty map
+     *
+     * @param onStart whether the creator is being initialized or not
+     */
+    private void getNewEmptyMap(boolean onStart) {
+        this.creatorMap = new MapComponent(-20, context, screenWidth, screenHeight, engineCallback.loader);
+        this.creatorMap.loadTileArray();
+        this.currentMapName = context.getString(R.string.unnamedMap);
+        this.newId = engineCallback.optionsManager.getMapNames().size();
+        this.creatorMap.mapID = this.newId;
+        this.mapWasSavedOrLoaded = false;
+        this.onConfirmingDeletion = false;
+        if (!onStart) {
+            this.saveMenu.currentMapID = newId;
+            this.saveMenu.currentMapName = currentMapName;
+            Toast.makeText(this.context, context.getString(R.string.toastNewMap) + currentMapName, Toast.LENGTH_SHORT).show();
+        }
     }
 
 

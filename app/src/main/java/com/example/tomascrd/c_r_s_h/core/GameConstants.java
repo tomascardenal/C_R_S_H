@@ -121,6 +121,10 @@ public final class GameConstants {
      */
     public final static String MAPLIST_FILE_NAME = "maplist.crsh";
     /**
+     * Reference name for the records list
+     */
+    public final static String RECORDLIST_FILE_NAME = "records.crsh";
+    /**
      * Reference for the SharedPreferences
      */
     public final static String PREFERENCES_NAME = "options.crsh";

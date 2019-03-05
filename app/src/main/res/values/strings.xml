@@ -108,9 +108,12 @@
     <string name="tutorialMapTwo">"Sin embargo, otras casillas te pueden bloquear\nLas cajas marrones y ladrillos te harán rebotar\ny los ladrillos revelarán cajas\n\nLas casillas de metal, son completamente irrompibles"</string>
     <string name="tutorialTapScreen">"(Pulsa la pantalla para continuar)"</string>
     <string name="tutorialIndicatorsOne">"En los bordes, verás indicadores con información"</string>
-    <string name="tutorialIndicatorsTwo">"Arriba están las vidas de los jugadores\nEn la izquierda, el jugador uno, con borde color azul\nEn la derecha, el jugador dos o la máquina\nEn este caso, es gris\nde ser contra otro humano, será rojo\n\nEl color corresponde al del jugador en el mapa"</string>
-    <string name="tutorialIndicatorsThree">"A los lados, tenemos los indicadores de ataque\nSi hay un rayo, estaremos enfadados y estaremos atacando\nEn caso contrario, estaremos defendiendo\nEste modo cambia cuando chocan los jugadores\no cuando se acaba el temporizador"</string>
-    <string name="tutorialIndicatorsFour">"En la parte inferior, está el temporizador de turno\nCuando la barra de colores se acaba, cambia el modo\nCuando un jugador está en modo de ataque, puede dañar al otro\n¡Si estás defendiendo, tocar a tu oponente te hará daño!"</string>
+    <string name="tutorialIndicatorsTwo">"Arriba están las vidas de los jugadores\nA la izquierda: jugador uno, con borde color azul\nEn la derecha, el jugador dos o la máquina\n\nEn este caso, es gris\nde ser contra otro humano, será rojo\nEl color corresponde al del jugador en el mapa"</string>
+    <string name="tutorialIndicatorsThree">"A los lados, tenemos los indicadores de ataque\nSi hay un rayo, estaremos enfadados y atacando\nEn caso contrario, estaremos defendiendo\nEste modo cambia cuando chocan los jugadores\no cuando se acaba el temporizador"</string>
+    <string name="tutorialIndicatorsFour">"En la parte inferior, está el temporizador\nCuando el tiempo se acaba, cambia el modo\nEn modo de ataque, puedes dañar al oponente\nDefendiendo... !tocar a tu oponente te hará daño!"</string>
     <string name="btnNextStage" translatable="false"></string>
     <string name="tutorialJoystick">"Ahora, vamos a probar el joystick, y pegarnos contra la máquina\n(no te preocupes, no sufre)\nSimplemente pulsa y arrastra como si fuera\nun mando de videoconsola analógico\n¡Ataca cuando estés enfadado y tengas el rayo encendido!\n\nPara acabar el test, pulsa la flecha abajo a la derecha"</string>
+    <string name="titleDeleteMap">¿Borrar este mapa?</string>
+    <string name="toastMapDeleted">El mapa se ha borrado correctamente</string>
+    <string name="toastMapNotDeleted">El mapa no se ha podido borrar</string>
 </resources>
