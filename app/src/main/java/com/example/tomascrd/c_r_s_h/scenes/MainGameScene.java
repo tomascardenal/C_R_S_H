@@ -73,11 +73,11 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
     /**
      * Map to load on the main game scene
      */
-    private MapComponent mapLoad;
+    protected MapComponent mapLoad;
     /**
      * Timer for turn switching
      */
-    private VisualTimerComponent timer;
+    protected VisualTimerComponent timer;
     /**
      * Life indicator for player one
      */
@@ -89,7 +89,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
     /**
      * Player 1 or side player
      */
-    private PlayerCrsh playerOne;
+    protected PlayerCrsh playerOne;
     /**
      * Player 2 or side player
      */
@@ -97,11 +97,11 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
     /**
      * COM Player
      */
-    private PlayerComCrsh playerCom;
+    protected PlayerComCrsh playerCom;
     /**
      * Joystick for player one
      */
-    private JoystickComponent joystickOne;
+    protected JoystickComponent joystickOne;
     /**
      * Joystick for player one
      */
@@ -128,19 +128,19 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
     /**
      * Callback to access the game engine
      */
-    private GameEngine engineCallback;
+    protected GameEngine engineCallback;
     /**
      * Indicates whether the game is paused or not
      */
-    private boolean onPause;
+    protected boolean onPause;
     /**
      * Pause menu
      */
-    private PauseMenuComponent pauseMenu;
+    protected PauseMenuComponent pauseMenu;
     /**
      * Pause button
      */
-    private ButtonComponent btnPause;
+    protected ButtonComponent btnPause;
     /**
      * Sensor manager for the accelerometer
      */
@@ -160,35 +160,35 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
     /**
      * Rect for indicating the player one mode
      */
-    private Rect modeOne;
+    protected Rect modeOne;
     /**
      * Rect for indicating the player two mode
      */
-    private Rect modeTwo;
+    protected Rect modeTwo;
     /**
      * Paint for mode one
      */
-    private Paint paintModeOne;
+    protected Paint paintModeOne;
     /**
      * Paint for mode two
      */
-    private Paint paintModeTwo;
+    protected Paint paintModeTwo;
     /**
      * Paint for score text
      */
-    private Paint paintScores;
+    protected Paint paintScores;
     /**
      * Bitmap for indicator one (left side)
      */
-    private Bitmap indicatorImageOne;
+    protected Bitmap indicatorImageOne;
     /**
      * Bitmap for indicator two (right side)
      */
-    private Bitmap indicatorImageTwo;
+    protected Bitmap indicatorImageTwo;
     /**
      * Counter for looping on indicator attack
      */
-    private int indicatorLoop = 0;
+    protected int indicatorLoop = 0;
     /**
      * Stores the previous COM score
      */
@@ -197,6 +197,9 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
      * Score for the com isn't displayed, this is a string representing the changes in it's score with random chars
      */
     private String comScoreMimic;
+    /**
+     * Stores the int representing the winner of the game
+     */
     private int winner;
 
     /**
@@ -209,7 +212,6 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
      * @param mapLoadID      id of the map to be loaded
      */
     public MainGameScene(Context context, int screenWidth, int screenHeight, GameEngine engineCallback, eGameMode gameMode, int mapLoadID) {
-        //TODO Set player indicators (with maybe a player sprite)
         //Initialize variables
         super(context, -1, screenWidth, screenHeight);
         this.engineCallback = engineCallback;
@@ -228,7 +230,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         PointF playerOneCenter = new PointF(mapLoad.tileArray[2][2].getCollisionRect().exactCenterX(), mapLoad.tileArray[2][2].getCollisionRect().exactCenterY());
         this.playerOne = new PlayerCrsh(this, mapLoad, "TestP1", 1, true, new CircleComponent(playerOneCenter, mapLoad.getReference() / 2));
         PointF playerTwoCenter = new PointF(mapLoad.tileArray[mapLoad.tileArray.length - 3][mapLoad.tileArray[mapLoad.tileArray.length - 3].length - 3].getCollisionRect().exactCenterX(), mapLoad.tileArray[mapLoad.tileArray.length - 3][mapLoad.tileArray[mapLoad.tileArray.length - 3].length - 3].getCollisionRect().exactCenterY());
-        if (this.gameMode == eGameMode.MODE_CRSH_COM || this.gameMode == eGameMode.MODE_NRML_COM) {
+        if (this.gameMode == eGameMode.MODE_CRSH_COM || this.gameMode == eGameMode.MODE_NRML_COM || this.gameMode == eGameMode.MODE_TUTORIAL) {
             this.playerCom = new PlayerComCrsh(this, mapLoad, true, new CircleComponent(playerTwoCenter, mapLoad.getReference() / 2));
         } else {
             this.playerTwo = new PlayerCrsh(this, mapLoad, "testP2", 2, false, new CircleComponent(playerTwoCenter, mapLoad.getReference() / 2));
@@ -267,7 +269,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         top = this.mapLoad.tileArray[0][13].getCollisionRect().top;
         right = this.mapLoad.tileArray[0][GameConstants.MAPAREA_COLUMNS - 1].getCollisionRect().right;
         bottom = this.mapLoad.tileArray[0][GameConstants.MAPAREA_COLUMNS - 1].getCollisionRect().bottom;
-        if (this.gameMode == eGameMode.MODE_CRSH_COM || this.gameMode == eGameMode.MODE_NRML_COM) {
+        if (this.gameMode == eGameMode.MODE_CRSH_COM || this.gameMode == eGameMode.MODE_NRML_COM || this.gameMode == eGameMode.MODE_TUTORIAL) {
             this.lifeTwo = new LifeComponent(this.context, this, new Rect(left, top, right, bottom), playerCom.getPlayerLifes(), true, 2);
         } else {
             this.lifeTwo = new LifeComponent(this.context, this, new Rect(left, top, right, bottom), playerTwo.getPlayerLifes(), true, 0);
@@ -296,7 +298,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         bottom = this.mapLoad.tileArray[GameConstants.MAPAREA_ROWS - 2][GameConstants.MAPAREA_COLUMNS - 1].getCollisionRect().bottom;
         this.modeTwo = new Rect(left, top, right, bottom);
         this.paintModeTwo = new Paint();
-        if (this.gameMode == eGameMode.MODE_CRSH_COM || this.gameMode == eGameMode.MODE_NRML_COM) {
+        if (this.gameMode == eGameMode.MODE_CRSH_COM || this.gameMode == eGameMode.MODE_NRML_COM || this.gameMode == eGameMode.MODE_TUTORIAL) {
             this.paintModeTwo.setShader(new LinearGradient(this.modeTwo.left + this.modeTwo.width() / 2, this.modeTwo.top, this.modeTwo.right - this.modeTwo.width() / 2, this.modeTwo.bottom, Color.GRAY, Color.BLACK, Shader.TileMode.CLAMP));
         } else {
             this.paintModeTwo.setShader(new LinearGradient(this.modeTwo.left + this.modeTwo.width() / 2, this.modeTwo.top, this.modeTwo.right - this.modeTwo.width() / 2, this.modeTwo.bottom, Color.RED, Color.BLACK, Shader.TileMode.CLAMP));
@@ -345,7 +347,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
             sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
             sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
             sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_GAME);
-        } else if ((gameMode == eGameMode.MODE_NRML_2P || gameMode == eGameMode.MODE_NRML_COM && (sensor != null || sensorManager != null))) {
+        } else if ((gameMode == eGameMode.MODE_NRML_2P || gameMode == eGameMode.MODE_NRML_COM || gameMode == eGameMode.MODE_TUTORIAL && (sensor != null || sensorManager != null))) {
             if (sensorManager != null && sensor != null) {
                 sensorManager.unregisterListener(this, sensor);
             }
@@ -400,7 +402,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         //Player Two or COM
         PointF playerTwoCenter = new PointF(mapLoad.tileArray[mapLoad.tileArray.length - 3][mapLoad.tileArray[mapLoad.tileArray.length - 3].length - 3].getCollisionRect().exactCenterX(), mapLoad.tileArray[mapLoad.tileArray.length - 3][mapLoad.tileArray[mapLoad.tileArray.length - 3].length - 3].getCollisionRect().exactCenterY());
 
-        if (this.gameMode == eGameMode.MODE_CRSH_COM || this.gameMode == eGameMode.MODE_NRML_COM) {
+        if (this.gameMode == eGameMode.MODE_CRSH_COM || this.gameMode == eGameMode.MODE_NRML_COM || this.gameMode == eGameMode.MODE_TUTORIAL) {
             this.playerCom = new PlayerComCrsh(this, mapLoad, true, new CircleComponent(playerTwoCenter, mapLoad.getReference() / 2));
             this.playerCom.respawn();
             lifeTwo.resetLife();
@@ -413,7 +415,7 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
         }
 
         //Gradients
-        if (this.gameMode == eGameMode.MODE_CRSH_COM || this.gameMode == eGameMode.MODE_NRML_COM) {
+        if (this.gameMode == eGameMode.MODE_CRSH_COM || this.gameMode == eGameMode.MODE_NRML_COM || this.gameMode == eGameMode.MODE_TUTORIAL) {
             this.paintModeTwo.setShader(new LinearGradient(this.modeTwo.left + this.modeTwo.width() / 2, this.modeTwo.top, this.modeTwo.right - this.modeTwo.width() / 2, this.modeTwo.bottom, Color.GRAY, Color.BLACK, Shader.TileMode.CLAMP));
         } else {
             this.paintModeTwo.setShader(new LinearGradient(this.modeTwo.left + this.modeTwo.width() / 2, this.modeTwo.top, this.modeTwo.right - this.modeTwo.width() / 2, this.modeTwo.bottom, Color.RED, Color.BLACK, Shader.TileMode.CLAMP));
@@ -598,65 +600,67 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
     public void draw(Canvas c) {
         //General background
         super.draw(c);
-        if (!onPause) {
-            //Draw map
-            mapLoad.draw(c);
-            //Timer
-            timer.draw(c);
-            //Life
-            lifeOne.draw(c);
-            lifeTwo.draw(c);
-            //
-            c.drawRect(modeOne, paintModeOne);
-            c.drawBitmap(indicatorImageOne, modeOne.left, modeOne.top, null);
-            c.drawRect(modeTwo, paintModeTwo);
-            c.drawBitmap(indicatorImageTwo, modeTwo.left, modeTwo.top, null);
-            //Draw player One
-            playerOne.draw(c);
-            if (playerOne.getCurrentPowerUp() != null) {
-                c.drawBitmap(engineCallback.loader.getPowerUpBitmap(playerOne.getCurrentPowerUp()), modeOne.left, modeOne.top + modeOne.height() / 3 * 2, null);
-            }
-            if (this.gameMode == eGameMode.MODE_NRML_2P || this.gameMode == eGameMode.MODE_CRSH_2P) {
-                String pOneScore = String.format("%04d", playerOne.getPlayerScore());
-                String pTwoScore = String.format("%04d", playerTwo.getPlayerScore());
-                c.drawText(pOneScore, screenWidth / GameConstants.GAMESCREEN_COLUMNS / 2, screenHeight / GameConstants.GAMESCREEN_ROWS * 2.5f, paintScores);
-                c.drawText(pTwoScore, (screenWidth - screenWidth / GameConstants.GAMESCREEN_COLUMNS / 2) - paintScores.measureText(pTwoScore), screenHeight / GameConstants.GAMESCREEN_ROWS * 2.5f, paintScores);
-                //Draw player Two
-                playerTwo.draw(c);
-                if (playerTwo.getCurrentPowerUp() != null) {
-                    c.drawBitmap(engineCallback.loader.getPowerUpBitmap(playerTwo.getCurrentPowerUp()), modeTwo.left, modeTwo.top + modeTwo.height() / 3 * 2, null);
+        if (gameMode != eGameMode.MODE_TUTORIAL) {
+            if (!onPause) {
+                //Draw map
+                mapLoad.draw(c);
+                //Timer
+                timer.draw(c);
+                //Life
+                lifeOne.draw(c);
+                lifeTwo.draw(c);
+                //
+                c.drawRect(modeOne, paintModeOne);
+                c.drawBitmap(indicatorImageOne, modeOne.left, modeOne.top, null);
+                c.drawRect(modeTwo, paintModeTwo);
+                c.drawBitmap(indicatorImageTwo, modeTwo.left, modeTwo.top, null);
+                //Draw player One
+                playerOne.draw(c);
+                if (playerOne.getCurrentPowerUp() != null) {
+                    c.drawBitmap(engineCallback.loader.getPowerUpBitmap(playerOne.getCurrentPowerUp()), modeOne.left, modeOne.top + modeOne.height() / 3 * 2, null);
+                }
+                if (this.gameMode == eGameMode.MODE_NRML_2P || this.gameMode == eGameMode.MODE_CRSH_2P) {
+                    String pOneScore = String.format("%04d", playerOne.getPlayerScore());
+                    String pTwoScore = String.format("%04d", playerTwo.getPlayerScore());
+                    c.drawText(pOneScore, screenWidth / GameConstants.GAMESCREEN_COLUMNS / 2, screenHeight / GameConstants.GAMESCREEN_ROWS * 2.5f, paintScores);
+                    c.drawText(pTwoScore, (screenWidth - screenWidth / GameConstants.GAMESCREEN_COLUMNS / 2) - paintScores.measureText(pTwoScore), screenHeight / GameConstants.GAMESCREEN_ROWS * 2.5f, paintScores);
+                    //Draw player Two
+                    playerTwo.draw(c);
+                    if (playerTwo.getCurrentPowerUp() != null) {
+                        c.drawBitmap(engineCallback.loader.getPowerUpBitmap(playerTwo.getCurrentPowerUp()), modeTwo.left, modeTwo.top + modeTwo.height() / 3 * 2, null);
+                    }
+                } else {
+                    String pOneScore = String.format("%04d", playerOne.getPlayerScore());
+                    if (previousCOMScore == -1) {
+                        previousCOMScore = playerCom.getPlayerScore();
+                        comScoreMimic = String.format("%c%c%c%c", Utils.getRandom(32, 50), Utils.getRandom(32, 50), Utils.getRandom(32, 50), Utils.getRandom(32, 50));
+                    } else if (previousCOMScore != playerCom.getPlayerScore()) {
+                        previousCOMScore = playerCom.getPlayerScore();
+                        comScoreMimic = String.format("%c%c%c%c", Utils.getRandom(32, 50), Utils.getRandom(32, 50), Utils.getRandom(32, 50), Utils.getRandom(32, 50));
+                    }
+
+                    c.drawText(pOneScore, screenWidth / GameConstants.GAMESCREEN_COLUMNS / 2, screenHeight / GameConstants.GAMESCREEN_ROWS * 2.5f, paintScores);
+                    c.drawText(comScoreMimic, (screenWidth - screenWidth / GameConstants.GAMESCREEN_COLUMNS / 2) - paintScores.measureText(comScoreMimic), screenHeight / GameConstants.GAMESCREEN_ROWS * 2.5f, paintScores);
+                    //Draw player COM
+                    playerCom.draw(c);
+                    if (playerCom.getCurrentPowerUp() != null) {
+                        c.drawBitmap(engineCallback.loader.getPowerUpBitmap(playerCom.getCurrentPowerUp()), modeTwo.left, modeTwo.top + modeTwo.height() / 3 * 2, null);
+                    }
+                }
+                //Draw the back button
+                btnPause.draw(c);
+                //Draw the joysticks
+                if (playerOne.getPlayerLifes() > 0) {
+                    joystickOne.draw(c);
+                }
+                if (this.gameMode == eGameMode.MODE_NRML_2P || this.gameMode == eGameMode.MODE_CRSH_2P) {
+                    if (playerTwo.getPlayerLifes() > 0) {
+                        joystickTwo.draw(c);
+                    }
                 }
             } else {
-                String pOneScore = String.format("%04d", playerOne.getPlayerScore());
-                if (previousCOMScore == -1) {
-                    previousCOMScore = playerCom.getPlayerScore();
-                    comScoreMimic = String.format("%c%c%c%c", Utils.getRandom(32, 50), Utils.getRandom(32, 50), Utils.getRandom(32, 50), Utils.getRandom(32, 50));
-                } else if (previousCOMScore != playerCom.getPlayerScore()) {
-                    previousCOMScore = playerCom.getPlayerScore();
-                    comScoreMimic = String.format("%c%c%c%c", Utils.getRandom(32, 50), Utils.getRandom(32, 50), Utils.getRandom(32, 50), Utils.getRandom(32, 50));
-                }
-
-                c.drawText(pOneScore, screenWidth / GameConstants.GAMESCREEN_COLUMNS / 2, screenHeight / GameConstants.GAMESCREEN_ROWS * 2.5f, paintScores);
-                c.drawText(comScoreMimic, (screenWidth - screenWidth / GameConstants.GAMESCREEN_COLUMNS / 2) - paintScores.measureText(comScoreMimic), screenHeight / GameConstants.GAMESCREEN_ROWS * 2.5f, paintScores);
-                //Draw player COM
-                playerCom.draw(c);
-                if (playerCom.getCurrentPowerUp() != null) {
-                    c.drawBitmap(engineCallback.loader.getPowerUpBitmap(playerCom.getCurrentPowerUp()), modeTwo.left, modeTwo.top + modeTwo.height() / 3 * 2, null);
-                }
+                pauseMenu.draw(c);
             }
-            //Draw the back button
-            btnPause.draw(c);
-            //Draw the joysticks
-            if (playerOne.getPlayerLifes() > 0) {
-                joystickOne.draw(c);
-            }
-            if (this.gameMode == eGameMode.MODE_NRML_2P || this.gameMode == eGameMode.MODE_CRSH_2P) {
-                if (playerTwo.getPlayerLifes() > 0) {
-                    joystickTwo.draw(c);
-                }
-            }
-        } else {
-            pauseMenu.draw(c);
         }
     }
 

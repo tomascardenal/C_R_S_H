@@ -1,53 +1,76 @@
 package com.example.tomascrd.c_r_s_h.scenes;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PointF;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.util.Log;
 import android.view.MotionEvent;
 
 import com.example.tomascrd.c_r_s_h.R;
+import com.example.tomascrd.c_r_s_h.components.ButtonComponent;
+import com.example.tomascrd.c_r_s_h.components.CircleComponent;
 import com.example.tomascrd.c_r_s_h.components.JoystickComponent;
+import com.example.tomascrd.c_r_s_h.components.LifeComponent;
 import com.example.tomascrd.c_r_s_h.components.MapComponent;
+import com.example.tomascrd.c_r_s_h.components.PauseMenuComponent;
+import com.example.tomascrd.c_r_s_h.components.PlayerComCrsh;
 import com.example.tomascrd.c_r_s_h.components.PlayerCrsh;
 import com.example.tomascrd.c_r_s_h.components.SceneCrsh;
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
 import com.example.tomascrd.c_r_s_h.core.GameEngine;
+import com.example.tomascrd.c_r_s_h.structs.eGameMode;
 
 /**
  * Represents the tutorial for the game
  *
  * @author Tomás Cardenal López
  */
-public class TutorialScene extends SceneCrsh {
+public class TutorialScene extends MainGameScene {
 
 
+    private enum eTutorialStage {
+        STAGE_WAITINGROOM,
+        STAGE_INTRO,
+        STAGE_MAP,
+        STAGE_JOYSTICK,
+        STAGE_INDICATORS,
+        STAGE_POWERUPS,
+        STAGE_MORE,
+    }
+
+    /**
+     * Maximum number of stage index
+     */
+    private static final int MAX_STAGES = 7;
     /**
      * Constant id for TutorialScene
      */
     public static final int TUTORIAL_ID = 5;
     /**
+     * Current stage index
+     */
+    private int stageIndex;
+    /**
+     * Current stage enum value
+     */
+    protected eTutorialStage currentStage;
+    /**
      * Determines if there's an animation
      */
-    private boolean animating;
+    protected boolean animating;
     /**
-     * Map to load during the tutorial
+     * Rect to draw over the map with an alpha
      */
-    public MapComponent mapLoad;
+    protected Rect mapAlphaRect;
     /**
-     * Player one on tutorial
+     * Button to start the tutorial
      */
-    public PlayerCrsh playerTutorialOne;
-    /**
-     * Player two on tutorial
-     */
-    public PlayerCrsh playerTutorialTwo;
-    /**
-     * Joystick
-     */
-    public JoystickComponent joystick;
+    public ButtonComponent btnStartTutorial;
 
     /**
      * Starts a tutorial screen
@@ -58,8 +81,13 @@ public class TutorialScene extends SceneCrsh {
      * @param engineCallback callback to access gameEngine data
      */
     public TutorialScene(Context context, int screenWidth, int screenHeight, GameEngine engineCallback) {
-        super(context, TUTORIAL_ID, screenWidth, screenHeight);
+        super(context, screenWidth, screenHeight, engineCallback, eGameMode.MODE_TUTORIAL, -20);
+        this.onPause = false;
         this.engineCallback = engineCallback;
+        this.stageIndex = 0;
+        this.currentStage = eTutorialStage.STAGE_WAITINGROOM;
+        this.animating = false;
+
         //Title text
         pTitleText = new Paint();
         pTitleText.setTypeface(Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN));
@@ -68,7 +96,14 @@ public class TutorialScene extends SceneCrsh {
         pTitleText.setTextSize((float) ((screenHeight / GameConstants.MENUSCREEN_COLUMNS) * 2));
         //Initialize variables
         this.engineCallback = engineCallback;
+        Typeface homespun = Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN);
+        this.btnStartTutorial = new ButtonComponent(context, homespun, context.getString(R.string.btnStartGame),
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 6,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 6,
+                screenWidth / GameConstants.MENUSCREEN_COLUMNS * 12,
+                screenHeight / GameConstants.MENUSCREEN_ROWS * 7, Color.BLUE, 150, true, 99);
 
+        this.pauseMenu = new PauseMenuComponent(this.context, this.mapLoad.xLeft, this.mapLoad.yTop, this.mapLoad.mapAreaWidth, this.mapLoad.mapAreaHeight, this);
     }
 
     /**
@@ -76,7 +111,7 @@ public class TutorialScene extends SceneCrsh {
      */
     @Override
     public void updatePhysics() {
-        super.updatePhysics();
+
     }
 
     /**
@@ -92,7 +127,6 @@ public class TutorialScene extends SceneCrsh {
         c.drawText(context.getString(R.string.btnTutorial), screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9, screenHeight / GameConstants.MENUSCREEN_ROWS, pTitleText);
         //Buttons
         backBtn.draw(c);
-
     }
 
     /**
@@ -101,6 +135,7 @@ public class TutorialScene extends SceneCrsh {
      * @param event the touch event
      * @return a new sceneId if it changed, or this id if it didn't change
      */
+    @Override
     public int onTouchEvent(MotionEvent event) {
         int action = event.getActionMasked();
         switch (action) {
