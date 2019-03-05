@@ -935,10 +935,14 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
     public int onPauseMenu(MotionEvent event) {
         if (pauseMenu.isConfirming()) {
             if (isClick(pauseMenu.getBtnConfirmYes(), event)) {
-                pauseMenu.setConfirming(false);
-                engineCallback.loadSavedScene = false;
-                this.reloadMap();
-                return 1;
+                if (gameMode != eGameMode.MODE_TUTORIAL) {
+                    pauseMenu.setConfirming(false);
+                    engineCallback.loadSavedScene = false;
+                    this.reloadMap();
+                    return 1;
+                } else {
+                    return 0;
+                }
             } else if (isClick(pauseMenu.getBtnConfirmNo(), event)) {
                 pauseMenu.setConfirming(false);
             }
@@ -963,9 +967,13 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
                 onPause = false;
             }
             if (isClick(pauseMenu.getBtnOptions(), event)) {
-                engineCallback.loadSavedScene = true;
-                engineCallback.savedScene = this;
-                return 2;
+                if (gameMode == eGameMode.MODE_TUTORIAL) {
+                    Toast.makeText(context, context.getString(R.string.toastNoOptionsOnTutorial), Toast.LENGTH_SHORT).show();
+                } else {
+                    engineCallback.loadSavedScene = true;
+                    engineCallback.savedScene = this;
+                    return 2;
+                }
             }
             if (isClick(pauseMenu.getBtnEndGame(), event)) {
                 pauseMenu.setConfirming(true);

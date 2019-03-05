@@ -101,4 +101,8 @@
     <string name="infoNoRecords">No hay records guardados todavía</string>
     <string name="titleRecordsDelete">¿Vaciar lista de récords?</string>
     <string name="btnEmptyRecords" translatable="false"></string>
+    <string name="btnStartTutorial">Comenzar Tutorial</string>
+    <string name="toastNoOptionsOnTutorial">No se pueden mostrar las opciones durante el tutorial</string>
+    <string name="tutorialIntroOne">"C_R_S_H es un juego en el que dos pequeñas pelotas\n(pero con sentimientos) se enfrentan en una batalla por ganar puntos\ny darse unas cuantas tortas\n\nEn este tutorial os enseñaremos como son\n las distintas partes del juego\npara evitar que cunda el caos y la confusión\n(aunque nos gusten mucho el caos y la confusión)"</string>
+    <string name="tutorialTapScreen">"(Pulsa la pantalla para continuar)"</string>
 </resources>

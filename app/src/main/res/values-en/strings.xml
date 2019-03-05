@@ -58,4 +58,8 @@
     <string name="recordsName">Type up your name</string>
     <string name="infoNoRecords">There aren\'t any records yet</string>
     <string name="titleRecordsDelete">Delete all records?</string>
+    <string name="btnStartTutorial">Start Tutorial</string>
+    <string name="toastNoOptionsOnTutorial">Options aren\'t avaiable during the tutorial</string>
+    <string name="tutorialIntroOne">"C_R_S_H is a game in which two little balls\n(balls, with feelings) battle each other in a race to score points\nand just beat each other up\n\nIn this tutorial we will show you\nthe different parts of the game\nso that there's no chaos or confusion\n(we DO love chaos or confusion, though)"</string>
+    <string name="tutorialTapScreen">"(Tap the screen to continue)"</string>
 </resources>
