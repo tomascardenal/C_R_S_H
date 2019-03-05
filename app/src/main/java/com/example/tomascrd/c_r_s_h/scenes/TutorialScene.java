@@ -1,26 +1,15 @@
 package com.example.tomascrd.c_r_s_h.scenes;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.Typeface;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import com.example.tomascrd.c_r_s_h.R;
 import com.example.tomascrd.c_r_s_h.components.ButtonComponent;
-import com.example.tomascrd.c_r_s_h.components.CircleComponent;
-import com.example.tomascrd.c_r_s_h.components.JoystickComponent;
-import com.example.tomascrd.c_r_s_h.components.LifeComponent;
-import com.example.tomascrd.c_r_s_h.components.MapComponent;
-import com.example.tomascrd.c_r_s_h.components.PauseMenuComponent;
-import com.example.tomascrd.c_r_s_h.components.PlayerComCrsh;
-import com.example.tomascrd.c_r_s_h.components.PlayerCrsh;
-import com.example.tomascrd.c_r_s_h.components.SceneCrsh;
 import com.example.tomascrd.c_r_s_h.core.GameConstants;
 import com.example.tomascrd.c_r_s_h.core.GameEngine;
 import com.example.tomascrd.c_r_s_h.structs.eGameMode;
@@ -74,6 +63,10 @@ public class TutorialScene extends MainGameScene {
      */
     protected Rect mapAlphaRect;
     /**
+     * Paint for map Alpha
+     */
+    private Paint pMapAlpha;
+    /**
      * Button to start the tutorial
      */
     public ButtonComponent btnStartTutorial;
@@ -89,6 +82,14 @@ public class TutorialScene extends MainGameScene {
      * Whether tap to continue is on
      */
     private boolean tapToContinue;
+    /**
+     * Index of text to show
+     */
+    private int currentTextIndex;
+    /**
+     * String references for map stage of the tutorial
+     */
+    private static final int[] mapStageTextRef = {R.string.tutorialMapOne, R.string.tutorialMapTwo};
 
     /**
      * Starts a tutorial screen
@@ -99,25 +100,29 @@ public class TutorialScene extends MainGameScene {
      * @param engineCallback callback to access gameEngine data
      */
     public TutorialScene(Context context, int screenWidth, int screenHeight, GameEngine engineCallback) {
-        super(context, screenWidth, screenHeight, engineCallback, eGameMode.MODE_TUTORIAL, -20);
+        //Initialize variables
+        super(context, screenWidth, screenHeight, engineCallback, eGameMode.MODE_TUTORIAL, -10);
         restartTutorialVariables();
 
+        pMapAlpha = new Paint();
+        pMapAlpha.setColor(Color.LTGRAY);
+        pMapAlpha.setAlpha(120);
+
+        mapAlphaRect = new Rect((int) this.mapLoad.xLeft, (int) this.mapLoad.yTop, (int) this.mapLoad.xLeft + (int) this.mapLoad.mapAreaWidth, (int) this.mapLoad.yTop + (int) this.mapLoad.mapAreaHeight);
         //Title text
         pTitleText = new Paint();
         pTitleText.setTypeface(Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN));
         pTitleText.setColor(Color.BLACK);
         pTitleText.setTextAlign(Paint.Align.CENTER);
         pTitleText.setTextSize((float) ((screenHeight / GameConstants.MENUSCREEN_COLUMNS) * 2));
-        //Initialize variables
-        this.engineCallback = engineCallback;
+
+        //Buttons
         Typeface homespun = Typeface.createFromAsset(context.getAssets(), GameConstants.FONT_HOMESPUN);
         this.btnStartTutorial = new ButtonComponent(context, homespun, context.getString(R.string.btnStartTutorial),
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 6,
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 6,
                 screenWidth / GameConstants.MENUSCREEN_COLUMNS * 12,
                 screenHeight / GameConstants.MENUSCREEN_ROWS * 7, Color.BLUE, 150, true, 99);
-
-        this.pauseMenu = new PauseMenuComponent(this.context, this.mapLoad.xLeft, this.mapLoad.yTop, this.mapLoad.mapAreaWidth, this.mapLoad.mapAreaHeight, this);
 
         //Tutorial text
         pTutorialText = new Paint();
@@ -126,7 +131,6 @@ public class TutorialScene extends MainGameScene {
         pTutorialText.setTextAlign(Paint.Align.CENTER);
         pTutorialText.setTextSize((float) (screenHeight / GameConstants.MENUSCREEN_COLUMNS));
         pTutorialText.setAlpha(255);
-
     }
 
     /**
@@ -134,8 +138,8 @@ public class TutorialScene extends MainGameScene {
      */
     private void restartTutorialVariables() {
         this.onPause = false;
-        this.engineCallback = engineCallback;
         this.stageIndex = 0;
+        this.currentTextIndex = 0;
         this.currentStage = eTutorialStage.STAGE_WAITINGROOM;
         this.animating = false;
         resetTapToContinue();
@@ -183,6 +187,7 @@ public class TutorialScene extends MainGameScene {
                     drawStageIntro(c);
                     break;
                 case STAGE_MAP:
+                    drawStageMap(c);
                     break;
                 case STAGE_JOYSTICK:
                     break;
@@ -214,14 +219,14 @@ public class TutorialScene extends MainGameScene {
     }
 
     /**
-     * Draws the screen during the intro stage
+     * Draws the screen during the tutorial intro stage
      *
      * @param c
      */
     private void drawStageIntro(Canvas c) {
         //Buttons
         btnPause.draw(c);
-        String[] introLines = context.getString(R.string.tutorialIntroOne).split("\n");
+        String[] introLines = context.getString(R.string.tutorialIntro).split("\n");
         int row = 1;
         //Draw all the lines shifted by a row
         for (String line : introLines) {
@@ -230,7 +235,26 @@ public class TutorialScene extends MainGameScene {
             c.drawText(line, x, y, pTutorialText);
             row++;
         }
+    }
 
+    /**
+     * Draws the screen during the map tutorial stage
+     *
+     * @param c
+     */
+    private void drawStageMap(Canvas c) {
+        //Buttons
+        btnPause.draw(c);
+        mapLoad.draw(c);
+        c.drawRect(mapAlphaRect, pMapAlpha);
+        String[] introLines = context.getString(mapStageTextRef[currentTextIndex]).split("\n");
+        int row = 2;
+        for (String line : introLines) {
+            float x = screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9;
+            float y = pTutorialText.getTextSize() * 1.75f * row;
+            c.drawText(line, x, y, pTutorialText);
+            row++;
+        }
     }
 
     /**
@@ -308,8 +332,8 @@ public class TutorialScene extends MainGameScene {
                         onPause = true;
                     }
                     if (tapToContinue) {
-                        //TODO this is a test only
-                        currentStage = eTutorialStage.STAGE_WAITINGROOM;
+                        resetTapToContinue();
+                        currentStage = eTutorialStage.STAGE_MAP;
                     }
                 } else {
                     int pauseResult = onPauseMenu(event);
@@ -346,6 +370,16 @@ public class TutorialScene extends MainGameScene {
                     if (isClick(btnPause, event)) {
                         onPause = true;
                     }
+                    if (tapToContinue) {
+                        resetTapToContinue();
+                        if (currentTextIndex < mapStageTextRef.length - 1) {
+                            currentTextIndex++;
+                        } else {
+                            currentTextIndex = 0;
+                            //FIXME this is just a test
+                            currentStage = eTutorialStage.STAGE_WAITINGROOM;
+                        }
+                    }
                 } else {
                     int pauseResult = onPauseMenu(event);
                     if (pauseResult != -1) {
@@ -356,7 +390,6 @@ public class TutorialScene extends MainGameScene {
                     }
                 }
             case MotionEvent.ACTION_MOVE: // Any finger moves
-
                 break;
         }
         return this.id;
@@ -409,7 +442,6 @@ public class TutorialScene extends MainGameScene {
             case MotionEvent.ACTION_DOWN:           // First finger
             case MotionEvent.ACTION_POINTER_DOWN:  // Second finger and so on
                 break;
-
             case MotionEvent.ACTION_UP:                     // Last finger up
             case MotionEvent.ACTION_POINTER_UP:  // Any other finger up
                 if (!onPause) {
@@ -496,7 +528,6 @@ public class TutorialScene extends MainGameScene {
                     }
                 }
             case MotionEvent.ACTION_MOVE: // Any finger moves
-
                 break;
         }
         return this.id;

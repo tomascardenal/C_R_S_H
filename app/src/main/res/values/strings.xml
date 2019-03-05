@@ -103,6 +103,8 @@
     <string name="btnEmptyRecords" translatable="false"></string>
     <string name="btnStartTutorial">Comenzar Tutorial</string>
     <string name="toastNoOptionsOnTutorial">No se pueden mostrar las opciones durante el tutorial</string>
-    <string name="tutorialIntroOne">"C_R_S_H es un juego en el que dos pequeñas pelotas\n(pero con sentimientos) se enfrentan en una batalla por ganar puntos\ny darse unas cuantas tortas\n\nEn este tutorial os enseñaremos como son\n las distintas partes del juego\npara evitar que cunda el caos y la confusión\n(aunque nos gusten mucho el caos y la confusión)"</string>
+    <string name="tutorialIntro">"C_R_S_H es un juego en el que dos pequeñas pelotas\n(pero con sentimientos) se enfrentan en una batalla por ganar puntos\ny darse unas cuantas tortas\n\nEn este tutorial os enseñaremos como son\n las distintas partes del juego\npara evitar que cunda el caos y la confusión\n(aunque nos gusten mucho el caos y la confusión)"</string>
+    <string name="tutorialMapOne">"This is the map, on the map you have different types of tiles\n the green ones are path tiles, you can walk on them"</string>
+    <string name="tutorialMapTwo">"The other tiles can block you though\nBrown boxes and red bricks will make you bounce\nalso, red bricks will reveal boxes\n\nGray steel tiles are just unbreakable"</string>
     <string name="tutorialTapScreen">"(Pulsa la pantalla para continuar)"</string>
 </resources>

@@ -59,7 +59,9 @@
     <string name="infoNoRecords">There aren\'t any records yet</string>
     <string name="titleRecordsDelete">Delete all records?</string>
     <string name="btnStartTutorial">Start Tutorial</string>
-    <string name="toastNoOptionsOnTutorial">Options aren\'t avaiable during the tutorial</string>
-    <string name="tutorialIntroOne">"C_R_S_H is a game in which two little balls\n(balls, with feelings) battle each other in a race to score points\nand just beat each other up\n\nIn this tutorial we will show you\nthe different parts of the game\nso that there's no chaos or confusion\n(we DO love chaos or confusion, though)"</string>
+    <string name="toastNoOptionsOnTutorial">Options aren\'t available during the tutorial</string>
+    <string name="tutorialIntro">"C_R_S_H is a game in which two little balls\n(balls, with feelings) battle each other in a race to score points\nand just beat each other up\n\nIn this tutorial we will show you\nthe different parts of the game\nso that there's no chaos or confusion\n(we DO love chaos or confusion, though)"</string>
+    <string name="tutorialMapOne">"Este es el mapa, en el puede haber distintos tips de casillas\nLas casillas de hierba verde permiten caminar sin problema"</string>
+    <string name="tutorialMapTwo">"Sin embargo, otras casillas te pueden bloquear\nLas cajas marrones y ladrillos te harán rebotar\ny los ladrillos revelarán cajas\n\nLas casillas de metal, son completamente irrompibles"</string>
     <string name="tutorialTapScreen">"(Tap the screen to continue)"</string>
 </resources>
