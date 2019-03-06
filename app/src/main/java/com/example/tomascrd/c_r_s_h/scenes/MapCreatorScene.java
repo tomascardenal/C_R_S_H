@@ -461,7 +461,6 @@ public class MapCreatorScene extends SceneCrsh {
             this.saveMenu.currentMapName = currentMapName;
             Toast.makeText(this.context, context.getString(R.string.toastNewMap) + currentMapName, Toast.LENGTH_SHORT).show();
         }
-        Log.i("MapDebug", newId+ " old: " + oldId);
     }
 
 

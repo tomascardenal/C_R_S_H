@@ -106,7 +106,6 @@ public class PauseMenuComponent extends DrawableComponent {
      * @param gameSceneState the current GameScene state
      */
     public PauseMenuComponent(Context context, float xRight, float yTop, float width, float height, SceneCrsh gameSceneState) {
-        //TODO endScreen + Records prompt
         //Initializing variables
         this.context = context;
         this.gameSceneState = gameSceneState;
