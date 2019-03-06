@@ -55,7 +55,7 @@ public final class GameConstants {
     /**
      * Accelerometer mode multiplier
      */
-    public final static float ACCELEROMETER_MULTIPLIER = 6;
+    public final static float ACCELEROMETER_MULTIPLIER = 9;
     /**
      * Value to multiply the acceleration from the Joystick on attack mode
      */
