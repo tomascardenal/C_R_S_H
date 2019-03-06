@@ -186,6 +186,7 @@ public class OptionsScene extends SceneCrsh {
             btnMusic.setText(context.getString(R.string.btnMusicOn));
             engineCallback.optionsManager.setPlayMusic(true);
         }
+        engineCallback.updateAudioObjects();
         engineCallback.updateMusicPlayer();
     }
 

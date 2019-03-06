@@ -3,6 +3,7 @@ package com.example.tomascrd.c_r_s_h.core;
 import android.content.pm.ActivityInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 
@@ -17,6 +18,10 @@ public class MainActivity extends AppCompatActivity {
      * The gameEngine object to run this game and to be set as ContentView
      */
     private GameEngine gameEngine;
+    /**
+     * Stores the state of the music
+     */
+    private boolean previousMusicState;
 
     /**
      * Controls the actions when this activity gets created
@@ -60,7 +65,12 @@ public class MainActivity extends AppCompatActivity {
             gameEngine = new GameEngine(this);
         } else {
             gameEngine.setGameWorking(true);
+
         }
+        gameEngine.optionsManager.setPlayMusic(previousMusicState);
+        gameEngine.updateAudioObjects();
+        gameEngine.updateMusicPlayer();
+
         gameEngine.setKeepScreenOn(true);
         setContentView(gameEngine);
     }
@@ -72,7 +82,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         if (gameEngine != null) {
-            gameEngine.pauseAllMusic();
+            Log.i("CrshDebug", "GameEngine!=null on onPause");
+            previousMusicState = gameEngine.optionsManager.isPlayMusic();
+            gameEngine.optionsManager.setPlayMusic(false);
+            gameEngine.updateMusicPlayer();
+            gameEngine.stopAndNullifyAllMusic();
             gameEngine.setGameWorking(false);
         }
     }

@@ -13,8 +13,8 @@
     <string name="creditsMusic">"Music: \nLow Costa Perreo by YVNG N31L"</string>
     <string name="creditsFonts">"Fonts:\nFontAwesome, by FontAwesome\nHomeSpun, by Aenigma Fonts\nKarma Future, by Typodermic Fonts\n"</string>
     <string name="creditsSoundEffects">"Sound FX:\nTomás Cardenal\nwith the help of:\nAlba Pereira"</string>
-    <string name="creditsGraphics">"Graphics:\nGrass Tiles by Alba Pereira\nBox and metal tiles by OpenGameArt\nSci-Fi Gateway by Joseph Crown\nPlayers and icon by Tomás Cardenal López</string>
-    <string name="creditsGraphics2">"Graphics:\nPowerup Icons by Lorc</string>
+    <string name="creditsGraphics">"Graphics:\nGrass Tiles by Alba Pereira\nPlayers and icon by Tomás Cardenal López\nBox and metal tiles by OpenGameArt\nSci-Fi Gateway by Joseph Crown</string>
+    <string name="creditsGraphics2">"Graphics:\nPowerup Icons by Lorc\nParallax mountains by Josh Morony</string>
     <string name="creditsThankYou">"Special thanks to:\nAlba, Callejo, Julio and everyone who collaborated\nin any way to the creation and testing\nof this game"</string>
     <string name="pauseTitle">Game paused</string>
     <string name="btnCrshMode">C_R_S_H mode</string>
@@ -74,7 +74,9 @@
     <string name="tutorialMoreOne">"You'll also have access to our main menu!\nWith options to play alone or against someone\nand both the N_R_M_L joystick mode or...\n\nC_R_S_H in which the attacking player controls\nit's ball tilting the phone!"</string>
     <string name="tutorialMoreTwo">"In the main menu you'll find these other options:\n\nMAP CREATOR: You can create your own map and then use it\nfor your game on the Play option\n\nOPTIONS: A plain ol'reliable options menu"</string>
     <string name="tutorialMoreThree">"CREDITS: Just the credits\n\nRECORDS: A records table, up to ten records!\n\nTUTORIAL: uhh... ¿hello?"</string>
-    <string name="tutorialMoreFour">"CONGRATULATIONS, YOU JUST FINISHED THIS TUTORIAL!\n\nNow go play and don't crash your phone..."</string>
+    <string name="tutorialMoreFour">"MORE INFO:\n\nOn the new game screen, you can select:\nThe game mode, number of players, but ALSO\nChange the map (to the bottom left)\nand on the bottom right, these game settings..."</string>
+    <string name="tutorialMoreFive">"Joystick swipe mode:\nJust makes the joystick control with swipes rather than\nstopping as soon as you lift the finger.\nFeel free to experiment!\n\nTimer speed:\nChanges the speed of the ingame timer"</string>
+    <string name="tutorialMoreSix">"CONGRATULATIONS, YOU JUST FINISHED THIS TUTORIAL!\n\nNow go play and don't crash your phone..."</string>
     <string name="tutorialTapToEnd">(Tap the screen to end this tutorial)</string>
     <string name="titleDeleteMap">Delete this map?</string>
     <string name="toastMapDeleted">The map was sucessfully deleted</string>

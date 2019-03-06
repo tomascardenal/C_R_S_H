@@ -99,7 +99,7 @@ public class TutorialScene extends MainGameScene {
     /**
      * String references for more stage of the tutorial
      */
-    private static final int[] moreStageTextRef = {R.string.tutorialMoreOne, R.string.tutorialMoreTwo, R.string.tutorialMoreThree, R.string.tutorialMoreFour};
+    private static final int[] moreStageTextRef = {R.string.tutorialMoreOne, R.string.tutorialMoreTwo, R.string.tutorialMoreThree, R.string.tutorialMoreFour, R.string.tutorialMoreFive, R.string.tutorialMoreSix};
 
     /**
      * Starts a tutorial screen
@@ -238,7 +238,7 @@ public class TutorialScene extends MainGameScene {
                     pTutorialText.setColor(Color.WHITE);
                     c.drawText(context.getString(R.string.tutorialTapScreen), screenWidth / 2, screenHeight - pTutorialText.getTextSize(), pTutorialText);
                     pTutorialText.setColor(Color.BLACK);
-                } else if (currentStage == eTutorialStage.STAGE_MORE && currentTextIndex == 3) {
+                } else if (currentStage == eTutorialStage.STAGE_MORE && currentTextIndex == 5) {
                     c.drawText(context.getString(R.string.tutorialTapToEnd), screenWidth / 2, screenHeight - pTutorialText.getTextSize(), pTutorialText);
                 } else {
                     c.drawText(context.getString(R.string.tutorialTapScreen), screenWidth / 2, screenHeight - pTutorialText.getTextSize(), pTutorialText);

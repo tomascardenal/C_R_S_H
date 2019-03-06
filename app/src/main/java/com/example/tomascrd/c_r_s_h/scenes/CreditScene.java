@@ -152,6 +152,7 @@ public class CreditScene extends SceneCrsh {
                 (int) ((screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9) + HALFWIDTH_HOMESPUN + offset), (int) ((screenHeight / GameConstants.MENUSCREEN_ROWS * 5) + (pCreditsText.getTextSize() / 2)));
         this.linkKarmaFuture = new Rect((int) (screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9 - HALFWIDTH_KARMAFUTURE - offset), (int) ((screenHeight / GameConstants.MENUSCREEN_ROWS * 6) - (pCreditsText.getTextSize() / 2)),
                 (int) ((screenWidth / GameConstants.MENUSCREEN_COLUMNS * 9) + HALFWIDTH_KARMAFUTURE + offset), (int) ((screenHeight / GameConstants.MENUSCREEN_ROWS * 6) + (pCreditsText.getTextSize() / 2)));
+
     }
 
     /**

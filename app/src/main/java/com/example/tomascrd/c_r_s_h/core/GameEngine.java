@@ -334,11 +334,7 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
         thread.setWorking(false);
         try {
             thread.join();
-            mediaPlayer.pause();
-            for (MediaPlayer mp : effectsPool) {
-                mp.pause();
-                mp.seekTo(0);
-            }
+            stopAndNullifyAllMusic();
             optionsManager.saveOptions();
             optionsManager.saveMapList();
             optionsManager.saveRecords();
@@ -356,11 +352,12 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
         }
         if (mediaPlayer == null) {
             mediaPlayer = MediaPlayer.create(context, R.raw.crshmaintheme);
-            try {
-                mediaPlayer.prepare();
-            } catch (IllegalStateException | IOException e) {
-                Log.e("CrshDebug", "mediaPlayer error" + e.getLocalizedMessage());
-            }
+        }
+        try {
+            mediaPlayer.prepare();
+            mediaPlayer.setLooping(true);
+        } catch (IllegalStateException | IOException e) {
+            Log.e("CrshDebug", "mediaPlayer error" + e.getLocalizedMessage());
         }
 
         if (effectsPool == null) {
@@ -384,8 +381,14 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
      * Checks for the system volume and updates the music volume accordingly
      */
     public void updateVolume() {
-        currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-        mediaPlayer.setVolume(currentVolume / 3, currentVolume / 3);
+        try {
+            if (audioManager != null)
+                currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+            if (mediaPlayer != null)
+                mediaPlayer.setVolume(currentVolume / 2, currentVolume / 2);
+        } catch (IllegalStateException e) {
+            Log.i("CrshDebug", "updateVolume() error" + e.getLocalizedMessage());
+        }
     }
 
     /**
@@ -393,22 +396,35 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
      */
     public void updateMusicPlayer() {
         if (!mediaPlayer.isPlaying() && optionsManager.isPlayMusic()) {
+            try {
+                mediaPlayer.prepare();
+            } catch (IllegalStateException | IOException e) {
+                Log.i("CrshDebug", "mediaPlayer error" + e.getLocalizedMessage());
+            }
             mediaPlayer.start();
         } else if (mediaPlayer.isPlaying() && !optionsManager.isPlayMusic()) {
             mediaPlayer.pause();
         }
+        Log.i("CrshDebug", "mediaPlayer state " + mediaPlayer.isPlaying() + " looping " + mediaPlayer.isLooping());
     }
 
     /**
      * Pauses all the music in the game
      */
-    public void pauseAllMusic() {
-        if (mainGameScene != null && currentScene instanceof MainGameScene) {
-            mainGameScene.setOnPause(true);
+    public void stopAndNullifyAllMusic() {
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+            mediaPlayer.release();
         }
-        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
-            mediaPlayer.pause();
+        if (effectsPool != null) {
+            for (MediaPlayer mp : effectsPool) {
+                mp.stop();
+                mp.release();
+            }
         }
+        mediaPlayer = null;
+        effectsPool = null;
+        audioManager = null;
     }
 
     /**
@@ -506,7 +522,6 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
      * Sets this game thread to work or not
      *
      * @param gameWorking the new value of the boolean
-     *
      */
     public void setGameWorking(boolean gameWorking) {
         this.gameWorking = gameWorking;
