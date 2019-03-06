@@ -48,14 +48,14 @@ public final class GameConstants {
      * Accelerometer min read value
      */
     public final static float ACCELEROMETER_MIN_THRESHOLD = 0.1f;
-    /**
+    /*
      * Accelerometer max read value
      */
     public final static float ACCELEROMETER_MAX_THRESHOLD = 1.0f;
     /**
      * Accelerometer mode multiplier
      */
-    public final static float ACCELEROMETER_MULTIPLIER = 12;
+    public final static float ACCELEROMETER_MULTIPLIER = 6;
     /**
      * Value to multiply the acceleration from the Joystick on attack mode
      */

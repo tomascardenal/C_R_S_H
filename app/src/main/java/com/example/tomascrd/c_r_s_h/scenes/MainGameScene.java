@@ -634,11 +634,11 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
                 //Draw the back button
                 btnPause.draw(c);
                 //Draw the joysticks
-                if (playerOne.getPlayerLifes() > 0) {
+                if (playerOne.getPlayerLifes() > 0 && joystickOne.isActive()) {
                     joystickOne.draw(c);
                 }
                 if (this.gameMode == eGameMode.MODE_NRML_2P || this.gameMode == eGameMode.MODE_CRSH_2P) {
-                    if (playerTwo.getPlayerLifes() > 0) {
+                    if (playerTwo.getPlayerLifes() > 0 && joystickTwo.isActive()) {
                         joystickTwo.draw(c);
                     }
                 }
@@ -729,10 +729,10 @@ public class MainGameScene extends SceneCrsh implements SensorEventListener {
                 //Joystick moving
                 if (!onPause) {
                     if (playerOne.getPlayerLifes() > 0 && !playerOne.isOnAttack()) {
-                        joystickOne.onMoveEvent(event, screenWidth / 2 - 100, true);
+                        joystickOne.onMoveEvent(event, screenWidth / 2 - 100, false);
                     }
                     if (playerTwo.getPlayerLifes() > 0 && !playerTwo.isOnAttack()) {
-                        joystickTwo.onMoveEvent(event, screenWidth / 2 + 100, false);
+                        joystickTwo.onMoveEvent(event, screenWidth / 2 + 100, true);
                     }
 
                 }

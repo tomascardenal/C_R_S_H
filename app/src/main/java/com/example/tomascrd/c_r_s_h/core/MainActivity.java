@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
             gameEngine.updateMusicPlayer();
             gameEngine.stopAndNullifyAllMusic();
             gameEngine.setGameWorking(false);
+            gameEngine.pauseGameIfOn();
         }
     }
 

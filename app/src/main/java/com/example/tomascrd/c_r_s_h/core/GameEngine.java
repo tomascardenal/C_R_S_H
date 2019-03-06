@@ -509,6 +509,12 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
+    public void pauseGameIfOn() {
+        if (currentScene instanceof MainGameScene && mainGameScene != null) {
+            mainGameScene.setOnPause(true);
+        }
+    }
+
     /**
      * Tells if the engine is working
      *
