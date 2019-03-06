@@ -509,6 +509,9 @@ public class GameEngine extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
+    /**
+     * Pauses the game if the currentScene is a gameScene. To call on onPause on MainActivity
+     */
     public void pauseGameIfOn() {
         if (currentScene instanceof MainGameScene && mainGameScene != null) {
             mainGameScene.setOnPause(true);
