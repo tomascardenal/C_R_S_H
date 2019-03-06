@@ -361,12 +361,8 @@ public class MapCreatorScene extends SceneCrsh {
                 saveMenu.setOnKeyboard(true);
             }
             if (isClick(saveMenu.getBtnNewMap(), event)) {
-                if (saveMenu.isConfirmChanges()) {
-                    saveMenu.setConfirming(true);
-                    saveMenu.setNewAfterConfirm(true);
-                } else {
-                    getNewEmptyMap(false);
-                }
+                saveMenu.setConfirming(true);
+                saveMenu.setNewAfterConfirm(true);
             }
         }
         return -1;
@@ -383,6 +379,9 @@ public class MapCreatorScene extends SceneCrsh {
             didIt = context.deleteFile(newId + GameConstants.MAPFILE_NAME);
             if (didIt) {
                 engineCallback.optionsManager.removeMap(new MapReference(newId, currentMapName));
+                if (this.newId == engineCallback.getCurrentMapID()) {
+                    engineCallback.setCurrentMapID(-10);
+                }
                 saveMenu.mapNames.clear();
                 saveMenu.mapNames = engineCallback.optionsManager.getMapNames();
                 getNewEmptyMap(false);
@@ -446,10 +445,14 @@ public class MapCreatorScene extends SceneCrsh {
      * @param onStart whether the creator is being initialized or not
      */
     private void getNewEmptyMap(boolean onStart) {
+        if (this.creatorMap != null && this.creatorMap.mapID == engineCallback.optionsManager.getMapReferences().size()) {
+            saveAMap();
+        }
         this.creatorMap = new MapComponent(-20, context, screenWidth, screenHeight, engineCallback.loader);
         this.creatorMap.loadTileArray();
         this.currentMapName = context.getString(R.string.unnamedMap);
-        this.newId = engineCallback.optionsManager.getMapNames().size();
+        int oldId = this.newId;
+        this.newId = engineCallback.optionsManager.getMapNames().size()+1;
         this.creatorMap.mapID = this.newId;
         this.mapWasSavedOrLoaded = false;
         this.onConfirmingDeletion = false;
@@ -458,6 +461,7 @@ public class MapCreatorScene extends SceneCrsh {
             this.saveMenu.currentMapName = currentMapName;
             Toast.makeText(this.context, context.getString(R.string.toastNewMap) + currentMapName, Toast.LENGTH_SHORT).show();
         }
+        Log.i("MapDebug", newId+ " old: " + oldId);
     }
 
 
